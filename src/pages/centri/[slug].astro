@@ -1,0 +1,92 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const centri = await getCollection('centri');
+  return centri.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const c = entry.data;
+const { Content } = await entry.render();
+const aperto = c.stato === 'aperto';
+
+// Discipline disponibili in questo centro
+const tutte = await getCollection('discipline');
+const disc = tutte
+  .filter((d) => d.data.centri.includes(entry.slug))
+  .sort((a, b) => a.data.ordine - b.data.ordine);
+---
+
+<Layout title={`${c.nome} — LUMe Fitness Club`}>
+  <Header />
+  <section class="sec" style="padding-top:0">
+    <div class="wrap">
+      <div class={`page-hero ${aperto ? '' : 'soon'}`}>
+        {aperto && c.immagine && <img src={c.immagine} alt={c.nome} />}
+        <div class="inner">
+          <span class={`badge ${aperto ? 'open' : 'wait'}`} style="position:static;display:inline-block;margin-bottom:12px">
+            {aperto ? 'Aperto' : 'Prossima apertura'}
+          </span>
+          <h1 class="d">{c.nome.replace('Lume ', '')}</h1>
+          <p style="color:#cfcfcf;margin-top:6px">{c.citta}</p>
+        </div>
+      </div>
+
+      <div style="max-width:760px;margin-top:28px;color:#cbcbcb;font-size:17px">
+        <Content />
+      </div>
+
+      <div class="info-grid">
+        {c.indirizzo && (
+          <div class="info-card">
+            <h4>Dove siamo</h4>
+            <p>{c.indirizzo}</p>
+            {c.telefono && <p style="color:#9a9a9a">{c.telefono}</p>}
+            {c.email && <p style="color:#9a9a9a">{c.email}</p>}
+          </div>
+        )}
+        {c.orari && (
+          <div class="info-card">
+            <h4>Orari</h4>
+            <p>Lun–Ven &nbsp; {c.orari.feriali}</p>
+            <p>Sabato &nbsp; {c.orari.sabato}</p>
+            <p>Domenica &nbsp; {c.orari.domenica}</p>
+          </div>
+        )}
+        {c.servizi.length > 0 && (
+          <div class="info-card">
+            <h4>Servizi</h4>
+            <div class="chips">{c.servizi.map((s) => <span class="chip">{s}</span>)}</div>
+          </div>
+        )}
+      </div>
+
+      {disc.length > 0 && (
+        <div style="margin-top:32px">
+          <span class="label">Discipline qui</span>
+          <div class="chips" style="margin-top:14px">
+            {disc.map((d) => <a class="chip" href={`/discipline/${d.slug}`}>{d.data.nome}</a>)}
+          </div>
+        </div>
+      )}
+
+      <div class="planning">
+        <div class="d">Planning {c.nome.replace('Lume ', '')}</div>
+        <p>Il planning settimanale di questo centro sarà disponibile qui — lo costruiamo insieme.</p>
+      </div>
+
+      <div style="margin-top:28px">
+        {aperto ? (
+          <a href={c.perfectgymUrl} class="btn btn-red">Abbonati a {c.nome.replace('Lume ', '')}</a>
+        ) : (
+          <a href="/#prevendita" class="btn btn-red">Iscriviti alla prevendita</a>
+        )}
+      </div>
+    </div>
+  </section>
+  <Footer />
+</Layout>

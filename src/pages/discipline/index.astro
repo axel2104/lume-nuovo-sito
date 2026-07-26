@@ -1,0 +1,33 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const discipline = (await getCollection('discipline')).sort((a, b) => a.data.ordine - b.data.ordine);
+---
+
+<Layout title="Discipline — LUMe Fitness Club">
+  <Header />
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">Discipline</span>
+        <h2 class="d">Allenati come vuoi</h2>
+        <p>Ogni attività ha la sua pagina, con livello di difficoltà e spiegazione.</p>
+      </div>
+      <div class="grid3">
+        {discipline.map((d) => (
+          <a class="card-d" href={`/discipline/${d.slug}`}>
+            {d.data.immagine && <img src={d.data.immagine} alt={d.data.nome} />}
+            <div class="card-d-in">
+              <span>{d.data.categoria}</span>
+              <h3>{d.data.nome}</h3>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+  <Footer />
+</Layout>

@@ -1,0 +1,39 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.data.ordine);
+---
+
+<Layout title="I nostri centri — LUMe Fitness Club">
+  <Header />
+  <section class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">I centri</span>
+        <h2 class="d">Quattro case, una sola energia</h2>
+        <p>Scegli il centro Lume più vicino a te.</p>
+      </div>
+      <div class="grid4">
+        {centri.map((c) => (
+          <a class={`centro ${c.data.stato === 'aperto' ? '' : 'soon'}`} href={`/centri/${c.slug}`}>
+            {c.data.stato === 'aperto' && c.data.immagine && (
+              <img src={c.data.immagine} alt={c.data.nome} />
+            )}
+            <span class={`badge ${c.data.stato === 'aperto' ? 'open' : 'wait'}`}>
+              {c.data.stato === 'aperto' ? 'Aperto' : 'Prossima apertura'}
+            </span>
+            <div class="centro-in">
+              <h3>{c.data.nome.replace('Lume ', '')}</h3>
+              <p>{c.data.citta}</p>
+              <div class="lnk">{c.data.stato === 'aperto' ? 'Scopri →' : 'Prevendita →'}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+  <Footer />
+</Layout>

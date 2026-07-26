@@ -1,0 +1,22 @@
+---
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/centri', label: 'Centri' },
+  { href: '/discipline', label: 'Discipline' },
+  { href: '/#abbonamenti', label: 'Abbonamenti' },
+  { href: '/#wiki', label: 'Wiki' },
+];
+---
+
+<nav class="site">
+  <div class="wrap nav">
+    <a href="/" class="logo">LUM<span>e</span>.</a>
+    <div class="nav-links">
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </div>
+    <div class="nav-right">
+      <a href="/#abbonamenti" class="btn btn-red nav-cta">Abbonati</a>
+      <div class="burger" aria-label="Menu"><i></i><i></i><i></i></div>
+    </div>
+  </div>
+</nav>

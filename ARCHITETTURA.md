@@ -171,8 +171,27 @@ Mantenere la riconoscibilità (logo, energia sportiva) modernizzando l'esecuzion
 
 ---
 
-## 12. Decisioni aperte
+## 12. Media, video e performance
 
+I video **non** vengono versionati nel repo né serviti dall'hosting del sito: risiedono su infrastruttura dedicata AWS. Questo tiene il repo leggero e sfrutta una CDN pensata per lo streaming.
+
+- **Storage + delivery:** file su **Amazon S3**, serviti tramite **CloudFront** (CDN). Mai servire il bucket S3 direttamente (niente cache edge, più latenza, più costi di egress).
+- **CORS:** configurare la policy CORS sul bucket, perché i video sono su dominio diverso dal sito (Netlify).
+- **Preconnect:** aggiungere `<link rel="preconnect">` verso il dominio CloudFront per anticipare la connessione e migliorare l'LCP.
+- **Formati:** per l'hero (loop breve, muto) basta MP4 + WebM statici. Per contenuti lunghi (showreel, drone, corsi) usare **HLS adaptive** — il progetto Astro ha già `hls.js` tra le dipendenze.
+- **Controllo costi egress** (CloudFront ~0,085 $/GB): compressione, cache lunga, poster-first, autoplay disattivato su `prefers-reduced-motion` e reti lente.
+
+**Immagini:** gestite invece da Astro (`astro:assets`) con output responsive in `webp/avif`. Font self-hosted e subsettati (non Google Fonts in produzione).
+
+Effetto atteso sulle performance: Core Web Vitals in verde per costruzione (zero JS di base, layout stabile), con Lighthouse mobile stimato ~92–99 sulla versione ottimizzata.
+
+**Alternativa** (se non si vuole gestire encoding/config AWS): servizi gestiti come Mux, Cloudflare Stream o Bunny Stream fanno encoding, adaptive e poster in automatico.
+
+---
+
+## 13. Decisioni aperte
+
+- [x] Hosting video: **AWS S3 + CloudFront** (HLS per i contenuti lunghi). ✔
 - [ ] Conferma nomi e indirizzi ufficiali dei **4 centri** (in particolare il 4°).
 - [ ] URL di iscrizione **PerfectGym** per centro/piano.
 - [ ] La **prevendita** richiede pagamento gestito dal sito (Stripe) o è solo raccolta lead?

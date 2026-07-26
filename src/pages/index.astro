@@ -1,0 +1,167 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.data.ordine);
+const discipline = (await getCollection('discipline')).sort((a, b) => a.data.ordine - b.data.ordine);
+
+const piani = [
+  { nome: 'Base', prezzo: 39, hot: false, voci: ['Accesso sala pesi', 'Zona cardio', '2 corsi di gruppo / sett.', 'Spogliatoi'] },
+  { nome: 'Plus · Più scelto', prezzo: 59, hot: true, voci: ['Tutto di Base', 'Corsi illimitati', 'Accesso a tutti i centri', 'App di prenotazione', '1 sessione PT / mese'] },
+  { nome: 'Premium', prezzo: 89, hot: false, voci: ['Tutto di Plus', 'Piscina & SPA', 'PT illimitato', 'Piano nutrizionale'] },
+];
+---
+
+<Layout>
+  <Header />
+
+  <header class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div class="hero-video">
+          <video autoplay muted loop playsinline preload="metadata" poster="/media/hero-poster.jpg">
+            <source src="/media/lume-hero.mp4" type="video/mp4" />
+          </video>
+          <div class="hero-chip"><b></b>Lume Fitness Club</div>
+          <div class="hero-vcap">▶ Showreel</div>
+        </div>
+        <div class="hero-copy">
+          <span class="label">Benessere a 360°</span>
+          <h1 class="d">Illumina<br />la tua <em>forza</em></h1>
+          <p>Quattro centri nelle Marche. Attrezzature d’élite, discipline per ogni obiettivo e uno staff che ti segue passo dopo passo.</p>
+          <div class="hero-cta">
+            <a href="/#abbonamenti" class="btn btn-red btn-full">Inizia ora</a>
+            <a href="/centri" class="btn btn-out btn-full">Scopri i centri</a>
+          </div>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>4</b><span>Centri</span></div>
+        <div class="stat"><b>600<em>+</em></b><span>Iscritti</span></div>
+        <div class="stat"><b>4.97</b><span>Recensioni</span></div>
+        <div class="stat"><b>{discipline.length}<em>+</em></b><span>Discipline</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="sec band">
+    <div class="wrap about">
+      <div>
+        <span class="label">Chi siamo</span>
+        <h2 class="d">Più di una palestra.<br />Un modo di stare bene.</h2>
+        <p>Lume Fitness Club nasce per rendere l’allenamento un’esperienza completa: corpo, mente ed energia. Sale ampie e luminose, tecnologia Technogym, corsi in licenza Les Mills, piscina e Reformer Pilates.</p>
+        <p>Ogni centro ha la sua identità, ma un unico standard: qualità, cura e risultati concreti.</p>
+        <a href="/centri" class="btn btn-out" style="margin-top:12px">I nostri centri</a>
+      </div>
+      <div class="about-imgs">
+        <img class="tall" src="/media/gym1.jpg" alt="Sala pesi Lume" />
+        <img src="/media/reformer.jpg" alt="Reformer Pilates" style="height:180px" />
+        <img src="/media/gym2.jpg" alt="Area functional" style="height:180px" />
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="centri">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">I centri</span>
+        <h2 class="d">Quattro case, una sola energia</h2>
+        <p>Trova il centro Lume più vicino a te. Ognuno con le sue sale, i suoi corsi e il suo carattere.</p>
+      </div>
+      <div class="grid4">
+        {centri.map((c) => (
+          <a class={`centro ${c.data.stato === 'aperto' ? '' : 'soon'}`} href={`/centri/${c.slug}`}>
+            {c.data.stato === 'aperto' && c.data.immagine && (
+              <img src={c.data.immagine} alt={c.data.nome} />
+            )}
+            <span class={`badge ${c.data.stato === 'aperto' ? 'open' : 'wait'}`}>
+              {c.data.stato === 'aperto' ? 'Aperto' : 'Prossima apertura'}
+            </span>
+            <div class="centro-in">
+              <h3>{c.data.nome.replace('Lume ', '')}</h3>
+              <p>{c.data.servizi.slice(0, 4).join(' · ')}</p>
+              <div class="lnk">{c.data.stato === 'aperto' ? 'Scopri →' : 'Iscriviti alla prevendita →'}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec band" id="discipline">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="label">Discipline</span>
+        <h2 class="d">Allenati come vuoi</h2>
+        <p>Dalla forza al benessere in acqua: scegli il tuo percorso tra le nostre discipline.</p>
+      </div>
+      <div class="grid3">
+        {discipline.map((d) => (
+          <a class="card-d" href={`/discipline/${d.slug}`}>
+            {d.data.immagine && <img src={d.data.immagine} alt={d.data.nome} />}
+            <div class="card-d-in">
+              <span>{d.data.categoria}</span>
+              <h3>{d.data.nome}</h3>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="abbonamenti">
+    <div class="wrap">
+      <div class="sec-head center" style="margin-left:auto;margin-right:auto">
+        <span class="label">Abbonamenti</span>
+        <h2 class="d">Scegli il tuo piano</h2>
+        <p>Attivazione rapida e gestione diretta dal portale PerfectGym.</p>
+      </div>
+      <div class="plans">
+        {piani.map((p) => (
+          <div class={`plan ${p.hot ? 'hot' : ''}`}>
+            <div class="pn">{p.nome}</div>
+            <div class="pr">{p.prezzo}<small>/mese</small></div>
+            <ul>{p.voci.map((v) => <li>{v}</li>)}</ul>
+            <a href="#" class={`btn ${p.hot ? 'btn-red' : 'btn-out'} btn-full`}>Iscriviti</a>
+          </div>
+        ))}
+      </div>
+      <p class="pg-note">Il pagamento e la gestione dell’abbonamento avvengono in modo sicuro tramite <b>PerfectGym</b>.</p>
+    </div>
+  </section>
+
+  <section class="sec" id="prevendita" style="padding-top:0">
+    <div class="wrap">
+      <div class="promo">
+        <div>
+          <span class="label" style="color:#fff">Prevendita attiva</span>
+          <h2 class="d" style="margin-top:12px">I nuovi centri stanno arrivando</h2>
+          <p>Blocca la tariffa lancio per Piediripa e Urban. Posti limitati.</p>
+        </div>
+        <a href="#" class="btn btn-cream btn-full" style="max-width:340px">Accedi alla prevendita</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec band" id="wiki">
+    <div class="wrap wiki">
+      <div>
+        <span class="label">Wiki Lume</span>
+        <h2 class="d">Tutte le risposte, in un posto</h2>
+        <p>Orari, regolamenti, guide agli allenamenti e domande frequenti. La knowledge base di Lume, sempre aggiornata.</p>
+        <a href="#" class="btn btn-out">Apri la Wiki</a>
+      </div>
+      <div class="wiki-vis">
+        <div class="q">🔍 Cerca nella wiki…</div>
+        <div class="row">Come prenoto un corso <span>→</span></div>
+        <div class="row">Orari e chiusure <span>→</span></div>
+        <div class="row">Regolamento piscina <span>→</span></div>
+        <div class="row">Congelare l’abbonamento <span>→</span></div>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>
