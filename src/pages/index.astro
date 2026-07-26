@@ -72,7 +72,7 @@ const piani = [
       </div>
       <div class="grid4">
         {centri.map((c) => (
-          <a class={`centro ${c.data.stato === 'aperto' ? '' : 'soon'}`} href={`/centri/${c.slug}`}>
+          <a class={`centro ${c.data.stato === 'aperto' ? '' : 'soon'}`} href={`/centri/${c.id}`}>
             {c.data.stato === 'aperto' && c.data.immagine && (
               <img src={c.data.immagine} alt={c.data.nome} />
             )}
@@ -99,7 +99,7 @@ const piani = [
       </div>
       <div class="grid3">
         {discipline.map((d) => (
-          <a class="card-d" href={`/discipline/${d.slug}`}>
+          <a class="card-d" href={`/discipline/${d.id}`}>
             {d.data.immagine && <img src={d.data.immagine} alt={d.data.nome} />}
             <div class="card-d-in">
               <span>{d.data.categoria}</span>

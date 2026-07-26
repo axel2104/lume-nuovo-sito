@@ -1,8 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind 4 — token brand (CSS-first) */
+@theme {
+  --color-bg: #0a0a0a;
+  --color-surface: #111111;
+  --color-card: #161616;
+  --color-line: #262626;
+  --color-brand: #C40042;
+  --color-brand-dark: #D7272A;
+  --color-cream: #F5F3EA;
+  --color-ink: #f4f4f4;
+  --color-mut: #9a9a9a;
+  --font-display: "Anton", sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
 
 /* ============================================================
    LUMe Fitness Club — Design System

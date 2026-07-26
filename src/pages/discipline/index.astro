@@ -18,7 +18,7 @@ const discipline = (await getCollection('discipline')).sort((a, b) => a.data.ord
       </div>
       <div class="grid3">
         {discipline.map((d) => (
-          <a class="card-d" href={`/discipline/${d.slug}`}>
+          <a class="card-d" href={`/discipline/${d.id}`}>
             {d.data.immagine && <img src={d.data.immagine} alt={d.data.nome} />}
             <div class="card-d-in">
               <span>{d.data.categoria}</span>

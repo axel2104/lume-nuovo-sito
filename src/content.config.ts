@@ -1,8 +1,9 @@
 import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 
 // ─── Centri ──────────────────────────────────────────────────────────────
 const centri = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.md', base: './src/content/centri' }),
   schema: z.object({
     nome: z.string(),
     citta: z.string(),
@@ -35,7 +36,7 @@ const centri = defineCollection({
 
 // ─── Discipline / attività ───────────────────────────────────────────────
 const discipline = defineCollection({
-  type: 'content',
+  loader: glob({ pattern: '**/*.md', base: './src/content/discipline' }),
   schema: z.object({
     nome: z.string(),
     categoria: z.string(),

@@ -2,19 +2,19 @@
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
   const discipline = await getCollection('discipline');
-  return discipline.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+  return discipline.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
 }
 
 const { entry } = Astro.props;
 const d = entry.data;
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 
 const centri = await getCollection('centri');
-const disponibile = centri.filter((c) => d.centri.includes(c.slug));
+const disponibile = centri.filter((c) => d.centri.includes(c.id));
 const livelli = [1, 2, 3, 4, 5];
 ---
 
@@ -47,7 +47,7 @@ const livelli = [1, 2, 3, 4, 5];
               <span class="label">Dove praticarla</span>
               <div class="chips" style="margin-top:12px">
                 {disponibile.map((c) => (
-                  <a class="chip" href={`/centri/${c.slug}`}>{c.data.nome.replace('Lume ', '')}</a>
+                  <a class="chip" href={`/centri/${c.id}`}>{c.data.nome.replace('Lume ', '')}</a>
                 ))}
               </div>
             </div>
