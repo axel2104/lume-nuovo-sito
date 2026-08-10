@@ -1,9 +1,14 @@
 import { defineConfig } from 'astro/config';
-import tailwindcss from '@tailwindcss/vite';
+import react from '@astrojs/react';
+import netlify from '@astrojs/netlify';
+import keystatic from '@keystatic/astro';
 
 // Hosting: Netlify.
-// Output statico. Quando aggiungeremo i form server-side (prevendita/waitlist,
-// check-member) passeremo a output: 'server' con l'adapter @astrojs/netlify.
+//
+// Il sito resta pre-renderizzato pagina per pagina: l'adapter serve solo perché
+// Keystatic ha bisogno di due rotte eseguite sul server (l'editor e il suo
+// endpoint OAuth). Tutto il resto continua a essere HTML statico servito dalla
+// CDN, quindi le performance non cambiano.
 //
 // `site` guida canonical, og:url e sitemap, e va scelto in base al contesto:
 //  - produzione  -> URL, l'indirizzo pulito del sito
@@ -18,7 +23,6 @@ const site =
 
 export default defineConfig({
   site,
-  vite: {
-    plugins: [tailwindcss()],
-  },
+  adapter: netlify(),
+  integrations: [react(), keystatic()],
 });

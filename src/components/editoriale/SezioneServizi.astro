@@ -1,15 +1,20 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import IconaServizio from './IconaServizio.astro';
-import { richtext } from '../../lib/richtext';
 
 const servizi = (await getCollection('servizi', ({ data }) => data.pubblicato)).sort(
   (a, b) => a.data.ordine - b.data.ordine,
 );
+
+// Il testo del pannello è il corpo Markdown del file: lo rendiamo qui, una
+// volta sola, invece di passarlo come stringa a un mini-renderer.
+const conTesto = await Promise.all(
+  servizi.map(async (s) => ({ s, Content: (await render(s)).Content })),
+);
 ---
 
 {
-  servizi.length > 0 && (
+  conTesto.length > 0 && (
     <section class="sec" id="servizi">
       <div class="wrap">
         <div class="sec-head">
@@ -22,7 +27,7 @@ const servizi = (await getCollection('servizi', ({ data }) => data.pubblicato)).
         </div>
 
         <div class="srv-grid">
-          {servizi.map((s) => (
+          {conTesto.map(({ s, Content }) => (
             <details class="srv-card">
               <summary>
                 <IconaServizio id={s.data.icona} />
@@ -30,7 +35,9 @@ const servizi = (await getCollection('servizi', ({ data }) => data.pubblicato)).
                 <span>{s.data.breve}</span>
                 <em aria-hidden="true">+</em>
               </summary>
-              <div class="srv-det" set:html={richtext(s.data.dettaglio)} />
+              <div class="srv-det">
+                <Content />
+              </div>
               {s.data.href && (
                 <a class="ed-more" href={s.data.href}>
                   Scopri di più

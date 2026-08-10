@@ -1,41 +1,10 @@
 /**
- * Mini-renderer per i campi stringa multi-paragrafo (es. `dettaglio` dei servizi).
+ * Piccoli helper di formattazione condivisi dalle pagine editoriali.
  *
- * Non serve una libreria Markdown completa: qui il contratto è volutamente
- * minimo — paragrafi separati da riga vuota, grassetto con **doppi asterischi**.
- * L'input viene sempre escapato prima di essere trasformato, così il campo resta
- * sicuro anche se un domani a compilarlo sarà un CMS.
+ * Qui c'era anche un mini-renderer Markdown per il campo `dettaglio` dei
+ * servizi. Non serve più: quel testo è diventato il corpo Markdown del file,
+ * quindi lo rende Astro con il parser vero. Restano le date.
  */
-
-function escapeHtml(testo: string): string {
-  return testo
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-export function paragrafi(testo: string | undefined | null): string[] {
-  if (!testo) return [];
-  return testo
-    .split(/\n\s*\n/)
-    .map((p) => p.trim())
-    .filter(Boolean);
-}
-
-/** Converte un paragrafo in HTML: escape + **grassetto** + a capo singoli. */
-export function inline(testo: string): string {
-  return escapeHtml(testo)
-    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-    .replace(/\n/g, '<br />');
-}
-
-/** Testo completo → HTML pronto per `set:html`. */
-export function richtext(testo: string | undefined | null): string {
-  return paragrafi(testo)
-    .map((p) => `<p>${inline(p)}</p>`)
-    .join('');
-}
 
 /** Data in italiano esteso, es. "12 settembre 2026". */
 export function dataEstesa(d: Date): string {

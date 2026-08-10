@@ -1,20 +1,43 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap');
-@import "tailwindcss";
 
-/* Tailwind 4 — token brand (CSS-first) */
-@theme {
-  --color-bg: #0a0a0a;
-  --color-surface: #111111;
-  --color-card: #161616;
-  --color-line: #262626;
-  --color-brand: #C40042;
-  --color-brand-dark: #D7272A;
-  --color-cream: #F5F3EA;
-  --color-ink: #f4f4f4;
-  --color-mut: #9a9a9a;
-  --font-display: "Anton", sans-serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+/* ============================================================
+   Reset di base
+   Sostituisce il preflight di Tailwind, che era l'unica cosa che
+   Tailwind faceva davvero qui: nessuna utility era in uso e i token
+   di @theme non erano referenziati da nessuno, perche' i colori veri
+   stanno in :root piu' sotto. Tolto Tailwind, il reset va riscritto a
+   mano o headings, liste e campi form cambiano aspetto.
+   (Rimuoverlo ha anche sciolto un conflitto fra @tailwindcss/vite e
+   @astrojs/react che faceva fallire la build su Astro 7.2.)
+   ============================================================ */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+html { line-height: 1.5; -webkit-text-size-adjust: 100%; tab-size: 4; }
+body { margin: 0; line-height: inherit; }
+h1, h2, h3, h4, h5, h6 { font-size: inherit; font-weight: inherit; margin: 0; }
+p, figure, blockquote, dl, dd, pre { margin: 0; }
+ol, ul, menu { list-style: none; margin: 0; padding: 0; }
+a { color: inherit; text-decoration: inherit; }
+b, strong { font-weight: bolder; }
+button, input, optgroup, select, textarea {
+  font: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: 0 solid;
 }
+button, [type='button'], [type='submit'] { -webkit-appearance: button; cursor: pointer; }
+:disabled { cursor: default; }
+img, svg, video, canvas, iframe { display: block; vertical-align: middle; }
+img, video { max-width: 100%; height: auto; }
+textarea { resize: vertical; }
+::placeholder { opacity: 1; }
+summary { display: list-item; }
+table { border-collapse: collapse; }
+hr { height: 0; color: inherit; border-top-width: 1px; }
+[hidden] { display: none !important; }
 
 /* ============================================================
    LUMe Fitness Club — Design System
