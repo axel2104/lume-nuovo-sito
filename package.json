@@ -13,6 +13,8 @@
   "dependencies": {
     "@astrojs/netlify": "^8.2.0",
     "@astrojs/react": "^6.0.2",
+    "@fontsource/anton": "^5.3.0",
+    "@fontsource/inter": "^5.3.0",
     "@keystatic/astro": "^5.2.0",
     "@keystatic/core": "^0.6.4",
     "astro": "^7.1.3",

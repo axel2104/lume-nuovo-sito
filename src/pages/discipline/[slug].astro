@@ -32,10 +32,13 @@ const simili = (await getCollection('discipline'))
   <Header />
   <section class="sec" style="padding-top:0">
     <div class="wrap">
-      <div class:list={["disc-hero", { "senza-media": !d.video && !d.immagine }]} data-cat={d.categoria}>
+      <div
+        class:list={['disc-hero', { 'senza-media': !d.video && !d.immagine }]}
+        data-cat={d.categoria}
+      >
         {
           d.video ? (
-            <video autoplay muted loop playsinline poster={d.immagine}>
+            <video autoplay muted loop playsinline poster={d.immagine ?? undefined}>
               <source src={d.video} type="video/mp4" />
             </video>
           ) : (
@@ -48,92 +51,117 @@ const simili = (await getCollection('discipline'))
         </div>
       </div>
 
-      <div class="disc-body">
-        <div>
-          <p class="lead">{d.breve}</p>
-          <div class="prose"><Content /></div>
-
-          {
-            disponibile.length > 0 && (
-              <div style="margin-top:26px">
-                <span class="label">Dove praticarla</span>
-                <div class="chips" style="margin-top:12px">
-                  {disponibile.map((c) => (
-                    <a class="chip" href={`/centri/${c.id}`}>
-                      {c.data.nome.replace('Lume ', '')}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )
-          }
+      {/*
+        Tutto ciò che sta qui dentro viene riusato: la griglia bento della
+        pagina Discipline scarica questa pagina e mostra questo frammento nel
+        pannello che si apre sotto la tessera. Se aggiungi qualcosa fuori da
+        `data-pannello`, nel pannello non comparirà.
+      */}
+      <div data-pannello data-cat={d.categoria}>
+        <div class="pan-testa">
+          <span class="label">{d.categoria}</span>
+          <h2 class="d">{d.nome}</h2>
         </div>
 
-        <aside class="disc-meta">
-          {
-            haIndicatori && (
-              <>
-                {d.difficolta != null && (
-                  <div class="meter-row">
-                    <span>Difficoltà</span>
-                    <div class="meter">
-                      {livelli.map((n) => <i class={n <= (d.difficolta ?? 0) ? 'on' : ''} />)}
-                    </div>
-                  </div>
-                )}
-                {d.intensita != null && (
-                  <div class="meter-row">
-                    <span>Intensità</span>
-                    <div class="meter">
-                      {livelli.map((n) => <i class={n <= (d.intensita ?? 0) ? 'on' : ''} />)}
-                    </div>
-                  </div>
-                )}
-                {d.durata != null && (
-                  <div class="meter-row">
-                    <span>Durata</span>
-                    <b>{d.durata} min</b>
-                  </div>
-                )}
-              </>
-            )
-          }
+        <div class="disc-body">
+          <div>
+            <p class="lead">{d.breve}</p>
+            <div class="prose"><Content /></div>
 
-          {
-            d.varianti.length > 0 && (
-              <div class="varianti">
-                <span class="label">Livelli e varianti</span>
-                <ul>
-                  {d.varianti.map((v) => (
-                    <li>
-                      <b>{v.nome}</b>
-                      {v.nota && <span>{v.nota}</span>}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )
-          }
+            {
+              disponibile.length > 0 && (
+                <div style="margin-top:26px">
+                  <span class="label">Dove praticarla</span>
+                  <div class="chips" style="margin-top:12px">
+                    {disponibile.map((c) => (
+                      <a class="chip" href={`/centri/${c.id}/`}>
+                        {c.data.nome.replace('Lume ', '')}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )
+            }
+          </div>
 
-          <button type="button" class="btn btn-red btn-full" data-open-modal="modal-contatti">
-            Prova {d.nome}
-          </button>
-          <a href="/#abbonamenti" class="btn btn-out btn-full" style="margin-top:10px">Vedi gli abbonamenti</a>
-        </aside>
+          <aside class="disc-meta">
+            {
+              haIndicatori && (
+                <>
+                  {d.difficolta != null && (
+                    <div class="meter-row">
+                      <span>Difficoltà</span>
+                      <div class="meter">
+                        {livelli.map((n) => <i class={n <= (d.difficolta ?? 0) ? 'on' : ''} />)}
+                      </div>
+                    </div>
+                  )}
+                  {d.intensita != null && (
+                    <div class="meter-row">
+                      <span>Intensità</span>
+                      <div class="meter">
+                        {livelli.map((n) => <i class={n <= (d.intensita ?? 0) ? 'on' : ''} />)}
+                      </div>
+                    </div>
+                  )}
+                  {d.durata != null && (
+                    <div class="meter-row">
+                      <span>Durata</span>
+                      <b>{d.durata} min</b>
+                    </div>
+                  )}
+                </>
+              )
+            }
+
+            {
+              d.varianti.length > 0 && (
+                <div class="varianti">
+                  <span class="label">Livelli e varianti</span>
+                  <ul>
+                    {d.varianti.map((v) => (
+                      <li>
+                        <b>{v.nome}</b>
+                        {v.nota && <span>{v.nota}</span>}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            }
+
+            <button type="button" class="btn btn-red btn-full" data-open-modal="modal-contatti">
+              Prova {d.nome}
+            </button>
+            {/* Visibile solo dentro il pannello: sulla pagina saremmo già qui. */}
+            <a class="btn btn-out btn-full solo-pannello" href={`/discipline/${entry.id}/`}>
+              Apri la scheda intera
+            </a>
+            <a href="/#abbonamenti" class="btn btn-out btn-full" style="margin-top:10px">
+              Vedi gli abbonamenti
+            </a>
+          </aside>
+        </div>
       </div>
 
       {
         simili.length > 0 && (
           <div style="margin-top:56px">
             <span class="label">{d.categoria}</span>
-            <div class="grid3" style="margin-top:16px">
+            <div class="bento" style="margin-top:16px">
               {simili.map((s) => (
-                <a class="card-d" href={`/discipline/${s.id}`} data-cat={s.data.categoria}>
-                  {s.data.immagine && <img src={s.data.immagine} alt={s.data.nome} />}
-                  <div class="card-d-in">
-                    <span>{s.data.categoria}</span>
-                    <h3>{s.data.nome}</h3>
-                  </div>
+                <a
+                  class:list={['tessera', s.data.rilievo === 'grande' ? 'largo' : s.data.rilievo]}
+                  href={`/discipline/${s.id}/`}
+                  data-cat={s.data.categoria}
+                >
+                  <span class="t-cat">{s.data.categoria}</span>
+                  <h3>{s.data.nome}</h3>
+                  {s.data.varianti.length > 0 && (
+                    <div class="t-meta">
+                      <span class="t-var">+{s.data.varianti.length} varianti</span>
+                    </div>
+                  )}
                 </a>
               ))}
             </div>
@@ -146,27 +174,50 @@ const simili = (await getCollection('discipline'))
 </Layout>
 
 <style>
-  .disc-hero.senza-media{min-height:26vh}
-  .disc-hero{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--line);min-height:46vh;display:flex;align-items:flex-end;margin-top:18px;background:#0f0f0f}
-  .disc-hero img,.disc-hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  .disc-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.2),rgba(10,10,10,.9))}
-  .disc-hero-in{position:relative;z-index:2;padding:26px}
-  .disc-hero-in h1{font-size:clamp(38px,8vw,74px);margin-top:10px}
-  .disc-body{display:grid;grid-template-columns:1fr;gap:28px;margin-top:28px}
-  .lead{font-size:19px;color:#e6e6e6}
-  .prose{color:#c2c2c2;font-size:16px;margin-top:12px}
-  .prose :global(p){margin:0 0 16px}
-  .prose :global(strong){color:#fff}
-  .disc-meta{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;height:fit-content}
-  .meter-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
-  .meter-row span{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
-  .meter{display:flex;gap:6px}
-  .meter i{width:22px;height:8px;border-radius:4px;background:#2a2a2a;display:block}
-  .meter i.on{background:var(--red)}
-  .varianti{margin-bottom:20px}
-  .varianti ul{list-style:none;padding:0;margin:12px 0 0}
-  .varianti li{padding:10px 0;border-bottom:1px solid var(--line)}
-  .varianti li b{display:block;font-size:14px;color:#ececec;font-weight:600}
-  .varianti li span{display:block;font-size:12.5px;color:var(--mut);margin-top:2px;line-height:1.45}
-  @media(min-width:900px){ .disc-body{grid-template-columns:1.6fr .8fr;gap:44px} }
+  .disc-hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 46vh;
+    margin-top: 18px;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    overflow: hidden;
+    background:
+      radial-gradient(90% 130% at 10% 0%, rgba(var(--tinta), 0.34), transparent 60%),
+      linear-gradient(160deg, #1a1a1a, #0c0c0c);
+  }
+  .disc-hero.senza-media {
+    min-height: 30vh;
+  }
+  .disc-hero img,
+  .disc-hero video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .disc-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.09) 1px, transparent 0);
+    background-size: 24px 24px;
+    opacity: 0.4;
+  }
+  .disc-hero:has(img)::after,
+  .disc-hero:has(video)::after {
+    background: linear-gradient(180deg, rgba(10, 10, 10, 0.2), rgba(10, 10, 10, 0.9));
+    opacity: 1;
+  }
+  .disc-hero-in {
+    position: relative;
+    z-index: 2;
+    padding: 30px;
+  }
+  .disc-hero-in h1 {
+    margin-top: 10px;
+    font-size: clamp(38px, 8vw, 74px);
+  }
 </style>

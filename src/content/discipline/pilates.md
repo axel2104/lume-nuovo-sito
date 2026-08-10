@@ -3,6 +3,7 @@ nome: "Pilates"
 categoria: "Mente & corpo"
 breve: "Il metodo classico a corpo libero, su più livelli, dal Base all'Avanzato."
 centri: [macerata, montecassiano]
+rilievo: largo
 ordine: 19
 varianti:
   - nome: "Pilates Base"

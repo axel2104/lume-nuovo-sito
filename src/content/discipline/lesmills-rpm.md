@@ -3,6 +3,7 @@ nome: "LesMills RPM"
 categoria: "Cardio & resistenza"
 breve: "Indoor cycling di gruppo: pianure, salite e sprint guidati dalla musica."
 centri: [macerata, montecassiano]
+rilievo: largo
 ordine: 10
 varianti:
   - nome: "RPM VIRTUAL"

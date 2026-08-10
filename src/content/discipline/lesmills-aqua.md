@@ -3,6 +3,7 @@ nome: "LesMills Aqua"
 categoria: "Acqua"
 breve: "I programmi Les Mills in vasca: mix forza e cardio, in tre formati."
 centri: [montecassiano]
+rilievo: grande
 ordine: 33
 varianti:
   - nome: "Aquadynamic"

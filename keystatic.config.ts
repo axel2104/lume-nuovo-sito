@@ -150,6 +150,17 @@ export default config({
           description: 'Segna le schede scritte in bozza. Non compare sul sito.',
           defaultValue: false,
         }),
+        rilievo: fields.select({
+          label: 'Peso nella griglia',
+          description:
+            'Quanto spazio occupa la tessera nella pagina Discipline. Usa "grande" con parsimonia: se sono grandi tutte, non lo è nessuna.',
+          options: [
+            { label: 'Normale', value: 'normale' },
+            { label: 'Largo (doppia colonna)', value: 'largo' },
+            { label: 'Grande (doppia colonna e doppia riga)', value: 'grande' },
+          ],
+          defaultValue: 'normale',
+        }),
         ordine: fields.integer({
           label: 'Ordine',
           description: 'Più basso = più in alto negli elenchi.',

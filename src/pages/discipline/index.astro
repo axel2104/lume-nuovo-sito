@@ -15,6 +15,8 @@ const categorie = [...new Set(discipline.map((d) => d.data.categoria))];
 const centri = (await getCollection('centri', ({ data }) => data.stato === 'aperto')).sort(
   (a, b) => a.data.ordine - b.data.ordine,
 );
+const nomeCentro = (id: string) =>
+  centri.find((c) => c.id === id)?.data.nome.replace('Lume ', '') ?? id;
 ---
 
 <Layout
@@ -29,7 +31,8 @@ const centri = (await getCollection('centri', ({ data }) => data.stato === 'aper
         <h2 class="d">Allenati come vuoi</h2>
         <p>
           {discipline.length} attività fra corsi di gruppo, funzionale, mente e corpo, Reformer e
-          acqua fitness. Filtra per tipo o per centro e apri la scheda che ti interessa.
+          acqua fitness. Filtra per tipo o per centro, e apri una tessera per leggerne la scheda
+          senza perdere il posto.
         </p>
       </div>
 
@@ -50,21 +53,29 @@ const centri = (await getCollection('centri', ({ data }) => data.stato === 'aper
         </div>
       </div>
 
-      <div class="grid3" id="disc-grid">
+      <div class="bento" id="disc-bento">
         {
           discipline.map((d) => (
             <a
-              class="card-d"
-              href={`/discipline/${d.id}`}
+              class:list={['tessera', d.data.rilievo]}
+              href={`/discipline/${d.id}/`}
               data-cat={d.data.categoria}
               data-centri={d.data.centri.join(' ')}
+              data-titolo={d.data.nome}
+              aria-expanded="false"
             >
-              {d.data.immagine && <img src={d.data.immagine} alt={d.data.nome} />}
-              <div class="card-d-in">
-                <span>{d.data.categoria}</span>
-                <h3>{d.data.nome}</h3>
+              <span class="t-cat">{d.data.categoria}</span>
+              <span class="t-piu" aria-hidden="true">
+                +
+              </span>
+              <h3>{d.data.nome}</h3>
+              {d.data.rilievo === 'grande' && <p class="t-breve">{d.data.breve}</p>}
+              <div class="t-meta">
+                {d.data.centri.map((c) => (
+                  <span>{nomeCentro(c)}</span>
+                ))}
                 {d.data.varianti.length > 0 && (
-                  <em class="card-var">+{d.data.varianti.length} varianti</em>
+                  <span class="t-var">+{d.data.varianti.length} varianti</span>
                 )}
               </div>
             </a>
@@ -81,23 +92,30 @@ const centri = (await getCollection('centri', ({ data }) => data.stato === 'aper
 </Layout>
 
 <script>
-  const griglia = document.getElementById('disc-grid');
+  import { initPannelli } from '../../lib/pannelloEspandibile.client.js';
+
+  const griglia = document.getElementById('disc-bento');
   const vuoto = document.getElementById('disc-vuoto');
 
   if (griglia) {
-    const card = Array.from(griglia.querySelectorAll<HTMLElement>('.card-d'));
+    const pannelli = initPannelli(griglia, { selettoreCella: '.tessera' });
+
+    const tessere = Array.from(griglia.querySelectorAll<HTMLElement>('.tessera'));
     const bottoniCat = Array.from(document.querySelectorAll<HTMLElement>('.hd-f[data-cat]'));
     const bottoniCentro = Array.from(document.querySelectorAll<HTMLElement>('.hd-f[data-centro]'));
     let categoria = '';
     let centro = '';
 
     const applica = () => {
+      // Un pannello aperto su una tessera che sta per sparire resterebbe
+      // orfano in mezzo alla griglia: prima si chiude.
+      pannelli?.chiudi();
       let visibili = 0;
-      card.forEach((c) => {
-        const okCat = !categoria || c.dataset.cat === categoria;
-        const okCentro = !centro || (c.dataset.centri || '').split(' ').includes(centro);
+      tessere.forEach((t) => {
+        const okCat = !categoria || t.dataset.cat === categoria;
+        const okCentro = !centro || (t.dataset.centri || '').split(' ').includes(centro);
         const mostra = okCat && okCentro;
-        c.hidden = !mostra;
+        t.hidden = !mostra;
         if (mostra) visibili++;
       });
       if (vuoto) vuoto.hidden = visibili > 0;
@@ -125,5 +143,9 @@ const centri = (await getCollection('centri', ({ data }) => data.stato === 'aper
     display: grid;
     gap: 10px;
     margin-bottom: 28px;
+  }
+  /* Una tessera nascosta dai filtri non deve occupare la sua cella di griglia. */
+  .tessera[hidden] {
+    display: none;
   }
 </style>

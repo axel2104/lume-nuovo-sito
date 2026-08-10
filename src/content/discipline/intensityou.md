@@ -3,6 +3,7 @@ nome: "IntensitYOU"
 categoria: "Funzionale & atletico"
 breve: "Il circuito funzionale firmato Lume, in tre declinazioni a seconda di cosa vuoi allenare."
 centri: [macerata, montecassiano]
+rilievo: grande
 ordine: 3
 varianti:
   - nome: "IntensitYOU Power"

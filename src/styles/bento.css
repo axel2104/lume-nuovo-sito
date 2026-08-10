@@ -1,0 +1,372 @@
+/* ============================================================
+   Griglia bento + pannello espandibile
+   Usata dalla pagina Discipline; il pannello è generico e servirà
+   anche al planning orario.
+   ============================================================ */
+
+/* Tinta per categoria. Le tessere non hanno foto: il colore e la sfumatura
+   sono l'unico segnale visivo che distingue una famiglia dall'altra. */
+.bento,
+.disc-hero {
+  --tinta: 196, 0, 66;
+}
+[data-cat='Forza & tono'] { --tinta: 228, 87, 46; }
+[data-cat='Cardio & resistenza'] { --tinta: 232, 163, 61; }
+[data-cat='Combat'] { --tinta: 215, 39, 42; }
+[data-cat='Mente & corpo'] { --tinta: 140, 90, 200; }
+[data-cat='Reformer & postura'] { --tinta: 78, 143, 217; }
+[data-cat='Danza'] { --tinta: 210, 60, 140; }
+[data-cat='Acqua'] { --tinta: 31, 165, 184; }
+
+.bento {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.tessera {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 176px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform 0.28s, border-color 0.28s, box-shadow 0.28s;
+}
+/* Fondo: sfumatura di categoria + trama a puntini, per dare materia a una
+   superficie che altrimenti sarebbe un rettangolo nero. */
+.tessera::before,
+.tessera::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.tessera::before {
+  background:
+    radial-gradient(120% 100% at 15% 0%, rgba(var(--tinta), 0.3), transparent 62%),
+    linear-gradient(160deg, #191919, #0c0c0c);
+}
+.tessera::after {
+  opacity: 0.35;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.1) 1px, transparent 0);
+  background-size: 22px 22px;
+}
+.tessera > * {
+  position: relative;
+  z-index: 1;
+}
+.tessera:hover {
+  transform: translateY(-4px);
+  border-color: rgba(var(--tinta), 0.85);
+  box-shadow: 0 18px 50px -20px rgba(var(--tinta), 0.65);
+}
+.tessera:focus-visible {
+  outline: 2px solid rgb(var(--tinta));
+  outline-offset: 3px;
+}
+.tessera.is-aperta {
+  border-color: rgb(var(--tinta));
+  box-shadow: 0 0 0 1px rgb(var(--tinta)), 0 18px 50px -22px rgba(var(--tinta), 0.7);
+}
+
+.tessera .t-cat {
+  margin-bottom: auto;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgb(var(--tinta));
+}
+.tessera h3 {
+  margin-top: 20px;
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 23px;
+  line-height: 0.98;
+}
+.tessera .t-breve {
+  margin-top: 10px;
+  max-width: 44ch;
+  color: #c9c9c9;
+  font-size: 14.5px;
+}
+.tessera .t-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+.tessera .t-meta span {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-size: 10.5px;
+  letter-spacing: 0.05em;
+  color: #a5a5a5;
+}
+.tessera .t-meta .t-var {
+  border-color: rgba(var(--tinta), 0.55);
+  color: rgb(var(--tinta));
+}
+/* Freccia che ruota quando la tessera è quella aperta. */
+.tessera .t-piu {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  display: grid;
+  place-items: center;
+  font-size: 15px;
+  color: #bdbdbd;
+  transition: 0.28s;
+}
+.tessera:hover .t-piu {
+  border-color: rgb(var(--tinta));
+  color: rgb(var(--tinta));
+}
+.tessera.is-aperta .t-piu {
+  transform: rotate(45deg);
+  border-color: rgb(var(--tinta));
+  color: rgb(var(--tinta));
+}
+
+/* ─── Pannello espandibile ─────────────────────────────────── */
+.pannello {
+  grid-column: 1 / -1;
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: linear-gradient(160deg, #151515, #0d0d0d);
+  padding: 30px 24px 34px;
+  animation: pannello-apri 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+}
+@keyframes pannello-apri {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    max-height: 2000px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pannello {
+    animation: none;
+  }
+  .tessera {
+    transition: none;
+  }
+}
+.pannello:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+.pannello-chiudi {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(10, 10, 10, 0.75);
+  color: #fff;
+  font-size: 21px;
+  line-height: 1;
+  cursor: pointer;
+  transition: 0.18s;
+}
+.pannello-chiudi:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+.pannello-attesa {
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--red), transparent);
+  background-size: 200% 100%;
+  animation: pannello-attesa 1s linear infinite;
+}
+@keyframes pannello-attesa {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* ─── Breakpoint ───────────────────────────────────────────── */
+@media (min-width: 640px) {
+  .bento {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .tessera.largo,
+  .tessera.grande {
+    grid-column: span 2;
+  }
+  .pannello {
+    padding: 34px 32px 38px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bento {
+    grid-template-columns: repeat(4, 1fr);
+    /* `dense` fa risalire le tessere piccole nei buchi lasciati da quelle
+       grandi: senza, la griglia resta piena di celle vuote. */
+    grid-auto-flow: row dense;
+  }
+  .tessera {
+    min-height: 200px;
+  }
+  .tessera.largo {
+    grid-column: span 2;
+  }
+  .tessera.grande {
+    grid-column: span 2;
+    grid-row: span 2;
+    min-height: 414px;
+  }
+  .tessera.grande h3 {
+    font-size: clamp(30px, 3vw, 46px);
+  }
+  .tessera.largo h3 {
+    font-size: 28px;
+  }
+  .pannello {
+    padding: 40px 44px 46px;
+  }
+}
+
+/* ============================================================
+   Corpo della scheda disciplina
+   Sta qui e non nella pagina perché lo stesso markup viene iniettato
+   a runtime dentro il pannello: gli stili con scope di Astro non lo
+   raggiungerebbero, essendo generato dopo la build.
+   ============================================================ */
+.pan-testa,
+.solo-pannello {
+  display: none;
+}
+/* Titolo e link "scheda intera" hanno senso solo dentro il pannello:
+   sulla pagina il titolo è già nell'hero e il link punterebbe a sé stesso. */
+.pannello .pan-testa {
+  display: block;
+  margin-bottom: 22px;
+}
+.pannello .pan-testa h2 {
+  margin-top: 10px;
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: clamp(30px, 4.4vw, 52px);
+  line-height: 0.95;
+}
+.pannello .solo-pannello {
+  display: inline-flex;
+  margin-top: 10px;
+}
+
+.disc-body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  margin-top: 28px;
+}
+.pannello .disc-body {
+  margin-top: 0;
+}
+.lead {
+  font-size: 19px;
+  color: #e6e6e6;
+}
+.prose {
+  margin-top: 12px;
+  color: #c2c2c2;
+  font-size: 16px;
+}
+.prose p {
+  margin: 0 0 16px;
+}
+.prose strong {
+  color: #fff;
+}
+.disc-meta {
+  height: fit-content;
+  padding: 22px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+.meter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.meter-row span {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mut);
+}
+.meter {
+  display: flex;
+  gap: 6px;
+}
+.meter i {
+  display: block;
+  width: 22px;
+  height: 8px;
+  border-radius: 4px;
+  background: #2a2a2a;
+}
+.meter i.on {
+  background: rgb(var(--tinta, 196, 0, 66));
+}
+.varianti {
+  margin-bottom: 20px;
+}
+.varianti ul {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+.varianti li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.varianti li b {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #ececec;
+}
+.varianti li span {
+  display: block;
+  margin-top: 2px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--mut);
+}
+
+@media (min-width: 900px) {
+  .disc-body {
+    grid-template-columns: 1.6fr 0.8fr;
+    gap: 44px;
+  }
+}

@@ -3,6 +3,7 @@ nome: "Yoga"
 categoria: "Mente & corpo"
 breve: "Sequenze lente, respiro e meditazione per calmare la mente e trovare equilibrio."
 centri: [macerata, montecassiano]
+rilievo: largo
 ordine: 22
 varianti:
   - nome: "Yoga Hatha"

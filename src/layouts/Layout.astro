@@ -1,7 +1,18 @@
 ---
+// Font self-hostati invece di Google Fonts: una richiesta esterna in meno che
+// blocca il rendering, e nessuna dipendenza da un dominio terzo per la
+// tipografia, che in questo design è la grafica.
+import '@fontsource/anton/400.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '@fontsource/inter/800.css';
+
 import '../styles/global.css';
 import '../styles/leadform.css';
 import '../styles/editoriale.css';
+import '../styles/bento.css';
 import { siteConfig, consensoGestito } from '../config/site';
 import ModalContatti from '../components/ModalContatti.astro';
 

@@ -3,6 +3,7 @@ nome: "Boxing Hero"
 categoria: "Combat"
 breve: "I fondamenti della boxe in circuito, sacchi ad acqua compresi. Nessuna esperienza richiesta."
 centri: [macerata]
+rilievo: grande
 ordine: 13
 ---
 

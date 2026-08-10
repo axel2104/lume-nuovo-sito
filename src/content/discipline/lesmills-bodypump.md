@@ -3,6 +3,7 @@ nome: "LesMills BodyPump"
 categoria: "Forza & tono"
 breve: "Bilanciere e ripetizioni alte: resistenza muscolare, definizione e densità ossea."
 centri: [macerata, montecassiano]
+rilievo: largo
 ordine: 6
 varianti:
   - nome: "BodyPump VIRTUAL"

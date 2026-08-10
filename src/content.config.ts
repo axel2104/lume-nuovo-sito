@@ -70,6 +70,12 @@ const discipline = defineCollection({
       .default([]),
     /** Testo scritto da noi, non ancora validato dallo staff. Non appare sul sito. */
     daRivedere: z.boolean().default(false),
+    /**
+     * Peso della tessera nella griglia bento della pagina Discipline.
+     * Deciso in redazione e non dal codice: è l'unico modo per dare rilievo
+     * ai corsi che contano davvero invece che a quelli capitati per primi.
+     */
+    rilievo: z.enum(['normale', 'largo', 'grande']).default('normale'),
     ordine: z.number().default(99),
   }),
 });
