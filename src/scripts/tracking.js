@@ -163,7 +163,24 @@
     vidCorrente = vid;
   }
 
-  // ─── Beacon di visita (opzionale) ───────────────────────────────────────
+  // ─── Ping di pageview (opzionale) ───────────────────────────────────────
+  /**
+   * Fire-and-forget: un ping per pageview, con il vid che permette di
+   * ricucire lato database gli accessi con i lead.
+   *
+   * Il content-type DEVE essere `text/plain;charset=UTF-8`, mai
+   * `application/json`. sendBeacon invia sempre le credenziali: con un
+   * content-type non CORS-safelisted il browser fa un preflight che fallisce
+   * se il webhook non risponde `Access-Control-Allow-Credentials: true`, e la
+   * richiesta vera non parte mai. Nessun errore in console, nessun dato al
+   * server. `text/plain` e' safelisted: niente preflight, la richiesta parte
+   * sempre come "semplice".
+   *
+   * Il body resta JSON: e' il webhook che deve fare JSON.parse() sul testo
+   * grezzo, perche' non gli arriva con Content-Type application/json.
+   */
+  var TIPO_BEACON = 'text/plain;charset=UTF-8';
+
   function inviaBeacon() {
     if (!WEBHOOK_VISIT) return;
     var body = JSON.stringify({
@@ -174,11 +191,11 @@
     });
     try {
       if (navigator.sendBeacon) {
-        navigator.sendBeacon(WEBHOOK_VISIT, new Blob([body], { type: 'application/json' }));
+        navigator.sendBeacon(WEBHOOK_VISIT, new Blob([body], { type: TIPO_BEACON }));
       } else {
         fetch(WEBHOOK_VISIT, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': TIPO_BEACON },
           body: body,
           keepalive: true,
         }).catch(function () {});
