@@ -163,10 +163,23 @@ const simili = (await getCollection('discipline'))
             <div class="bento" style="margin-top:16px">
               {simili.map((s) => (
                 <a
-                  class:list={['tessera', s.data.rilievo === 'grande' ? 'largo' : s.data.rilievo]}
+                  class="tessera"
                   href={`/discipline/${s.id}/`}
                   data-cat={s.data.categoria}
+                  data-video={s.data.video || undefined}
                 >
+                  {s.data.immagine && (
+                    <Picture
+                      class="t-foto"
+                      src={s.data.immagine}
+                      alt=""
+                      widths={[400, 800]}
+                      sizes="(min-width:1024px) 25vw, 100vw"
+                      loading="lazy"
+                      formats={['avif', 'webp']}
+                    />
+                  )}
+                  <span class="t-velo" aria-hidden="true" />
                   <span class="t-cat">{s.data.categoria}</span>
                   <h3>{s.data.nome}</h3>
                   {s.data.varianti.length > 0 && (
@@ -186,6 +199,11 @@ const simili = (await getCollection('discipline'))
 </Layout>
 
 <script>
-  import { avviaVideoHero } from '../../lib/anteprimaVideo.client.js';
+  import { avviaVideoHero, initAnteprimeVideo } from '../../lib/anteprimaVideo.client.js';
+
   avviaVideoHero(document);
+
+  // Anche le correlate in fondo alla scheda hanno l'anteprima al passaggio.
+  const correlate = document.querySelector('.bento');
+  if (correlate) initAnteprimeVideo(correlate, { selettoreCella: '.tessera' });
 </script>

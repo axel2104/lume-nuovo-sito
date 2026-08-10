@@ -3,6 +3,7 @@ nome: "LesMills SHAPES"
 categoria: "Mente & corpo"
 breve: "Pilates, body sculpt e power yoga in 45 minuti a impatto debole."
 centri: [macerata, montecassiano]
+rilievo: alto
 ordine: 17
 varianti:
   - nome: "Power Pilates + Power Yoga"

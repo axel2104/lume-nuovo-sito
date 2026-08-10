@@ -3,7 +3,7 @@ nome: "Spartan System"
 categoria: "Funzionale & atletico"
 breve: "Corpo libero che pesca da jiu-jitsu, capoeira, yoga, pilates, lotta e calisthenics."
 centri: [macerata]
-rilievo: largo
+rilievo: alto
 ordine: 4
 ---
 

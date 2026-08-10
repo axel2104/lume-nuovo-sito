@@ -3,6 +3,7 @@ nome: "Sala attrezzi"
 categoria: "Forza & tono"
 breve: "Isotoniche, pesi liberi e cardio Technogym, con i tecnici sempre in sala."
 centri: [macerata, montecassiano]
+immagine: ../../assets/discipline/gym-floor.jpg
 ordine: 8
 daRivedere: true
 ---

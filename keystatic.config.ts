@@ -156,9 +156,11 @@ export default config({
           description:
             'Quanto spazio occupa la tessera nella pagina Discipline. Usa "grande" con parsimonia: se sono grandi tutte, non lo è nessuna.',
           options: [
-            { label: 'Normale', value: 'normale' },
-            { label: 'Largo (doppia colonna)', value: 'largo' },
-            { label: 'Grande (doppia colonna e doppia riga)', value: 'grande' },
+            { label: 'Normale — un riquadro', value: 'normale' },
+            { label: 'Alto — due righe', value: 'alto' },
+            { label: 'Largo — due colonne', value: 'largo' },
+            { label: 'Panoramico — tre colonne', value: 'panoramico' },
+            { label: 'Grande — due colonne per due righe', value: 'grande' },
           ],
           defaultValue: 'normale',
         }),

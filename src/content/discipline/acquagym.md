@@ -3,6 +3,7 @@ nome: "AcquaGYM"
 categoria: "Acqua"
 breve: "Il classico dell'acqua fitness: tonificazione a corpo libero, articolazioni scaricate."
 centri: [montecassiano]
+rilievo: largo
 ordine: 31
 daRivedere: true
 ---

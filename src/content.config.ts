@@ -78,7 +78,9 @@ const discipline = defineCollection({
      * Deciso in redazione e non dal codice: è l'unico modo per dare rilievo
      * ai corsi che contano davvero invece che a quelli capitati per primi.
      */
-    rilievo: z.enum(['normale', 'largo', 'grande']).default('normale'),
+    rilievo: z
+      .enum(['normale', 'alto', 'largo', 'panoramico', 'grande'])
+      .default('normale'),
     ordine: z.number().default(99),
   }),
 });

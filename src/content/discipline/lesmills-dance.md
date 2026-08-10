@@ -3,6 +3,7 @@ nome: "LesMills DANCE"
 categoria: "Danza"
 breve: "Il dancefloor come allenamento: cardio e tonicità senza accorgertene."
 centri: [macerata, montecassiano]
+rilievo: largo
 ordine: 26
 ---
 

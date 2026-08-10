@@ -3,6 +3,8 @@ nome: "Walking"
 categoria: "Cardio & resistenza"
 breve: "Cammino su tappeto meccanico a intensità variabile, scandito dalla musica."
 centri: [macerata, montecassiano]
+immagine: ../../assets/discipline/walking.jpg
+rilievo: alto
 ordine: 12
 ---
 

@@ -3,6 +3,7 @@ nome: "AcquaBIKE"
 categoria: "Acqua"
 breve: "Pedalata in vasca: lavoro intenso sulle gambe e massaggio drenante naturale."
 centri: [montecassiano]
+rilievo: alto
 ordine: 28
 daRivedere: true
 ---
