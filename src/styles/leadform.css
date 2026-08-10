@@ -449,6 +449,13 @@ textarea.lf-in {
   border-color: var(--red);
   color: var(--red);
 }
+/* All'apertura il browser mette il fuoco sul primo elemento focusabile:
+   senza questo l'anello di default stona con la palette. */
+.lf-close:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+  border-color: var(--red);
+}
 
 /* ─── Inline ───────────────────────────────────────────────── */
 .lf-inline {
