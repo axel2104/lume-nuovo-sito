@@ -3,7 +3,7 @@ titolo: La nuova sala Reformer di Montecassiano
 data: 2026-07-28
 categoria: centri
 sintesi: Otto postazioni nuove, luce naturale e classi da massimo otto persone. Ecco com'è andata la prima settimana.
-immagine: /media/reformer.jpg
+immagine: ../../assets/news/nuova-sala-reformer.jpg
 immagineAlt: Sala Reformer Pilates con macchine allineate
 autore: Staff Lume
 centri: [montecassiano]

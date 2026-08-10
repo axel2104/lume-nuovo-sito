@@ -17,7 +17,7 @@ servizi:
   - "Piscina & Acqua fitness"
   - "Sale Les Mills"
   - "Scuola nuoto bambini"
-immagine: /media/gym2.jpg
+immagine: ../../assets/centri/macerata.jpg
 perfectgymUrl: "#"
 planning: []
 ---

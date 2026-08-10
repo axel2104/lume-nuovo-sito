@@ -3,7 +3,7 @@ titolo: Come scegliere l'abbonamento giusto
 data: 2026-06-15
 categoria: novita
 sintesi: Tre domande da farsi prima di scegliere, per non pagare quello che non userai.
-immagine: /media/gym1.jpg
+immagine: ../../assets/news/scegliere-abbonamento.jpg
 immagineAlt: Sala pesi del centro Lume di Macerata
 autore: Staff Lume
 pubblicato: true

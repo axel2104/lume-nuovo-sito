@@ -1,4 +1,5 @@
 ---
+import { Picture } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
@@ -20,7 +21,13 @@ const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.
         {centri.map((c) => (
           <a class={`centro ${c.data.stato === 'aperto' ? '' : 'soon'}`} href={`/centri/${c.id}`}>
             {c.data.stato === 'aperto' && c.data.immagine && (
-              <img src={c.data.immagine} alt={c.data.nome} />
+              <Picture
+                src={c.data.immagine}
+                alt={c.data.nome}
+                widths={[400, 800, 1200]}
+                sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw"
+                formats={['avif', 'webp']}
+              />
             )}
             <span class={`badge ${c.data.stato === 'aperto' ? 'open' : 'wait'}`}>
               {c.data.stato === 'aperto' ? 'Aperto' : 'Prossima apertura'}

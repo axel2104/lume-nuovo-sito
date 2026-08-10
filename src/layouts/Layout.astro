@@ -19,22 +19,25 @@ import ModalContatti from '../components/ModalContatti.astro';
 // Lo script di tracciamento è un file a sé (lintabile, versionabile) ma va
 // iniettato inline in <head>: deve girare prima di GTM, non dopo un bundle.
 import trackingSrc from '../scripts/tracking.js?raw';
+import ogPredefinita from '../assets/pagine/og-default.jpg';
+import type { ImageMetadata } from 'astro';
 
 interface Props {
   title?: string;
   description?: string;
-  image?: string;
+  /** Stringa per i file in public/, oggetto immagine per quelli importati da src/. */
+  image?: string | ImageMetadata;
 }
 
 const {
   title = 'LUMe Fitness Club — Benessere a 360°',
   description = 'Lume Fitness Club: quattro centri nelle Marche. Attrezzature d’élite, discipline per ogni obiettivo e uno staff che ti segue passo dopo passo.',
-  image = '/media/gym2.jpg',
+  image = ogPredefinita,
 } = Astro.props;
 
 const base = Astro.site ?? new URL('https://www.lumefitness.it');
 const canonical = new URL(Astro.url.pathname, base).toString();
-const ogImage = new URL(image, base).toString();
+const ogImage = new URL(typeof image === 'string' ? image : image.src, base).toString();
 
 const clientConfig = {
   webhookCheck: siteConfig.webhookCheck,

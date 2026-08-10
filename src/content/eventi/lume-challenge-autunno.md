@@ -6,7 +6,7 @@ categoria: challenge
 descrizione: "Sfida a squadre miste fra i centri Lume: sei workout, un pomeriggio, una classifica sola. Aperta a tutti i livelli."
 luogo: Lume Macerata
 centro: macerata
-immagine: /media/crossfit.jpg
+immagine: ../../assets/eventi/challenge.jpg
 postiLimitati: true
 pubblicato: true
 ---

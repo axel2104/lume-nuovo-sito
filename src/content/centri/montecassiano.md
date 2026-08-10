@@ -16,7 +16,7 @@ servizi:
   - "Piscina & Scuola nuoto"
   - "Spogliatoi moderni"
   - "Parcheggio gratuito"
-immagine: /media/gym1.jpg
+immagine: ../../assets/centri/montecassiano.jpg
 perfectgymUrl: "#"
 planning: []
 ---

@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { getCollection } from 'astro:content';
+import { Picture } from 'astro:assets';
 
 const discipline = (await getCollection('discipline')).sort(
   (a, b) => a.data.ordine - b.data.ordine,
@@ -64,6 +65,17 @@ const nomeCentro = (id: string) =>
               data-titolo={d.data.nome}
               aria-expanded="false"
             >
+              {d.data.immagine && (
+                <Picture
+                  class="t-foto"
+                  src={d.data.immagine}
+                  alt=""
+                  widths={[400, 800, 1200]}
+                  sizes="(min-width:1024px) 25vw, (min-width:640px) 50vw, 100vw"
+                  loading="lazy"
+                  formats={['avif', 'webp']}
+                />
+              )}
               <span class="t-cat">{d.data.categoria}</span>
               <span class="t-piu" aria-hidden="true">
                 +

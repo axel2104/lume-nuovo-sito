@@ -1,4 +1,8 @@
 ---
+import { Picture } from 'astro:assets';
+import salaPesi from '../assets/pagine/sala-pesi.jpg';
+import reformerFoto from '../assets/pagine/reformer.jpg';
+import functional from '../assets/pagine/functional.jpg';
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -65,9 +69,12 @@ const piani = [
         <a href="/centri" class="btn btn-out" style="margin-top:12px">I nostri centri</a>
       </div>
       <div class="about-imgs">
-        <img class="tall" src="/media/gym1.jpg" alt="Sala pesi Lume" />
-        <img src="/media/reformer.jpg" alt="Reformer Pilates" style="height:180px" />
-        <img src="/media/gym2.jpg" alt="Area functional" style="height:180px" />
+        <Picture class="tall" src={salaPesi} alt="Sala pesi Lume" widths={[500, 1000]} sizes="(min-width:1024px) 40vw, 100vw" formats={['avif', 'webp']}
+      />
+        <Picture src={reformerFoto} alt="Reformer Pilates" widths={[300, 600]} sizes="20vw" style="height:180px" formats={['avif', 'webp']}
+      />
+        <Picture src={functional} alt="Area functional" widths={[300, 600]} sizes="20vw" style="height:180px" formats={['avif', 'webp']}
+      />
       </div>
     </div>
   </section>
@@ -83,7 +90,8 @@ const piani = [
         {centri.map((c) => (
           <a class={`centro ${c.data.stato === 'aperto' ? '' : 'soon'}`} href={`/centri/${c.id}`}>
             {c.data.stato === 'aperto' && c.data.immagine && (
-              <img src={c.data.immagine} alt={c.data.nome} />
+              <Picture src={c.data.immagine} alt={c.data.nome} widths={[400, 800]} sizes="(min-width:1024px) 25vw, 100vw" formats={['avif', 'webp']}
+            />
             )}
             <span class={`badge ${c.data.stato === 'aperto' ? 'open' : 'wait'}`}>
               {c.data.stato === 'aperto' ? 'Aperto' : 'Prossima apertura'}
@@ -109,7 +117,10 @@ const piani = [
       <div class="grid3">
         {vetrina.map((d) => (
           <a class="card-d" href={`/discipline/${d.id}`} data-cat={d.data.categoria}>
-            {d.data.immagine && <img src={d.data.immagine} alt={d.data.nome} />}
+            {d.data.immagine && (
+              <Picture src={d.data.immagine} alt={d.data.nome} widths={[400, 800]} sizes="(min-width:1024px) 25vw, 100vw" formats={['avif', 'webp']}
+            />
+            )}
             <div class="card-d-in">
               <span>{d.data.categoria}</span>
               <h3>{d.data.nome}</h3>

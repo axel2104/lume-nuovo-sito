@@ -6,7 +6,7 @@ categoria: masterclass
 descrizione: Due ore di lavoro su respirazione, allineamento e controllo del core, guidate da una delle istruttrici più esperte del circuito.
 luogo: Lume Montecassiano
 centro: montecassiano
-immagine: /media/reformer.jpg
+immagine: ../../assets/eventi/masterclass-reformer.jpg
 postiLimitati: true
 pubblicato: true
 ---

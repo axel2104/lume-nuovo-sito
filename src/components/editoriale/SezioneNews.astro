@@ -1,4 +1,5 @@
 ---
+import { Picture } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import { categorieNews, etichetta } from '../../data/tassonomie';
 import { dataEstesa } from '../../lib/richtext';
@@ -30,7 +31,14 @@ const elenco = limite > 0 ? tutte.slice(0, limite) : tutte;
           {elenco.map((n) => (
             <a class="ed-card" href={`/lume-life/news/${n.id}`}>
               <div class="ed-thumb">
-                <img src={n.data.immagine} alt={n.data.immagineAlt} loading="lazy" decoding="async" />
+                <Picture
+                  src={n.data.immagine}
+                  alt={n.data.immagineAlt}
+                  widths={[400, 800]}
+                  sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw"
+                  loading="lazy"
+                  formats={['avif', 'webp']}
+                />
               </div>
               <div class="ed-body">
                 <span class="ed-meta">

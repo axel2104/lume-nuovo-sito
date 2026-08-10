@@ -11,7 +11,10 @@ import {
 // ─── Centri ──────────────────────────────────────────────────────────────
 const centri = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/centri' }),
-  schema: z.object({
+  // `image()` risolve il percorso relativo in metadati veri (dimensioni,
+  // formato): è ciò che permette ad Astro di generare le varianti e di
+  // scrivere width/height, evitando il salto di layout al caricamento.
+  schema: ({ image }) => z.object({
     nome: z.string(),
     citta: z.string(),
     stato: z.enum(['aperto', 'prevendita', 'prossima-apertura']),
@@ -27,7 +30,7 @@ const centri = defineCollection({
     // in quali centri si tiene (campo `centri`), ed è quella l'unica fonte.
     // Una seconda lista qui divergerebbe al primo corso aggiunto.
     servizi: z.array(z.string()).default([]),
-    immagine: z.string().nullish(),
+    immagine: image().nullish(),
     perfectgymUrl: z.string().default('#'),
     // Planning virtuale per sede (lo costruiamo insieme in seguito)
     planning: z
@@ -46,7 +49,7 @@ const centri = defineCollection({
 // ─── Discipline / attività ───────────────────────────────────────────────
 const discipline = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/discipline' }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     nome: z.string(),
     categoria: z.string(),
     // Difficoltà, intensità e durata non esistono in PerfectGym: sono tutti
@@ -56,7 +59,7 @@ const discipline = defineCollection({
     intensita: z.number().min(1).max(5).nullish(),
     durata: z.number().nullish(), // minuti
     breve: z.string(), // descrizione breve
-    immagine: z.string().nullish(),
+    immagine: image().nullish(),
     video: z.string().nullish(), // video loop (AWS S3/CloudFront)
     centri: z.array(z.string()).default([]),
     /**
@@ -84,12 +87,15 @@ const discipline = defineCollection({
 // Il corpo Markdown del file è il testo dell'articolo.
 const news = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/news' }),
-  schema: z.object({
+  // `image()` risolve il percorso relativo in metadati veri (dimensioni,
+  // formato): è ciò che permette ad Astro di generare le varianti e di
+  // scrivere width/height, evitando il salto di layout al caricamento.
+  schema: ({ image }) => z.object({
     titolo: z.string(),
     data: z.coerce.date(),
     categoria: z.enum(idDi(categorieNews)),
     sintesi: z.string(), // anteprima nella card
-    immagine: z.string(),
+    immagine: image(),
     immagineAlt: z.string(),
     autore: z.string().nullish(),
     /** Slug dei centri a cui la news si riferisce. Vuoto = riguarda tutti. */
@@ -105,7 +111,10 @@ const news = defineCollection({
 // ─── Eventi ──────────────────────────────────────────────────────────────
 const eventi = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/eventi' }),
-  schema: z.object({
+  // `image()` risolve il percorso relativo in metadati veri (dimensioni,
+  // formato): è ciò che permette ad Astro di generare le varianti e di
+  // scrivere width/height, evitando il salto di layout al caricamento.
+  schema: ({ image }) => z.object({
     titolo: z.string(),
     data: z.coerce.date(),
     ora: z.string().nullish(), // es. "18:30"
@@ -114,7 +123,7 @@ const eventi = defineCollection({
     luogo: z.string().nullish(),
     /** Slug del centro che ospita l'evento. */
     centro: z.string().nullish(),
-    immagine: z.string().nullish(),
+    immagine: image().nullish(),
     iscrizioniHref: z.string().nullish(),
     postiLimitati: z.boolean().default(false),
     pubblicato: z.boolean().default(true),

@@ -45,8 +45,8 @@ function corpo(label = 'Testo') {
     extension: 'md',
     options: {
       image: {
-        directory: 'public/media/contenuti',
-        publicPath: '/media/contenuti/',
+        directory: 'src/assets/contenuti',
+        publicPath: '../../assets/contenuti/',
       },
     },
   });
@@ -118,8 +118,8 @@ export default config({
         }),
         immagine: fields.image({
           label: 'Foto del corso',
-          directory: 'public/media/discipline',
-          publicPath: '/media/discipline/',
+          directory: 'src/assets/discipline',
+          publicPath: '../../assets/discipline/',
           validation: { isRequired: false },
         }),
         video: fields.text({
@@ -208,8 +208,8 @@ export default config({
         }),
         immagine: fields.image({
           label: 'Foto del centro',
-          directory: 'public/media/centri',
-          publicPath: '/media/centri/',
+          directory: 'src/assets/centri',
+          publicPath: '../../assets/centri/',
           validation: { isRequired: false },
         }),
         perfectgymUrl: fields.text({
@@ -250,8 +250,8 @@ export default config({
         }),
         immagine: fields.image({
           label: 'Immagine di copertina',
-          directory: 'public/media/news',
-          publicPath: '/media/news/',
+          directory: 'src/assets/news',
+          publicPath: '../../assets/news/',
           validation: { isRequired: true },
         }),
         immagineAlt: fields.text({
@@ -304,8 +304,8 @@ export default config({
         centro: fields.relationship({ label: 'Centro che ospita', collection: 'centri' }),
         immagine: fields.image({
           label: 'Immagine',
-          directory: 'public/media/eventi',
-          publicPath: '/media/eventi/',
+          directory: 'src/assets/eventi',
+          publicPath: '../../assets/eventi/',
           validation: { isRequired: false },
         }),
         iscrizioniHref: fields.text({

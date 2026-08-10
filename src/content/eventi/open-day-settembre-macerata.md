@@ -6,7 +6,7 @@ categoria: open-day
 descrizione: "Giornata a porte aperte: prova tutti i corsi a calendario, visita il centro e parla con gli istruttori. Ingresso libero."
 luogo: Lume Macerata
 centro: macerata
-immagine: /media/gym2.jpg
+immagine: ../../assets/eventi/open-day.jpg
 postiLimitati: false
 pubblicato: true
 ---

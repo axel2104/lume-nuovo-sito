@@ -4,6 +4,7 @@ categoria: "Reformer & postura"
 breve: "Il pilates sulle macchine Reformer: controllo del core, forza e postura."
 centri: [macerata, montecassiano]
 rilievo: grande
+immagine: ../../assets/discipline/reformer.jpg
 ordine: 24
 varianti:
   - nome: "Reformer Intermedio"

@@ -23,6 +23,13 @@ const site =
 
 export default defineConfig({
   site,
+  // Le immagini le ridimensiona e converte il CDN di Netlify, su richiesta e
+  // in cache. Misurato su 13 foto: con questa opzione la build dura 8 secondi,
+  // pre-generando tutto con sharp (`netlify({ imageCDN: false })`) ne dura 25 e
+  // produce 49 file di varianti. Con un CMS dove ogni salvataggio fa una build,
+  // e con una fototeca destinata a crescere, la differenza conta.
+  // Rovescio della medaglia: le varianti esistono solo su Netlify, quindi per
+  // vedere le foto in locale si usa `npm run dev`, non il contenuto di dist.
   adapter: netlify(),
   integrations: [react(), keystatic()],
 });
