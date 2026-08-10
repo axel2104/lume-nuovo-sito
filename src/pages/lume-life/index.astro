@@ -1,0 +1,59 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import SezioneEventi from '../../components/editoriale/SezioneEventi.astro';
+import SezioneNews from '../../components/editoriale/SezioneNews.astro';
+import SezioneHelpdesk from '../../components/editoriale/SezioneHelpdesk.astro';
+import SezioneServizi from '../../components/editoriale/SezioneServizi.astro';
+---
+
+<Layout
+  title="Lume Life — eventi, news e servizi | LUMe Fitness Club"
+  description="La vita dei centri Lume: prossimi eventi, novità dai club, servizi e risposte alle domande più frequenti."
+>
+  <Header />
+
+  <main>
+    <section class="sec">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">Lume Life</span>
+          <h2 class="d">Il club non è solo allenarsi</h2>
+          <p>
+            Eventi, novità dai centri, servizi e risposte pratiche. Tutto quello che succede attorno
+            alla sala, in un posto solo.
+          </p>
+        </div>
+
+        <nav class="ll-nav" aria-label="Sezioni di Lume Life">
+          <a href="#eventi">Eventi</a>
+          <a href="#news">News</a>
+          <a href="#servizi">Servizi</a>
+          <a href="#help">Help desk</a>
+        </nav>
+      </div>
+    </section>
+
+    <SezioneEventi />
+    <SezioneNews />
+    <SezioneServizi />
+    <SezioneHelpdesk />
+
+    <section class="sec">
+      <div class="wrap">
+        <div class="promo">
+          <div>
+            <h2 class="d">Non trovi quello che cerchi?</h2>
+            <p>Scrivici o fatti richiamare: rispondiamo a tutti, davvero.</p>
+          </div>
+          <button type="button" class="btn btn-cream" data-open-modal="modal-contatti">
+            Contattaci
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

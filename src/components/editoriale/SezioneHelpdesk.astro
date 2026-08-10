@@ -1,0 +1,113 @@
+---
+import { getCollection } from 'astro:content';
+import { categorieHelpdesk } from '../../data/tassonomie';
+
+const articoli = (await getCollection('helpdesk', ({ data }) => data.pubblicato)).sort(
+  (a, b) => a.data.ordine - b.data.ordine || a.data.titolo.localeCompare(b.data.titolo, 'it'),
+);
+
+// Mostriamo solo le categorie che hanno almeno un articolo.
+const usate = new Set(articoli.map((a) => a.data.categoria));
+const categorie = categorieHelpdesk.filter((c) => usate.has(c.id));
+---
+
+{
+  articoli.length > 0 && (
+    <section class="sec band" id="help">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">Help desk</span>
+          <h2 class="d">Domande frequenti</h2>
+          <p>Le risposte alle cose che ci chiedete più spesso. Se non trovi la tua, scrivici.</p>
+        </div>
+
+        <div class="hd-tools">
+          <input
+            type="search"
+            id="hd-cerca"
+            class="lf-in"
+            placeholder="Cerca una risposta…"
+            aria-label="Cerca fra le domande frequenti"
+          />
+          <div class="hd-filtri" role="group" aria-label="Filtra per categoria">
+            <button type="button" class="hd-f on" data-cat="">
+              Tutte
+            </button>
+            {categorie.map((c) => (
+              <button type="button" class="hd-f" data-cat={c.id}>
+                {c.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div class="hd-grid" id="hd-grid">
+          {articoli.map((a) => (
+            <a
+              class="hd-card"
+              href={`/lume-life/help/${a.id}`}
+              data-cat={a.data.categoria}
+              data-cerca={`${a.data.titolo} ${a.data.sintesi} ${a.data.tags.join(' ')}`.toLowerCase()}
+            >
+              <h3>{a.data.titolo}</h3>
+              <p>{a.data.sintesi}</p>
+              {a.data.tags.length > 0 && (
+                <div class="hd-tags">
+                  {a.data.tags.map((t) => (
+                    <span>{t}</span>
+                  ))}
+                </div>
+              )}
+            </a>
+          ))}
+        </div>
+
+        <p class="ed-vuoto" id="hd-nessuno" hidden>
+          Nessuna risposta per questa ricerca. Prova con un’altra parola, oppure
+          <button type="button" class="ed-link" data-open-modal="modal-contatti">
+            scrivici direttamente
+          </button>
+          .
+        </p>
+      </div>
+    </section>
+  )
+}
+
+<script>
+  // Filtro e ricerca client-side: per qualche decina di articoli già presenti
+  // nel markup non serve nessun backend di ricerca.
+  const griglia = document.getElementById('hd-grid');
+  const campo = document.getElementById('hd-cerca');
+  const vuoto = document.getElementById('hd-nessuno');
+
+  if (griglia && campo instanceof HTMLInputElement) {
+    const card = Array.from(griglia.querySelectorAll<HTMLElement>('.hd-card'));
+    const filtri = Array.from(document.querySelectorAll<HTMLElement>('.hd-f'));
+    let categoria = '';
+
+    const applica = () => {
+      const q = campo.value.trim().toLowerCase();
+      let visibili = 0;
+
+      card.forEach((c) => {
+        const okCat = !categoria || c.dataset.cat === categoria;
+        const okTesto = !q || (c.dataset.cerca || '').includes(q);
+        const mostra = okCat && okTesto;
+        c.hidden = !mostra;
+        if (mostra) visibili++;
+      });
+
+      if (vuoto) vuoto.hidden = visibili > 0;
+    };
+
+    campo.addEventListener('input', applica);
+    filtri.forEach((b) => {
+      b.addEventListener('click', () => {
+        categoria = b.dataset.cat || '';
+        filtri.forEach((x) => x.classList.toggle('on', x === b));
+        applica();
+      });
+    });
+  }
+</script>

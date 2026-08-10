@@ -1,0 +1,109 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import LeadFormInline from '../components/LeadFormInline.astro';
+import { getCollection } from 'astro:content';
+
+const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.data.ordine);
+---
+
+<Layout
+  title="Contatti — LUMe Fitness Club"
+  description="Parla con Lume: fatti richiamare, prenota una visita guidata o scrivici. Quattro centri nelle Marche, uno staff che risponde davvero."
+>
+  <Header />
+
+  <main>
+    <section class="sec">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">Contatti</span>
+          <h2 class="d">Dicci come possiamo aiutarti</h2>
+          <p>
+            Scegli tu: ti richiamiamo noi nel momento che preferisci, ti aspettiamo in sede per una
+            visita guidata, oppure ci scrivi e ti rispondiamo via email.
+          </p>
+        </div>
+
+        <div class="contatti-grid">
+          <LeadFormInline />
+
+          <aside class="contatti-side">
+            {
+              centri.map((c) => (
+                <div class="info-card">
+                  <h4>{c.data.nome}</h4>
+                  {c.data.indirizzo && <p class="ci-riga">{c.data.indirizzo}</p>}
+                  {c.data.telefono && (
+                    <p class="ci-riga">
+                      <a href={`tel:${c.data.telefono.replace(/\s/g, '')}`}>{c.data.telefono}</a>
+                    </p>
+                  )}
+                  {c.data.email && (
+                    <p class="ci-riga">
+                      <a href={`mailto:${c.data.email}`}>{c.data.email}</a>
+                    </p>
+                  )}
+                  {c.data.orari && (
+                    <p class="ci-orari">
+                      Lun–Ven {c.data.orari.feriali} · Sab {c.data.orari.sabato} · Dom{' '}
+                      {c.data.orari.domenica}
+                    </p>
+                  )}
+                  {c.data.stato !== 'aperto' && <span class="ci-soon">Prossima apertura</span>}
+                </div>
+              ))
+            }
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .contatti-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .contatti-side {
+    display: grid;
+    gap: 12px;
+  }
+  .ci-riga {
+    font-size: 14px;
+    color: #ddd;
+    margin: 0 0 4px;
+  }
+  .ci-riga a:hover {
+    color: var(--red);
+  }
+  .ci-orari {
+    font-size: 12px;
+    color: var(--mut);
+    margin: 10px 0 0;
+  }
+  .ci-soon {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--red);
+    border: 1px solid var(--red);
+    border-radius: 999px;
+    padding: 5px 11px;
+  }
+  @media (min-width: 1024px) {
+    .contatti-grid {
+      grid-template-columns: 1.35fr 0.65fr;
+      gap: 32px;
+    }
+  }
+</style>

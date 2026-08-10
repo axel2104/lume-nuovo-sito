@@ -1,0 +1,80 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { categorieHelpdesk, etichetta } from '../../../data/tassonomie';
+import { dataEstesa } from '../../../lib/richtext';
+
+export async function getStaticPaths() {
+  const articoli = await getCollection('helpdesk', ({ data }) => data.pubblicato);
+  return articoli.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+// Sempre `d.campo`, mai `entry.campo`: i dati stanno sotto `.data`.
+const d = entry.data;
+const { Content } = await render(entry);
+
+const stessaCategoria = (await getCollection('helpdesk', ({ data }) => data.pubblicato))
+  .filter((a) => a.id !== entry.id && a.data.categoria === d.categoria)
+  .slice(0, 4);
+---
+
+<Layout title={`${d.titolo} — Help desk LUMe`} description={d.sintesi}>
+  <Header />
+
+  <main>
+    <article class="sec">
+      <div class="wrap wrap-stretto">
+        <a class="ed-back" href="/lume-life#help">← Tutte le domande</a>
+
+        <header class="art-head">
+          <span class="ed-meta">
+            {etichetta(categorieHelpdesk, d.categoria)} · aggiornato il {dataEstesa(d.aggiornato)}
+          </span>
+          <h1 class="d">{d.titolo}</h1>
+          <p class="art-sub">{d.sintesi}</p>
+        </header>
+
+        <div class="art-body">
+          <Content />
+        </div>
+
+        {
+          d.tags.length > 0 && (
+            <div class="hd-tags hd-tags-lg">
+              {d.tags.map((t) => (
+                <span>{t}</span>
+              ))}
+            </div>
+          )
+        }
+
+        <div class="hd-ancora">
+          <p>Non hai trovato la risposta?</p>
+          <button type="button" class="btn btn-red" data-open-modal="modal-contatti">
+            Scrivi allo staff
+          </button>
+        </div>
+
+        {
+          stessaCategoria.length > 0 && (
+            <div class="hd-correlati">
+              <h2 class="d">Domande collegate</h2>
+              <ul>
+                {stessaCategoria.map((a) => (
+                  <li>
+                    <a href={`/lume-life/help/${a.id}`}>{a.data.titolo}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </div>
+    </article>
+  </main>
+
+  <Footer />
+</Layout>

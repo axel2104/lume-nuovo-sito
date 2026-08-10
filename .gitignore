@@ -4,5 +4,7 @@ dist/
 *.log
 .env
 .env.*
+!.env.example
 .netlify/
 .astro/
+_to_delete/

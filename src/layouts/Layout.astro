@@ -1,15 +1,38 @@
 ---
 import '../styles/global.css';
+import '../styles/leadform.css';
+import '../styles/editoriale.css';
+import { siteConfig, consensoGestito } from '../config/site';
+import ModalContatti from '../components/ModalContatti.astro';
+
+// Lo script di tracciamento è un file a sé (lintabile, versionabile) ma va
+// iniettato inline in <head>: deve girare prima di GTM, non dopo un bundle.
+import trackingSrc from '../scripts/tracking.js?raw';
 
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
 }
 
 const {
   title = 'LUMe Fitness Club — Benessere a 360°',
   description = 'Lume Fitness Club: quattro centri nelle Marche. Attrezzature d’élite, discipline per ogni obiettivo e uno staff che ti segue passo dopo passo.',
+  image = '/media/gym2.jpg',
 } = Astro.props;
+
+const base = Astro.site ?? new URL('https://www.lumefitness.it');
+const canonical = new URL(Astro.url.pathname, base).toString();
+const ogImage = new URL(image, base).toString();
+
+const clientConfig = {
+  webhookCheck: siteConfig.webhookCheck,
+  webhookLead: siteConfig.webhookLead,
+  webhookVisit: siteConfig.webhookVisit,
+  consensoGestito,
+};
+
+const { gtmId, iubendaSiteId, iubendaCookiePolicyId } = siteConfig;
 ---
 
 <!doctype html>
@@ -18,13 +41,112 @@ const {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+
+    <!--
+      1. Consent Mode v2 — DEVE stare prima di qualunque tag Google.
+      Se GTM parte senza questo blocco, Google considera il consenso concesso.
+    -->
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        window.dataLayer.push(arguments);
+      }
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        personalization_storage: 'denied',
+        functionality_storage: 'granted',
+        security_storage: 'granted',
+        wait_for_update: 500,
+      });
+    </script>
+
+    <!-- 2. Configurazione runtime letta dallo script di tracciamento -->
+    <script is:inline define:vars={{ clientConfig }}>
+      window.LUME_CFG = clientConfig;
+    </script>
+
+    <!-- 3. Tracciamento: UTM, visitor id, ponte di consenso -->
+    <script is:inline set:html={trackingSrc}></script>
+
+    <!--
+      4. Iubenda Cookie Solution.
+      `googleConsentMode: false` perché il Consent Mode lo pilotiamo noi dai
+      callback qui sotto: lasciarlo gestire anche a Iubenda significa due
+      sorgenti che scrivono gli stessi cinque segnali.
+    -->
+    {
+      consensoGestito && (
+        <>
+          <script
+            is:inline
+            set:html={`
+var _iub = _iub || [];
+_iub.csConfiguration = {
+  siteId: ${JSON.stringify(iubendaSiteId)},
+  cookiePolicyId: ${JSON.stringify(iubendaCookiePolicyId)},
+  lang: "it",
+  countryDetection: true,
+  perPurposeConsent: true,
+  googleConsentMode: false,
+  banner: {
+    acceptButtonDisplay: true,
+    customizeButtonDisplay: true,
+    rejectButtonDisplay: true,
+    position: "float-bottom-center",
+    closeButtonDisplay: false
+  },
+  callback: {
+    onPreferenceExpressedOrNotNeeded: function (pref) {
+      if (window.lumeConsent) window.lumeConsent.fromIubenda(pref);
+    },
+    onPreferenceExpressed: function (pref) {
+      if (window.lumeConsent) window.lumeConsent.fromIubenda(pref);
+    }
+  }
+};
+`}
+          ></script>
+          <script
+            is:inline
+            async
+            src={`https://cs.iubenda.com/autoblocking/${iubendaSiteId}.js`}
+          ></script>
+          <script is:inline async src="https://cdn.iubenda.com/cs/gpp/stub.js"></script>
+          <script is:inline async src="https://cdn.iubenda.com/cs/iubenda_cs.js" charset="UTF-8"
+          ></script>
+        </>
+      )
+    }
+
+    <!--
+      5. Google Tag Manager. Nessun fallback <noscript>: senza JavaScript il
+      Consent Mode non gira, quindi quell'iframe traccerebbe senza consenso.
+    -->
+    {
+      gtmId && (
+        <script
+          is:inline
+          set:html={`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',${JSON.stringify(gtmId)});`}
+        ></script>
+      )
+    }
+
+    <link rel="canonical" href={canonical} />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="it_IT" />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <slot />
+    <ModalContatti />
   </body>
 </html>

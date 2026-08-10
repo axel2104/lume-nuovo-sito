@@ -1,0 +1,22 @@
+name: Check
+
+# Type-check e build a ogni push: `astro check` intercetta gli errori di tipo
+# nei template (per esempio un meta SEO che legge un campo inesistente e finisce
+# a `undefined`), che altrimenti passano inosservati per settimane.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build:fast

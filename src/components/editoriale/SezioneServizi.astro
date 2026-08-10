@@ -1,0 +1,45 @@
+---
+import { getCollection } from 'astro:content';
+import IconaServizio from './IconaServizio.astro';
+import { richtext } from '../../lib/richtext';
+
+const servizi = (await getCollection('servizi', ({ data }) => data.pubblicato)).sort(
+  (a, b) => a.data.ordine - b.data.ordine,
+);
+---
+
+{
+  servizi.length > 0 && (
+    <section class="sec" id="servizi">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">Servizi</span>
+          <h2 class="d">Oltre l’allenamento</h2>
+          <p>
+            Tutto quello che ruota attorno alla sala: professionisti, convenzioni e servizi pensati
+            per farti stare bene dentro e fuori dal centro.
+          </p>
+        </div>
+
+        <div class="srv-grid">
+          {servizi.map((s) => (
+            <details class="srv-card">
+              <summary>
+                <IconaServizio id={s.data.icona} />
+                <strong>{s.data.titolo}</strong>
+                <span>{s.data.breve}</span>
+                <em aria-hidden="true">+</em>
+              </summary>
+              <div class="srv-det" set:html={richtext(s.data.dettaglio)} />
+              {s.data.href && (
+                <a class="ed-more" href={s.data.href}>
+                  Scopri di più
+                </a>
+              )}
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

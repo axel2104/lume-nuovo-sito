@@ -1,0 +1,88 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { categorieNews, etichetta } from '../../../data/tassonomie';
+import { dataEstesa } from '../../../lib/richtext';
+
+export async function getStaticPaths() {
+  const news = await getCollection('news', ({ data }) => data.pubblicato);
+  return news.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+// I campi vivono sotto `.data`: leggerli da `entry` darebbe undefined, e i meta
+// SEO resterebbero vuoti senza che nessuno se ne accorga.
+const d = entry.data;
+const { Content } = await render(entry);
+
+const correlate = (await getCollection('news', ({ data }) => data.pubblicato))
+  .filter((n) => n.id !== entry.id)
+  .sort((a, b) => b.data.data.getTime() - a.data.data.getTime())
+  .slice(0, 3);
+---
+
+<Layout title={`${d.titolo} — LUMe Fitness Club`} description={d.sintesi} image={d.immagine}>
+  <Header />
+
+  <main>
+    <article class="sec">
+      <div class="wrap">
+        <a class="ed-back" href="/lume-life#news">← Tutte le news</a>
+
+        <header class="art-head">
+          <span class="ed-meta">
+            {etichetta(categorieNews, d.categoria)} · {dataEstesa(d.data)}
+            {d.autore && ` · ${d.autore}`}
+          </span>
+          <h1 class="d">{d.titolo}</h1>
+          <p class="art-sub">{d.sintesi}</p>
+        </header>
+
+        <img class="art-img" src={d.immagine} alt={d.immagineAlt} loading="eager" decoding="async" />
+
+        <div class="art-body">
+          <Content />
+        </div>
+
+        {
+          d.ctaLabel && d.ctaHref && (
+            <a class="btn btn-red art-cta" href={d.ctaHref}>
+              {d.ctaLabel}
+            </a>
+          )
+        }
+      </div>
+    </article>
+
+    {
+      correlate.length > 0 && (
+        <section class="sec band">
+          <div class="wrap">
+            <div class="sec-head">
+              <span class="label">Continua</span>
+              <h2 class="d">Altre news</h2>
+            </div>
+            <div class="ed-grid">
+              {correlate.map((n) => (
+                <a class="ed-card" href={`/lume-life/news/${n.id}`}>
+                  <div class="ed-thumb">
+                    <img src={n.data.immagine} alt={n.data.immagineAlt} loading="lazy" decoding="async" />
+                  </div>
+                  <div class="ed-body">
+                    <span class="ed-meta">{dataEstesa(n.data.data)}</span>
+                    <h3>{n.data.titolo}</h3>
+                    <p>{n.data.sintesi}</p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+  </main>
+
+  <Footer />
+</Layout>

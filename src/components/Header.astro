@@ -3,8 +3,8 @@ const links = [
   { href: '/', label: 'Home' },
   { href: '/centri', label: 'Centri' },
   { href: '/discipline', label: 'Discipline' },
+  { href: '/lume-life', label: 'Lume Life' },
   { href: '/#abbonamenti', label: 'Abbonamenti' },
-  { href: '/#wiki', label: 'Wiki' },
 ];
 ---
 
@@ -15,8 +15,23 @@ const links = [
       {links.map((l) => <a href={l.href}>{l.label}</a>)}
     </div>
     <div class="nav-right">
+      <button type="button" class="btn btn-out nav-cta nav-contatti" data-open-modal="modal-contatti">
+        Contattaci
+      </button>
       <a href="/#abbonamenti" class="btn btn-red nav-cta">Abbonati</a>
       <div class="burger" aria-label="Menu"><i></i><i></i><i></i></div>
     </div>
   </div>
 </nav>
+
+<style>
+  /* Su mobile lo spazio è poco: resta il CTA principale. */
+  .nav-contatti {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .nav-contatti {
+      display: inline-flex;
+    }
+  }
+</style>

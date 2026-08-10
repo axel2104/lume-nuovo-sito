@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+import { categorieNews, etichetta } from '../../data/tassonomie';
+import { dataEstesa } from '../../lib/richtext';
+
+interface Props {
+  /** Quante news mostrare. 0 = tutte. */
+  limite?: number;
+  titolo?: string;
+}
+const { limite = 0, titolo = 'News' } = Astro.props;
+
+const tutte = (await getCollection('news', ({ data }) => data.pubblicato)).sort(
+  (a, b) => b.data.data.getTime() - a.data.data.getTime(),
+);
+const elenco = limite > 0 ? tutte.slice(0, limite) : tutte;
+---
+
+{
+  elenco.length > 0 && (
+    <section class="sec" id="news">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">{titolo}</span>
+          <h2 class="d">Cosa succede in Lume</h2>
+          <p>Aggiornamenti dai centri, consigli dello staff e storie di chi si allena con noi.</p>
+        </div>
+
+        <div class="ed-grid">
+          {elenco.map((n) => (
+            <a class="ed-card" href={`/lume-life/news/${n.id}`}>
+              <div class="ed-thumb">
+                <img src={n.data.immagine} alt={n.data.immagineAlt} loading="lazy" decoding="async" />
+              </div>
+              <div class="ed-body">
+                <span class="ed-meta">
+                  {etichetta(categorieNews, n.data.categoria)} · {dataEstesa(n.data.data)}
+                </span>
+                <h3>{n.data.titolo}</h3>
+                <p>{n.data.sintesi}</p>
+                <span class="ed-more">Leggi</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}

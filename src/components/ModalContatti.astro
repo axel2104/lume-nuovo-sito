@@ -1,0 +1,61 @@
+---
+/**
+ * Modal "Contattaci" — montato una sola volta nel Layout.
+ *
+ * Qualsiasi elemento del sito lo apre con `data-open-modal="modal-contatti"`:
+ * nessun listener da aggiungere altrove, e il testo del CTA cliccato finisce
+ * nell'attribuzione del lead.
+ */
+import LeadFormBody from './LeadFormBody.astro';
+---
+
+<dialog id="modal-contatti" class="lf-modal" aria-labelledby="modal-contatti-titolo">
+  <div class="lf-modal-in">
+    <button type="button" class="lf-close" data-modal-close aria-label="Chiudi">×</button>
+    <h2 id="modal-contatti-titolo" class="sr-only">Contattaci</h2>
+    <LeadFormBody prefix="lm" />
+  </div>
+</dialog>
+
+<script>
+  import { initLeadForm } from '../lib/leadForm.client.js';
+
+  const modal = document.getElementById('modal-contatti');
+  if (modal instanceof HTMLDialogElement) {
+    // `reset()` chiude il dialog e la chiusura del dialog richiama `reset()`:
+    // senza questo flag i due si rincorrono per un giro di troppo.
+    let inChiusura = false;
+
+    const form = initLeadForm(modal, {
+      prefix: 'lm',
+      onReset: () => {
+        if (inChiusura) return;
+        inChiusura = true;
+        if (modal.open) modal.close();
+        inChiusura = false;
+      },
+    });
+
+    const chiudi = () => {
+      if (!inChiusura) form?.reset();
+    };
+
+    document.addEventListener('click', (e) => {
+      const t = e.target instanceof Element ? e.target.closest('[data-open-modal]') : null;
+      if (!t || t.getAttribute('data-open-modal') !== 'modal-contatti') return;
+      e.preventDefault();
+      modal.showModal();
+      form?.open(location.pathname, (t.textContent || '').trim());
+    });
+
+    modal.addEventListener('click', (e) => {
+      // Il target è il <dialog> stesso solo quando si clicca il backdrop.
+      if (e.target === modal) return chiudi();
+      const t = e.target instanceof Element ? e.target.closest('[data-modal-close]') : null;
+      if (t) chiudi();
+    });
+
+    // Copre anche la chiusura con Esc, gestita nativamente dal browser.
+    modal.addEventListener('close', chiudi);
+  }
+</script>

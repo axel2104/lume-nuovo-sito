@@ -1,0 +1,76 @@
+---
+import { getCollection } from 'astro:content';
+import { categorieEventi, etichetta } from '../../data/tassonomie';
+import { dataEstesa } from '../../lib/richtext';
+
+interface Props {
+  limite?: number;
+}
+const { limite = 0 } = Astro.props;
+
+// Solo eventi futuri (da mezzanotte di oggi), dal più vicino al più lontano.
+const adesso = new Date();
+const oggi = new Date(adesso.getFullYear(), adesso.getMonth(), adesso.getDate());
+
+const tutti = (await getCollection('eventi', ({ data }) => data.pubblicato))
+  .filter((e) => e.data.data >= oggi)
+  .sort((a, b) => a.data.data.getTime() - b.data.data.getTime());
+
+const elenco = limite > 0 ? tutti.slice(0, limite) : tutti;
+---
+
+<section class="sec band" id="eventi">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="label">Eventi</span>
+      <h2 class="d">Prossimi appuntamenti</h2>
+      <p>Open day, masterclass e sfide interne. Alcuni hanno posti limitati: prenota per tempo.</p>
+    </div>
+
+    {
+      elenco.length === 0 ? (
+        <p class="ed-vuoto">
+          Nessun evento in programma al momento. Torna a trovarci: ne organizziamo di continuo.
+        </p>
+      ) : (
+        <div class="ev-list">
+          {elenco.map((e) => (
+            <article class="ev-row">
+              <div class="ev-data">
+                <b>{e.data.data.getDate()}</b>
+                <span>
+                  {new Intl.DateTimeFormat('it-IT', {
+                    month: 'short',
+                    timeZone: 'Europe/Rome',
+                  }).format(e.data.data)}
+                </span>
+              </div>
+              <div class="ev-main">
+                <span class="ed-meta">
+                  {etichetta(categorieEventi, e.data.categoria)}
+                  {e.data.ora && ` · ore ${e.data.ora}`}
+                  {e.data.luogo && ` · ${e.data.luogo}`}
+                </span>
+                <h3>{e.data.titolo}</h3>
+                <p>{e.data.descrizione}</p>
+                {e.data.postiLimitati && <span class="ev-tag">Posti limitati</span>}
+              </div>
+              <div class="ev-cta">
+                {e.data.iscrizioniHref ? (
+                  <a class="btn btn-red" href={e.data.iscrizioniHref}>
+                    Iscriviti
+                  </a>
+                ) : (
+                  <button type="button" class="btn btn-out" data-open-modal="modal-contatti">
+                    Info evento
+                  </button>
+                )}
+              </div>
+              <span class="sr-only">{dataEstesa(e.data.data)}</span>
+            </article>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>
