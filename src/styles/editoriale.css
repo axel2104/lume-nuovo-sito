@@ -501,3 +501,42 @@
     margin-top: 0;
   }
 }
+
+/* ─── Card disciplina senza foto ───────────────────────────────────────
+   Finché non arrivano gli scatti dei corsi, una sfumatura per categoria
+   evita che la card sia un rettangolo nero vuoto. Sta qui e non nella
+   pagina indice perché serve ovunque: indice, correlate, homepage. */
+.card-d:not(:has(img)) {
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(196, 0, 66, 0.28), transparent 60%),
+    linear-gradient(160deg, #1a1a1a, #0d0d0d);
+  border: 1px solid var(--line);
+}
+.card-d[data-cat='Acqua']:not(:has(img)) {
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(0, 122, 196, 0.3), transparent 60%),
+    linear-gradient(160deg, #14181c, #0d0d0d);
+}
+.card-d[data-cat='Mente & corpo']:not(:has(img)) {
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(140, 90, 200, 0.24), transparent 60%),
+    linear-gradient(160deg, #17151c, #0d0d0d);
+}
+.card-d[data-cat='Cardio & resistenza']:not(:has(img)) {
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(230, 130, 30, 0.24), transparent 60%),
+    linear-gradient(160deg, #1c1813, #0d0d0d);
+}
+.card-d[data-cat='Danza']:not(:has(img)) {
+  background:
+    radial-gradient(120% 90% at 20% 0%, rgba(210, 60, 140, 0.26), transparent 60%),
+    linear-gradient(160deg, #1c1419, #0d0d0d);
+}
+.card-var {
+  display: block;
+  font-style: normal;
+  font-size: 11px;
+  color: var(--mut);
+  margin-top: 6px;
+  letter-spacing: 0.04em;
+}

@@ -16,25 +16,36 @@ const { Content } = await render(entry);
 const centri = await getCollection('centri');
 const disponibile = centri.filter((c) => d.centri.includes(c.id));
 const livelli = [1, 2, 3, 4, 5];
+
+// Gli indicatori esistono solo dove il dato c'è: se mancano tutti, la colonna
+// laterale resta comunque utile con varianti e call to action.
+const haIndicatori = d.difficolta != null || d.intensita != null || d.durata != null;
+
+// Altre discipline della stessa categoria, per non lasciare la pagina cieca.
+const simili = (await getCollection('discipline'))
+  .filter((x) => x.id !== entry.id && x.data.categoria === d.categoria)
+  .sort((a, b) => a.data.ordine - b.data.ordine)
+  .slice(0, 4);
 ---
 
-<Layout title={`${d.nome} — LUMe Fitness Club`}>
+<Layout title={`${d.nome} — LUMe Fitness Club`} description={d.breve}>
   <Header />
   <section class="sec" style="padding-top:0">
     <div class="wrap">
-      <div class="disc-hero">
-        {d.video ? (
-          <video autoplay muted loop playsinline poster={d.immagine}>
-            <source src={d.video} type="video/mp4" />
-          </video>
-        ) : (
-          d.immagine && <img src={d.immagine} alt={d.nome} />
-        )}
+      <div class:list={["disc-hero", { "senza-media": !d.video && !d.immagine }]} data-cat={d.categoria}>
+        {
+          d.video ? (
+            <video autoplay muted loop playsinline poster={d.immagine}>
+              <source src={d.video} type="video/mp4" />
+            </video>
+          ) : (
+            d.immagine && <img src={d.immagine} alt={d.nome} />
+          )
+        }
         <div class="disc-hero-in">
           <span class="label">{d.categoria}</span>
           <h1 class="d">{d.nome}</h1>
         </div>
-        {!d.video && <span class="soon-tag">Video loop in arrivo</span>}
       </div>
 
       <div class="disc-body">
@@ -42,55 +53,120 @@ const livelli = [1, 2, 3, 4, 5];
           <p class="lead">{d.breve}</p>
           <div class="prose"><Content /></div>
 
-          {disponibile.length > 0 && (
-            <div style="margin-top:26px">
-              <span class="label">Dove praticarla</span>
-              <div class="chips" style="margin-top:12px">
-                {disponibile.map((c) => (
-                  <a class="chip" href={`/centri/${c.id}`}>{c.data.nome.replace('Lume ', '')}</a>
-                ))}
+          {
+            disponibile.length > 0 && (
+              <div style="margin-top:26px">
+                <span class="label">Dove praticarla</span>
+                <div class="chips" style="margin-top:12px">
+                  {disponibile.map((c) => (
+                    <a class="chip" href={`/centri/${c.id}`}>
+                      {c.data.nome.replace('Lume ', '')}
+                    </a>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )
+          }
         </div>
 
         <aside class="disc-meta">
-          <div class="meter-row">
-            <span>Difficoltà</span>
-            <div class="meter">{livelli.map((n) => <i class={n <= d.difficolta ? 'on' : ''}></i>)}</div>
-          </div>
-          {d.intensita && (
-            <div class="meter-row">
-              <span>Intensità</span>
-              <div class="meter">{livelli.map((n) => <i class={n <= (d.intensita ?? 0) ? 'on' : ''}></i>)}</div>
-            </div>
-          )}
-          {d.durata ? (
-            <div class="meter-row"><span>Durata</span><b>{d.durata} min</b></div>
-          ) : null}
-          <a href="/#abbonamenti" class="btn btn-red btn-full" style="margin-top:8px">Provala</a>
+          {
+            haIndicatori && (
+              <>
+                {d.difficolta != null && (
+                  <div class="meter-row">
+                    <span>Difficoltà</span>
+                    <div class="meter">
+                      {livelli.map((n) => <i class={n <= (d.difficolta ?? 0) ? 'on' : ''} />)}
+                    </div>
+                  </div>
+                )}
+                {d.intensita != null && (
+                  <div class="meter-row">
+                    <span>Intensità</span>
+                    <div class="meter">
+                      {livelli.map((n) => <i class={n <= (d.intensita ?? 0) ? 'on' : ''} />)}
+                    </div>
+                  </div>
+                )}
+                {d.durata != null && (
+                  <div class="meter-row">
+                    <span>Durata</span>
+                    <b>{d.durata} min</b>
+                  </div>
+                )}
+              </>
+            )
+          }
+
+          {
+            d.varianti.length > 0 && (
+              <div class="varianti">
+                <span class="label">Livelli e varianti</span>
+                <ul>
+                  {d.varianti.map((v) => (
+                    <li>
+                      <b>{v.nome}</b>
+                      {v.nota && <span>{v.nota}</span>}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
+
+          <button type="button" class="btn btn-red btn-full" data-open-modal="modal-contatti">
+            Prova {d.nome}
+          </button>
+          <a href="/#abbonamenti" class="btn btn-out btn-full" style="margin-top:10px">Vedi gli abbonamenti</a>
         </aside>
       </div>
+
+      {
+        simili.length > 0 && (
+          <div style="margin-top:56px">
+            <span class="label">{d.categoria}</span>
+            <div class="grid3" style="margin-top:16px">
+              {simili.map((s) => (
+                <a class="card-d" href={`/discipline/${s.id}`} data-cat={s.data.categoria}>
+                  {s.data.immagine && <img src={s.data.immagine} alt={s.data.nome} />}
+                  <div class="card-d-in">
+                    <span>{s.data.categoria}</span>
+                    <h3>{s.data.nome}</h3>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        )
+      }
     </div>
   </section>
   <Footer />
 </Layout>
 
 <style>
+  .disc-hero.senza-media{min-height:26vh}
   .disc-hero{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--line);min-height:46vh;display:flex;align-items:flex-end;margin-top:18px;background:#0f0f0f}
   .disc-hero img,.disc-hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
   .disc-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.2),rgba(10,10,10,.9))}
   .disc-hero-in{position:relative;z-index:2;padding:26px}
   .disc-hero-in h1{font-size:clamp(38px,8vw,74px);margin-top:10px}
-  .soon-tag{position:absolute;z-index:3;top:16px;right:16px;background:#1c1c1c;color:var(--red);border:1px solid var(--red);border-radius:999px;padding:6px 12px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
   .disc-body{display:grid;grid-template-columns:1fr;gap:28px;margin-top:28px}
   .lead{font-size:19px;color:#e6e6e6}
   .prose{color:#c2c2c2;font-size:16px;margin-top:12px}
+  .prose :global(p){margin:0 0 16px}
+  .prose :global(strong){color:#fff}
   .disc-meta{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;height:fit-content}
   .meter-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--line)}
   .meter-row span{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
   .meter{display:flex;gap:6px}
   .meter i{width:22px;height:8px;border-radius:4px;background:#2a2a2a;display:block}
   .meter i.on{background:var(--red)}
+  .varianti{margin-bottom:20px}
+  .varianti ul{list-style:none;padding:0;margin:12px 0 0}
+  .varianti li{padding:10px 0;border-bottom:1px solid var(--line)}
+  .varianti li b{display:block;font-size:14px;color:#ececec;font-weight:600}
+  .varianti li span{display:block;font-size:12.5px;color:var(--mut);margin-top:2px;line-height:1.45}
   @media(min-width:900px){ .disc-body{grid-template-columns:1.6fr .8fr;gap:44px} }
 </style>

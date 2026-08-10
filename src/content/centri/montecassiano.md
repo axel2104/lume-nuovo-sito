@@ -10,7 +10,6 @@ orari:
   feriali: "07:00 – 22:00"
   sabato: "08:30 – 19:00"
   domenica: "Chiuso"
-discipline: [gym-floor, spinning, reformer, personal-training]
 servizi:
   - "Sala pesi attrezzata"
   - "Corsi di gruppo"

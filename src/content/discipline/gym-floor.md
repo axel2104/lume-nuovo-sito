@@ -1,15 +1,14 @@
 ---
-nome: Gym Floor
-categoria: Forza
-difficolta: 3
-intensita: 4
-durata: 0
-breve: Sala pesi con le più moderne attrezzature Technogym.
-immagine: /media/weights.jpg
-video: ""
-centri: [macerata, montecassiano, piediripa, urban]
-ordine: 3
+nome: "Sala attrezzi"
+categoria: "Forza & tono"
+breve: "Isotoniche, pesi liberi e cardio Technogym, con i tecnici sempre in sala."
+centri: [macerata, montecassiano]
+ordine: 8
+daRivedere: true
 ---
 
-Zona pesi liberi, macchine isotoniche e area functional. Con l'assistenza dei
-nostri trainer costruisci il percorso di forza più adatto a te.
+La sala è aperta per tutta la giornata e non richiede prenotazione: isotoniche e pesi liberi
+Technogym, area funzionale e parco cardio.
+
+I tecnici sono sempre presenti: ti impostano la scheda, ti correggono l'esecuzione e la aggiornano
+man mano che cambiano i tuoi obiettivi.

@@ -10,7 +10,6 @@ orari:
   feriali: "06:30 – 22:30"
   sabato: "08:00 – 20:00"
   domenica: "09:00 – 14:00"
-discipline: [crossfit, reformer, gym-floor, spinning, boxing, personal-training]
 servizi:
   - "Gym floor 500m² Technogym"
   - "Box CrossFit 450m²"

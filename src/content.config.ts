@@ -23,7 +23,9 @@ const centri = defineCollection({
     orari: z
       .object({ feriali: z.string(), sabato: z.string(), domenica: z.string() })
       .optional(),
-    discipline: z.array(z.string()).default([]),
+    // Le discipline di un centro NON si elencano qui: ogni disciplina dichiara
+    // in quali centri si tiene (campo `centri`), ed è quella l'unica fonte.
+    // Una seconda lista qui divergerebbe al primo corso aggiunto.
     servizi: z.array(z.string()).default([]),
     immagine: z.string().optional(),
     perfectgymUrl: z.string().default('#'),
@@ -47,13 +49,27 @@ const discipline = defineCollection({
   schema: z.object({
     nome: z.string(),
     categoria: z.string(),
-    difficolta: z.number().min(1).max(5), // slider difficoltà
-    intensita: z.number().min(1).max(5).optional(), // slider intensità
+    // Difficoltà, intensità e durata non esistono in PerfectGym: sono tutti
+    // opzionali e gli slider compaiono solo dove il dato c'è davvero.
+    // Meglio una scheda senza indicatori che una con numeri inventati.
+    difficolta: z.number().min(1).max(5).optional(),
+    intensita: z.number().min(1).max(5).optional(),
     durata: z.number().optional(), // minuti
     breve: z.string(), // descrizione breve
     immagine: z.string().optional(),
     video: z.string().optional(), // video loop (AWS S3/CloudFront)
     centri: z.array(z.string()).default([]),
+    /**
+     * Livelli e declinazioni dello stesso corso (Base/Intermedio/Avanzato,
+     * versioni VIRTUAL, format gemelli a calendario). Stanno dentro la scheda
+     * madre invece di essere pagine a sé: eviterebbero solo di moltiplicare
+     * pagine quasi identiche.
+     */
+    varianti: z
+      .array(z.object({ nome: z.string(), nota: z.string().optional() }))
+      .default([]),
+    /** Testo scritto da noi, non ancora validato dallo staff. Non appare sul sito. */
+    daRivedere: z.boolean().default(false),
     ordine: z.number().default(99),
   }),
 });

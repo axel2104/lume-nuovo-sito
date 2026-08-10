@@ -4,7 +4,6 @@ citta: Macerata (centro)
 stato: prevendita
 ordine: 4
 email: urban@lumefitness.it
-discipline: [reformer, gym-floor, boxing, personal-training]
 servizi:
   - "Nel cuore della città"
   - "Prevendita in corso"

@@ -4,30 +4,126 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { getCollection } from 'astro:content';
 
-const discipline = (await getCollection('discipline')).sort((a, b) => a.data.ordine - b.data.ordine);
+const discipline = (await getCollection('discipline')).sort(
+  (a, b) => a.data.ordine - b.data.ordine,
+);
+
+// Categorie nell'ordine in cui compaiono le schede, non alfabetico: l'ordine
+// delle discipline è già curato e i filtri devono seguirlo.
+const categorie = [...new Set(discipline.map((d) => d.data.categoria))];
+
+const centri = (await getCollection('centri', ({ data }) => data.stato === 'aperto')).sort(
+  (a, b) => a.data.ordine - b.data.ordine,
+);
 ---
 
-<Layout title="Discipline — LUMe Fitness Club">
+<Layout
+  title="Discipline — LUMe Fitness Club"
+  description="Oltre trenta attività fra corsi Les Mills, funzionale, mente e corpo, Reformer e acqua fitness. Ogni disciplina ha la sua scheda."
+>
   <Header />
   <section class="sec">
     <div class="wrap">
       <div class="sec-head">
         <span class="label">Discipline</span>
         <h2 class="d">Allenati come vuoi</h2>
-        <p>Ogni attività ha la sua pagina, con livello di difficoltà e spiegazione.</p>
+        <p>
+          {discipline.length} attività fra corsi di gruppo, funzionale, mente e corpo, Reformer e
+          acqua fitness. Filtra per tipo o per centro e apri la scheda che ti interessa.
+        </p>
       </div>
-      <div class="grid3">
-        {discipline.map((d) => (
-          <a class="card-d" href={`/discipline/${d.id}`}>
-            {d.data.immagine && <img src={d.data.immagine} alt={d.data.nome} />}
-            <div class="card-d-in">
-              <span>{d.data.categoria}</span>
-              <h3>{d.data.nome}</h3>
-            </div>
-          </a>
-        ))}
+
+      <div class="disc-filtri">
+        <div class="hd-filtri" role="group" aria-label="Filtra per tipo">
+          <button type="button" class="hd-f on" data-cat="">Tutte</button>
+          {categorie.map((c) => <button type="button" class="hd-f" data-cat={c}>{c}</button>)}
+        </div>
+        <div class="hd-filtri" role="group" aria-label="Filtra per centro">
+          <button type="button" class="hd-f on" data-centro="">Ogni centro</button>
+          {
+            centri.map((c) => (
+              <button type="button" class="hd-f" data-centro={c.id}>
+                {c.data.nome.replace('Lume ', '')}
+              </button>
+            ))
+          }
+        </div>
       </div>
+
+      <div class="grid3" id="disc-grid">
+        {
+          discipline.map((d) => (
+            <a
+              class="card-d"
+              href={`/discipline/${d.id}`}
+              data-cat={d.data.categoria}
+              data-centri={d.data.centri.join(' ')}
+            >
+              {d.data.immagine && <img src={d.data.immagine} alt={d.data.nome} />}
+              <div class="card-d-in">
+                <span>{d.data.categoria}</span>
+                <h3>{d.data.nome}</h3>
+                {d.data.varianti.length > 0 && (
+                  <em class="card-var">+{d.data.varianti.length} varianti</em>
+                )}
+              </div>
+            </a>
+          ))
+        }
+      </div>
+
+      <p class="ed-vuoto" id="disc-vuoto" hidden>
+        Nessuna disciplina con questi filtri. Prova ad allargare la ricerca.
+      </p>
     </div>
   </section>
   <Footer />
 </Layout>
+
+<script>
+  const griglia = document.getElementById('disc-grid');
+  const vuoto = document.getElementById('disc-vuoto');
+
+  if (griglia) {
+    const card = Array.from(griglia.querySelectorAll<HTMLElement>('.card-d'));
+    const bottoniCat = Array.from(document.querySelectorAll<HTMLElement>('.hd-f[data-cat]'));
+    const bottoniCentro = Array.from(document.querySelectorAll<HTMLElement>('.hd-f[data-centro]'));
+    let categoria = '';
+    let centro = '';
+
+    const applica = () => {
+      let visibili = 0;
+      card.forEach((c) => {
+        const okCat = !categoria || c.dataset.cat === categoria;
+        const okCentro = !centro || (c.dataset.centri || '').split(' ').includes(centro);
+        const mostra = okCat && okCentro;
+        c.hidden = !mostra;
+        if (mostra) visibili++;
+      });
+      if (vuoto) vuoto.hidden = visibili > 0;
+    };
+
+    const collega = (bottoni: HTMLElement[], chiave: 'cat' | 'centro') => {
+      bottoni.forEach((b) => {
+        b.addEventListener('click', () => {
+          const valore = (chiave === 'cat' ? b.dataset.cat : b.dataset.centro) || '';
+          if (chiave === 'cat') categoria = valore;
+          else centro = valore;
+          bottoni.forEach((x) => x.classList.toggle('on', x === b));
+          applica();
+        });
+      });
+    };
+
+    collega(bottoniCat, 'cat');
+    collega(bottoniCentro, 'centro');
+  }
+</script>
+
+<style>
+  .disc-filtri {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+</style>

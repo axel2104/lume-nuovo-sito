@@ -1,15 +1,15 @@
 ---
-nome: CrossFit
-categoria: Funzionale
-difficolta: 4
-intensita: 5
-durata: 60
-breve: Allenamento funzionale ad alta intensità nel Box da 450m².
-immagine: /media/crossfit.jpg
-video: ""
-centri: [macerata, piediripa]
-ordine: 1
+nome: "CrossFit"
+categoria: "Funzionale & atletico"
+breve: "Movimenti funzionali costantemente variati, ad alta intensità, in classe guidata."
+centri: [macerata]
+ordine: 2
+daRivedere: true
 ---
 
-Vogatori, air bike, bilancieri e bumper: il CrossFit di Lume unisce forza,
-condizionamento e tecnica in sessioni sempre diverse, guidate dai nostri coach.
+Il CrossFit unisce sollevamento pesi, ginnastica e lavoro metabolico in sessioni sempre
+diverse: ogni classe ha un riscaldamento, una parte tecnica dedicata a un movimento e un WOD, il
+workout del giorno, uguale per tutti ma scalabile sul livello di ciascuno.
+
+Nel Box di Macerata si lavora sempre con un coach in sala, che corregge la tecnica e adatta
+carichi e volumi. Non serve arrivare preparati: si parte dai fondamentali e si costruisce da lì.

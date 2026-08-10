@@ -7,6 +7,15 @@ import { getCollection } from 'astro:content';
 const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.data.ordine);
 const discipline = (await getCollection('discipline')).sort((a, b) => a.data.ordine - b.data.ordine);
 
+// In homepage una vetrina, non il catalogo: una disciplina per categoria, così
+// si capisce l'ampiezza dell'offerta senza srotolare trenta card.
+const vetrina = Object.values(
+  discipline.reduce<Record<string, (typeof discipline)[number]>>((acc, d) => {
+    acc[d.data.categoria] ??= d;
+    return acc;
+  }, {}),
+).slice(0, 8);
+
 const piani = [
   { nome: 'Base', prezzo: 39, hot: false, voci: ['Accesso sala pesi', 'Zona cardio', '2 corsi di gruppo / sett.', 'Spogliatoi'] },
   { nome: 'Plus · Più scelto', prezzo: 59, hot: true, voci: ['Tutto di Base', 'Corsi illimitati', 'Accesso a tutti i centri', 'App di prenotazione', '1 sessione PT / mese'] },
@@ -95,11 +104,11 @@ const piani = [
       <div class="sec-head">
         <span class="label">Discipline</span>
         <h2 class="d">Allenati come vuoi</h2>
-        <p>Dalla forza al benessere in acqua: scegli il tuo percorso tra le nostre discipline.</p>
+        <p>Dalla forza al benessere in acqua: {discipline.length} attività fra corsi di gruppo, funzionale, mente e corpo, Reformer e piscina.</p>
       </div>
       <div class="grid3">
-        {discipline.map((d) => (
-          <a class="card-d" href={`/discipline/${d.id}`}>
+        {vetrina.map((d) => (
+          <a class="card-d" href={`/discipline/${d.id}`} data-cat={d.data.categoria}>
             {d.data.immagine && <img src={d.data.immagine} alt={d.data.nome} />}
             <div class="card-d-in">
               <span>{d.data.categoria}</span>
@@ -107,6 +116,9 @@ const piani = [
             </div>
           </a>
         ))}
+      </div>
+      <div style="margin-top:26px">
+        <a href="/discipline" class="btn btn-out">Tutte le {discipline.length} discipline</a>
       </div>
     </div>
   </section>

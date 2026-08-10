@@ -4,7 +4,6 @@ citta: Piediripa (Macerata)
 stato: prevendita
 ordine: 3
 email: piediripa@lumefitness.it
-discipline: [crossfit, gym-floor, spinning, personal-training]
 servizi:
   - "Nuovo centro Lume"
   - "Prevendita in corso"
