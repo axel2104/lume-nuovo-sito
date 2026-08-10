@@ -249,9 +249,17 @@
   if (CFG.consensoGestito) {
     // Se Iubenda ha già caricato una preferenza salvata prima di noi, applicala subito.
     leggiIubenda(null);
-  } else {
-    // Nessun banner configurato: sviluppo. In produzione questo ramo non deve girare.
+  } else if (!CFG.produzione) {
+    // Sviluppo senza banner: attiviamo tutto per poter testare il flusso.
     attivaTracciamento();
     aggiornaConsenso(true, true, true);
+  } else {
+    // Build di produzione senza banner configurato: non si traccia nulla.
+    // Meglio perdere dati che raccoglierli senza consenso.
+    try {
+      console.warn(
+        '[lume] Banner cookie non configurato (PUBLIC_IUBENDA_*): tracciamento disattivato.',
+      );
+    } catch (e) {}
   }
 })();

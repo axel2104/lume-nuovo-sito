@@ -30,6 +30,8 @@ const clientConfig = {
   webhookLead: siteConfig.webhookLead,
   webhookVisit: siteConfig.webhookVisit,
   consensoGestito,
+  // In produzione senza banner il tracciamento resta spento: vedi tracking.js.
+  produzione: import.meta.env.PROD,
 };
 
 const { gtmId, iubendaSiteId, iubendaCookiePolicyId } = siteConfig;
