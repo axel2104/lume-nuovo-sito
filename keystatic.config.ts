@@ -52,10 +52,28 @@ function corpo(label = 'Testo') {
   });
 }
 
+const SU_GITHUB = {
+  kind: 'github',
+  repo: { owner: 'axel2104', name: 'lume-nuovo-sito' },
+} as const;
+
+/**
+ * In sviluppo l'editor scrive direttamente sui file locali: non serve
+ * configurare niente.
+ *
+ * Fa eccezione la procedura guidata che crea la GitHub App: gira solo in
+ * modalità github e, alla fine, SCRIVE un file `.env` sul disco. Sulla
+ * serverless function di Netlify il filesystem è in sola lettura, quindi
+ * lanciarla sul sito pubblicato risponde 500. Va fatta in locale.
+ *
+ * Per farla: crea un `.env` con `PUBLIC_KEYSTATIC_STORAGE=github`, riavvia
+ * `npm run dev` e apri /keystatic. Finita la procedura le credenziali sono
+ * nel `.env` e vanno copiate su Netlify.
+ */
+const forzaGithub = import.meta.env.PUBLIC_KEYSTATIC_STORAGE === 'github';
+
 export default config({
-  storage: import.meta.env.DEV
-    ? { kind: 'local' }
-    : { kind: 'github', repo: { owner: 'axel2104', name: 'lume-nuovo-sito' } },
+  storage: import.meta.env.DEV && !forzaGithub ? { kind: 'local' } : SU_GITHUB,
 
   ui: {
     brand: { name: 'LUMe Fitness Club' },
