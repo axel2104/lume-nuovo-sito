@@ -123,8 +123,9 @@ export default config({
           validation: { isRequired: false },
         }),
         video: fields.text({
-          label: 'Video loop (URL CloudFront)',
-          description: 'Facoltativo. Se presente sostituisce la foto nell’intestazione.',
+          label: 'Video anteprima (URL CloudFront)',
+          description:
+            'Facoltativo. Un loop breve e muto: 4–6 secondi, MP4 H.264, larghezza 1280, sotto il mega. Parte al passaggio del mouse sulla tessera e in testa alla scheda. Serve comunque la foto, che fa da fermo immagine.',
           validation: { isRequired: false },
         }),
         difficolta: livello('Difficoltà', 'Da 1 a 5. Lascia vuoto se non lo sai.'),

@@ -63,6 +63,7 @@ const nomeCentro = (id: string) =>
               data-cat={d.data.categoria}
               data-centri={d.data.centri.join(' ')}
               data-titolo={d.data.nome}
+              data-video={d.data.video || undefined}
               aria-expanded="false"
             >
               {d.data.immagine && (
@@ -105,12 +106,17 @@ const nomeCentro = (id: string) =>
 
 <script>
   import { initPannelli } from '../../lib/pannelloEspandibile.client.js';
+  import { initAnteprimeVideo, avviaVideoHero } from '../../lib/anteprimaVideo.client.js';
 
   const griglia = document.getElementById('disc-bento');
   const vuoto = document.getElementById('disc-vuoto');
 
   if (griglia) {
-    const pannelli = initPannelli(griglia, { selettoreCella: '.tessera' });
+    const pannelli = initPannelli(griglia, {
+      selettoreCella: '.tessera',
+      onAperto: (pannello: HTMLElement) => avviaVideoHero(pannello),
+    });
+    const anteprime = initAnteprimeVideo(griglia, { selettoreCella: '.tessera' });
 
     const tessere = Array.from(griglia.querySelectorAll<HTMLElement>('.tessera'));
     const bottoniCat = Array.from(document.querySelectorAll<HTMLElement>('.hd-f[data-cat]'));
@@ -122,6 +128,7 @@ const nomeCentro = (id: string) =>
       // Un pannello aperto su una tessera che sta per sparire resterebbe
       // orfano in mezzo alla griglia: prima si chiude.
       pannelli?.chiudi();
+      anteprime?.ferma();
       let visibili = 0;
       tessere.forEach((t) => {
         const okCat = !categoria || t.dataset.cat === categoria;

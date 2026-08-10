@@ -26,6 +26,9 @@ export function initPannelli(griglia, opzioni) {
     /** Aggiorna la barra degli indirizzi mentre il pannello è aperto. */
     sincronizzaUrl = true,
     etichettaChiudi = 'Chiudi',
+    /** Chiamata dopo aver iniettato il contenuto: serve a far ripartire
+        quello che vive solo nel markup, come i video. */
+    onAperto = null,
   } = opzioni || {};
 
   let pannello = null;
@@ -95,6 +98,11 @@ export function initPannelli(griglia, opzioni) {
 
     dentro.innerHTML = dati.html;
     pannello.classList.remove('is-caricando');
+    if (typeof onAperto === 'function') {
+      try {
+        onAperto(pannello, cella);
+      } catch (e) {}
+    }
     pannello.setAttribute('aria-label', cella.dataset.titolo || 'Dettaglio');
 
     if (sincronizzaUrl) {

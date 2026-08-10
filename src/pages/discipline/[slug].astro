@@ -33,35 +33,6 @@ const simili = (await getCollection('discipline'))
   <Header />
   <section class="sec" style="padding-top:0">
     <div class="wrap">
-      <div
-        class:list={['disc-hero', { 'senza-media': !d.video && !d.immagine }]}
-        data-cat={d.categoria}
-      >
-        {
-          d.video ? (
-            <video autoplay muted loop playsinline poster={d.immagine?.src ?? undefined}>
-              <source src={d.video} type="video/mp4" />
-            </video>
-          ) : (
-            d.immagine && (
-              <Picture
-                src={d.immagine}
-                alt={d.nome}
-                widths={[800, 1400, 2000]}
-                sizes="100vw"
-                loading="eager"
-                fetchpriority="high"
-                formats={['avif', 'webp']}
-              />
-            )
-          )
-        }
-        <div class="disc-hero-in">
-          <span class="label">{d.categoria}</span>
-          <h1 class="d">{d.nome}</h1>
-        </div>
-      </div>
-
       {/*
         Tutto ciò che sta qui dentro viene riusato: la griglia bento della
         pagina Discipline scarica questa pagina e mostra questo frammento nel
@@ -69,9 +40,39 @@ const simili = (await getCollection('discipline'))
         `data-pannello`, nel pannello non comparirà.
       */}
       <div data-pannello data-cat={d.categoria}>
-        <div class="pan-testa">
-          <span class="label">{d.categoria}</span>
-          <h2 class="d">{d.nome}</h2>
+        <div
+          class:list={['disc-hero', { 'senza-media': !d.video && !d.immagine }]}
+          data-cat={d.categoria}
+        >
+          {
+            d.video ? (
+              <video
+                data-hero-video
+                data-sorgente={d.video}
+                muted
+                loop
+                playsinline
+                preload="none"
+                poster={d.immagine?.src ?? undefined}
+              />
+            ) : (
+              d.immagine && (
+                <Picture
+                  src={d.immagine}
+                  alt={d.nome}
+                  widths={[800, 1400, 2000]}
+                  sizes="100vw"
+                  loading="eager"
+                  fetchpriority="high"
+                  formats={['avif', 'webp']}
+                />
+              )
+            )
+          }
+          <div class="disc-hero-in">
+            <span class="label">{d.categoria}</span>
+            <h1 class="d">{d.nome}</h1>
+          </div>
         </div>
 
         <div class="disc-body">
@@ -184,51 +185,7 @@ const simili = (await getCollection('discipline'))
   <Footer />
 </Layout>
 
-<style>
-  .disc-hero {
-    position: relative;
-    display: flex;
-    align-items: flex-end;
-    min-height: 46vh;
-    margin-top: 18px;
-    border: 1px solid var(--line);
-    border-radius: 22px;
-    overflow: hidden;
-    background:
-      radial-gradient(90% 130% at 10% 0%, rgba(var(--tinta), 0.34), transparent 60%),
-      linear-gradient(160deg, #1a1a1a, #0c0c0c);
-  }
-  .disc-hero.senza-media {
-    min-height: 30vh;
-  }
-  .disc-hero img,
-  .disc-hero video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .disc-hero::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.09) 1px, transparent 0);
-    background-size: 24px 24px;
-    opacity: 0.4;
-  }
-  .disc-hero:has(img)::after,
-  .disc-hero:has(video)::after {
-    background: linear-gradient(180deg, rgba(10, 10, 10, 0.2), rgba(10, 10, 10, 0.9));
-    opacity: 1;
-  }
-  .disc-hero-in {
-    position: relative;
-    z-index: 2;
-    padding: 30px;
-  }
-  .disc-hero-in h1 {
-    margin-top: 10px;
-    font-size: clamp(38px, 8vw, 74px);
-  }
-</style>
+<script>
+  import { avviaVideoHero } from '../../lib/anteprimaVideo.client.js';
+  avviaVideoHero(document);
+</script>

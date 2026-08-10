@@ -74,13 +74,34 @@
 .tessera:hover .t-foto {
   transform: scale(1.05);
 }
-.tessera:has(.t-foto)::before {
+.tessera .t-video {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.45s;
+}
+/* La classe arriva da JS solo quando il video sta davvero suonando: fino a
+   quel momento si vede la foto, senza sfarfallii né rettangoli neri. */
+.tessera.con-video .t-video {
+  opacity: 1;
+}
+.tessera.con-video .t-foto {
+  opacity: 0;
+  transition: opacity 0.45s;
+}
+.tessera:has(.t-foto)::before,
+.tessera:has(.t-video)::before {
   background:
     linear-gradient(180deg, rgba(10, 10, 10, 0.1) 28%, rgba(10, 10, 10, 0.92) 100%),
     radial-gradient(110% 90% at 12% 0%, rgba(var(--tinta), 0.35), transparent 60%);
   z-index: 1;
 }
-.tessera:has(.t-foto)::after {
+.tessera:has(.t-foto)::after,
+.tessera:has(.t-video)::after {
   display: none;
 }
 .tessera:hover {
@@ -280,24 +301,11 @@
    a runtime dentro il pannello: gli stili con scope di Astro non lo
    raggiungerebbero, essendo generato dopo la build.
    ============================================================ */
-.pan-testa,
 .solo-pannello {
   display: none;
 }
-/* Titolo e link "scheda intera" hanno senso solo dentro il pannello:
-   sulla pagina il titolo è già nell'hero e il link punterebbe a sé stesso. */
-.pannello .pan-testa {
-  display: block;
-  margin-bottom: 22px;
-}
-.pannello .pan-testa h2 {
-  margin-top: 10px;
-  font-family: 'Anton', sans-serif;
-  font-weight: 400;
-  text-transform: uppercase;
-  font-size: clamp(30px, 4.4vw, 52px);
-  line-height: 0.95;
-}
+/* Il link "scheda intera" ha senso solo dentro il pannello: sulla pagina
+   punterebbe a sé stessa. */
 .pannello .solo-pannello {
   display: inline-flex;
   margin-top: 10px;
@@ -393,4 +401,77 @@
     grid-template-columns: 1.6fr 0.8fr;
     gap: 44px;
   }
+}
+
+
+/* ============================================================
+   Intestazione della scheda disciplina
+   Globale e non scoped: lo stesso blocco compare sulla pagina e dentro
+   il pannello, che viene costruito a runtime.
+   ============================================================ */
+.disc-hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 46vh;
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  overflow: hidden;
+  background:
+    radial-gradient(90% 130% at 10% 0%, rgba(var(--tinta), 0.34), transparent 60%),
+    linear-gradient(160deg, #1a1a1a, #0c0c0c);
+}
+.disc-hero.senza-media {
+  min-height: 30vh;
+}
+/* Dentro il pannello l'intestazione fa da presentazione, non da copertina:
+   più bassa, e senza stacco dal bordo superiore. */
+.pannello .disc-hero {
+  min-height: 34vh;
+  margin-top: 0;
+  margin-bottom: 26px;
+}
+.pannello .disc-hero.senza-media {
+  min-height: 22vh;
+}
+.disc-hero img,
+.disc-hero video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.disc-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.09) 1px, transparent 0);
+  background-size: 24px 24px;
+  opacity: 0.4;
+}
+/* Con foto o video la trama a puntini lascia il posto alla velatura che
+   tiene leggibile il titolo. */
+.disc-hero:has(img)::after,
+.disc-hero:has(video)::after {
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0.2), rgba(10, 10, 10, 0.9));
+  background-image: none;
+  opacity: 1;
+}
+.disc-hero-in {
+  position: relative;
+  z-index: 2;
+  padding: 30px;
+}
+.disc-hero-in h1 {
+  margin-top: 10px;
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 0.95;
+  font-size: clamp(38px, 8vw, 74px);
+}
+.pannello .disc-hero-in h1 {
+  font-size: clamp(32px, 4.6vw, 56px);
 }
