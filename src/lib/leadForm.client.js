@@ -282,6 +282,51 @@ export function initLeadForm(root, options) {
     el.hidden = !messaggio;
   }
 
+  /**
+   * Regole di validazione per campo, usate sia all'uscita dal campo (`focusout`)
+   * sia al momento dell'invio: un messaggio solo, scritto in un posto solo.
+   */
+  const REGOLE = {
+    email: {
+      err: 'step1-err',
+      ok: (v) => RE_EMAIL.test(v.trim().toLowerCase()),
+      msg: 'Inserisci un indirizzo email valido.',
+    },
+    nome: {
+      err: 'step2-err',
+      ok: (v) => v.trim().length >= 2,
+      msg: 'Inserisci il tuo nome.',
+    },
+    cognome: {
+      err: 'step2-err',
+      ok: (v) => v.trim().length >= 2,
+      msg: 'Inserisci il tuo cognome.',
+    },
+    cell: {
+      err: 'step2-err',
+      ok: (v) => RE_TEL.test(v.trim()) && v.replace(/\D/g, '').length >= 6,
+      msg: 'Inserisci un numero di cellulare valido.',
+    },
+  };
+
+  /** Marca il campo come non valido e collega il messaggio a chi usa uno screen reader. */
+  function segnala(campo, suffissoErrore, messaggio) {
+    const el = byId(campo);
+    if (el) {
+      el.setAttribute('aria-invalid', 'true');
+      el.setAttribute('aria-describedby', P + '-' + suffissoErrore);
+    }
+    errore(suffissoErrore, messaggio);
+    return el;
+  }
+
+  function pulisci(campo) {
+    const el = byId(campo);
+    if (!el) return;
+    el.removeAttribute('aria-invalid');
+    el.removeAttribute('aria-describedby');
+  }
+
   function caricamento(bottone, attivo) {
     if (!bottone) return;
     bottone.disabled = attivo;
@@ -306,11 +351,11 @@ export function initLeadForm(root, options) {
     leggiStep1();
     errore('step1-err', '');
 
-    if (!RE_EMAIL.test(stato.email)) {
-      errore('step1-err', 'Inserisci un indirizzo email valido.');
-      byId('email')?.focus();
+    if (!REGOLE.email.ok(stato.email)) {
+      segnala('email', 'step1-err', REGOLE.email.msg)?.focus();
       return;
     }
+    pulisci('email');
     if (!stato.centro) {
       errore('step1-err', 'Scegli il centro che ti interessa.');
       return;
@@ -368,14 +413,21 @@ export function initLeadForm(root, options) {
     stato.privacy = !!byId('privacy')?.checked;
     stato.marketing = !!byId('marketing')?.checked;
 
-    if (stato.nome.length < 2) return errore('step2-err', 'Inserisci il tuo nome.');
-    if (stato.cognome.length < 2) return errore('step2-err', 'Inserisci il tuo cognome.');
-    if (!RE_TEL.test(stato.cellulare) || stato.cellulare.replace(/\D/g, '').length < 6) {
-      return errore('step2-err', 'Inserisci un numero di cellulare valido.');
+    // Primo campo non valido: messaggio collegato e focus li', come chiede
+    // la linea guida sul focus management dopo un invio fallito.
+    for (const campo of ['nome', 'cognome', 'cell']) {
+      const valore = campo === 'cell' ? stato.cellulare : stato[campo === 'nome' ? 'nome' : 'cognome'];
+      if (!REGOLE[campo].ok(valore)) {
+        segnala(campo, 'step2-err', REGOLE[campo].msg)?.focus();
+        return;
+      }
+      pulisci(campo);
     }
     if (!stato.privacy) {
-      return errore('step2-err', 'Per proseguire devi accettare l’informativa privacy.');
+      segnala('privacy', 'step2-err', 'Per proseguire devi accettare l’informativa privacy.')?.focus();
+      return;
     }
+    pulisci('privacy');
 
     mostra(3);
   }
@@ -631,6 +683,30 @@ export function initLeadForm(root, options) {
   }
 
   // ─── Listener (delegati sulla radice: il markup può cambiare) ───────────
+
+  // Validazione all'uscita dal campo, non a ogni tasto: la linea guida chiede
+  // di controllare sul blur, e chi sta ancora scrivendo non va corretto a meta'
+  // parola. Un campo lasciato vuoto non viene segnalato: non e' un errore, e'
+  // solo un campo non ancora compilato — quello lo dira' l'invio.
+  root.addEventListener('focusout', (ev) => {
+    const el = ev.target;
+    if (!el || !el.id || el.id.indexOf(P + '-') !== 0) return;
+    const campo = el.id.slice(P.length + 1);
+    const regola = REGOLE[campo];
+    if (!regola) return;
+
+    const valore = el.value || '';
+    if (!valore.trim()) {
+      pulisci(campo);
+      return;
+    }
+    if (regola.ok(valore)) {
+      pulisci(campo);
+      errore(regola.err, '');
+    } else {
+      segnala(campo, regola.err, regola.msg);
+    }
+  });
 
   root.addEventListener('click', (ev) => {
     const t = ev.target;
