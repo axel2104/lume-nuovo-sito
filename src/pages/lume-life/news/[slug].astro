@@ -27,7 +27,7 @@ const correlate = (await getCollection('news', ({ data }) => data.pubblicato))
 <Layout title={`${d.titolo} — LUMe Fitness Club`} description={d.sintesi} image={d.immagine}>
   <Header />
 
-  <main>
+  <main id="contenuto">
     <article class="sec">
       <div class="wrap">
         <a class="ed-back" href="/lume-life#news">← Tutte le news</a>

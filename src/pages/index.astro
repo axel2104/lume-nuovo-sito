@@ -29,16 +29,37 @@ const piani = [
 
 <Layout>
   <Header />
+  <main id="contenuto">
 
   <header class="hero">
     <div class="wrap">
       <div class="hero-grid">
         <div class="hero-video">
-          <video autoplay muted loop playsinline preload="metadata" poster="/media/hero-poster.jpg">
+          <video
+            data-hero-video
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            poster="/media/hero-poster.jpg"
+          >
             <source src="/media/lume-hero.mp4" type="video/mp4" />
           </video>
           <div class="hero-chip"><b></b>Lume Fitness Club</div>
-          <div class="hero-vcap">▶ Showreel</div>
+          <!--
+            Il video è un loop in autoplay da 2,3 MB: serve un comando per
+            fermarlo. Era un <div> decorativo con il glifo ▶ come icona.
+          -->
+          <button type="button" class="hero-vcap" data-hero-toggle aria-label="Metti in pausa il video">
+            <svg class="ico-pausa" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true" fill="currentColor">
+              <rect x="1" y="1" width="3.5" height="10" rx="1" /><rect x="7.5" y="1" width="3.5" height="10" rx="1" />
+            </svg>
+            <svg class="ico-play" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true" fill="currentColor">
+              <path d="M2 1l9 5-9 5z" />
+            </svg>
+            Showreel
+          </button>
         </div>
         <div class="hero-copy">
           <span class="label">Benessere a 360°</span>
@@ -186,5 +207,38 @@ const piani = [
     </div>
   </section>
 
+  </main>
   <Footer />
 </Layout>
+
+<script>
+  // Il loop in autoplay non deve partire per chi ha chiesto meno movimento.
+  const video = document.querySelector('[data-hero-video]');
+  const toggle = document.querySelector('[data-hero-toggle]');
+
+  if (video instanceof HTMLVideoElement && toggle) {
+    const mostraStato = () => {
+      const inPausa = video.paused;
+      toggle.classList.toggle('is-in-pausa', inPausa);
+      toggle.setAttribute('aria-label', inPausa ? 'Riproduci il video' : 'Metti in pausa il video');
+    };
+
+    let ridotto = false;
+    try {
+      ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    } catch (e) {}
+    if (ridotto) {
+      video.removeAttribute('autoplay');
+      video.pause();
+    }
+
+    toggle.addEventListener('click', () => {
+      if (video.paused) video.play();
+      else video.pause();
+    });
+    video.addEventListener('play', mostraStato);
+    video.addEventListener('pause', mostraStato);
+    mostraStato();
+  }
+</script>
+

@@ -31,6 +31,7 @@ const simili = (await getCollection('discipline'))
 
 <Layout title={`${d.nome} — LUMe Fitness Club`} description={d.breve}>
   <Header />
+  <main id="contenuto">
   <section class="sec" style="padding-top:0">
     <div class="wrap">
       {/*
@@ -195,6 +196,7 @@ const simili = (await getCollection('discipline'))
       }
     </div>
   </section>
+  </main>
   <Footer />
 </Layout>
 

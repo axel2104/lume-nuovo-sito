@@ -8,7 +8,7 @@ const links = [
 ];
 ---
 
-<nav class="site">
+<nav class="site" aria-label="Navigazione principale">
   <div class="wrap nav">
     <a href="/" class="logo">LUM<span>e</span>.</a>
     <div class="nav-links">
@@ -19,10 +19,84 @@ const links = [
         Contattaci
       </button>
       <a href="/#abbonamenti" class="btn btn-red nav-cta">Abbonati</a>
-      <div class="burger" aria-label="Menu"><i></i><i></i><i></i></div>
+      <button
+        type="button"
+        class="burger"
+        id="burger"
+        aria-label="Apri il menu"
+        aria-expanded="false"
+        aria-controls="menu-mobile"
+      >
+        <i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i>
+      </button>
     </div>
   </div>
 </nav>
+
+<!--
+  Menu mobile. È un <dialog> nativo come ModalContatti: il browser regala
+  trappola del focus, chiusura con Esc, backdrop e inert sul resto della
+  pagina. Sotto i 1024px era l'unico modo per raggiungere le sezioni: prima
+  il burger era un <div> senza alcun gestore, quindi Centri, Discipline e
+  Lume Life non erano raggiungibili da mobile.
+-->
+<dialog id="menu-mobile" class="menu-mobile" aria-label="Menu">
+  <div class="menu-mobile-in">
+    <div class="menu-mobile-top">
+      <span class="logo">LUM<span>e</span>.</span>
+      <button type="button" class="menu-chiudi" data-menu-close aria-label="Chiudi il menu">&times;</button>
+    </div>
+    <ul class="menu-mobile-links">
+      {links.map((l) => (
+        <li>
+          <a href={l.href}>{l.label}</a>
+        </li>
+      ))}
+    </ul>
+    <button type="button" class="btn btn-out btn-full" data-open-modal="modal-contatti">
+      Contattaci
+    </button>
+  </div>
+</dialog>
+
+<script>
+  const burger = document.getElementById('burger');
+  const menu = document.getElementById('menu-mobile');
+
+  if (burger && menu instanceof HTMLDialogElement) {
+    const apri = () => {
+      menu.showModal();
+      burger.setAttribute('aria-expanded', 'true');
+    };
+    const chiudi = () => {
+      if (menu.open) menu.close();
+    };
+
+    burger.addEventListener('click', apri);
+
+    menu.addEventListener('click', (e) => {
+      // Il target è il <dialog> stesso solo quando si clicca il backdrop.
+      if (e.target === menu) return chiudi();
+      const t = e.target instanceof Element ? e.target : null;
+      // Chiude anche seguendo un link: la destinazione può essere un'ancora
+      // nella pagina corrente, e in quel caso non c'è navigazione a chiuderlo.
+      if (t?.closest('[data-menu-close]') || t?.closest('a[href]')) chiudi();
+    });
+
+    // Copre anche Esc e il backdrop, gestiti dal browser.
+    menu.addEventListener('close', () => {
+      burger.setAttribute('aria-expanded', 'false');
+      burger.focus({ preventScroll: true });
+    });
+
+    // Passando a desktop la nav completa torna visibile: un menu aperto
+    // resterebbe sopra una pagina che non ne ha più bisogno.
+    const wide = window.matchMedia('(min-width: 1024px)');
+    wide.addEventListener('change', (e) => {
+      if (e.matches) chiudi();
+    });
+  }
+</script>
 
 <style>
   /* Su mobile lo spazio è poco: resta il CTA principale. */
@@ -32,6 +106,69 @@ const links = [
   @media (min-width: 1024px) {
     .nav-contatti {
       display: inline-flex;
+    }
+  }
+
+  .menu-mobile {
+    width: min(420px, 100%);
+    max-width: 100%;
+    margin: 0 0 0 auto;
+    height: 100dvh;
+    max-height: 100dvh;
+    border: 0;
+    border-left: 1px solid var(--line);
+    background: var(--bg2);
+    color: var(--txt);
+    padding: 0;
+  }
+  .menu-mobile::backdrop {
+    background: rgba(10, 10, 10, 0.72);
+    backdrop-filter: blur(4px);
+  }
+  .menu-mobile-in {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding: 20px var(--pad) calc(20px + env(safe-area-inset-bottom));
+  }
+  .menu-mobile-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 42px;
+  }
+  .menu-chiudi {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    line-height: 1;
+    color: var(--mut);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+  .menu-chiudi:hover {
+    color: var(--txt);
+  }
+  .menu-mobile-links a {
+    display: flex;
+    align-items: center;
+    min-height: 56px;
+    font-family: 'Anton', sans-serif;
+    font-size: 26px;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    border-bottom: 1px solid var(--line);
+  }
+  .menu-mobile-links a:hover {
+    color: var(--red-txt);
+  }
+
+  @media (min-width: 1024px) {
+    .menu-mobile {
+      display: none;
     }
   }
 </style>

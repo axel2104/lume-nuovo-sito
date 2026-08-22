@@ -10,6 +10,7 @@ const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.
 
 <Layout title="I nostri centri — LUMe Fitness Club">
   <Header />
+  <main id="contenuto">
   <section class="sec">
     <div class="wrap">
       <div class="sec-head">
@@ -42,5 +43,6 @@ const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.
       </div>
     </div>
   </section>
+  </main>
   <Footer />
 </Layout>
