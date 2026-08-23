@@ -99,7 +99,7 @@ nav.site{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.9);backdrop-
 /* SECTIONS */
 .sec{padding:64px 0}
 .sec-head{max-width:720px;margin-bottom:36px}
-.sec-head h2{font-size:clamp(34px,8vw,64px);margin:14px 0 16px}
+.sec-head h1,.sec-head h2{font-size:clamp(34px,8vw,64px);margin:14px 0 16px}
 .sec-head p{color:var(--mut);font-size:16px}
 .band{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 
@@ -231,6 +231,130 @@ footer.site{background:#060606;border-top:1px solid var(--line);padding:54px 0 2
   .wiki{grid-template-columns:1fr 1fr;gap:64px}
   .plans{gap:18px}
   .info-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+/* ============================================================
+   Pagina abbonamenti
+   ============================================================ */
+
+/* ─── Hero ──────────────────────────────────────────────── */
+.ab-hero{padding:clamp(34px,7vw,72px) 0 clamp(30px,5vw,52px)}
+.ab-hero h1{font-size:clamp(42px,10vw,92px);margin:18px 0 20px;text-wrap:balance}
+.ab-hero h1 em{color:var(--red-txt);font-style:normal}
+.ab-lede{color:#cfcfcf;font-size:clamp(16px,2vw,19px);max-width:52ch}
+.ab-punti{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:16px;overflow:hidden;margin-top:clamp(28px,5vw,44px)}
+.ab-punti li{background:var(--bg2);padding:20px 22px}
+.ab-punti strong{display:block;font-family:'Anton',sans-serif;font-weight:400;
+  text-transform:uppercase;font-size:clamp(24px,4vw,30px);color:#fff;line-height:1;
+  font-variant-numeric:tabular-nums}
+.ab-punti span{display:block;color:var(--mut);font-size:13px;margin-top:6px}
+
+/* ─── Selettore mensile / annuale ───────────────────────────
+   Due radio piu' `:has()`: entrambi i prezzi stanno nel markup e il
+   CSS nasconde quello che non serve. Zero JavaScript, e senza `:has()`
+   resta visibile il mensile. */
+.listino{margin-bottom:32px}
+.pf{border:0;margin:0 0 clamp(26px,4vw,38px);display:inline-flex;align-items:center;
+  background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px}
+.pf input{position:absolute;opacity:0;pointer-events:none}
+.pf label{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:999px;
+  font-size:14px;font-weight:600;color:var(--mut);cursor:pointer;transition:.18s;
+  min-height:44px;white-space:nowrap}
+.pf label:hover{color:#ddd}
+/* Niente opacity qui: bianco all'80% sul rosso scendeva a 3,8:1. */
+.pf label span{font-size:12px;font-weight:700;letter-spacing:.04em;
+  font-variant-numeric:tabular-nums}
+.pf input:checked + label{background:var(--red);color:#fff}
+.pf input:focus-visible + label{outline:2px solid var(--red-txt);outline-offset:3px}
+
+.pr-a{display:none}
+.listino:has(#f-annuale:checked) .pr-m{display:none}
+.listino:has(#f-annuale:checked) .pr-a{display:block}
+
+/* ─── Card dei piani ────────────────────────────────────────
+   `subgrid` allinea testa, prezzo e bottone fra card di altezza
+   diversa. Prima lo facevano due `min-height` in em, che tenevano
+   solo finche' nessuno scriveva una descrizione piu' lunga. */
+.plans{display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:32px}
+.plan{background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:30px 26px;position:relative;
+  display:grid;grid-template-rows:subgrid;grid-row:span 4;gap:0;align-content:start}
+.plan.hot{border-color:var(--red);background:linear-gradient(180deg,rgba(196,0,66,.10),var(--card))}
+.plan-tag{position:absolute;top:-11px;left:26px;background:var(--red);color:#fff;font-size:10px;
+  font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:5px 12px;border-radius:999px}
+.plan .pn{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);
+  font-weight:700;font-family:'Inter',sans-serif}
+.plan.hot .pn{color:var(--red-txt)}
+.plan-per{color:var(--mut);font-size:13.5px;margin-top:6px;line-height:1.5}
+.plan-prezzo{padding:18px 0 4px}
+.plan .pr{font-family:'Anton',sans-serif;font-size:clamp(44px,9vw,54px);margin:0;
+  line-height:1;font-variant-numeric:tabular-nums}
+/* La card consigliata deve pesare piu' del bordo colorato: e' l'unico modo
+   perche' l'occhio abbia un punto d'atterraggio fra tre prezzi uguali. */
+.plan.hot .pr{font-size:clamp(52px,11vw,68px);color:#fff}
+.plan .pr small{font-size:15px;color:var(--mut);font-family:'Inter',sans-serif;font-weight:600}
+.plan-nota{color:var(--mut);font-size:12.5px;margin-top:8px}
+.plan-voci{padding-bottom:24px}
+.plan-delta{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:#6f6f6f;margin:18px 0 10px}
+.plan-voci ul{list-style:none;margin:0;padding:0}
+.plan-voci li{font-size:14px;color:#cbcbcb;padding:9px 0;border-bottom:1px solid var(--line);
+  display:flex;gap:10px}
+.plan-voci li::before{content:"\2713";color:var(--red-txt);font-weight:700}
+.pg-note{text-align:center;color:var(--mut);font-size:14px}
+.pg-note b{color:#fff}
+.pg-note a{color:var(--red-txt);text-decoration:underline}
+
+/* ─── Tabella comparativa ───────────────────────────────── */
+.tab-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--card)}
+.tab-conf{width:100%;border-collapse:collapse;min-width:560px;font-size:14px}
+.tab-conf th,.tab-conf td{padding:14px 16px;text-align:center;border-bottom:1px solid var(--line)}
+.tab-conf tbody tr:last-child th,.tab-conf tbody tr:last-child td{border-bottom:0}
+.tab-conf thead th{font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;
+  font-size:17px;letter-spacing:.03em;color:#fff;position:sticky;top:0;background:var(--bg2)}
+.tab-conf thead th:first-child{text-align:left;font-family:'Inter',sans-serif;font-size:11px;
+  font-weight:700;letter-spacing:.14em;color:var(--mut)}
+.tab-conf tbody th{text-align:left;font-weight:500;color:#ddd;
+  position:sticky;left:0;background:var(--card);min-width:200px}
+.tab-conf tbody th em{display:block;font-style:normal;font-size:11.5px;color:#7d7d7d;margin-top:3px}
+.tab-conf .hot{background:rgba(196,0,66,.08)}
+.tab-conf thead th.hot{background:linear-gradient(180deg,rgba(196,0,66,.22),var(--bg2))}
+.tab-conf .si{color:var(--red-txt);font-weight:700;font-size:16px}
+.tab-conf .no{color:#5a5a5a}
+.tab-conf .lim{color:#ddd;font-size:13px}
+
+/* ─── Striscia Guest Pass ───────────────────────────────── */
+.gp-strip{display:flex;flex-direction:column;gap:22px}
+.gp-strip h2{font-family:'Anton',sans-serif;text-transform:uppercase;
+  font-size:clamp(26px,6vw,42px);margin:14px 0 12px;line-height:1}
+.gp-strip p{color:var(--mut);font-size:16px;max-width:56ch}
+.gp-strip .btn{align-self:flex-start}
+
+/* ─── FAQ: <details> nativo, nessun accordion da scrivere ── */
+.faq{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:16px;overflow:hidden}
+.faq details{background:var(--card)}
+.faq summary{list-style:none;cursor:pointer;padding:20px 24px;font-weight:600;font-size:16px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:56px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";color:var(--red-txt);font-size:22px;line-height:1;flex:none}
+.faq details[open] summary::after{content:"\2212"}
+.faq summary:hover{color:var(--red-txt)}
+.faq summary:focus-visible{outline:2px solid var(--red-txt);outline-offset:-2px}
+.faq-in{padding:0 24px 22px;color:var(--mut);font-size:15px}
+.faq-in a{color:var(--red-txt);text-decoration:underline;font-size:14px;
+  display:inline-block;margin-top:10px}
+
+@media(min-width:640px){
+  .ab-punti{grid-template-columns:repeat(3,1fr)}
+  .gp-strip{flex-direction:row;align-items:center;justify-content:space-between;gap:40px}
+  .gp-strip .btn{align-self:auto;white-space:nowrap}
+}
+@media(min-width:900px){
+  /* La colonna consigliata e' piu' larga, non solo bordata. */
+  .plans{grid-template-columns:1fr 1.14fr 1fr;gap:18px;align-items:start}
+  .plan.hot{padding:38px 30px}
 }
 
 /* ============================================================

@@ -66,6 +66,7 @@ const prefissi = ['+39', '+41', '+44', '+33', '+49', '+34', '+1'];
               name={`${P}-centro`}
               value={c.id}
               data-label={c.data.nome}
+              data-pg={c.data.perfectgymUrl}
             />
             <span>
               {c.data.nome}
@@ -270,4 +271,13 @@ const prefissi = ['+39', '+41', '+44', '+33', '+49', '+34', '+1'];
     <p class="lf-recap" id={`${P}-msg-summary`}></p>
     <button type="button" class="btn btn-cream btn-full" data-lm-close>Chiudi</button>
   </div>
+
+  <!--
+    Passo verso il portale, comune alle tre conferme: compare solo per chi e'
+    arrivato da un piano di /abbonamenti e solo se quella sede ha un URL vero.
+    Uno solo qui invece di tre copie dentro i blocchi di conferma.
+  -->
+  <p class="lf-pg" data-pg-link hidden>
+    Vuoi completare subito? <a href="#" target="_blank" rel="noopener">Attiva l'abbonamento su PerfectGym</a>
+  </p>
 </div>

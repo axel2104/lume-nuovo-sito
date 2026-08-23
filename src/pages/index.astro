@@ -7,6 +7,7 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getCollection } from 'astro:content';
+import { vociAbbonamento } from '../data/tassonomie';
 
 const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.data.ordine);
 const discipline = (await getCollection('discipline')).sort((a, b) => a.data.ordine - b.data.ordine);
@@ -20,11 +21,20 @@ const vetrina = Object.values(
   }, {}),
 ).slice(0, 8);
 
-const piani = [
-  { nome: 'Base', prezzo: 39, hot: false, voci: ['Accesso sala pesi', 'Zona cardio', '2 corsi di gruppo / sett.', 'Spogliatoi'] },
-  { nome: 'Plus · Più scelto', prezzo: 59, hot: true, voci: ['Tutto di Base', 'Corsi illimitati', 'Accesso a tutti i centri', 'App di prenotazione', '1 sessione PT / mese'] },
-  { nome: 'Premium', prezzo: 89, hot: false, voci: ['Tutto di Plus', 'Piscina & SPA', 'PT illimitato', 'Piano nutrizionale'] },
-];
+// I piani non stanno più qui: erano tre oggetti cablati che nessuno fuori dal
+// repo poteva cambiare, e che divergevano da /abbonamenti al primo ritocco.
+const piani = (await getCollection('abbonamenti'))
+  .filter((p) => p.data.pubblicato)
+  .sort((a, b) => a.data.ordine - b.data.ordine);
+
+/** In home solo le prime voci: il confronto completo vive su /abbonamenti. */
+function assaggio(p: (typeof piani)[number]) {
+  const voci = (p.data.voci ?? {}) as Record<string, boolean | string>;
+  return vociAbbonamento
+    .filter((v) => voci[v.id] !== undefined)
+    .slice(0, 4)
+    .map((v) => (typeof voci[v.id] === 'string' ? `${v.label}: ${String(voci[v.id]).toLowerCase()}` : v.label));
+}
 ---
 
 <Layout>
@@ -66,7 +76,7 @@ const piani = [
           <h1 class="d">Illumina<br />la tua <em>forza</em></h1>
           <p>Quattro centri nelle Marche. Attrezzature d’élite, discipline per ogni obiettivo e uno staff che ti segue passo dopo passo.</p>
           <div class="hero-cta">
-            <a href="/#abbonamenti" class="btn btn-red btn-full">Inizia ora</a>
+            <a href="/abbonamenti" class="btn btn-red btn-full">Inizia ora</a>
             <a href="/centri" class="btn btn-out btn-full">Scopri i centri</a>
           </div>
         </div>
@@ -164,15 +174,28 @@ const piani = [
       </div>
       <div class="plans">
         {piani.map((p) => (
-          <div class={`plan ${p.hot ? 'hot' : ''}`}>
-            <div class="pn">{p.nome}</div>
-            <div class="pr">{p.prezzo}<small>/mese</small></div>
-            <ul>{p.voci.map((v) => <li>{v}</li>)}</ul>
-            <a href="#" class={`btn ${p.hot ? 'btn-red' : 'btn-out'} btn-full`}>Iscriviti</a>
-          </div>
+          <article class={`plan ${p.data.consigliato ? 'hot' : ''}`}>
+            {p.data.consigliato && <span class="plan-tag">Il più scelto</span>}
+            <div class="plan-testa">
+              <h3 class="pn">{p.data.nome}</h3>
+              <p class="plan-per">{p.data.per}</p>
+            </div>
+            <div class="plan-prezzo">
+              <div class="pr">{p.data.mensile}&nbsp;€<small>/mese</small></div>
+            </div>
+            <div class="plan-voci">
+              <ul>{assaggio(p).map((v) => <li>{v}</li>)}</ul>
+            </div>
+            <a href="/abbonamenti" class={`btn ${p.data.consigliato ? 'btn-red' : 'btn-out'} btn-full`}>
+              Vedi il piano {p.data.nome}
+            </a>
+          </article>
         ))}
       </div>
-      <p class="pg-note">Il pagamento e la gestione dell’abbonamento avvengono in modo sicuro tramite <b>PerfectGym</b>.</p>
+      <p class="pg-note">
+        Mensile o annuale, prevendita dei nuovi centri e domande frequenti:
+        <a href="/abbonamenti" style="color:var(--red-txt);text-decoration:underline">tutti i dettagli sugli abbonamenti</a>.
+      </p>
     </div>
   </section>
 

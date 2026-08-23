@@ -235,6 +235,10 @@ export function initLeadForm(root, options) {
       cellulare: '',
       centro: '',
       centroLabel: '',
+      // Piano scelto su /abbonamenti, vuoto per un contatto generico.
+      piano: '',
+      /** Portale PerfectGym della sede scelta, per chiudere l'iscrizione. */
+      pgUrl: '',
       attivita: [],
       attivitaLabel: [],
       privacy: false,
@@ -341,6 +345,7 @@ export function initLeadForm(root, options) {
     const centro = q('input[name="' + P + '-centro"]:checked');
     stato.centro = centro ? centro.value : '';
     stato.centroLabel = centro ? centro.getAttribute('data-label') || centro.value : '';
+    stato.pgUrl = centro ? centro.getAttribute('data-pg') || '' : '';
 
     const scelte = qa('input[name="' + P + '-attivita"]:checked');
     stato.attivita = scelte.map((c) => c.value);
@@ -554,6 +559,7 @@ export function initLeadForm(root, options) {
       cellulare: stato.cellulare ? stato.prefisso + ' ' + stato.cellulare : '',
       centro: stato.centro,
       centroLabel: stato.centroLabel,
+      piano: stato.piano,
       attivita: stato.attivitaLabel, // etichette leggibili, non gli id interni
       attivitaId: stato.attivita,
       privacy: stato.privacy,
@@ -585,8 +591,19 @@ export function initLeadForm(root, options) {
     }
     caricamento(bottone, false);
 
+    // Chi e' partito da un piano ha gia' detto cosa vuole: il portale e' il
+    // passo successivo, non una pagina da ritrovare da solo. Compare solo se
+    // la sede ha davvero un URL: `perfectgymUrl` vale "#" finche' non lo danno.
+    const pg = q('[data-pg-link]');
+    if (pg) {
+      const attivo = Boolean(stato.piano && stato.pgUrl && stato.pgUrl !== '#');
+      if (attivo) pg.querySelector('a').href = stato.pgUrl;
+      pg.hidden = !attivo;
+    }
+
     traccia('generate_lead', {
       lead_tipo: payload.tipo,
+      lead_piano: payload.piano,
       lead_pagina: payload.pagina,
       lead_cta: payload.cta,
       lead_centro: payload.centro,
@@ -677,6 +694,8 @@ export function initLeadForm(root, options) {
       if (el) el.hidden = true;
     });
     ['step1-err', 'step2-err', 'cb-err', 'visit-err', 'msg-err'].forEach((s) => errore(s, ''));
+    const pg = q('[data-pg-link]');
+    if (pg) pg.hidden = true;
 
     mostra(1);
     onReset();
@@ -804,9 +823,10 @@ export function initLeadForm(root, options) {
 
   return {
     /** Prepara il form per una nuova compilazione, memorizzando la provenienza. */
-    open(pagina, cta) {
+    open(pagina, cta, piano) {
       stato.pagina = pagina || (typeof location !== 'undefined' ? location.pathname : '');
       stato.cta = cta || '';
+      stato.piano = piano || '';
       mostra(1);
     },
     reset,

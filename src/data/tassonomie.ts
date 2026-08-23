@@ -50,6 +50,31 @@ export const categorieHelpdesk = [
   { id: 'regolamento', label: 'Regolamento' },
 ] as const satisfies readonly Voce[];
 
+// ─── Abbonamenti ───────────────────────────────────────────────────────────
+/**
+ * Le righe della tabella comparativa dei piani.
+ *
+ * I piani non elencano più voci in testo libero: dichiarano quali di queste
+ * righe includono. Così «Corsi di gruppo» è la stessa riga per tutti e tre e
+ * la tabella si costruisce da sola — con le liste libere ogni piano scriveva
+ * «Tutto di Base» e chi legge doveva tenere a mente tre elenchi.
+ */
+export const vociAbbonamento = [
+  { id: 'sala', label: 'Sala pesi e zona cardio' },
+  { id: 'spogliatoi', label: 'Spogliatoi, docce e armadietti' },
+  { id: 'corsi', label: 'Corsi di gruppo' },
+  { id: 'centri', label: 'Accesso a tutti i centri Lume' },
+  { id: 'app', label: 'App di prenotazione' },
+  { id: 'pt', label: 'Personal training' },
+  {
+    id: 'acqua',
+    label: 'Piscina e attività in acqua',
+    descrizione: 'Solo nei centri con piscina',
+  },
+  { id: 'spa', label: 'SPA e area relax', descrizione: 'Solo nei centri con SPA' },
+  { id: 'nutrizione', label: 'Piano nutrizionale' },
+] as const satisfies readonly Voce[];
+
 // ─── Icone dei servizi ─────────────────────────────────────────────────────
 // Ogni id corrisponde a un SVG in `src/components/editoriale/IconaServizio.astro`.
 export const iconeServizi = [

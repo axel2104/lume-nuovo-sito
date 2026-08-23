@@ -476,3 +476,16 @@ textarea.lf-in {
     padding: 44px 40px;
   }
 }
+
+/* Passo verso il portale dopo una conferma (solo dai piani di /abbonamenti). */
+.lf-pg {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  color: var(--mut);
+  font-size: 13.5px;
+}
+.lf-pg a {
+  color: var(--red-txt);
+  text-decoration: underline;
+}
