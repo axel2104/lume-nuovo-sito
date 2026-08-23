@@ -8,3 +8,5 @@ dist/
 .netlify/
 .astro/
 _to_delete/
+
+graphify-out/

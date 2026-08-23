@@ -9,6 +9,7 @@
  * così il form resta allineato al catalogo senza manutenzione doppia.
  */
 import { getCollection } from 'astro:content';
+import { interessiLead } from '../data/tassonomie';
 
 interface Props {
   /** Prefisso breve e univoco per gli id, es. "lm" (modal) o "li" (inline). */
@@ -19,10 +20,13 @@ const { prefix: P } = Astro.props;
 
 const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.data.ordine);
 
-const discipline = await getCollection('discipline');
-const interessi = [...new Set(discipline.map((d) => d.data.categoria))].sort((a, b) =>
-  a.localeCompare(b, 'it'),
-);
+// Gli interessi NON derivano da `discipline.categoria`: quella tassonomia
+// descrive come ti muovi (Acqua, Combat, Mente & corpo) e serve a navigare il
+// catalogo, non a instradare un contatto. Su "Acqua" collassavano acquagym
+// adulti, scuola nuoto bambini, acqua nido e agonismo: quattro conversazioni
+// commerciali diverse. `interessiLead` le tiene distinte, con le stesse
+// etichette dei Typeform da cui arrivano i lead oggi.
+const interessi = interessiLead;
 
 const prefissi = ['+39', '+41', '+44', '+33', '+49', '+34', '+1'];
 ---
@@ -62,6 +66,7 @@ const prefissi = ['+39', '+41', '+44', '+33', '+49', '+34', '+1'];
               name={`${P}-centro`}
               value={c.id}
               data-label={c.data.nome}
+              data-pg={c.data.perfectgymUrl}
             />
             <span>
               {c.data.nome}
@@ -77,10 +82,10 @@ const prefissi = ['+39', '+41', '+44', '+33', '+49', '+34', '+1'];
         <>
           <span class="lf-lab">Cosa ti interessa <small>(opzionale)</small></span>
           <div class="lf-chips">
-            {interessi.map((cat) => (
+            {interessi.map((v) => (
               <label class="lf-chip">
-                <input type="checkbox" name={`${P}-attivita`} value={cat} data-label={cat} />
-                <span>{cat}</span>
+                <input type="checkbox" name={`${P}-attivita`} value={v.id} data-label={v.label} />
+                <span>{v.label}</span>
               </label>
             ))}
           </div>
@@ -266,4 +271,13 @@ const prefissi = ['+39', '+41', '+44', '+33', '+49', '+34', '+1'];
     <p class="lf-recap" id={`${P}-msg-summary`}></p>
     <button type="button" class="btn btn-cream btn-full" data-lm-close>Chiudi</button>
   </div>
+
+  <!--
+    Passo verso il portale, comune alle tre conferme: compare solo per chi e'
+    arrivato da un piano di /abbonamenti e solo se quella sede ha un URL vero.
+    Uno solo qui invece di tre copie dentro i blocchi di conferma.
+  -->
+  <p class="lf-pg" data-pg-link hidden>
+    Vuoi completare subito? <a href="#" target="_blank" rel="noopener">Attiva l'abbonamento su PerfectGym</a>
+  </p>
 </div>

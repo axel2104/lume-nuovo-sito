@@ -8,7 +8,8 @@
     "build": "astro check && astro build",
     "build:fast": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "node --test \"test/**/*.test.mjs\""
   },
   "dependencies": {
     "@astrojs/netlify": "^8.2.0",

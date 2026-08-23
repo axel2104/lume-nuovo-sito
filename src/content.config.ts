@@ -6,6 +6,7 @@ import {
   categorieNews,
   iconeServizi,
   idDi,
+  vociAbbonamento,
 } from './data/tassonomie';
 
 // ─── Centri ──────────────────────────────────────────────────────────────
@@ -163,4 +164,38 @@ const servizi = defineCollection({
   }),
 });
 
-export const collections = { centri, discipline, news, eventi, helpdesk, servizi };
+// ─── Abbonamenti ─────────────────────────────────────────────────────────
+// I piani stavano cablati dentro `index.astro`: cambiarli richiedeva un
+// deploy. Qui li modifica lo staff da Keystatic, e home e /abbonamenti
+// leggono la stessa fonte invece di tenere due listini che divergono.
+const abbonamenti = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/abbonamenti' }),
+  schema: z.object({
+    nome: z.string(),
+    /** Riga sotto il nome: a chi si rivolge il piano. */
+    per: z.string(),
+    mensile: z.number(),
+    // L'annuale NON si calcola dal mensile con un moltiplicatore: lo sconto è
+    // una scelta commerciale che può cambiare piano per piano, e nel codice
+    // sarebbe invisibile a chi la decide.
+    annuale: z.number(),
+    /** Una tantum all'attivazione, 0 = nessuna. */
+    attivazione: z.number().default(0),
+    /**
+     * Cosa include il piano, riga per riga della tabella comparativa.
+     * `true` = incluso senza limiti; una stringa = incluso con un limite
+     * ("2 a settimana"), che finisce nella cella al posto della spunta.
+     * Le righe non elencate sono escluse.
+     */
+    // `.optional()` sul valore: con una chiave enum Zod pretende TUTTE le
+    // righe su ogni piano, e un piano deve poterne omettere.
+    voci: z
+      .record(z.enum(idDi(vociAbbonamento)), z.union([z.boolean(), z.string()]).optional())
+      .default({}),
+    consigliato: z.boolean().default(false),
+    ordine: z.number().default(99),
+    pubblicato: z.boolean().default(true),
+  }),
+});
+
+export const collections = { abbonamenti, centri, discipline, news, eventi, helpdesk, servizi };

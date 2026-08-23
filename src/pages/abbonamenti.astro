@@ -1,0 +1,327 @@
+---
+/**
+ * Pagina abbonamenti.
+ *
+ * Il cambio mensile/annuale non usa JavaScript: entrambi i prezzi sono nel
+ * markup e due radio li scambiano con `:has()`. Su un sito che spedisce 658
+ * byte di JS non ha senso aggiungere un listener per una cosa che il CSS fa
+ * da solo — e senza `:has()` resta visibile il mensile.
+ *
+ * Le card mostrano solo cosa AGGIUNGE un piano rispetto al precedente,
+ * calcolato dal diff delle voci. La verità completa sta nella tabella qui
+ * sotto: così nessuna card deve scrivere «tutto quello che c'è in Base» e
+ * chi legge non tiene a mente tre elenchi.
+ */
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+import { vociAbbonamento, type Voce } from '../data/tassonomie';
+
+// `as const satisfies` nella tassonomia restringe il tipo di ogni voce, e
+// `descrizione` sparisce da quelle che non ce l'hanno. Qui serve la forma
+// larga: e' una lista da scorrere, non una costante da cui pescare.
+const righe: readonly Voce[] = vociAbbonamento;
+
+const piani = (await getCollection('abbonamenti'))
+  .filter((p) => p.data.pubblicato)
+  .sort((a, b) => a.data.ordine - b.data.ordine);
+
+const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.data.ordine);
+const aperti = centri.filter((c) => c.data.stato === 'aperto');
+const inArrivo = centri.filter((c) => c.data.stato !== 'aperto');
+
+const faq = (await getCollection('helpdesk'))
+  .filter((v) => v.data.pubblicato && ['abbonamenti', 'pagamenti'].includes(v.data.categoria))
+  .sort((a, b) => a.data.ordine - b.data.ordine);
+
+/**
+ * Prezzo pieno del Guest Pass. Chi arriva da un invito paga meno, ma quel
+ * prezzo vive nel link di invito: esporlo qui vorrebbe dire dire a tutti che
+ * esiste una porta più economica. L'importo vero lo decide n8n, non il sito.
+ */
+const GUEST_PASS = 15;
+
+const euro = (n: number) => new Intl.NumberFormat('it-IT').format(n);
+
+type Voci = Record<string, boolean | string>;
+const vociDi = (p: (typeof piani)[number]) => (p.data.voci ?? {}) as Voci;
+
+/** Il valore di una riga per un piano: `null` se il piano non la include. */
+const valore = (p: (typeof piani)[number], id: string) => vociDi(p)[id] ?? null;
+
+/**
+ * Cosa questo piano aggiunge rispetto al precedente: righe nuove, oppure
+ * righe già presenti ma con un limite diverso ("2 a settimana" → "Illimitati").
+ * Sul primo piano è semplicemente tutto quello che include.
+ */
+function aggiunte(indice: number) {
+  const mio = vociDi(piani[indice]);
+  const prima = indice > 0 ? vociDi(piani[indice - 1]) : {};
+  return righe
+    .filter((v) => mio[v.id] !== undefined && mio[v.id] !== prima[v.id])
+    .map((v) => {
+      const val = mio[v.id];
+      return typeof val === 'string' ? `${v.label}: ${val.toLowerCase()}` : v.label;
+    });
+}
+
+// Il risparmio massimo va sull'etichetta del selettore: è la leva della
+// pagina e nasconderla dietro un click la rende inutile.
+const risparmioMax = Math.max(...piani.map((p) => p.data.mensile * 12 - p.data.annuale), 0);
+---
+
+<Layout
+  title="Abbonamenti — LUMe Fitness Club"
+  description="I piani Lume: sala, corsi illimitati, acqua e SPA. Stesso prezzo in tutti i centri aperti, mensile o annuale, gestione dal portale PerfectGym."
+>
+  <Header />
+
+  <main id="contenuto">
+    <!--
+      DA TOGLIERE quando arriva il listino vero (una riga, questo <p>).
+      Finche' i prezzi vengono dal mockup, chi apre la pagina deve saperlo
+      prima di leggerli: senza avviso li prende per il listino del club.
+    -->
+    <p class="avviso-bozza">
+      <b>Bozza</b> I prezzi di questa pagina vengono dal mockup e non sono il listino reale.
+    </p>
+
+    <!-- ─── Hero ──────────────────────────────────────────────────── -->
+    <header class="ab-hero">
+      <div class="wrap">
+        <span class="label">Abbonamenti</span>
+        <h1 class="d">Un prezzo solo,<br /><em>tutti i centri</em></h1>
+        <p class="ab-lede">
+          Lo stesso piano vale a {aperti.map((c) => c.data.citta).join(' e ')}: non paghi di più per
+          allenarti dove ti è comodo. Mensile se vuoi restare libero, annuale se hai già deciso.
+        </p>
+        <ul class="ab-punti">
+          <li><strong>{aperti.length} centri</strong><span>stesso prezzo, nessun supplemento</span></li>
+          <li><strong>7 giorni</strong><span>di prova prima di scegliere</span></li>
+          <li><strong>{euro(risparmioMax)} €</strong><span>il risparmio massimo sull'annuale</span></li>
+        </ul>
+      </div>
+    </header>
+
+    <!-- ─── Piani ─────────────────────────────────────────────────── -->
+    <section class="sec" style="padding-top:0" aria-labelledby="tit-piani">
+      <div class="wrap">
+        <h2 id="tit-piani" class="sr-only">I piani</h2>
+
+        <div class="listino">
+          <fieldset class="pf">
+            <legend class="sr-only">Come vuoi pagare</legend>
+            <input type="radio" name="formula" id="f-mensile" checked />
+            <label for="f-mensile">Mensile</label>
+            <input type="radio" name="formula" id="f-annuale" />
+            <label for="f-annuale">Annuale <span>fino a −{euro(risparmioMax)} €</span></label>
+          </fieldset>
+
+          <div class="plans">
+            {
+              piani.map((p, i) => {
+                const risparmio = p.data.mensile * 12 - p.data.annuale;
+                const nuove = aggiunte(i);
+                return (
+                  <article class={`plan ${p.data.consigliato ? 'hot' : ''}`}>
+                    {p.data.consigliato && <span class="plan-tag">Il più scelto</span>}
+
+                    <div class="plan-testa">
+                      <h3 class="pn">{p.data.nome}</h3>
+                      <p class="plan-per">{p.data.per}</p>
+                    </div>
+
+                    <div class="plan-prezzo">
+                      <div class="pr pr-m">
+                        {euro(p.data.mensile)}&nbsp;€<small>/mese</small>
+                      </div>
+                      <div class="pr pr-a">
+                        {euro(p.data.annuale)}&nbsp;€<small>/anno</small>
+                      </div>
+                      <p class="plan-nota pr-m">
+                        {p.data.attivazione > 0
+                          ? `Più ${euro(p.data.attivazione)} € di attivazione.`
+                          : 'Nessuna quota di attivazione.'}
+                      </p>
+                      <p class="plan-nota pr-a">
+                        {risparmio > 0
+                          ? `Risparmi ${euro(risparmio)} € sull'anno.`
+                          : 'Come dodici mensilità.'}
+                      </p>
+                    </div>
+
+                    <div class="plan-voci">
+                      <p class="plan-delta">
+                        {i === 0 ? 'Comprende' : `Tutto di ${piani[i - 1].data.nome}, più`}
+                      </p>
+                      <ul>{nuove.map((v) => <li>{v}</li>)}</ul>
+                    </div>
+
+                    <button
+                      type="button"
+                      class={`btn ${p.data.consigliato ? 'btn-red' : 'btn-out'} btn-full`}
+                      data-open-modal="modal-contatti"
+                      data-piano={p.id}
+                    >
+                      Richiedi {p.data.nome}
+                    </button>
+                  </article>
+                );
+              })
+            }
+          </div>
+        </div>
+
+        <p class="pg-note">
+          Ti richiamiamo per scegliere insieme il piano, poi iscrizione e pagamenti si completano
+          sul portale <b>PerfectGym</b>.
+        </p>
+      </div>
+    </section>
+
+    <!-- ─── Tabella comparativa ───────────────────────────────────── -->
+    <section class="sec band" id="confronto" aria-labelledby="tit-confronto">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">Confronto</span>
+          <h2 id="tit-confronto" class="d">Cosa cambia, riga per riga</h2>
+        </div>
+
+        <div class="tab-scroll">
+          <table class="tab-conf">
+            <caption class="sr-only">
+              Cosa include ogni piano. Scorri in orizzontale per vedere tutte le colonne.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Cosa include</th>
+                {
+                  piani.map((p) => (
+                    <th scope="col" class={p.data.consigliato ? 'hot' : ''}>
+                      {p.data.nome}
+                    </th>
+                  ))
+                }
+              </tr>
+            </thead>
+            <tbody>
+              {
+                righe.map((v) => (
+                  <tr>
+                    <th scope="row">
+                      {v.label}
+                      {v.descrizione && <em>{v.descrizione}</em>}
+                    </th>
+                    {
+                      piani.map((p) => {
+                        const val = valore(p, v.id);
+                        return (
+                          <td class={p.data.consigliato ? 'hot' : ''}>
+                            {val === null ? (
+                              <span class="no" aria-label="Non incluso">
+                                —
+                              </span>
+                            ) : val === true ? (
+                              <span class="si" aria-label="Incluso">
+                                ✓
+                              </span>
+                            ) : (
+                              <span class="lim">{val}</span>
+                            )}
+                          </td>
+                        );
+                      })
+                    }
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Guest Pass ────────────────────────────────────────────── -->
+    <section class="sec" style="padding-top:56px;padding-bottom:56px">
+      <div class="wrap">
+        <div class="gp-strip">
+          <div>
+            <span class="label">Prima di decidere</span>
+            <h2 class="d">Sette giorni di Guest Pass</h2>
+            <p>
+              Accesso completo al centro per una settimana a {euro(GUEST_PASS)} €, con un istruttore
+              che ti accompagna al primo ingresso. Solo per chi non ha mai avuto un abbonamento
+              Lume.
+            </p>
+          </div>
+          <a href="/guest-pass" class="btn btn-cream">Attiva il pass</a>
+        </div>
+      </div>
+    </section>
+
+    {
+      inArrivo.length > 0 && (
+        <section class="sec" style="padding-top:0">
+          <div class="wrap">
+            <div class="promo">
+              <div>
+                <span class="label" style="color:#fff">
+                  Prevendita attiva
+                </span>
+                <h2 class="d" style="margin-top:12px">
+                  Tariffa lancio nei nuovi centri
+                </h2>
+                <p>
+                  {inArrivo.map((c) => c.data.nome).join(' e ')} aprono presto. Chi si iscrive
+                  adesso blocca la tariffa lancio e la tiene anche dopo l'apertura.
+                </p>
+              </div>
+              <button
+                type="button"
+                class="btn btn-cream btn-full"
+                style="max-width:340px"
+                data-open-modal="modal-contatti"
+                data-piano="prevendita"
+              >
+                Blocca la tariffa lancio
+              </button>
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    {
+      faq.length > 0 && (
+        <section class="sec" style="padding-top:0" aria-labelledby="tit-faq">
+          <div class="wrap">
+            <div class="sec-head">
+              <span class="label">Domande frequenti</span>
+              <h2 id="tit-faq" class="d">
+                Prima che tu lo chieda
+              </h2>
+            </div>
+            <div class="faq">
+              {faq.map((v) => (
+                <details>
+                  <summary>{v.data.titolo}</summary>
+                  <div class="faq-in">
+                    <p>{v.data.sintesi}</p>
+                    <a href={`/lume-life/help/${v.id}`}>Leggi la risposta completa</a>
+                  </div>
+                </details>
+              ))}
+            </div>
+            <p class="pg-note" style="margin-top:26px">
+              Durata, rinnovi, disdette e sospensioni sono scritti per esteso nella{' '}
+              <a href="/lume-life">wiki Lume</a>.
+            </p>
+          </div>
+        </section>
+      )
+    }
+  </main>
+
+  <Footer />
+</Layout>

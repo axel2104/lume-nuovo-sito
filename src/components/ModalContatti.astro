@@ -45,7 +45,8 @@ import LeadFormBody from './LeadFormBody.astro';
       if (!t || t.getAttribute('data-open-modal') !== 'modal-contatti') return;
       e.preventDefault();
       modal.showModal();
-      form?.open(location.pathname, (t.textContent || '').trim());
+      // `data-piano` c'e' solo sui bottoni di /abbonamenti: altrove resta vuoto.
+      form?.open(location.pathname, (t.textContent || '').trim(), t.getAttribute('data-piano') || '');
     });
 
     modal.addEventListener('click', (e) => {
