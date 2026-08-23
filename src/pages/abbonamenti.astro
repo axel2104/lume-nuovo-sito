@@ -78,6 +78,15 @@ const risparmioMax = Math.max(...piani.map((p) => p.data.mensile * 12 - p.data.a
   <Header />
 
   <main id="contenuto">
+    <!--
+      DA TOGLIERE quando arriva il listino vero (una riga, questo <p>).
+      Finche' i prezzi vengono dal mockup, chi apre la pagina deve saperlo
+      prima di leggerli: senza avviso li prende per il listino del club.
+    -->
+    <p class="avviso-bozza">
+      <b>Bozza</b> I prezzi di questa pagina vengono dal mockup e non sono il listino reale.
+    </p>
+
     <!-- ─── Hero ──────────────────────────────────────────────────── -->
     <header class="ab-hero">
       <div class="wrap">

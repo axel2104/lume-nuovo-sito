@@ -237,6 +237,13 @@ footer.site{background:#060606;border-top:1px solid var(--line);padding:54px 0 2
    Pagina abbonamenti
    ============================================================ */
 
+/* Fascia "bozza": ambra, non il rosso del brand — il rosso qui si
+   leggerebbe come decorazione invece che come avvertimento. */
+.avviso-bozza{background:rgba(224,182,74,.10);border-bottom:1px solid rgba(224,182,74,.3);
+  color:#E0B64A;font-size:13.5px;text-align:center;padding:12px var(--pad);line-height:1.5}
+.avviso-bozza b{font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  font-size:11px;margin-right:8px}
+
 /* ─── Hero ──────────────────────────────────────────────── */
 .ab-hero{padding:clamp(34px,7vw,72px) 0 clamp(30px,5vw,52px)}
 .ab-hero h1{font-size:clamp(42px,10vw,92px);margin:18px 0 20px;text-wrap:balance}
