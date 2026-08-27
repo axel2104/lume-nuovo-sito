@@ -1,0 +1,209 @@
+---
+/**
+ * Iscrizione alla newsletter — due campi e un invio.
+ *
+ * Non passa dal motore multi-step: sarebbe una sovrastruttura per un solo campo
+ * obbligatorio. Manda però allo stesso webhook e con lo stesso contratto, così
+ * su Airtable finisce in RICHIESTE con `Tipo Richiesta = NEWSLETTER` insieme a
+ * tutto il resto, invece di vivere in una lista separata.
+ *
+ * Sostituisce i due form del blog del vecchio sito, che erano decorativi: non
+ * avevano `action` né endpoint, quindi ogni iscrizione raccolta finora è andata
+ * persa senza che nessuno se ne accorgesse.
+ */
+import { NEWSLETTER } from '../../config/forms';
+
+interface Props {
+  titolo?: string;
+  testo?: string;
+  /** Valore del campo Medium su Airtable, per distinguere dove è stato compilato. */
+  medium?: string;
+}
+
+const {
+  titolo = 'Resta aggiornato',
+  testo = 'Novità, promozioni ed eventi dei centri Lume. Una email al mese, niente di più.',
+  medium = NEWSLETTER.medium,
+} = Astro.props;
+---
+
+<div class="nl" data-newsletter data-medium={medium} data-tipo={NEWSLETTER.tipoRichiesta}>
+  <div data-nl-form>
+    <h3 class="lf-title d">{titolo}</h3>
+    <p class="lf-sub">{testo}</p>
+
+    <div class="nl-row">
+      {/*
+        La label avvolge l'input invece di usare `for`: così il componente può
+        comparire due volte nella stessa pagina (in-pagina e nel footer) senza
+        id duplicati, che romperebbero l'associazione per gli screen reader.
+      */}
+      <label>
+        <span class="sr-only">La tua email</span>
+        <input
+          class="lf-in"
+          type="email"
+          data-nl-email
+          placeholder="nome@esempio.it"
+          autocomplete="email"
+          inputmode="email"
+          required
+        />
+      </label>
+      <button type="button" class="btn btn-red" data-nl-invia>
+        <span>Iscrivimi</span>
+        <span class="loader" aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <!-- Honeypot: invisibile e fuori dal flusso di tab. -->
+    <input type="text" data-nl-hp class="lf-hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+    <label class="lf-check">
+      <input type="checkbox" data-nl-privacy />
+      <span>
+        Ho letto l’<a href="/privacy" target="_blank" rel="noopener">informativa privacy</a> e
+        acconsento a ricevere comunicazioni. <b aria-hidden="true">*</b>
+      </span>
+    </label>
+
+    <p class="lf-err" data-nl-err role="alert" hidden></p>
+  </div>
+
+  <div data-nl-ok hidden>
+    <div class="lf-ok" aria-hidden="true">✓</div>
+    <h3 class="lf-title d">Ci siamo</h3>
+    <p class="lf-sub">Ti abbiamo iscritto. La prossima email arriva a inizio mese.</p>
+  </div>
+</div>
+
+<script>
+  const RE_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  document.querySelectorAll('[data-newsletter]').forEach((root) => {
+    if (!(root instanceof HTMLElement)) return;
+
+    const email = root.querySelector('[data-nl-email]');
+    const privacy = root.querySelector('[data-nl-privacy]');
+    const hp = root.querySelector('[data-nl-hp]');
+    const bottone = root.querySelector('[data-nl-invia]');
+    const err = root.querySelector('[data-nl-err]');
+    const form = root.querySelector('[data-nl-form]');
+    const ok = root.querySelector('[data-nl-ok]');
+
+    if (
+      !(email instanceof HTMLInputElement) ||
+      !(privacy instanceof HTMLInputElement) ||
+      !(bottone instanceof HTMLButtonElement) ||
+      !(err instanceof HTMLElement) ||
+      !(form instanceof HTMLElement) ||
+      !(ok instanceof HTMLElement)
+    ) {
+      return;
+    }
+
+    const errore = (msg) => {
+      err.textContent = msg || '';
+      err.hidden = !msg;
+    };
+
+    async function invia() {
+      errore('');
+
+      const valore = email.value.trim().toLowerCase();
+      if (!RE_EMAIL.test(valore)) {
+        errore('Inserisci un indirizzo email valido.');
+        email.focus();
+        return;
+      }
+      if (!privacy.checked) {
+        errore('Per iscriverti devi accettare l’informativa privacy.');
+        return;
+      }
+      // Honeypot compilato: è un bot. Mostriamo il successo e non inviamo nulla.
+      if (hp instanceof HTMLInputElement && hp.value !== '') {
+        form.hidden = true;
+        ok.hidden = false;
+        return;
+      }
+
+      const cfg = window.LUME_CFG || {};
+      const utm = typeof window.lumeGetUtm === 'function' ? window.lumeGetUtm() : {};
+      const corpo = {
+        flusso: 'newsletter',
+        tipoRichiesta: root.dataset.tipo || 'NEWSLETTER',
+        email: valore,
+        privacy: true,
+        marketing: true,
+        source: utm.source || utm.utm_source || 'SitoWeb',
+        medium: utm.medium || utm.utm_medium || root.dataset.medium || 'Newsletter',
+        pagina: location.pathname,
+        utm,
+        vid: typeof window.lumeGetVid === 'function' ? window.lumeGetVid() : null,
+      };
+
+      bottone.disabled = true;
+      bottone.classList.add('is-loading');
+      try {
+        if (cfg.webhookLead) {
+          const res = await fetch(cfg.webhookLead, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(corpo),
+          });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+        } else {
+          console.info('[lume] newsletter (nessun webhook configurato)', corpo);
+        }
+      } catch (e) {
+        bottone.disabled = false;
+        bottone.classList.remove('is-loading');
+        errore('Iscrizione non riuscita. Riprova fra qualche istante.');
+        return;
+      }
+      bottone.disabled = false;
+      bottone.classList.remove('is-loading');
+
+      try {
+        if (typeof window.lumeTrack === 'function') {
+          window.lumeTrack('newsletter_iscrizione', { lead_medium: corpo.medium });
+        }
+      } catch (e) {}
+
+      form.hidden = true;
+      ok.hidden = false;
+    }
+
+    bottone.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      void invia();
+    });
+    email.addEventListener('keydown', (ev) => {
+      if (ev.key !== 'Enter') return;
+      ev.preventDefault();
+      void invia();
+    });
+  });
+</script>
+
+<style>
+  .nl {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--lf-r-l);
+    padding: 28px 24px;
+  }
+  .nl-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .nl-row label {
+    display: block;
+  }
+  @media (min-width: 560px) {
+    .nl-row {
+      grid-template-columns: 1fr auto;
+    }
+  }
+</style>

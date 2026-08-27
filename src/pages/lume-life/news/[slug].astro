@@ -4,6 +4,7 @@ import { getCollection, render } from 'astro:content';
 import Layout from '../../../layouts/Layout.astro';
 import Header from '../../../components/Header.astro';
 import Footer from '../../../components/Footer.astro';
+import Newsletter from '../../../components/forms/Newsletter.astro';
 import { categorieNews, etichetta } from '../../../data/tassonomie';
 import { dataEstesa } from '../../../lib/richtext';
 
@@ -63,6 +64,12 @@ const correlate = (await getCollection('news', ({ data }) => data.pubblicato))
           )
         }
       </div>
+
+      {/* Chi arriva in fondo a un articolo è il lettore più qualificato che
+          abbiamo: è qui che l'iscrizione ha senso chiederla. */}
+      <div class="art-nl">
+        <Newsletter medium={`NewsArticolo:${entry.id}`} />
+      </div>
     </article>
 
     {
@@ -102,3 +109,10 @@ const correlate = (await getCollection('news', ({ data }) => data.pubblicato))
 
   <Footer />
 </Layout>
+
+<style>
+  .art-nl {
+    max-width: 1000px;
+    margin: 44px auto 0;
+  }
+</style>

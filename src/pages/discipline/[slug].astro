@@ -4,6 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import { getCollection, render } from 'astro:content';
+import { interesseDisciplina, SEDI } from '../../config/forms';
 
 export async function getStaticPaths() {
   const discipline = await getCollection('discipline');
@@ -27,6 +28,12 @@ const simili = (await getCollection('discipline'))
   .filter((x) => x.id !== entry.id && x.data.categoria === d.categoria)
   .sort((a, b) => a.data.ordine - b.data.ordine)
   .slice(0, 4);
+
+// Chi arriva qui ha già scelto cosa vuole fare: il form si apre con l'attività
+// spuntata, e se la disciplina si tiene in un solo centro anche con la sede.
+const interesse = interesseDisciplina(d);
+const sediDisponibili = disponibile.filter((c) => SEDI[c.id]);
+const centroUnico = sediDisponibili.length === 1 ? sediDisponibili[0].id : '';
 ---
 
 <Layout title={`${d.nome} — LUMe Fitness Club`} description={d.breve}>
@@ -143,8 +150,32 @@ const simili = (await getCollection('discipline'))
               )
             }
 
-            <button type="button" class="btn btn-red btn-full" data-open-modal="modal-contatti">
+            {/*
+              Il bottone diceva "Prova" e apriva il form informazioni: ora apre
+              davvero il flusso del pass prova, con l'attività già spuntata.
+              `data-medium` porta lo slug della disciplina, così su Airtable si
+              vede quale scheda converte invece di un generico "sito".
+            */}
+            <button
+              type="button"
+              class="btn btn-red btn-full"
+              data-open-form="prova"
+              data-medium={`Disciplina:${entry.id}`}
+              data-interesse={interesse}
+              data-centro={centroUnico}
+            >
               Prova {d.nome}
+            </button>
+            <button
+              type="button"
+              class="btn btn-out btn-full"
+              style="margin-top:10px"
+              data-open-form="info"
+              data-medium={`DisciplinaInfo:${entry.id}`}
+              data-interesse={interesse}
+              data-centro={centroUnico}
+            >
+              Chiedi informazioni
             </button>
             {/* Visibile solo dentro il pannello: sulla pagina saremmo già qui. */}
             <a class="btn btn-out btn-full solo-pannello" href={`/discipline/${entry.id}/`}>

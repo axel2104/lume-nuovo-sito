@@ -3,6 +3,7 @@ const links = [
   { href: '/', label: 'Home' },
   { href: '/centri', label: 'Centri' },
   { href: '/discipline', label: 'Discipline' },
+  { href: '/planning/macerata', label: 'Planning' },
   { href: '/lume-life', label: 'Lume Life' },
   { href: '/abbonamenti', label: 'Abbonamenti' },
 ];
@@ -15,10 +16,17 @@ const links = [
       {links.map((l) => <a href={l.href}>{l.label}</a>)}
     </div>
     <div class="nav-right">
-      <button type="button" class="btn btn-out nav-cta nav-contatti" data-open-modal="modal-contatti">
+      <button
+        type="button"
+        class="btn btn-out nav-cta nav-contatti"
+        data-open-form="info"
+        data-medium="HeaderContatti"
+      >
         Contattaci
       </button>
-      <a href="/abbonamenti" class="btn btn-red nav-cta">Abbonati</a>
+      <button type="button" class="btn btn-red nav-cta" data-open-form="prova" data-medium="HeaderProva">
+        Prova Lume
+      </button>
       <button
         type="button"
         class="burger"
@@ -34,7 +42,7 @@ const links = [
 </nav>
 
 <!--
-  Menu mobile. È un <dialog> nativo come ModalContatti: il browser regala
+  Menu mobile. È un <dialog> nativo come i modal dei form: il browser regala
   trappola del focus, chiusura con Esc, backdrop e inert sul resto della
   pagina. Sotto i 1024px era l'unico modo per raggiungere le sezioni: prima
   il burger era un <div> senza alcun gestore, quindi Centri, Discipline e
@@ -53,9 +61,24 @@ const links = [
         </li>
       ))}
     </ul>
-    <button type="button" class="btn btn-out btn-full" data-open-modal="modal-contatti">
-      Contattaci
-    </button>
+    <div class="menu-mobile-cta">
+      <button
+        type="button"
+        class="btn btn-red btn-full"
+        data-open-form="prova"
+        data-medium="MenuMobileProva"
+      >
+        Prova Lume
+      </button>
+      <button
+        type="button"
+        class="btn btn-out btn-full"
+        data-open-form="info"
+        data-medium="MenuMobileContatti"
+      >
+        Contattaci
+      </button>
+    </div>
   </div>
 </dialog>
 
@@ -164,6 +187,11 @@ const links = [
   }
   .menu-mobile-links a:hover {
     color: var(--red-txt);
+  }
+  .menu-mobile-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
   @media (min-width: 1024px) {

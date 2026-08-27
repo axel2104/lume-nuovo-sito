@@ -3,7 +3,9 @@ import { Picture } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import BandaCta from '../../components/BandaCta.astro';
 import { getCollection, render } from 'astro:content';
+import { SEDI } from '../../config/forms';
 
 export async function getStaticPaths() {
   const centri = await getCollection('centri');
@@ -14,6 +16,16 @@ const { entry } = Astro.props;
 const c = entry.data;
 const { Content } = await render(entry);
 const aperto = c.stato === 'aperto';
+
+/**
+ * I form raccolgono lead solo per i centri che il campo SEDE di Airtable
+ * conosce. Un centro aperto ma assente da quella lista mostrerebbe form che
+ * generano record scartati, quindi qui torna ai contatti generici.
+ */
+const raccogliLead = aperto && Boolean(SEDI[entry.id]);
+
+/** `perfectgymUrl` ha default '#': un link a '#' è peggio di nessun link. */
+const portaleAttivo = Boolean(c.perfectgymUrl && c.perfectgymUrl !== '#');
 
 // Discipline disponibili in questo centro
 const tutte = await getCollection('discipline');
@@ -88,18 +100,75 @@ const disc = tutte
         </div>
       )}
 
-      <div class="planning">
-        <div class="d">Planning {c.nome.replace('Lume ', '')}</div>
-        <p>Il planning settimanale di questo centro sarà disponibile qui — lo costruiamo insieme.</p>
-      </div>
+      {/* Il planning ha una pagina sua, indicizzabile e condivisibile: qui basta
+          la porta d'ingresso. */}
+      {aperto ? (
+        <div class="planning">
+          <div class="d">Planning {c.nome.replace('Lume ', '')}</div>
+          <p>Orario settimanale dei corsi: sala, acqua, Reformer e discipline su prenotazione.</p>
+          <a href={`/planning/${entry.id}`} class="btn btn-out" style="margin-top:16px">
+            Vedi l’orario dei corsi
+          </a>
+        </div>
+      ) : (
+        <div class="planning">
+          <div class="d">Planning {c.nome.replace('Lume ', '')}</div>
+          <p>L’orario dei corsi sarà pubblicato all’apertura del centro.</p>
+        </div>
+      )}
 
-      <div style="margin-top:28px">
-        {aperto ? (
-          <a href={c.perfectgymUrl} class="btn btn-red">Abbonati a {c.nome.replace('Lume ', '')}</a>
-        ) : (
+      {/*
+        Le CTA della sede portano il centro già selezionato: chi è su questa
+        pagina ha già risposto alla domanda "quale centro", e richiederla nel
+        form sarebbe attrito gratuito. `data-medium` porta lo slug, così su
+        Airtable si distingue Macerata da Montecassiano come sorgente.
+      */}
+      {raccogliLead ? (
+        <div style="margin-top:34px">
+          <BandaCta
+            titolo={`Vieni a vedere ${c.nome.replace('Lume ', '')}`}
+            testo="Prova una settimana o fissa una visita guidata: ti facciamo vedere le sale e ti spieghiamo come funziona, senza impegno."
+            larghezzaCta="280px"
+          >
+            <button
+              type="button"
+              class="btn btn-red btn-full"
+              data-open-form="prova"
+              data-medium={`Centro:${entry.id}`}
+              data-centro={entry.id}
+            >
+              Prova 7 giorni
+            </button>
+            <button
+              type="button"
+              class="btn btn-out btn-full"
+              data-open-form="iscrizione"
+              data-medium={`CentroAbbonamento:${entry.id}`}
+              data-centro={entry.id}
+            >
+              Richiedi un abbonamento
+            </button>
+            <button
+              type="button"
+              class="btn btn-out btn-full"
+              data-open-form="info"
+              data-medium={`CentroInfo:${entry.id}`}
+              data-centro={entry.id}
+            >
+              Fatti richiamare
+            </button>
+            {portaleAttivo && (
+              <a href={c.perfectgymUrl} class="btn btn-out btn-full">
+                Attiva online sul portale
+              </a>
+            )}
+          </BandaCta>
+        </div>
+      ) : (
+        <div style="margin-top:28px">
           <a href="/#prevendita" class="btn btn-red">Iscriviti alla prevendita</a>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   </section>
   </main>

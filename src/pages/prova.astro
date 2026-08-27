@@ -1,0 +1,217 @@
+---
+/**
+ * Landing del pass prova — destinazione dei redirect da `/provagratis` e
+ * `n8n.lumeflow.it/form/guest-pass`.
+ *
+ * Il vecchio sito mandava questa richiesta su due strumenti diversi (un form
+ * nativo n8n e un Typeform) con offerte descritte in modo diverso. Qui c'è una
+ * pagina sola, e il form è quello del sito: l'utente non cambia dominio, e
+ * l'attribuzione non si perde nel passaggio.
+ */
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import FormInline from '../components/forms/FormInline.astro';
+import { getCollection } from 'astro:content';
+import { SEDI } from '../config/forms';
+
+const centri = (await getCollection('centri'))
+  .filter((c) => SEDI[c.id])
+  .sort((a, b) => a.data.ordine - b.data.ordine);
+
+const incluso = [
+  { titolo: 'Sala pesi e cardio', testo: 'Accesso libero al gym floor, con la scheda impostata da un tecnico.' },
+  { titolo: 'Corsi fitness', testo: 'Tutti i corsi di gruppo in licenza Les Mills, prenotabili da app.' },
+  { titolo: 'Acqua', testo: 'Acqua fitness e nuoto libero assistito, dove la piscina c’è.' },
+  { titolo: 'CrossFit e Reformer', testo: 'Anche le discipline su prenotazione, non solo la sala.' },
+];
+---
+
+<Layout
+  title="Prova Lume 7 giorni — LUMe Fitness Club"
+  description="Sette giorni di accesso completo ai centri Lume a 15 €: sala pesi, corsi fitness, acqua, CrossFit e Pilates Reformer. Nessun vincolo di rinnovo."
+>
+  <Header />
+
+  <main>
+    <section class="sec">
+      <div class="wrap">
+        <div class="prova-grid">
+          <div>
+            <span class="label">Pass prova</span>
+            <h1 class="d">Sette giorni.<br />Tutto incluso.</h1>
+            <p class="prova-lead">
+              Un pass completo per capire se Lume è il posto giusto per te, prima di firmare
+              qualsiasi cosa. Nessun vincolo di rinnovo: se non torni, non succede niente.
+            </p>
+
+            <div class="prova-prezzo">
+              <b>15 €</b>
+              <span>una volta sola · 7 giorni consecutivi</span>
+            </div>
+
+            <div class="prova-voci">
+              {
+                incluso.map((i) => (
+                  <div class="prova-voce">
+                    <h3>{i.titolo}</h3>
+                    <p>{i.testo}</p>
+                  </div>
+                ))
+              }
+            </div>
+
+            <div class="prova-note">
+              <h4>Le regole, senza asterischi</h4>
+              <ul>
+                <li>Riservato a chi non ha mai avuto un abbonamento o un pass Lume.</li>
+                <li>Il codice va attivato entro 30 giorni dalla richiesta.</li>
+                <li>Il primo ingresso si fa in reception con un documento.</li>
+                <li>Un solo pass per persona.</li>
+              </ul>
+            </div>
+
+            <div class="prova-sedi">
+              <span class="label">Dove</span>
+              <div class="prova-sedi-lista">
+                {
+                  centri.map((c) => (
+                    <div class="info-card">
+                      <h4>{c.data.nome}</h4>
+                      {c.data.indirizzo && <p>{c.data.indirizzo}</p>}
+                      {c.data.orari && (
+                        <p class="prova-orari">
+                          Lun–Ven {c.data.orari.feriali} · Sab {c.data.orari.sabato}
+                        </p>
+                      )}
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="prova-form">
+            <FormInline flusso="prova" medium="PaginaProva" />
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .prova-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  .prova-lead {
+    max-width: 52ch;
+  }
+  .prova-prezzo {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin: 26px 0;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .prova-prezzo b {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(40px, 9vw, 62px);
+    line-height: 1;
+    color: var(--red);
+  }
+  .prova-prezzo span {
+    font-size: 13px;
+    color: var(--mut);
+  }
+  .prova-voci {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-bottom: 30px;
+  }
+  .prova-voce h3 {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 16px;
+    letter-spacing: 0.03em;
+    margin: 0 0 5px;
+  }
+  .prova-voce p {
+    font-size: 14px;
+    color: var(--mut);
+    margin: 0;
+  }
+  .prova-note {
+    border: 1px solid var(--line);
+    border-radius: var(--lf-r-m);
+    padding: 22px 24px;
+    margin-bottom: 30px;
+  }
+  .prova-note h4 {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    margin: 0 0 12px;
+  }
+  .prova-note ul {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 7px;
+  }
+  .prova-note li {
+    font-size: 13px;
+    line-height: 1.55;
+    color: #cfcfcf;
+  }
+  .prova-sedi-lista {
+    display: grid;
+    gap: 12px;
+  }
+  /* `.info-card` arriva da global.css con 16px: qui segue la scala dei form,
+     senza toccare le altre pagine che la usano. */
+  .prova-sedi-lista .info-card {
+    border-radius: var(--lf-r-m);
+  }
+  .prova-sedi-lista p {
+    font-size: 13px;
+    color: #ddd;
+    margin: 0 0 4px;
+  }
+  .prova-orari {
+    color: var(--mut) !important;
+    font-size: 12px !important;
+  }
+
+  @media (min-width: 640px) {
+    .prova-voci {
+      grid-template-columns: 1fr 1fr;
+    }
+    .prova-sedi-lista {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 1024px) {
+    .prova-grid {
+      grid-template-columns: 1fr 0.85fr;
+      gap: 48px;
+    }
+    /* Il form segue la lettura invece di finire fuori schermo sulle colonne
+       lunghe: chi ha già deciso lo trova sempre a portata di click. */
+    .prova-form {
+      position: sticky;
+      top: 96px;
+    }
+  }
+</style>

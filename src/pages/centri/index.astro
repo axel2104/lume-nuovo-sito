@@ -3,6 +3,7 @@ import { Picture } from 'astro:assets';
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import BandaCta from '../../components/BandaCta.astro';
 import { getCollection } from 'astro:content';
 
 const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.data.ordine);
@@ -40,6 +41,22 @@ const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.
             </div>
           </a>
         ))}
+      </div>
+
+      {/* La pagina elencava i centri e finiva: chi ha appena scelto dove
+          allenarsi non aveva nessun passo successivo da fare. */}
+      <div style="margin-top:34px">
+        <BandaCta
+          titolo="Non sai quale scegliere?"
+          testo="Raccontaci cosa cerchi e ti indirizziamo al centro giusto — o provane uno per una settimana."
+        >
+          <button type="button" class="btn btn-red btn-full" data-open-form="prova" data-medium="IndiceCentri">
+            Prova 7 giorni
+          </button>
+          <button type="button" class="btn btn-out btn-full" data-open-form="info" data-medium="IndiceCentriInfo">
+            Fatti consigliare
+          </button>
+        </BandaCta>
       </div>
     </div>
   </section>

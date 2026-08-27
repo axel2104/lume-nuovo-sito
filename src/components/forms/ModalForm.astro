@@ -1,0 +1,110 @@
+---
+/**
+ * Modal di un form. Montato una volta nel Layout per ogni flusso usato dal sito.
+ *
+ * Qualsiasi elemento della pagina lo apre con `data-open-form="<flusso>"`:
+ * nessun listener da aggiungere altrove. Gli attributi opzionali sul CTA
+ * arricchiscono il lead senza chiedere nulla all'utente:
+ *
+ *   data-medium="HeroMacerata"        → finisce nel campo Medium di Airtable
+ *   data-centro="macerata"            → preseleziona il centro
+ *   data-interesse="Pilates Reformer" → preseleziona l'attività
+ *   data-abbonamento="Plus"           → preseleziona il piano
+ *
+ * Le preselezioni servono a non far ripetere ciò che il contesto già dice: sulla
+ * scheda del Reformer l'attività è ovvia, sul bottone del piano Plus il piano è
+ * ovvio. Il testo del bottone cliccato resta registrato come `cta`.
+ *
+ * Nota sullo script: la configurazione passa dai data-attribute e non da
+ * `define:vars`, perché quella direttiva implica `is:inline` e uno script inline
+ * non viene elaborato dal bundler — l'`import` non funzionerebbe. Essendo
+ * identico per tutte le istanze, Astro lo include una volta sola e il ciclo
+ * inizializza tutti i modal presenti.
+ */
+import LeadFormBody from './LeadFormBody.astro';
+import { FLUSSI } from '../../config/forms';
+
+interface Props {
+  flusso: string;
+}
+
+const { flusso } = Astro.props;
+const def = FLUSSI[flusso];
+if (!def) throw new Error(`Flusso "${flusso}" non definito in src/config/forms.ts`);
+
+const idModal = `modal-form-${flusso}`;
+const prefix = `m${flusso}`;
+---
+
+<dialog
+  id={idModal}
+  class="lf-modal"
+  aria-labelledby={`${idModal}-titolo`}
+  data-modal-form
+  data-flusso={flusso}
+  data-prefix={prefix}
+>
+  <div class="lf-modal-in">
+    <button type="button" class="lf-close" data-modal-close aria-label="Chiudi">×</button>
+    <h2 id={`${idModal}-titolo`} class="sr-only">{def.titolo}</h2>
+    <LeadFormBody flusso={flusso} prefix={prefix} />
+  </div>
+</dialog>
+
+<script>
+  import { initForm } from '../../lib/leadForm.client.js';
+
+  document.querySelectorAll('dialog[data-modal-form]').forEach((el) => {
+    if (!(el instanceof HTMLDialogElement)) return;
+
+    const flusso = el.dataset.flusso;
+    const prefix = el.dataset.prefix;
+    if (!flusso || !prefix) return;
+
+    // `reset()` chiude il dialog e la chiusura del dialog richiama `reset()`:
+    // senza questo flag i due si rincorrono per un giro di troppo.
+    let inChiusura = false;
+
+    const form = initForm(el, {
+      flusso,
+      prefix,
+      onReset: () => {
+        if (inChiusura) return;
+        inChiusura = true;
+        if (el.open) el.close();
+        inChiusura = false;
+      },
+    });
+
+    const chiudi = () => {
+      if (!inChiusura) form?.reset();
+    };
+
+    document.addEventListener('click', (ev) => {
+      const t = ev.target instanceof Element ? ev.target.closest('[data-open-form]') : null;
+      if (!t || t.getAttribute('data-open-form') !== flusso) return;
+      ev.preventDefault();
+
+      el.showModal();
+      form?.apri(
+        location.pathname,
+        (t.textContent || '').trim(),
+        t.getAttribute('data-medium') || '',
+      );
+
+      form?.preseleziona('centro', t.getAttribute('data-centro'));
+      form?.preseleziona('attivita', t.getAttribute('data-interesse'));
+      form?.preseleziona('abbonamento', t.getAttribute('data-abbonamento'));
+    });
+
+    el.addEventListener('click', (ev) => {
+      // Il target è il <dialog> stesso solo quando si clicca il backdrop.
+      if (ev.target === el) return chiudi();
+      const t = ev.target instanceof Element ? ev.target.closest('[data-modal-close]') : null;
+      if (t) chiudi();
+    });
+
+    // Copre anche la chiusura con Esc, gestita nativamente dal browser.
+    el.addEventListener('close', chiudi);
+  });
+</script>

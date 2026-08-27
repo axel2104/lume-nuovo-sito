@@ -1,0 +1,359 @@
+/* ============================================================
+   Planning settimanale
+   Riusa i token brand di global.css e la scala dei raggi di leadform.css
+   (con fallback, così il componente resta usabile da solo).
+   ============================================================ */
+
+.pl {
+  --pl-r: var(--lf-r-s, 2px);
+  --pl-gutter: 54px;
+}
+
+/* ─── Avviso dati di esempio ────────────────────────────────── */
+.pl-esempio {
+  border: 1px dashed var(--red);
+  border-radius: var(--lf-r-m, 4px);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #e6e6e6;
+}
+
+/* ─── Barra: filtri e metadati ──────────────────────────────── */
+.pl-barra {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+.pl-filtri {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+}
+.pl-f {
+  display: grid;
+  gap: 6px;
+}
+.pl-f span {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mut);
+}
+.pl-f select {
+  background: #0a0a0a;
+  border: 1px solid var(--line);
+  border-radius: var(--pl-r);
+  color: var(--txt);
+  font-family: inherit;
+  font-size: 14px;
+  padding: 10px 12px;
+  min-width: 170px;
+}
+.pl-f select:focus-visible {
+  outline: none;
+  border-color: var(--red);
+}
+.pl-reset,
+.pl-link {
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: var(--pl-r);
+  color: #bbb;
+  font-family: inherit;
+  font-size: 13px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: 0.15s;
+}
+.pl-reset:hover,
+.pl-link:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+.pl-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  font-size: 12px;
+  color: var(--mut);
+}
+.pl-prenota {
+  color: var(--red);
+  font-weight: 600;
+}
+.pl-prenota:hover {
+  text-decoration: underline;
+}
+
+/* ─── Stato vuoto ───────────────────────────────────────────── */
+.pl-vuoto {
+  color: var(--mut);
+  font-size: 14px;
+  line-height: 1.6;
+  border: 1px solid var(--line);
+  border-radius: var(--lf-r-m, 4px);
+  padding: 22px 24px;
+  margin: 0;
+}
+.pl-vuoto a {
+  color: var(--red);
+  text-decoration: underline;
+}
+
+/* ─── Griglia settimanale (desktop) ─────────────────────────── */
+/* Nascosta di default: sotto i 1024px sette colonne non stanno in nessuno
+   schermo senza diventare illeggibili, e il telefono è dove si guarda
+   l'orario prima di uscire di casa. */
+.pl-griglia {
+  display: none;
+}
+
+.pl-testa,
+.pl-corpo {
+  display: grid;
+  grid-template-columns: var(--pl-gutter) repeat(var(--pl-colonne, 7), minmax(0, 1fr));
+}
+.pl-giorno-testa {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: #ddd;
+  padding: 0 0 10px 10px;
+}
+.pl-corpo {
+  position: relative;
+  border-top: 1px solid var(--line);
+}
+.pl-gutter {
+  position: relative;
+}
+.pl-ora {
+  position: absolute;
+  right: 10px;
+  /* Mezza riga di testo sopra la linea, così il numero è allineato al filo
+     dell'ora e non sembra appartenere alla fascia precedente. */
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: #6a6a6a;
+  font-variant-numeric: tabular-nums;
+}
+.pl-colonna {
+  position: relative;
+  border-left: 1px solid var(--line);
+  min-height: 100%;
+}
+.pl-riga {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #141414;
+}
+
+.pl-lez {
+  position: absolute;
+  overflow: hidden;
+  display: block;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--red);
+  border-radius: var(--pl-r);
+  padding: 6px 8px;
+  color: inherit;
+  transition: 0.15s;
+}
+a.pl-lez:hover {
+  border-color: var(--red);
+  background: rgba(196, 0, 66, 0.12);
+}
+.pl-lez b {
+  /* Due righe al massimo: oltre, il titolo mangerebbe la riga dei metadati. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+/* Lezione breve: il titolo scende a una riga sola, così i metadati restano
+   visibili invece di essere spinti fuori dal riquadro. */
+.pl-lez.corta b {
+  -webkit-line-clamp: 1;
+  font-size: 11.5px;
+}
+/* Tre o più sale in parallelo: la colonna si divide in tessere da ~60px e il
+   testo va rimpicciolito, altrimenti si legge "Les M…" e non serve a niente. */
+.pl-lez.stretta {
+  padding: 5px 6px;
+}
+.pl-lez.stretta b {
+  font-size: 10.5px;
+  line-height: 1.2;
+}
+.pl-lez.stretta .pl-lez-meta {
+  font-size: 9px;
+}
+.pl-lez-meta {
+  display: block;
+  margin-top: 2px;
+  font-size: 10px;
+  color: var(--mut);
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pl-lez[hidden] {
+  display: none;
+}
+
+/* ─── Liste per giorno (mobile) ─────────────────────────────── */
+.pl-giorni {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 14px;
+  margin-bottom: 6px;
+  /* Il selettore resta a portata di pollice mentre si scorre la giornata. */
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--bg, #060606);
+  scrollbar-width: none;
+}
+.pl-giorni::-webkit-scrollbar {
+  display: none;
+}
+.pl-gio {
+  flex: none;
+  display: grid;
+  gap: 2px;
+  justify-items: center;
+  min-width: 52px;
+  padding: 9px 10px;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: var(--pl-r);
+  color: #bbb;
+  font-family: inherit;
+  cursor: pointer;
+  transition: 0.15s;
+}
+.pl-gio b {
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1;
+}
+.pl-gio span {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6a6a6a;
+}
+.pl-gio.on {
+  border-color: var(--red);
+  background: rgba(196, 0, 66, 0.14);
+  color: #fff;
+}
+.pl-gio.on span {
+  color: #d9a3b6;
+}
+
+.pl-lista {
+  margin-top: 18px;
+}
+/* Senza JavaScript la classe `singolo` non viene mai aggiunta: tutti i giorni
+   restano visibili uno sotto l'altro. Pagina lunga, ma completa. */
+.pl-lista.singolo:not(.on) {
+  display: none;
+}
+.pl-lista.singolo .pl-lista-titolo {
+  display: none;
+}
+.pl-lista-titolo {
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  color: var(--mut);
+  margin: 0 0 10px;
+}
+.pl-lista ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.pl-lista li {
+  display: grid;
+  grid-template-columns: 62px 1fr;
+  gap: 14px;
+  align-items: baseline;
+  padding: 13px 0;
+  border-top: 1px solid var(--line);
+}
+.pl-lista li[hidden] {
+  display: none;
+}
+.pl-ml-ora {
+  display: grid;
+  font-variant-numeric: tabular-nums;
+}
+.pl-ml-ora b {
+  font-size: 15px;
+  font-weight: 600;
+}
+.pl-ml-ora i {
+  font-style: normal;
+  font-size: 11px;
+  color: #6a6a6a;
+}
+.pl-ml-corpo {
+  display: grid;
+  gap: 3px;
+}
+.pl-ml-corpo b,
+.pl-ml-corpo a {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.pl-ml-corpo a {
+  color: var(--txt);
+}
+.pl-ml-corpo a:hover {
+  color: var(--red);
+}
+.pl-ml-meta {
+  font-size: 12px;
+  color: var(--mut);
+}
+.pl-lista-vuota {
+  font-size: 13px;
+  color: var(--mut);
+  margin: 12px 0 0;
+}
+
+/* ─── Passaggio a griglia ───────────────────────────────────── */
+@media (min-width: 1024px) {
+  .pl-griglia {
+    display: block;
+  }
+  .pl-mobile {
+    display: none;
+  }
+}

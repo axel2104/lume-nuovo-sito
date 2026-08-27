@@ -1,0 +1,340 @@
+---
+/**
+ * Markup di un form, generato dalla definizione del flusso.
+ *
+ * Nessuna logica qui dentro: questo file traduce `FLUSSI[flusso]` in HTML e si
+ * limita a rispettare il contratto di id e data-attribute che il motore
+ * (`src/lib/leadForm.client.js`) si aspetta. Il flusso `info` e il flusso
+ * `prova` sono lo stesso componente con una configurazione diversa.
+ *
+ * ─── Contratto di id ──────────────────────────────────────────────────────
+ * Tutti gli id sono `{prefix}-{idStep}-{nomeCampo}`. Il prefisso separa due
+ * istanze nella stessa pagina (modal + inline); lo step separa campi omonimi
+ * dentro lo stesso flusso — `messaggio` compare in quattro step diversi, e con
+ * id solo prefissati sarebbero quattro elementi con lo stesso id.
+ *
+ * Centri e attività non sono hardcoded: i primi arrivano dalla collection
+ * `centri` filtrata sulle sedi che Airtable accetta, le seconde dalle opzioni
+ * del campo `ATTIVITA' INTERESSE NRE`. Vedi `src/config/forms.ts`.
+ */
+import { getCollection } from 'astro:content';
+import { FLUSSI, INTERESSI, SEDI, PREFISSI, type Campo, type Step } from '../../config/forms';
+
+interface Props {
+  /** Chiave di `FLUSSI`, es. "info" | "prova" | "iscrizione". */
+  flusso: string;
+  /** Prefisso breve e univoco per gli id, es. "lm" (modal) o "li" (inline). */
+  prefix: string;
+}
+
+const { flusso, prefix: P } = Astro.props;
+
+const def = FLUSSI[flusso];
+if (!def) throw new Error(`Flusso "${flusso}" non definito in src/config/forms.ts`);
+
+/**
+ * Solo i centri che il campo `SEDE` di Airtable conosce. Un centro mostrato qui
+ * e assente su Airtable produrrebbe lead che si perdono senza errori.
+ */
+const centri = (await getCollection('centri'))
+  .filter((c) => SEDI[c.id])
+  .sort((a, b) => a.data.ordine - b.data.ordine);
+
+/** Risolve le opzioni dichiarate per riferimento nella configurazione. */
+function opzioniDi(campo: Campo) {
+  if (campo.opzioni === 'interessi') return INTERESSI.map((i) => ({ valore: i, label: i }));
+  if (campo.opzioni === 'centri') return [];
+  return campo.opzioni ?? [];
+}
+
+const id = (step: Step, nome: string) => `${P}-${step.id}-${nome}`;
+---
+
+<div class="lf" data-lead-form data-flusso={flusso}>
+  {
+    def.passi > 0 && (
+      <div class="lf-dots" aria-hidden="true">
+        {Array.from({ length: def.passi }, (_, i) => (
+          <span data-step-dot={i + 1} class={i === 0 ? 'on' : undefined} />
+        ))}
+      </div>
+    )
+  }
+
+  {/*
+    Honeypot. Fuori dal flusso di tab e invisibile agli screen reader: un utente
+    non può compilarlo per sbaglio, un bot che riempie tutti gli input sì.
+    Uno per form, non per step: il motore lo legge sempre allo stesso indirizzo.
+  */}
+  <input
+    type="text"
+    id={`${P}-hp`}
+    name="azienda"
+    class="lf-hp"
+    tabindex="-1"
+    autocomplete="off"
+    aria-hidden="true"
+  />
+
+  {
+    def.steps.map((step, indice) => (
+      <div data-step={step.id} hidden={indice > 0}>
+        {step.riquadro && (
+          <div class="lf-box">
+            <strong>{step.riquadro.titolo}</strong>
+            <ul>
+              {step.riquadro.voci.map((v) => (
+                <li>{v}</li>
+              ))}
+            </ul>
+            {step.riquadro.nota && <em>{step.riquadro.nota}</em>}
+          </div>
+        )}
+
+        {step.finale && <div class="lf-ok" aria-hidden="true">✓</div>}
+
+        <h3 class="lf-title d">{step.titolo}</h3>
+        {step.sub && <p class="lf-sub">{step.sub}</p>}
+
+        {step.finale && <p class="lf-recap" id={id(step, 'recap')} />}
+
+        {
+          (step.campi ?? []).map((campo) => {
+            const idc = id(step, campo.nome);
+
+            if (campo.tipo === 'email' || campo.tipo === 'testo') {
+              return (
+                <>
+                  {campo.label && (
+                    <label class="lf-lab" for={idc}>
+                      {campo.label}
+                      {campo.nota && <small> {campo.nota}</small>}
+                    </label>
+                  )}
+                  <input
+                    class="lf-in"
+                    type={campo.tipo === 'email' ? 'email' : 'text'}
+                    id={idc}
+                    data-campo={campo.nome}
+                    placeholder={campo.placeholder}
+                    autocomplete={
+                      campo.tipo === 'email'
+                        ? 'email'
+                        : campo.nome === 'nome'
+                          ? 'given-name'
+                          : campo.nome === 'cognome'
+                            ? 'family-name'
+                            : 'off'
+                    }
+                    inputmode={campo.tipo === 'email' ? 'email' : undefined}
+                    required={campo.obbligatorio}
+                  />
+                </>
+              );
+            }
+
+            if (campo.tipo === 'tel') {
+              return (
+                <>
+                  <label class="lf-lab" for={idc}>
+                    {campo.label}
+                  </label>
+                  <div class="lf-tel">
+                    <select
+                      class="lf-in lf-pfx"
+                      id={id(step, 'pfx')}
+                      aria-label="Prefisso internazionale"
+                    >
+                      {PREFISSI.map((p) => (
+                        <option value={p}>{p}</option>
+                      ))}
+                    </select>
+                    <input
+                      class="lf-in"
+                      type="tel"
+                      id={idc}
+                      data-campo={campo.nome}
+                      placeholder={campo.placeholder}
+                      autocomplete="tel-national"
+                      inputmode="tel"
+                      required={campo.obbligatorio}
+                    />
+                  </div>
+                </>
+              );
+            }
+
+            if (campo.tipo === 'textarea') {
+              return (
+                <>
+                  {campo.label && (
+                    <label class="lf-lab" for={idc}>
+                      {campo.label}
+                      {campo.nota && <small> {campo.nota}</small>}
+                    </label>
+                  )}
+                  <textarea
+                    class="lf-in"
+                    id={idc}
+                    data-campo={campo.nome}
+                    rows={campo.righe ?? 4}
+                    placeholder={campo.placeholder}
+                  />
+                </>
+              );
+            }
+
+            /* Chip dei centri: portano nei data-attribute tutto ciò che il
+               motore deve sapere della sede scelta — l'opzione Airtable e i due
+               event type Cal.com — così non serve importare la collection lato
+               client. */
+            if (campo.tipo === 'chipsRadio' && campo.opzioni === 'centri') {
+              return (
+                <>
+                  <span class="lf-lab">
+                    {campo.label}
+                    {campo.nota && <small> {campo.nota}</small>}
+                  </span>
+                  <div class="lf-chips">
+                    {centri.map((c) => (
+                      <label class="lf-chip">
+                        <input
+                          type="radio"
+                          name={idc}
+                          value={c.id}
+                          data-campo={campo.nome}
+                          data-label={c.data.nome}
+                          data-sede={SEDI[c.id]}
+                          data-cal-visita={c.data.calcom?.visita ?? ''}
+                          data-cal-richiamata={c.data.calcom?.richiamata ?? ''}
+                          data-pg={c.data.perfectgymUrl ?? '#'}
+                        />
+                        <span>{c.data.nome}</span>
+                      </label>
+                    ))}
+                  </div>
+                </>
+              );
+            }
+
+            if (campo.tipo === 'chipsRadio' || campo.tipo === 'chipsCheck') {
+              const multipla = campo.tipo === 'chipsCheck';
+              return (
+                <>
+                  <span class="lf-lab">
+                    {campo.label}
+                    {campo.nota && <small> {campo.nota}</small>}
+                  </span>
+                  <div class="lf-chips">
+                    {opzioniDi(campo).map((o) => (
+                      <label class="lf-chip">
+                        <input
+                          type={multipla ? 'checkbox' : 'radio'}
+                          name={idc}
+                          value={o.valore}
+                          data-campo={campo.nome}
+                          data-label={o.label}
+                        />
+                        <span>{o.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </>
+              );
+            }
+
+            if (campo.tipo === 'consensi') {
+              return (
+                <>
+                  <label class="lf-check">
+                    <input type="checkbox" id={id(step, 'privacy')} />
+                    <span>
+                      Ho letto e accetto l’
+                      <a href="/privacy" target="_blank" rel="noopener">
+                        informativa privacy
+                      </a>
+                      . <b aria-hidden="true">*</b>
+                    </span>
+                  </label>
+                  <label class="lf-check">
+                    <input type="checkbox" id={id(step, 'marketing')} />
+                    <span>Voglio ricevere novità, promozioni ed eventi di Lume.</span>
+                  </label>
+                </>
+              );
+            }
+
+            /* Card di scelta: ognuna salta allo step con lo stesso id del valore. */
+            if (campo.tipo === 'scelte') {
+              return (
+                <div class="lf-opts">
+                  {opzioniDi(campo).map((o) => (
+                    <button type="button" class="lf-opt" data-scelta={o.valore}>
+                      <strong>{o.label}</strong>
+                      {o.nota && <span>{o.nota}</span>}
+                    </button>
+                  ))}
+                </div>
+              );
+            }
+
+            return null;
+          })
+        }
+
+        {/* Embed Cal.com: montato dal motore solo dopo l'invio del lead. */}
+        {step.prenotazione && (
+          <>
+            <div class="lf-cal" id={id(step, 'cal')} data-cal-embed />
+            <p class="lf-cal-ko" id={id(step, 'cal-ko')} data-cal-ko hidden>
+              Il calendario non è raggiungibile in questo momento, ma la tua richiesta
+              è arrivata: ti contattiamo noi per fissare l’appuntamento.
+            </p>
+          </>
+        )}
+
+        {!step.finale && <p class="lf-err" id={id(step, 'err')} role="alert" hidden />}
+
+        {step.finale && (
+          <p class="lf-pg" id={id(step, 'pg')} data-pg-link hidden>
+            Hai già scelto il piano: iscrizione e pagamento si completano sul portale della
+            tua sede. <a href="#" target="_blank" rel="noopener">Vai al portale PerfectGym ↗</a>
+          </p>
+        )}
+
+        {step.finale ? (
+          <button type="button" class="btn btn-cream btn-full" data-form-close>
+            {step.chiudi ?? 'Chiudi'}
+          </button>
+        ) : (
+          step.avanti && (
+            <div class={step.indietro ? 'lf-actions' : undefined}>
+              {step.indietro && (
+                <button type="button" class="btn btn-out" data-step-back={step.indietro}>
+                  Indietro
+                </button>
+              )}
+              <button
+                type="button"
+                class={`btn btn-red ${step.indietro ? 'lf-grow' : 'btn-full lf-next'}`}
+                id={id(step, 'avanti')}
+              >
+                <span class="lf-btn-txt">{step.avanti}</span>
+                <span class="loader" aria-hidden="true"></span>
+              </button>
+            </div>
+          )
+        )}
+
+        {/* Step di sole card di scelta: nessun bottone avanti, solo il ritorno. */}
+        {!step.finale && !step.avanti && step.indietro && (
+          <div class="lf-actions">
+            <button type="button" class="btn btn-out" data-step-back={step.indietro}>
+              Indietro
+            </button>
+          </div>
+        )}
+      </div>
+    ))
+  }
+</div>

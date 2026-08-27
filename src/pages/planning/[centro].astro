@@ -1,0 +1,145 @@
+---
+/**
+ * Planning di un centro — destinazione dei redirect da `/planning`,
+ * `/planning-macerata` e `/planning-montecassiano`.
+ *
+ * Una pagina per centro invece di una sola con le tab: l'URL è condivisibile
+ * (lo staff manda l'orario su WhatsApp) e "planning corsi Macerata" è una
+ * ricerca che la gente fa davvero, quindi conviene avere una pagina indicizzabile
+ * per ciascuno.
+ */
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import BandaCta from '../../components/BandaCta.astro';
+import PlanningSettimana from '../../components/planning/PlanningSettimana.astro';
+import { getCollection } from 'astro:content';
+import { SEDI } from '../../config/forms';
+import { PLANNING_ESEMPIO } from '../../data/planning-esempio';
+
+export async function getStaticPaths() {
+  const centri = await getCollection('centri', ({ data }) => data.stato === 'aperto');
+  return centri.map((entry) => ({ params: { centro: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const c = entry.data;
+
+const altri = (await getCollection('centri', ({ data }) => data.stato === 'aperto'))
+  .sort((a, b) => a.data.ordine - b.data.ordine);
+
+/**
+ * In sviluppo, un centro senza planning mostra i dati di esempio: serve a vedere
+ * il layout finché il webhook non esiste. In produzione mai — un orario inventato
+ * su una pagina pubblica è peggio di una pagina vuota.
+ */
+const usaEsempio = import.meta.env.DEV && c.planning.length === 0;
+const lezioni = usaEsempio ? (PLANNING_ESEMPIO[entry.id] ?? []) : c.planning;
+
+const nome = c.nome.replace('Lume ', '');
+const raccogliLead = Boolean(SEDI[entry.id]);
+---
+
+<Layout
+  title={`Planning corsi ${nome} — LUMe Fitness Club`}
+  description={`Orario settimanale dei corsi del centro Lume di ${c.citta}: sala, acqua, Reformer e discipline su prenotazione. Prenota dal portale.`}
+>
+  <Header />
+
+  <main>
+    <section class="sec">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">Planning</span>
+          <h1 class="d">Corsi a {nome}</h1>
+          <p>
+            L’orario della settimana tipo. Le variazioni del giorno — una lezione spostata, un
+            festivo — le trovi sul portale, dove prenoti il posto.
+          </p>
+        </div>
+
+        {
+          altri.length > 1 && (
+            <nav class="pl-sedi" aria-label="Scegli il centro">
+              {altri.map((a) => (
+                <a
+                  href={`/planning/${a.id}`}
+                  class:list={['pl-sede', { on: a.id === entry.id }]}
+                  aria-current={a.id === entry.id ? 'page' : undefined}
+                >
+                  {a.data.nome.replace('Lume ', '')}
+                </a>
+              ))}
+            </nav>
+          )
+        }
+
+        <PlanningSettimana
+          centro={entry.id}
+          lezioni={lezioni}
+          aggiornatoIl={c.planningAggiornatoIl}
+          prenotaUrl={c.perfectgymCorsiUrl}
+          esempio={usaEsempio}
+        />
+
+        {
+          raccogliLead && (
+            <div style="margin-top:44px">
+              <BandaCta
+                titolo="Prova un corso prima di iscriverti"
+                testo="Con il pass di una settimana entri in tutti quelli che vedi qui sopra, prenotazione inclusa."
+              >
+                <button
+                  type="button"
+                  class="btn btn-red btn-full"
+                  data-open-form="prova"
+                  data-medium={`Planning:${entry.id}`}
+                  data-centro={entry.id}
+                >
+                  Prova 7 giorni
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-out btn-full"
+                  data-open-form="info"
+                  data-medium={`PlanningInfo:${entry.id}`}
+                  data-centro={entry.id}
+                >
+                  Chiedi informazioni
+                </button>
+              </BandaCta>
+            </div>
+          )
+        }
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .pl-sedi {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 26px;
+  }
+  .pl-sede {
+    border: 1px solid var(--line);
+    border-radius: var(--lf-r-s);
+    padding: 10px 18px;
+    font-size: 14px;
+    color: #bbb;
+    transition: 0.15s;
+  }
+  .pl-sede:hover {
+    border-color: #4a4a4a;
+    color: #fff;
+  }
+  .pl-sede.on {
+    border-color: var(--red);
+    background: rgba(196, 0, 66, 0.14);
+    color: #fff;
+  }
+</style>

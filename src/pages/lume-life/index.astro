@@ -6,6 +6,7 @@ import SezioneEventi from '../../components/editoriale/SezioneEventi.astro';
 import SezioneNews from '../../components/editoriale/SezioneNews.astro';
 import SezioneHelpdesk from '../../components/editoriale/SezioneHelpdesk.astro';
 import SezioneServizi from '../../components/editoriale/SezioneServizi.astro';
+import Newsletter from '../../components/forms/Newsletter.astro';
 ---
 
 <Layout
@@ -42,12 +43,26 @@ import SezioneServizi from '../../components/editoriale/SezioneServizi.astro';
 
     <section class="sec">
       <div class="wrap">
+        {/* La newsletter sta qui e non nel footer: questo è l'unico posto del
+            sito dove chi legge ha appena dimostrato interesse per i contenuti.
+            Nel footer sarebbe JavaScript su ogni pagina per pochissime
+            iscrizioni. */}
+        <Newsletter
+          titolo="Ti teniamo aggiornato"
+          testo="Eventi, novità dai centri e promozioni. Una email al mese, niente di più."
+          medium="LumeLifeNewsletter"
+        />
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="wrap">
         <div class="promo">
           <div>
             <h2 class="d">Non trovi quello che cerchi?</h2>
             <p>Scrivici o fatti richiamare: rispondiamo a tutti, davvero.</p>
           </div>
-          <button type="button" class="btn btn-cream" data-open-modal="modal-contatti">
+          <button type="button" class="btn btn-cream" data-open-form="info" data-medium="LumeLife">
             Contattaci
           </button>
         </div>

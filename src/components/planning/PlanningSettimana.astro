@@ -1,0 +1,48 @@
+---
+/**
+ * Planning settimanale di un centro.
+ *
+ * Il componente è volutamente sottile: il markup lo produce
+ * `src/lib/planningVista.ts`, la stessa funzione che il client richiama quando
+ * i filtri cambiano o quando arrivano dati freschi dal webhook.
+ *
+ * I dati viaggiano anche come JSON in pagina. Costano qualche kB, ma servono a
+ * far **ricalcolare** il layout al filtro invece di limitarsi a nascondere le
+ * tessere: filtrando per sala le lezioni superstiti devono riprendersi tutta la
+ * larghezza della colonna, non restare strette come quando dividevano lo spazio
+ * con le altre. Il nodo JSON sta fuori dalla vista, che viene sostituita.
+ */
+import { firma } from '../../config/planning';
+import { colonneAttive, renderPlanning, type DatiPlanning } from '../../lib/planningVista';
+
+interface Props extends DatiPlanning {
+  /** Slug del centro: identifica il blocco per il refresh. */
+  centro: string;
+}
+
+const { centro, lezioni, aggiornatoIl, prenotaUrl, esempio = false } = Astro.props;
+
+const html = renderPlanning({ lezioni, aggiornatoIl, prenotaUrl, esempio });
+const dati = JSON.stringify({ lezioni, aggiornatoIl: aggiornatoIl ?? null });
+---
+
+<div
+  class="pl"
+  data-planning
+  data-centro={centro}
+  data-firma={firma(lezioni)}
+  data-prenota={prenotaUrl ?? ''}
+  data-esempio={esempio ? '1' : ''}
+  style={`--pl-colonne:${colonneAttive(lezioni)}`}
+>
+  <script type="application/json" data-planning-dati set:html={dati} />
+  <div data-planning-vista set:html={html} />
+</div>
+
+<script>
+  import { initPlanning } from '../../lib/planning.client.js';
+
+  document.querySelectorAll('[data-planning]').forEach((el) => {
+    if (el instanceof HTMLElement) initPlanning(el);
+  });
+</script>

@@ -34,6 +34,13 @@
     'gclid',
     'fbclid',
     'msclkid',
+    // `source` e `medium` senza prefisso utm_: è la convenzione che il vecchio
+    // sito usava nei link ai form (`?source=SitoWebMC&medium=BtnProva`) e che i
+    // campi Source/Medium della tabella RICHIESTE si aspettano. Vanno catturati
+    // qui, altrimenti tutti i link storici ancora in circolazione — campagne,
+    // QR in sede, vecchie email — arrivano senza attribuzione.
+    'source',
+    'medium',
     'centro',
     'email',
     'userId',

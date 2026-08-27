@@ -33,17 +33,54 @@ const centri = defineCollection({
     servizi: z.array(z.string()).default([]),
     immagine: image().nullish(),
     perfectgymUrl: z.string().default('#'),
-    // Planning virtuale per sede (lo costruiamo insieme in seguito)
+    /**
+     * Event type Cal.com della sede, senza dominio: `lume-macerata/visita`.
+     *
+     * Uno per tipo di appuntamento, perché durata e disponibilità sono diverse
+     * (una visita guidata non è una telefonata). Sono nullish: se mancano, i
+     * form registrano il lead e mostrano "ti contattiamo noi" invece di un
+     * calendario rotto — un lead senza appuntamento vale comunque, un embed
+     * vuoto no.
+     */
+    calcom: z
+      .object({
+        visita: z.string().nullish(),
+        richiamata: z.string().nullish(),
+      })
+      .nullish(),
+    /** Portale PerfectGym con l'elenco corsi prenotabili di questa sede. */
+    perfectgymCorsiUrl: z.string().nullish(),
+
+    /**
+     * Planning: la **settimana tipo** della sede, non un calendario di date.
+     *
+     * È l'ultimo orario noto e fa da fondo pagina: la pagina lo mostra subito,
+     * poi il browser prova ad aggiornarlo dal webhook n8n collegato a
+     * PerfectGym. Se il webhook non risponde resta visibile questo — meglio
+     * l'orario di ieri che una pagina vuota. Vedi `docs/PLANNING.md`.
+     *
+     * Lista piatta e non raggruppata per giorno: si edita meglio (anche da
+     * Keystatic) ed è la stessa forma che restituisce il webhook, quindi il
+     * componente non deve conoscere due strutture.
+     */
     planning: z
       .array(
         z.object({
-          giorno: z.string(),
-          slot: z.array(
-            z.object({ ora: z.string(), corso: z.string(), sala: z.string().nullish() }),
-          ),
+          /** 1 = lunedì … 7 = domenica. */
+          giorno: z.number().int().min(1).max(7),
+          inizio: z.string(), // "07:00"
+          fine: z.string(), // "07:50"
+          corso: z.string(),
+          /** Slug della collection `discipline`: rende la lezione cliccabile. */
+          disciplina: z.string().nullish(),
+          sala: z.string().nullish(),
+          istruttore: z.string().nullish(),
+          prenotabile: z.boolean().default(true),
         }),
       )
       .default([]),
+    /** ISO dell'ultimo aggiornamento del planning qui sopra. */
+    planningAggiornatoIl: z.string().nullish(),
   }),
 });
 
@@ -60,6 +97,16 @@ const discipline = defineCollection({
     intensita: z.number().min(1).max(5).nullish(),
     durata: z.number().nullish(), // minuti
     breve: z.string(), // descrizione breve
+    /**
+     * Attività di interesse Airtable da preselezionare nel form quando si apre
+     * da questa scheda. Deve essere una delle opzioni di `INTERESSI` in
+     * `src/config/forms.ts`, altrimenti il lead arriva senza attività.
+     *
+     * Vuoto = si usa il ripiego per categoria (`INTERESSE_PER_CATEGORIA`).
+     * Va compilato solo dove la categoria porta fuori strada: il TRX Pilates sta
+     * in "Mente & corpo" ma commercialmente è Pilates Reformer.
+     */
+    interesse: z.string().nullish(),
     immagine: image().nullish(),
     video: z.string().nullish(), // video loop (AWS S3/CloudFront)
     centri: z.array(z.string()).default([]),

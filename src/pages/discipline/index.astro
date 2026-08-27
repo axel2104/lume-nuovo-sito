@@ -2,6 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import BandaCta from '../../components/BandaCta.astro';
 import { getCollection } from 'astro:content';
 import { Picture } from 'astro:assets';
 
@@ -101,6 +102,22 @@ const nomeCentro = (id: string) =>
       <p class="ed-vuoto" id="disc-vuoto" hidden>
         Nessuna disciplina con questi filtri. Prova ad allargare la ricerca.
       </p>
+
+      {/* Il catalogo mostrava trentatré discipline e nessun modo di provarne
+          una: qui l'interesse accumulato scorrendo trova uno sbocco. */}
+      <div style="margin-top:44px">
+        <BandaCta
+          titolo="Provale davvero"
+          testo="Una settimana di pass ti dà accesso a tutte: corsi, sala, acqua e discipline su prenotazione."
+        >
+          <button type="button" class="btn btn-red btn-full" data-open-form="prova" data-medium="IndiceDiscipline">
+            Prova 7 giorni
+          </button>
+          <button type="button" class="btn btn-out btn-full" data-open-form="info" data-medium="IndiceDisciplineInfo">
+            Chiedi consiglio
+          </button>
+        </BandaCta>
+      </div>
     </div>
   </section>
   </main>

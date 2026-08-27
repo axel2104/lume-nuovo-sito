@@ -1,0 +1,68 @@
+---
+/**
+ * Form embeddato in pagina. Stessa logica del modal, prefisso diverso: le due
+ * istanze possono convivere nella stessa pagina senza collisioni di id.
+ *
+ * `centro` preseleziona la sede: su `/centri/macerata` è già evidente dove
+ * l'utente vuole andare, richiederlo sarebbe attrito gratuito.
+ */
+import LeadFormBody from './LeadFormBody.astro';
+import { FLUSSI } from '../../config/forms';
+
+interface Props {
+  flusso: string;
+  /** Slug del centro da preselezionare, es. "macerata". */
+  centro?: string;
+  /** Attività da preselezionare: deve essere una delle opzioni di `INTERESSI`. */
+  interesse?: string;
+  /** Piano da preselezionare nel flusso iscrizione: Base | Plus | Premium. */
+  abbonamento?: string;
+  /** Valore del campo Medium su Airtable, per distinguere le posizioni in pagina. */
+  medium?: string;
+}
+
+const { flusso, centro = '', interesse = '', abbonamento = '', medium = '' } = Astro.props;
+if (!FLUSSI[flusso]) throw new Error(`Flusso "${flusso}" non definito in src/config/forms.ts`);
+
+const prefix = `i${flusso}`;
+---
+
+<div
+  class="lf-inline"
+  data-form-inline
+  data-flusso={flusso}
+  data-prefix={prefix}
+  data-centro={centro}
+  data-interesse={interesse}
+  data-abbonamento={abbonamento}
+  data-medium={medium}
+>
+  <LeadFormBody flusso={flusso} prefix={prefix} />
+</div>
+
+<script>
+  import { initForm } from '../../lib/leadForm.client.js';
+
+  document.querySelectorAll('[data-form-inline]').forEach((el) => {
+    if (!(el instanceof HTMLElement)) return;
+
+    const flusso = el.dataset.flusso;
+    const prefix = el.dataset.prefix;
+    if (!flusso || !prefix) return;
+
+    const form = initForm(el, { flusso, prefix });
+    form?.apri(location.pathname, 'Form in pagina', el.dataset.medium || '');
+
+    // `?centro=macerata` vince sul valore della pagina: è così che i redirect
+    // dai vecchi Typeform per sede (`/infoMacerata`, `/infoMonte`) arrivano al
+    // form generico con la sede già selezionata.
+    let centro = el.dataset.centro || '';
+    try {
+      centro = new URLSearchParams(location.search).get('centro') || centro;
+    } catch (e) {}
+
+    form?.preseleziona('centro', centro);
+    form?.preseleziona('attivita', el.dataset.interesse);
+    form?.preseleziona('abbonamento', el.dataset.abbonamento);
+  });
+</script>

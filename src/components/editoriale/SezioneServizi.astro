@@ -46,7 +46,21 @@ const conTesto = await Promise.all(
             </details>
           ))}
         </div>
+
+        {/* Fisioterapia, nutrizione e personal training si vendono parlando:
+            senza una CTA la sezione informava e si fermava lì. */}
+        <div class="srv-cta">
+          <button type="button" class="btn btn-out" data-open-form="info" data-medium="SezioneServizi">
+            Parla con noi di un servizio
+          </button>
+        </div>
       </div>
     </section>
   )
 }
+
+<style>
+  .srv-cta {
+    margin-top: 26px;
+  }
+</style>

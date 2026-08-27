@@ -35,6 +35,25 @@ export const siteConfig = {
   /** Beacon di visita (opzionale). Vuoto = nessun beacon inviato. */
   webhookVisit: env.PUBLIC_WEBHOOK_VISIT ?? '',
 
+  /**
+   * Webhook che restituisce il planning aggiornato di un centro.
+   *
+   * Interrogato dal browser con `?centro=<slug>`, deve rispondere
+   * `{ aggiornatoIl, lezioni: [...] }`. Vuoto = la pagina mostra solo lo
+   * snapshot presente nei contenuti, senza tentare aggiornamenti.
+   */
+  webhookPlanning: env.PUBLIC_WEBHOOK_PLANNING ?? '',
+
+  /**
+   * Origine dell'istanza Cal.com da cui caricare l'embed.
+   *
+   * `https://cal.com` per il cloud, `https://cal.lumefitness.it` (o simile) per
+   * l'istanza self-hosted. È una variabile e non una costante proprio per
+   * rendere la migrazione a self-hosted un cambio di configurazione invece di
+   * una modifica al codice.
+   */
+  calcomOrigin: env.PUBLIC_CALCOM_ORIGIN ?? 'https://cal.com',
+
   /** Fuso orario delle sedi: usato per filtrare gli slot già passati. */
   timezone: 'Europe/Rome',
 } as const;

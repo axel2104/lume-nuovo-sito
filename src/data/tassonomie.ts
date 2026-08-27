@@ -113,6 +113,24 @@ export interface VoceLead extends Voce {
   daRivedere?: boolean;
 }
 
+/**
+ * ⚠️ Etichette da riallineare ad Airtable prima di collegarle a un form.
+ *
+ * Il contratto vero delle attività di interesse è `INTERESSI` in
+ * `src/config/forms.ts`: sono le opzioni del campo `ATTIVITA' INTERESSE NRE`
+ * della tabella RICHIESTE, e nessuna delle etichette qui sotto coincide con
+ * quelle ("CrossFit" vs "CrossFit/Hyrox", "Personal trainer" vs "Personal
+ * Training", "Reformer / Wellback System" vs "Pilates Reformer", e
+ * "Fitness (sala pesi e corsi)", "Attività in acqua adulti" e "Agonismo nuoto"
+ * non esistono affatto).
+ *
+ * La struttura è però migliore di `INTERESSI`: separa acqua adulti, scuola
+ * nuoto bambini, acqua nido e agonismo, e porta il campo `centri`. Il passo
+ * successivo è unificare le due liste — questa struttura, quei valori — dopo
+ * aver deciso in Airtable se aggiungere le opzioni mancanti. Fino ad allora
+ * questa lista non alimenta nessun form: se la si collega così com'è, Airtable
+ * crea opzioni nuove a ogni lead e la segmentazione si sbriciola in silenzio.
+ */
 export const interessiLead = [
   {
     id: 'fitness',

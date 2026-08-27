@@ -6,6 +6,7 @@ import functional from '../assets/pagine/functional.jpg';
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import BandaCta from '../components/BandaCta.astro';
 import { getCollection } from 'astro:content';
 import { vociAbbonamento } from '../data/tassonomie';
 
@@ -75,8 +76,15 @@ function assaggio(p: (typeof piani)[number]) {
           <span class="label">Benessere a 360°</span>
           <h1 class="d">Illumina<br />la tua <em>forza</em></h1>
           <p>Quattro centri nelle Marche. Attrezzature d’élite, discipline per ogni obiettivo e uno staff che ti segue passo dopo passo.</p>
+          {/*
+            La CTA primaria della home è il pass prova, non gli abbonamenti: a
+            chi arriva per la prima volta si chiede di provare, non di firmare.
+            Il listino resta un ancoraggio più in basso, per chi ha già deciso.
+          */}
           <div class="hero-cta">
-            <a href="/abbonamenti" class="btn btn-red btn-full">Inizia ora</a>
+            <button type="button" class="btn btn-red btn-full" data-open-form="prova" data-medium="HeroHome">
+              Prova 7 giorni
+            </button>
             <a href="/centri" class="btn btn-out btn-full">Scopri i centri</a>
           </div>
         </div>
@@ -165,6 +173,27 @@ function assaggio(p: (typeof piani)[number]) {
     </div>
   </section>
 
+  {/*
+    Il pass prova ha una sezione sua, prima del listino: è il passo più piccolo
+    che possiamo chiedere a chi non ci conosce, e sul vecchio sito era la CTA più
+    cliccata. Due porte diverse di proposito — il modal per chi ha già capito,
+    la pagina per chi vuole leggere le condizioni prima di lasciare l'email.
+  */}
+  <section class="sec" id="prova">
+    <div class="wrap">
+      <BandaCta
+        label="Pass prova"
+        titolo="Sette giorni, tutto incluso"
+        testo="Sala pesi, corsi, acqua, CrossFit e Reformer per una settimana a 15 €. Nessun vincolo di rinnovo: se non torni, non succede niente."
+      >
+        <button type="button" class="btn btn-red btn-full" data-open-form="prova" data-medium="BandHome">
+          Richiedi il pass
+        </button>
+        <a href="/prova" class="btn btn-out btn-full">Come funziona</a>
+      </BandaCta>
+    </div>
+  </section>
+
   <section class="sec" id="abbonamenti">
     <div class="wrap">
       <div class="sec-head center" style="margin-left:auto;margin-right:auto">
@@ -207,7 +236,14 @@ function assaggio(p: (typeof piani)[number]) {
           <h2 class="d" style="margin-top:12px">I nuovi centri stanno arrivando</h2>
           <p>Blocca la tariffa lancio per Piediripa e Urban. Posti limitati.</p>
         </div>
-        <a href="#" class="btn btn-cream btn-full" style="max-width:340px">Accedi alla prevendita</a>
+        {/*
+          NON apre i form del sito: la prevendita ha un funnel suo, con contratto
+          e pagamento, e i suoi lead vivono nella tabella Prevendita Urban. Il
+          campo SEDE di RICHIESTE non conosce nemmeno quelle due sedi. Per ora
+          porta all'indice dei centri, dove le due schede in prevendita ci sono:
+          va puntato al funnel vero quando si decide dove viverà.
+        */}
+        <a href="/centri" class="btn btn-cream btn-full" style="max-width:340px">Scopri la prevendita</a>
       </div>
     </div>
   </section>
@@ -218,7 +254,9 @@ function assaggio(p: (typeof piani)[number]) {
         <span class="label">Wiki Lume</span>
         <h2 class="d">Tutte le risposte, in un posto</h2>
         <p>Orari, regolamenti, guide agli allenamenti e domande frequenti. La knowledge base di Lume, sempre aggiornata.</p>
-        <a href="#" class="btn btn-out">Apri la Wiki</a>
+        {/* La wiki vera è fase 2 (Starlight su /wiki): per ora l'help desk è
+            la cosa più vicina che esiste davvero, meglio di un link morto. */}
+        <a href="/lume-life#help" class="btn btn-out">Vai all’help desk</a>
       </div>
       <div class="wiki-vis">
         <div class="q">🔍 Cerca nella wiki…</div>

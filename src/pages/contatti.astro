@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import LeadFormInline from '../components/LeadFormInline.astro';
+import FormInline from '../components/forms/FormInline.astro';
 import { getCollection } from 'astro:content';
 
 const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.data.ordine);
@@ -27,7 +27,7 @@ const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.
         </div>
 
         <div class="contatti-grid">
-          <LeadFormInline />
+          <FormInline flusso="info" medium="PaginaContatti" />
 
           <aside class="contatti-side">
             {

@@ -13,8 +13,9 @@ import '../styles/global.css';
 import '../styles/leadform.css';
 import '../styles/editoriale.css';
 import '../styles/bento.css';
+import '../styles/planning.css';
 import { siteConfig, consensoGestito } from '../config/site';
-import ModalContatti from '../components/ModalContatti.astro';
+import ModalForm from '../components/forms/ModalForm.astro';
 
 // Lo script di tracciamento è un file a sé (lintabile, versionabile) ma va
 // iniettato inline in <head>: deve girare prima di GTM, non dopo un bundle.
@@ -43,6 +44,8 @@ const clientConfig = {
   webhookCheck: siteConfig.webhookCheck,
   webhookLead: siteConfig.webhookLead,
   webhookVisit: siteConfig.webhookVisit,
+  calcomOrigin: siteConfig.calcomOrigin,
+  webhookPlanning: siteConfig.webhookPlanning,
   consensoGestito,
   // In produzione senza banner il tracciamento resta spento: vedi tracking.js.
   produzione: import.meta.env.PROD,
@@ -164,6 +167,13 @@ _iub.csConfiguration = {
   <body>
     <a class="skip-link" href="#contenuto">Salta al contenuto</a>
     <slot />
-    <ModalContatti />
+    <!--
+      I tre modal sono montati una volta per pagina e aperti da qualsiasi CTA con
+      `data-open-form="<flusso>"`. Sono markup statico senza costo di JavaScript
+      aggiuntivo: il motore è un unico bundle condiviso, non uno per flusso.
+    -->
+    <ModalForm flusso="info" />
+    <ModalForm flusso="prova" />
+    <ModalForm flusso="iscrizione" />
   </body>
 </html>

@@ -38,3 +38,71 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     X-Frame-Options = "SAMEORIGIN"
+
+# ─────────────────────────────────────────────────────────────────────────
+# REDIRECT DEI VECCHI FORM
+#
+# Il sito WordPress mandava la raccolta lead fuori dal sito: due form nativi
+# n8n, tre Typeform e uno shortlink interno. Quegli URL sono in giro da anni —
+# nelle campagne Google Ads, nei QR in sede, nei post social, nelle email — e
+# continueranno a essere cliccati per molto tempo dopo il go-live.
+#
+# `force = true` perché servono anche quando esiste un file con lo stesso nome,
+# e lo status è 301: sono spostamenti definitivi, così i click si consolidano
+# sulle pagine nuove invece di restare in un limbo.
+#
+# La query string viene mantenuta da Netlify: `?source=X&medium=Y` sopravvive al
+# redirect e viene letto dal tracciamento. È esattamente ciò che il vecchio
+# /provagratis rompeva, buttando via l'attribuzione di otto CTA su cinque pagine.
+# ─────────────────────────────────────────────────────────────────────────
+
+# Il vecchio sito aveva /planning, /planning-macerata e /planning-montecassiano.
+# Sono URL che la gente ha nei preferiti e che lo staff manda su WhatsApp.
+[[redirects]]
+  from = "/planning"
+  to = "/planning/macerata"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/planning-macerata"
+  to = "/planning/macerata"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/planning-montecassiano"
+  to = "/planning/montecassiano"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/provagratis"
+  to = "/prova"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/form/guest-pass"
+  to = "/prova"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/form/iscrizioni"
+  to = "/iscriviti"
+  status = 301
+  force = true
+
+# I due Typeform per sede confluiscono nel form info con il centro già scelto.
+[[redirects]]
+  from = "/infoMacerata"
+  to = "/contatti?centro=macerata"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/infoMonte"
+  to = "/contatti?centro=montecassiano"
+  status = 301
+  force = true

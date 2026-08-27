@@ -1,0 +1,79 @@
+---
+/**
+ * Banda di chiusura con invito all'azione.
+ *
+ * Esiste perché la stessa forma serviva in quattro punti — home, indice centri,
+ * indice discipline, pagina sede — e tre copie dello stesso CSS sono tre
+ * occasioni di divergere. I bottoni arrivano dallo slot: la banda non sa nulla
+ * dei flussi, li decide la pagina che la usa.
+ *
+ * Non include `<section>` né `.wrap`: alcune pagine la inseriscono dentro un
+ * wrap che già esiste, e annidarne un secondo romperebbe le spaziature.
+ */
+interface Props {
+  titolo: string;
+  testo?: string;
+  /** Etichetta piccola sopra il titolo. */
+  label?: string;
+  /** Larghezza minima della colonna dei bottoni su desktop. */
+  larghezzaCta?: string;
+}
+
+const { titolo, testo, label, larghezzaCta = '270px' } = Astro.props;
+---
+
+<div class="banda">
+  <div>
+    {label && <span class="label">{label}</span>}
+    <h2 class="d">{titolo}</h2>
+    {testo && <p>{testo}</p>}
+  </div>
+  <div class="banda-cta" style={`--banda-cta-w:${larghezzaCta}`}>
+    <slot />
+  </div>
+</div>
+
+<style>
+  .banda {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    align-items: center;
+    background: var(--card);
+    border: 1px solid var(--line);
+    /* Il filo rosso a sinistra invece del riquadro pieno: segnala l'invito
+       all'azione senza urlare come farebbe un blocco tutto rosso. */
+    border-left: 2px solid var(--red);
+    border-radius: var(--lf-r-m);
+    padding: 32px 26px;
+  }
+  .banda h2 {
+    font-size: clamp(24px, 5vw, 34px);
+    line-height: 1.05;
+    margin: 12px 0 0;
+  }
+  .banda .label + h2 {
+    margin-top: 12px;
+  }
+  .banda p {
+    color: var(--mut);
+    font-size: 15px;
+    margin: 12px 0 0;
+    max-width: 52ch;
+  }
+  .banda-cta {
+    display: grid;
+    gap: 10px;
+  }
+
+  @media (min-width: 900px) {
+    .banda {
+      grid-template-columns: 1fr auto;
+      gap: 40px;
+      padding: 38px 34px;
+    }
+    .banda-cta {
+      min-width: var(--banda-cta-w);
+    }
+  }
+</style>

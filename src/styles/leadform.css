@@ -3,6 +3,20 @@
    Riusa i token brand di global.css (--red, --card, --line, ...).
    ============================================================ */
 
+/* ─── Scala dei raggi ──────────────────────────────────────────
+   Angoli quasi netti: la rotondità morbida faceva sembrare i form
+   un widget incollato sopra il sito invece che parte del sito.
+
+   Sta qui e non in global.css di proposito: così il resto delle card e
+   dei bottoni non cambia forma senza che sia stato deciso. Quando si
+   vuole che tutto il sito segua, queste tre righe si spostano in
+   global.css e i componenti le ereditano senza altre modifiche. */
+:root {
+  --lf-r-s: 2px;  /* campi, chip, pillole */
+  --lf-r-m: 4px;  /* card interne, riquadri */
+  --lf-r-l: 6px;  /* contenitori: modal e form in pagina */
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -13,6 +27,15 @@
   clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* I bottoni dentro i form seguono la stessa scala. `.btn` in global.css è una
+   pillola (999px): accanto a un campo a spigolo vivo non legge come un sistema
+   unico. L'override è scoped al form, così i bottoni del resto del sito
+   restano quelli che sono finché non si decide di cambiarli tutti. */
+.lf .btn,
+.nl .btn {
+  border-radius: var(--lf-r-s);
 }
 
 /* ─── Contenitore ──────────────────────────────────────────── */
@@ -46,9 +69,9 @@
   margin-bottom: 22px;
 }
 .lf-dots span {
-  height: 3px;
+  height: 2px;
   flex: 1;
-  border-radius: 999px;
+  border-radius: 0;
   background: var(--line);
   transition: background 0.25s;
 }
@@ -76,7 +99,7 @@
   width: 100%;
   background: #0a0a0a;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: var(--lf-r-s);
   padding: 14px 16px;
   color: var(--txt);
   font-family: inherit;
@@ -125,7 +148,7 @@ textarea.lf-in {
   display: inline-flex;
   flex-direction: column;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--lf-r-s);
   padding: 10px 16px;
   font-size: 14px;
   color: #ddd;
@@ -188,7 +211,7 @@ textarea.lf-in {
   text-align: left;
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--lf-r-m);
   padding: 18px 20px;
   cursor: pointer;
   transition: 0.18s;
@@ -214,121 +237,87 @@ textarea.lf-in {
   margin-top: 4px;
 }
 
-/* ─── Calendario ───────────────────────────────────────────── */
-.lf-cal {
+/* ─── Riquadro informativo (offerta prova) ─────────────────── */
+.lf-box {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 14px;
+  border-left: 2px solid var(--red);
+  border-radius: var(--lf-r-m);
+  padding: 18px 20px;
+  margin-bottom: 22px;
 }
-.cal-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.lf-box strong {
+  display: block;
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 17px;
   margin-bottom: 10px;
 }
-.cal-mese {
-  font-family: 'Anton', sans-serif;
-  text-transform: uppercase;
-  font-size: 16px;
-  letter-spacing: 0.04em;
-}
-.cal-nav {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  border: 1px solid var(--line);
-  background: transparent;
-  color: #fff;
-  font-size: 18px;
-  line-height: 1;
-  cursor: pointer;
-  transition: 0.18s;
-}
-.cal-nav:hover:not(:disabled) {
-  border-color: var(--red);
-  color: var(--red);
-}
-.cal-nav:disabled {
-  opacity: 0.25;
-  cursor: default;
-}
-.cal-grid {
+.lf-box ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
+  gap: 5px;
 }
-.cal-dow {
-  text-align: center;
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #5c5c5c;
-  padding-bottom: 6px;
-}
-.cal-day {
-  aspect-ratio: 1;
-  min-height: 38px;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  background: #0a0a0a;
-  color: #e6e6e6;
-  font-family: inherit;
+.lf-box li {
+  position: relative;
+  padding-left: 18px;
   font-size: 14px;
-  cursor: pointer;
-  transition: 0.15s;
+  color: #ddd;
 }
-.cal-day:hover:not(.off) {
-  border-color: var(--red);
+.lf-box li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--red);
+  font-size: 12px;
 }
-.cal-day.off {
-  color: #3d3d3d;
-  background: transparent;
-  cursor: default;
-}
-.cal-day.today {
-  box-shadow: inset 0 0 0 1px #3a3a3a;
-}
-.cal-day.sel {
-  background: var(--red);
-  color: #fff;
-  border-color: var(--red);
+.lf-box em {
+  display: block;
+  margin-top: 12px;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--mut);
 }
 
-.slot-group {
-  margin-top: 14px;
+/* ─── Prenotazione (embed Cal.com) ─────────────────────────────
+   L'altezza minima evita il salto di layout: l'iframe di Cal.com si
+   dimensiona dopo il caricamento, e senza riserva di spazio la schermata
+   di conferma collassa e poi si espande sotto gli occhi dell'utente. */
+.lf-cal {
+  margin: 20px 0 4px;
+  min-height: 420px;
+  border-radius: var(--lf-r-m);
+  overflow: hidden;
 }
-.slot-group h5 {
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--mut);
-  margin: 0 0 8px;
-  font-weight: 700;
-}
-.slot-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.slot {
+.lf-cal:empty {
   border: 1px solid var(--line);
-  background: #0a0a0a;
-  color: #e6e6e6;
-  border-radius: 999px;
-  padding: 9px 14px;
-  font-family: inherit;
+  background: var(--card);
+}
+.lf-cal-ko {
+  margin: 16px 0 4px;
   font-size: 13px;
-  cursor: pointer;
-  transition: 0.15s;
+  line-height: 1.5;
+  color: var(--mut);
+  border: 1px solid var(--line);
+  border-radius: var(--lf-r-m);
+  padding: 14px 16px;
 }
-.slot:hover {
-  border-color: var(--red);
-}
-.slot.on {
-  background: var(--red);
-  border-color: var(--red);
-  color: #fff;
+
+/* ─── Honeypot ─────────────────────────────────────────────────
+   Fuori dallo schermo e non `display:none`: alcuni bot ignorano i campi
+   nascosti in modo evidente, ma compilano quelli che il CSS sposta via. */
+.lf-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* ─── Azioni, errori, loader ───────────────────────────────── */
@@ -377,9 +366,9 @@ textarea.lf-in {
 }
 
 .lf-ok {
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--lf-r-s);
   background: rgba(196, 0, 66, 0.16);
   color: var(--red);
   display: flex;
@@ -409,7 +398,7 @@ textarea.lf-in {
   position: relative;
   background: var(--bg2);
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: var(--lf-r-l);
   padding: 28px 22px 26px;
   width: min(560px, calc(100% - 24px));
   max-height: calc(100dvh - 32px);
@@ -431,11 +420,11 @@ textarea.lf-in {
 }
 .lf-close {
   position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--lf-r-s);
   border: 1px solid var(--line);
   background: rgba(10, 10, 10, 0.7);
   color: #fff;
@@ -461,7 +450,7 @@ textarea.lf-in {
 .lf-inline {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: var(--lf-r-l);
   padding: 30px 24px;
 }
 

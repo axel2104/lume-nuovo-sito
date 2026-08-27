@@ -161,8 +161,9 @@ const risparmioMax = Math.max(...piani.map((p) => p.data.mensile * 12 - p.data.a
                     <button
                       type="button"
                       class={`btn ${p.data.consigliato ? 'btn-red' : 'btn-out'} btn-full`}
-                      data-open-modal="modal-contatti"
-                      data-piano={p.id}
+                      data-open-form="iscrizione"
+                      data-medium={`Abbonamenti:${p.data.nome}`}
+                      data-abbonamento={p.data.nome}
                     >
                       Richiedi {p.data.nome}
                     </button>
@@ -281,8 +282,8 @@ const risparmioMax = Math.max(...piani.map((p) => p.data.mensile * 12 - p.data.a
                 type="button"
                 class="btn btn-cream btn-full"
                 style="max-width:340px"
-                data-open-modal="modal-contatti"
-                data-piano="prevendita"
+                data-open-form="info"
+                data-medium="AbbonamentiPrevendita"
               >
                 Blocca la tariffa lancio
               </button>
