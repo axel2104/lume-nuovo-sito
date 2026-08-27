@@ -42,8 +42,24 @@ test('la tabella confronta ogni piano su ogni riga', () => {
   assert.equal(corpo.split('<td').length - 1, righe * piani);
 });
 
-test('ogni piano porta il proprio id nel lead form', () => {
+test('ogni piano preseleziona se stesso nel form di iscrizione', () => {
   const piani = html.split('class="plan ').length - 1;
-  // +1: anche il blocco prevendita usa data-piano.
-  assert.equal(html.split('data-piano=').length - 1, piani + 1);
+  // `data-abbonamento` e' il valore che finisce nel campo Nome Abbonamento di
+  // Airtable: se un piano non lo porta, il lead arriva senza sapere da quale
+  // listino e' partito, che e' l'unica informazione che questa pagina aggiunge.
+  assert.equal(html.split('data-abbonamento=').length - 1, piani);
+  assert.ok(
+    html.includes('data-open-form="iscrizione"'),
+    'i CTA dei piani non aprono il flusso iscrizione'
+  );
+});
+
+test('la prevendita apre un contatto, non un piano', () => {
+  // Non e' un abbonamento in listino: mandarla sul flusso iscrizione la
+  // farebbe arrivare in Airtable come un piano che non esiste.
+  if (!html.includes('AbbonamentiPrevendita')) return; // nessun centro in prevendita
+  assert.ok(
+    html.includes('data-medium="AbbonamentiPrevendita"'),
+    'il CTA prevendita ha perso la sua attribuzione'
+  );
 });

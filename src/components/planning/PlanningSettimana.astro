@@ -35,7 +35,7 @@ const dati = JSON.stringify({ lezioni, aggiornatoIl: aggiornatoIl ?? null });
   data-esempio={esempio ? '1' : ''}
   style={`--pl-colonne:${colonneAttive(lezioni)}`}
 >
-  <script type="application/json" data-planning-dati set:html={dati} />
+  <script is:inline type="application/json" data-planning-dati set:html={dati} />
   <div data-planning-vista set:html={html} />
 </div>
 

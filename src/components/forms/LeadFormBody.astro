@@ -18,7 +18,15 @@
  * del campo `ATTIVITA' INTERESSE NRE`. Vedi `src/config/forms.ts`.
  */
 import { getCollection } from 'astro:content';
-import { FLUSSI, INTERESSI, SEDI, PREFISSI, type Campo, type Step } from '../../config/forms';
+import {
+  FLUSSI,
+  INTERESSI,
+  SEDI,
+  PREFISSI,
+  type Campo,
+  type Opzione,
+  type Step,
+} from '../../config/forms';
 
 interface Props {
   /** Chiave di `FLUSSI`, es. "info" | "prova" | "iscrizione". */
@@ -41,7 +49,7 @@ const centri = (await getCollection('centri'))
   .sort((a, b) => a.data.ordine - b.data.ordine);
 
 /** Risolve le opzioni dichiarate per riferimento nella configurazione. */
-function opzioniDi(campo: Campo) {
+function opzioniDi(campo: Campo): Opzione[] {
   if (campo.opzioni === 'interessi') return INTERESSI.map((i) => ({ valore: i, label: i }));
   if (campo.opzioni === 'centri') return [];
   return campo.opzioni ?? [];

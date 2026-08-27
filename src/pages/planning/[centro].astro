@@ -29,11 +29,19 @@ const altri = (await getCollection('centri', ({ data }) => data.stato === 'apert
   .sort((a, b) => a.data.ordine - b.data.ordine);
 
 /**
- * In sviluppo, un centro senza planning mostra i dati di esempio: serve a vedere
- * il layout finché il webhook non esiste. In produzione mai — un orario inventato
- * su una pagina pubblica è peggio di una pagina vuota.
+ * Un centro senza planning mostra i dati di esempio in sviluppo, e su un deploy
+ * solo se qualcuno ha messo `PUBLIC_PLANNING_ESEMPIO=1` fra le variabili
+ * d'ambiente.
+ *
+ * Serve a vedere il layout su un'anteprima finché PerfectGym non è collegato.
+ * Non è il default e non lo diventa per sbaglio: un orario inventato su una
+ * pagina pubblica indicizzata è peggio di una pagina vuota — chi lo legge esce
+ * di casa per un corso che non esiste. La variabile va togliuta prima di
+ * mandare online il dominio vero; l'avviso rosso in pagina resta visibile
+ * intanto, e `docs/PLANNING.md` lo mette in checklist.
  */
-const usaEsempio = import.meta.env.DEV && c.planning.length === 0;
+const esempioAmmesso = import.meta.env.DEV || import.meta.env.PUBLIC_PLANNING_ESEMPIO === '1';
+const usaEsempio = esempioAmmesso && c.planning.length === 0;
 const lezioni = usaEsempio ? (PLANNING_ESEMPIO[entry.id] ?? []) : c.planning;
 
 const nome = c.nome.replace('Lume ', '');

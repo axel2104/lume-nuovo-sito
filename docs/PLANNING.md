@@ -154,6 +154,17 @@ PUBLIC_WEBHOOK_PLANNING=https://n8n.lumeflow.it/webhook/planning
 
 Vuoto = nessun aggiornamento tentato, si vede solo lo snapshot.
 
+```bash
+# Solo per le anteprime: mostra l'orario di esempio dove `planning` è vuoto.
+PUBLIC_PLANNING_ESEMPIO=1
+```
+
+In sviluppo l'esempio compare da solo. Su un deploy serve questa variabile, ed
+è **da togliere prima di mandare online il dominio vero**: un orario inventato
+su una pagina pubblica indicizzata è peggio di una pagina vuota, perché chi lo
+legge esce di casa per un corso che non esiste. Finché c'è, in cima al planning
+resta un avviso rosso che dice che quei dati non sono reali.
+
 Per centro, in `src/content/centri/<centro>.md`:
 
 ```yaml
@@ -206,6 +217,7 @@ giorno, non i contenuti.
 - [ ] Header CORS sulla risposta del webhook
 - [ ] Verificato che la risposta non contenga dati personali
 - [ ] `PUBLIC_WEBHOOK_PLANNING` su Netlify
+- [ ] `PUBLIC_PLANNING_ESEMPIO` **rimossa** da Netlify quando l'orario vero c'è
 - [ ] `perfectgymCorsiUrl` compilato per entrambi i centri (clubId diverso!)
 - [ ] Snapshot iniziale in `planning` per i due centri
 - [ ] Test con webhook spento: la pagina deve mostrare lo snapshot

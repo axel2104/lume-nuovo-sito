@@ -102,12 +102,18 @@ const {
       return;
     }
 
-    const errore = (msg) => {
+    const errore = (msg: string) => {
       err.textContent = msg || '';
       err.hidden = !msg;
     };
 
-    async function invia() {
+    /**
+     * Arrow e non `function`: la restrizione di tipo degli `instanceof` qui
+     * sopra non sopravvive dentro una dichiarazione di funzione (puo' essere
+     * chiamata prima), quindi `astro check` rivedrebbe ogni riferimento come
+     * `Element | null`.
+     */
+    const invia = async () => {
       errore('');
 
       const valore = email.value.trim().toLowerCase();
