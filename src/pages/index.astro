@@ -8,7 +8,9 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BandaCta from '../components/BandaCta.astro';
 import { getCollection } from 'astro:content';
-import { vociAbbonamento } from '../data/tassonomie';
+import { vociAbbonamento, vociIncluse } from '../data/tassonomie';
+import { conValori, righe } from '../lib/copy';
+import testi from '../content/pagine/home.json';
 
 const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.data.ordine);
 const discipline = (await getCollection('discipline')).sort((a, b) => a.data.ordine - b.data.ordine);
@@ -30,7 +32,7 @@ const piani = (await getCollection('abbonamenti'))
 
 /** In home solo le prime voci: il confronto completo vive su /abbonamenti. */
 function assaggio(p: (typeof piani)[number]) {
-  const voci = (p.data.voci ?? {}) as Record<string, boolean | string>;
+  const voci = vociIncluse(p.data.voci);
   return vociAbbonamento
     .filter((v) => voci[v.id] !== undefined)
     .slice(0, 4)
@@ -38,7 +40,7 @@ function assaggio(p: (typeof piani)[number]) {
 }
 ---
 
-<Layout>
+<Layout title={testi.seo.titolo} description={testi.seo.descrizione}>
   <Header />
   <main id="contenuto">
 
@@ -73,9 +75,17 @@ function assaggio(p: (typeof piani)[number]) {
           </button>
         </div>
         <div class="hero-copy">
-          <span class="label">Benessere a 360°</span>
-          <h1 class="d">Illumina<br />la tua <em>forza</em></h1>
-          <p>Quattro centri nelle Marche. Attrezzature d’élite, discipline per ogni obiettivo e uno staff che ti segue passo dopo passo.</p>
+          <span class="label">{testi.hero.label}</span>
+          <h1 class="d">
+            {righe(testi.hero.titolo).map((r, i) => (
+              <>
+                {i > 0 && <br />}
+                {r}
+              </>
+            ))}{' '}
+            <em>{testi.hero.evidenza}</em>
+          </h1>
+          <p>{testi.hero.testo}</p>
           {/*
             La CTA primaria della home è il pass prova, non gli abbonamenti: a
             chi arriva per la prima volta si chiede di provare, non di firmare.
@@ -83,17 +93,22 @@ function assaggio(p: (typeof piani)[number]) {
           */}
           <div class="hero-cta">
             <button type="button" class="btn btn-red btn-full" data-open-form="prova" data-medium="HeroHome">
-              Prova 7 giorni
+              {testi.hero.ctaProva}
             </button>
-            <a href="/centri" class="btn btn-out btn-full">Scopri i centri</a>
+            <a href="/centri" class="btn btn-out btn-full">{testi.hero.ctaCentri}</a>
           </div>
         </div>
       </div>
       <div class="stats">
-        <div class="stat"><b>4</b><span>Centri</span></div>
-        <div class="stat"><b>600<em>+</em></b><span>Iscritti</span></div>
-        <div class="stat"><b>4.97</b><span>Recensioni</span></div>
-        <div class="stat"><b>{discipline.length}<em>+</em></b><span>Discipline</span></div>
+        {testi.stats.map((s) => (
+          <div class="stat">
+            <b>
+              {conValori(s.numero, { discipline: discipline.length, centri: centri.length })}
+              {s.suffisso && <em>{s.suffisso}</em>}
+            </b>
+            <span>{s.etichetta}</span>
+          </div>
+        ))}
       </div>
     </div>
   </header>
@@ -101,11 +116,19 @@ function assaggio(p: (typeof piani)[number]) {
   <section class="sec band">
     <div class="wrap about">
       <div>
-        <span class="label">Chi siamo</span>
-        <h2 class="d">Più di una palestra.<br />Un modo di stare bene.</h2>
-        <p>Lume Fitness Club nasce per rendere l’allenamento un’esperienza completa: corpo, mente ed energia. Sale ampie e luminose, tecnologia Technogym, corsi in licenza Les Mills, piscina e Reformer Pilates.</p>
-        <p>Ogni centro ha la sua identità, ma un unico standard: qualità, cura e risultati concreti.</p>
-        <a href="/centri" class="btn btn-out" style="margin-top:12px">I nostri centri</a>
+        <span class="label">{testi.chiSiamo.label}</span>
+        <h2 class="d">
+          {righe(testi.chiSiamo.titolo).map((r, i) => (
+            <>
+              {i > 0 && <br />}
+              {r}
+            </>
+          ))}
+        </h2>
+        {testi.chiSiamo.paragrafi.map((par) => (
+          <p>{par}</p>
+        ))}
+        <a href="/centri" class="btn btn-out" style="margin-top:12px">{testi.chiSiamo.cta}</a>
       </div>
       <div class="about-imgs">
         <Picture class="tall" src={salaPesi} alt="Sala pesi Lume" widths={[500, 1000]} sizes="(min-width:1024px) 40vw, 100vw" formats={['avif', 'webp']}
@@ -121,9 +144,9 @@ function assaggio(p: (typeof piani)[number]) {
   <section class="sec" id="centri">
     <div class="wrap">
       <div class="sec-head">
-        <span class="label">I centri</span>
-        <h2 class="d">Quattro case, una sola energia</h2>
-        <p>Trova il centro Lume più vicino a te. Ognuno con le sue sale, i suoi corsi e il suo carattere.</p>
+        <span class="label">{testi.centri.label}</span>
+        <h2 class="d">{testi.centri.titolo}</h2>
+        <p>{testi.centri.testo}</p>
       </div>
       <div class="grid4">
         {centri.map((c) => (
@@ -149,9 +172,9 @@ function assaggio(p: (typeof piani)[number]) {
   <section class="sec band" id="discipline">
     <div class="wrap">
       <div class="sec-head">
-        <span class="label">Discipline</span>
-        <h2 class="d">Allenati come vuoi</h2>
-        <p>Dalla forza al benessere in acqua: {discipline.length} attività fra corsi di gruppo, funzionale, mente e corpo, Reformer e piscina.</p>
+        <span class="label">{testi.discipline.label}</span>
+        <h2 class="d">{testi.discipline.titolo}</h2>
+        <p>{conValori(testi.discipline.testo, { discipline: discipline.length })}</p>
       </div>
       <div class="grid3">
         {vetrina.map((d) => (
@@ -168,7 +191,9 @@ function assaggio(p: (typeof piani)[number]) {
         ))}
       </div>
       <div style="margin-top:26px">
-        <a href="/discipline" class="btn btn-out">Tutte le {discipline.length} discipline</a>
+        <a href="/discipline" class="btn btn-out">
+          {conValori(testi.discipline.cta, { discipline: discipline.length })}
+        </a>
       </div>
     </div>
   </section>
@@ -182,14 +207,14 @@ function assaggio(p: (typeof piani)[number]) {
   <section class="sec" id="prova">
     <div class="wrap">
       <BandaCta
-        label="Pass prova"
-        titolo="Sette giorni, tutto incluso"
-        testo="Sala pesi, corsi, acqua, CrossFit e Reformer per una settimana a 15 €. Nessun vincolo di rinnovo: se non torni, non succede niente."
+        label={testi.bandaProva.label}
+        titolo={testi.bandaProva.titolo}
+        testo={testi.bandaProva.testo}
       >
         <button type="button" class="btn btn-red btn-full" data-open-form="prova" data-medium="BandHome">
-          Richiedi il pass
+          {testi.bandaProva.ctaForm}
         </button>
-        <a href="/prova" class="btn btn-out btn-full">Come funziona</a>
+        <a href="/prova" class="btn btn-out btn-full">{testi.bandaProva.ctaPagina}</a>
       </BandaCta>
     </div>
   </section>
@@ -197,9 +222,9 @@ function assaggio(p: (typeof piani)[number]) {
   <section class="sec" id="abbonamenti">
     <div class="wrap">
       <div class="sec-head center" style="margin-left:auto;margin-right:auto">
-        <span class="label">Abbonamenti</span>
-        <h2 class="d">Scegli il tuo piano</h2>
-        <p>Attivazione rapida e gestione diretta dal portale PerfectGym.</p>
+        <span class="label">{testi.abbonamenti.label}</span>
+        <h2 class="d">{testi.abbonamenti.titolo}</h2>
+        <p>{testi.abbonamenti.testo}</p>
       </div>
       <div class="plans">
         {piani.map((p) => (
@@ -222,8 +247,10 @@ function assaggio(p: (typeof piani)[number]) {
         ))}
       </div>
       <p class="pg-note">
-        Mensile o annuale, prevendita dei nuovi centri e domande frequenti:
-        <a href="/abbonamenti" style="color:var(--red-txt);text-decoration:underline">tutti i dettagli sugli abbonamenti</a>.
+        {testi.abbonamenti.nota}{' '}
+        <a href="/abbonamenti" style="color:var(--red-txt);text-decoration:underline">
+          {testi.abbonamenti.notaLink}
+        </a>.
       </p>
     </div>
   </section>
@@ -232,9 +259,9 @@ function assaggio(p: (typeof piani)[number]) {
     <div class="wrap">
       <div class="promo">
         <div>
-          <span class="label" style="color:#fff">Prevendita attiva</span>
-          <h2 class="d" style="margin-top:12px">I nuovi centri stanno arrivando</h2>
-          <p>Blocca la tariffa lancio per Piediripa e Urban. Posti limitati.</p>
+          <span class="label" style="color:#fff">{testi.prevendita.label}</span>
+          <h2 class="d" style="margin-top:12px">{testi.prevendita.titolo}</h2>
+          <p>{testi.prevendita.testo}</p>
         </div>
         {/*
           NON apre i form del sito: la prevendita ha un funnel suo, con contratto
@@ -243,7 +270,9 @@ function assaggio(p: (typeof piani)[number]) {
           porta all'indice dei centri, dove le due schede in prevendita ci sono:
           va puntato al funnel vero quando si decide dove viverà.
         */}
-        <a href="/centri" class="btn btn-cream btn-full" style="max-width:340px">Scopri la prevendita</a>
+        <a href="/centri" class="btn btn-cream btn-full" style="max-width:340px">
+          {testi.prevendita.cta}
+        </a>
       </div>
     </div>
   </section>
@@ -251,12 +280,12 @@ function assaggio(p: (typeof piani)[number]) {
   <section class="sec band" id="wiki">
     <div class="wrap wiki">
       <div>
-        <span class="label">Wiki Lume</span>
-        <h2 class="d">Tutte le risposte, in un posto</h2>
-        <p>Orari, regolamenti, guide agli allenamenti e domande frequenti. La knowledge base di Lume, sempre aggiornata.</p>
+        <span class="label">{testi.wiki.label}</span>
+        <h2 class="d">{testi.wiki.titolo}</h2>
+        <p>{testi.wiki.testo}</p>
         {/* La wiki vera è fase 2 (Starlight su /wiki): per ora l'help desk è
             la cosa più vicina che esiste davvero, meglio di un link morto. */}
-        <a href="/lume-life#help" class="btn btn-out">Vai all’help desk</a>
+        <a href="/lume-life#help" class="btn btn-out">{testi.wiki.cta}</a>
       </div>
       <div class="wiki-vis">
         <div class="q">🔍 Cerca nella wiki…</div>

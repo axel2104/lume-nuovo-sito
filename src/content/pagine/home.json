@@ -1,0 +1,66 @@
+{
+  "seo": {
+    "titolo": "LUMe Fitness Club — Benessere a 360°",
+    "descrizione": "Lume Fitness Club: quattro centri nelle Marche. Attrezzature d’élite, discipline per ogni obiettivo e uno staff che ti segue passo dopo passo."
+  },
+  "hero": {
+    "label": "Benessere a 360°",
+    "titolo": "Illumina\nla tua",
+    "evidenza": "forza",
+    "testo": "Quattro centri nelle Marche. Attrezzature d’élite, discipline per ogni obiettivo e uno staff che ti segue passo dopo passo.",
+    "ctaProva": "Prova 7 giorni",
+    "ctaCentri": "Scopri i centri"
+  },
+  "stats": [
+    { "numero": "4", "suffisso": "", "etichetta": "Centri" },
+    { "numero": "600", "suffisso": "+", "etichetta": "Iscritti" },
+    { "numero": "4.97", "suffisso": "", "etichetta": "Recensioni" },
+    { "numero": "{discipline}", "suffisso": "+", "etichetta": "Discipline" }
+  ],
+  "chiSiamo": {
+    "label": "Chi siamo",
+    "titolo": "Più di una palestra.\nUn modo di stare bene.",
+    "paragrafi": [
+      "Lume Fitness Club nasce per rendere l’allenamento un’esperienza completa: corpo, mente ed energia. Sale ampie e luminose, tecnologia Technogym, corsi in licenza Les Mills, piscina e Reformer Pilates.",
+      "Ogni centro ha la sua identità, ma un unico standard: qualità, cura e risultati concreti."
+    ],
+    "cta": "I nostri centri"
+  },
+  "centri": {
+    "label": "I centri",
+    "titolo": "Quattro case, una sola energia",
+    "testo": "Trova il centro Lume più vicino a te. Ognuno con le sue sale, i suoi corsi e il suo carattere."
+  },
+  "discipline": {
+    "label": "Discipline",
+    "titolo": "Allenati come vuoi",
+    "testo": "Dalla forza al benessere in acqua: {discipline} attività fra corsi di gruppo, funzionale, mente e corpo, Reformer e piscina.",
+    "cta": "Tutte le {discipline} discipline"
+  },
+  "bandaProva": {
+    "label": "Pass prova",
+    "titolo": "Sette giorni, tutto incluso",
+    "testo": "Sala pesi, corsi, acqua, CrossFit e Reformer per una settimana a 15 €. Nessun vincolo di rinnovo: se non torni, non succede niente.",
+    "ctaForm": "Richiedi il pass",
+    "ctaPagina": "Come funziona"
+  },
+  "abbonamenti": {
+    "label": "Abbonamenti",
+    "titolo": "Scegli il tuo piano",
+    "testo": "Attivazione rapida e gestione diretta dal portale PerfectGym.",
+    "nota": "Mensile o annuale, prevendita dei nuovi centri e domande frequenti:",
+    "notaLink": "tutti i dettagli sugli abbonamenti"
+  },
+  "prevendita": {
+    "label": "Prevendita attiva",
+    "titolo": "I nuovi centri stanno arrivando",
+    "testo": "Blocca la tariffa lancio per Piediripa e Urban. Posti limitati.",
+    "cta": "Scopri la prevendita"
+  },
+  "wiki": {
+    "label": "Wiki Lume",
+    "titolo": "Tutte le risposte, in un posto",
+    "testo": "Orari, regolamenti, guide agli allenamenti e domande frequenti. La knowledge base di Lume, sempre aggiornata.",
+    "cta": "Vai all’help desk"
+  }
+}

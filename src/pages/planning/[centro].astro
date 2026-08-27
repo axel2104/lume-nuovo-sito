@@ -28,6 +28,9 @@ const c = entry.data;
 const altri = (await getCollection('centri', ({ data }) => data.stato === 'aperto'))
   .sort((a, b) => a.data.ordine - b.data.ordine);
 
+/** Le schede dei corsi: il componente tiene solo quelle che l'orario cita. */
+const discipline = await getCollection('discipline');
+
 /**
  * Un centro senza planning mostra i dati di esempio in sviluppo, e su un deploy
  * solo se qualcuno ha messo `PUBLIC_PLANNING_ESEMPIO=1` fra le variabili
@@ -82,12 +85,15 @@ const raccogliLead = Boolean(SEDI[entry.id]);
           )
         }
 
+        {c.planningNota && <p class="pl-nota">{c.planningNota}</p>}
+
         <PlanningSettimana
           centro={entry.id}
           lezioni={lezioni}
           aggiornatoIl={c.planningAggiornatoIl}
           prenotaUrl={c.perfectgymCorsiUrl}
           esempio={usaEsempio}
+          schede={discipline}
         />
 
         {

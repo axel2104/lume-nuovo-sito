@@ -37,18 +37,6 @@ export interface Lezione {
   prenotabile?: boolean;
 }
 
-/** Lezione con la posizione calcolata nella griglia. */
-export interface LezionePosizionata extends Lezione {
-  /** Minuti dalla mezzanotte. */
-  da: number;
-  a: number;
-  /** Corsia occupata fra quelle sovrapposte, e quante ce ne sono in totale. */
-  corsia: number;
-  corsie: number;
-}
-
-// ─── Orari ────────────────────────────────────────────────────────────────
-
 /** "07:30" → 450. Restituisce NaN su input malformato, non zero: uno zero
  *  silenzioso piazzerebbe la lezione a mezzanotte senza far sospettare nulla. */
 export function minuti(hhmm: string): number {
@@ -81,72 +69,55 @@ export function lezioniValide(lezioni: Lezione[]): Lezione[] {
 // ─── Layout ───────────────────────────────────────────────────────────────
 
 /**
- * Assegna a ogni lezione una corsia, così le sovrapposizioni stanno affiancate
- * invece di sovrapporsi.
+ * Raggruppa l'orario per fascia di inizio.
  *
- * Serve perché un planning vero ha più sale: alle 18:30 può esserci BodyPump in
- * Sala A e Reformer in sala Pilates. Una griglia che ignora il problema mostra le
- * due lezioni una sopra l'altra e ne rende una invisibile — e nessuno se ne
- * accorge finché un iscritto non si presenta al corso sbagliato.
+ * ─── Perché una tabella di fasce e non una griglia a tempo continuo ────────
+ * La prima versione disegnava un asse verticale proporzionale ai minuti e
+ * affiancava le lezioni sovrapposte in corsie. Sul palinsesto vero non regge:
+ * a Macerata il lunedì ci sono fino a **otto lezioni contemporaneamente
+ * aperte**, e otto corsie in una colonna di duecento pixel fanno tessere da
+ * quaranta pixel con i nomi troncati a "LesMill…". Un orario illeggibile non è
+ * un orario.
  *
- * Algoritmo classico: ordinate per inizio, ogni lezione prende la prima corsia
- * libera. Le corsie totali sono calcolate per gruppo di sovrapposizione, non per
- * giornata intera, altrimenti un solo incrocio alle 18:30 stringerebbe anche le
- * lezioni del mattino che non si sovrappongono a nulla.
+ * Gli stessi dati, letti per fascia di inizio, hanno **al massimo quattro
+ * lezioni per casella** (e nella grande maggioranza dei casi una o due):
+ * impilate in verticale prendono tutta la larghezza della colonna e si leggono.
+ * È anche la forma in cui il palinsesto è già pensato — il foglio dello staff è
+ * una tabella di fasce — e quella in cui lo cerca chi lo consulta: "cosa c'è
+ * alle 18:30?", non "cosa è in corso alle 18:37?".
+ *
+ * Si perde la percezione proporzionale della durata. In cambio si legge.
  */
-export function disponi(lezioni: Lezione[]): LezionePosizionata[] {
-  const ordinate = lezioniValide(lezioni)
-    .map((l) => ({ ...l, da: minuti(l.inizio), a: minuti(l.fine), corsia: 0, corsie: 1 }))
-    .sort((x, y) => x.da - y.da || x.a - y.a || x.corso.localeCompare(y.corso, 'it'));
-
-  const out: LezionePosizionata[] = [];
-
-  for (const giorno of GIORNI) {
-    const delGiorno = ordinate.filter((l) => l.giorno === giorno.n);
-    if (!delGiorno.length) continue;
-
-    /** Fine dell'ultima lezione in ciascuna corsia. */
-    const fineCorsia: number[] = [];
-    /** Lezioni del gruppo di sovrapposizione corrente. */
-    let gruppo: LezionePosizionata[] = [];
-    let fineGruppo = -1;
-
-    const chiudiGruppo = () => {
-      if (!gruppo.length) return;
-      const corsie = Math.max(...gruppo.map((l) => l.corsia)) + 1;
-      gruppo.forEach((l) => {
-        l.corsie = corsie;
-      });
-      out.push(...gruppo);
-      gruppo = [];
-      fineCorsia.length = 0;
-    };
-
-    for (const l of delGiorno) {
-      // Nessuna lezione aperta oltre questo inizio: il gruppo precedente è chiuso.
-      if (l.da >= fineGruppo) chiudiGruppo();
-
-      let corsia = fineCorsia.findIndex((fine) => fine <= l.da);
-      if (corsia === -1) corsia = fineCorsia.length;
-      fineCorsia[corsia] = l.a;
-
-      l.corsia = corsia;
-      gruppo.push(l);
-      fineGruppo = Math.max(fineGruppo, l.a);
-    }
-    chiudiGruppo();
-  }
-
-  return out;
+export function slotDi(lezioni: Lezione[]): { inizio: string; min: number; stacco: boolean }[] {
+  const min = [...new Set(lezioniValide(lezioni).map((l) => minuti(l.inizio)))].sort((a, b) => a - b);
+  return min.map((m, i) => ({
+    inizio: orario(m),
+    min: m,
+    // Un salto di un'ora e mezza è la pausa fra mattina e pomeriggio: segnarla
+    // evita che le 11:05 e le 13:15 sembrino consecutive.
+    stacco: i > 0 && m - min[i - 1] >= 90,
+  }));
 }
 
-/** Estremi della giornata, arrotondati all'ora piena, per l'asse della griglia. */
-export function estremi(lezioni: Lezione[]): { da: number; a: number } {
-  const valide = lezioniValide(lezioni);
-  if (!valide.length) return { da: 8 * 60, a: 22 * 60 };
-  const da = Math.min(...valide.map((l) => minuti(l.inizio)));
-  const a = Math.max(...valide.map((l) => minuti(l.fine)));
-  return { da: Math.floor(da / 60) * 60, a: Math.ceil(a / 60) * 60 };
+/** Lezioni per giorno e fascia, indicizzate con la chiave `giorno|inizio`. */
+export function perSlot(lezioni: Lezione[]): Map<string, Lezione[]> {
+  const mappa = new Map<string, Lezione[]>();
+  for (const l of lezioniValide(lezioni)) {
+    const k = l.giorno + '|' + orario(minuti(l.inizio));
+    const gia = mappa.get(k);
+    if (gia) gia.push(l);
+    else mappa.set(k, [l]);
+  }
+  for (const voci of mappa.values()) {
+    voci.sort((a, b) => minuti(a.fine) - minuti(b.fine) || a.corso.localeCompare(b.corso, 'it'));
+  }
+  return mappa;
+}
+
+/** Giorni che hanno almeno una lezione, nell'ordine della settimana. */
+export function giorniDi(lezioni: Lezione[]): (typeof GIORNI)[number][] {
+  const presenti = new Set(lezioniValide(lezioni).map((l) => l.giorno));
+  return GIORNI.filter((g) => presenti.has(g.n));
 }
 
 /** Sale presenti, in ordine di prima comparsa: è l'ordine in cui le pensa lo staff. */
@@ -165,16 +136,6 @@ export function corsiDi(lezioni: Lezione[]): string[] {
     a.localeCompare(b, 'it'),
   );
 }
-
-/**
- * Altezza in pixel di un minuto nella griglia desktop.
- *
- * 1,15 px/min = una lezione da 50 minuti alta 57px, che è il minimo per
- * contenere un titolo su due righe più la riga di orario e sala senza tagliarla.
- * A 0,9 px/min (45px) l'ultima riga finiva mozzata, e una riga di testo tagliata
- * a metà si legge come un difetto anche quando il dato è giusto.
- */
-export const PX_PER_MIN = 1.15;
 
 /**
  * Impronta di un orario, per capire se è cambiato.

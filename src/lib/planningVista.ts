@@ -15,13 +15,13 @@
  */
 
 import {
-  GIORNI,
-  PX_PER_MIN,
   corsiDi,
-  disponi,
-  estremi,
-  orario,
+  giorniDi,
+  minuti,
+  lezioniValide,
+  perSlot,
   saleDi,
+  slotDi,
   type Lezione,
 } from '../config/planning';
 
@@ -70,7 +70,7 @@ function dataIt(iso?: string | null): string {
 }
 
 export function renderPlanning(dati: DatiPlanning): string {
-  const posizionate = disponi(dati.lezioni || []);
+  const lezioni = lezioniValide(dati.lezioni || []);
   const prenota = dati.prenotaUrl || '';
 
   const avviso = dati.esempio
@@ -78,7 +78,7 @@ export function renderPlanning(dati: DatiPlanning): string {
        vedere il layout finché il collegamento a PerfectGym non è attivo. In produzione non compare.</p>`
     : '';
 
-  if (!posizionate.length) {
+  if (!lezioni.length) {
     const link = prenota
       ? ` <a href="${esc(prenota)}" target="_blank" rel="noopener">Apri il portale ↗</a>`
       : '';
@@ -89,13 +89,10 @@ export function renderPlanning(dati: DatiPlanning): string {
     );
   }
 
-  const { da, a } = estremi(dati.lezioni);
-  const ore = Array.from({ length: Math.floor((a - da) / 60) + 1 }, (_, i) => da + i * 60);
-  const altezza = (a - da) * PX_PER_MIN;
   const perOpzioni = dati.opzioniDa ?? dati.lezioni;
   const sale = saleDi(perOpzioni);
   const corsi = corsiDi(perOpzioni);
-  const giorniAttivi = GIORNI.filter((g) => posizionate.some((l) => l.giorno === g.n));
+  const giorniAttivi = giorniDi(lezioni);
   const aggiornato = dataIt(dati.aggiornatoIl);
 
   // ─── Barra: filtri e metadati ───────────────────────────────────────────
@@ -131,90 +128,54 @@ export function renderPlanning(dati: DatiPlanning): string {
     </div>`;
 
   // ─── Attributi condivisi fra le due viste ───────────────────────────────
-  // Gli stessi su griglia e lista: i filtri agiscono su entrambe senza sapere
+  // Gli stessi su tabella e lista: i filtri agiscono su entrambe senza sapere
   // quale sia visibile, e non esiste il caso di una vista aggiornata e l'altra no.
-  const attributi = (l: (typeof posizionate)[number]) =>
-    `data-lezione data-giorno="${l.giorno}" data-corso="${esc(l.corso)}" data-sala="${esc(l.sala ?? '')}"`;
+  const attributi = (l: Lezione) =>
+    `data-lezione data-giorno="${l.giorno}" data-corso="${esc(l.corso)}" data-sala="${esc(l.sala ?? '')}"` +
+    ` data-disciplina="${esc(l.disciplina ?? '')}"`;
 
-  // ─── Griglia settimanale (desktop) ──────────────────────────────────────
-  const griglia = `
-    <div class="pl-griglia">
-      <div class="pl-testa">
-        <span class="pl-gutter-testa"></span>
-        ${giorniAttivi.map((g) => `<span class="pl-giorno-testa">${g.nome}</span>`).join('')}
-      </div>
-      <div class="pl-corpo" style="height:${altezza}px">
-        <div class="pl-gutter">
-          ${ore
-            .map(
-              (o) =>
-                `<span class="pl-ora" style="top:${(o - da) * PX_PER_MIN}px">${orario(o)}</span>`,
-            )
-            .join('')}
-        </div>
+  /** Una lezione dentro una casella della tabella. */
+  const tessera = (l: Lezione) => {
+    const meta = [`${esc(l.inizio)}–${esc(l.fine)}`, l.sala ? esc(l.sala) : '']
+      .filter(Boolean)
+      .join(' · ');
+    const corpo = `<b>${esc(l.corso)}</b><span class="pl-lez-meta">${meta}</span>`;
+    const completo = esc(
+      [`${l.inizio}–${l.fine}`, l.corso, l.sala, l.istruttore].filter(Boolean).join(' · '),
+    );
+    // Resta un `<a>` con un href vero: senza JavaScript porta alla scheda, con
+    // JavaScript il click apre il popup. Un `<button>` qui perderebbe il link.
+    return l.disciplina
+      ? `<a class="pl-lez" ${attributi(l)} title="${completo}" href="/discipline/${esc(l.disciplina)}">${corpo}</a>`
+      : `<article class="pl-lez" ${attributi(l)} title="${completo}">${corpo}</article>`;
+  };
+
+  // ─── Tabella per fasce (desktop) ────────────────────────────────────────
+  const slot = slotDi(lezioni);
+  const mappa = perSlot(lezioni);
+
+  const tabella = `
+    <div class="pl-tab" role="table" aria-label="Orario settimanale dei corsi">
+      <div class="pl-tab-testa" role="row">
+        <span class="pl-tab-ora" role="columnheader"><span class="sr-only">Ora</span></span>
         ${giorniAttivi
-          .map(
-            (g) => `
-          <div class="pl-colonna">
-            ${ore
-              .map(
-                (o) =>
-                  `<span class="pl-riga" style="top:${(o - da) * PX_PER_MIN}px" aria-hidden="true"></span>`,
-              )
-              .join('')}
-            ${posizionate
-              .filter((l) => l.giorno === g.n)
-              .map((l) => {
-                const durata = l.a - l.da;
-                const stile =
-                  `top:${(l.da - da) * PX_PER_MIN}px;` +
-                  `height:${durata * PX_PER_MIN}px;` +
-                  `left:calc(${(l.corsia / l.corsie) * 100}% + 1px);` +
-                  `width:calc(${100 / l.corsie}% - 2px)`;
-
-                /**
-                 * La tessera ha due righe e non tre: titolo e una riga sola di
-                 * metadati. Con tre blocchi, una lezione da cinquanta minuti non
-                 * ha l'altezza per contenerli e l'ultima riga viene tagliata a
-                 * metà — che a schermo si legge come un errore, non come una
-                 * scelta.
-                 *
-                 * `corta` e `stretta` fanno degradare il contenuto invece di
-                 * troncarlo: sotto i quaranta minuti il titolo sta su una riga,
-                 * e con tre o più sale in parallelo la sala sparisce (resta nel
-                 * tooltip e nella vista mobile, dove lo spazio c'è).
-                 */
-                const classi = ['pl-lez'];
-                if (durata < 40) classi.push('corta');
-                if (l.corsie >= 3) classi.push('stretta');
-
-                const meta = [
-                  `${esc(l.inizio)}–${esc(l.fine)}`,
-                  l.corsie < 3 && l.sala ? esc(l.sala) : '',
-                ]
-                  .filter(Boolean)
-                  .join(' · ');
-
-                const corpo = `<b>${esc(l.corso)}</b><span class="pl-lez-meta">${meta}</span>`;
-
-                // Il tooltip porta sempre tutto: qualunque troncamento visivo
-                // non fa perdere informazione a chi passa il mouse.
-                const completo = esc(
-                  [`${l.inizio}–${l.fine}`, l.corso, l.sala, l.istruttore].filter(Boolean).join(' · '),
-                );
-
-                // Tutta la tessera è cliccabile quando la disciplina esiste: un
-                // bersaglio grande vale più di un link testuale in un riquadro
-                // alto quaranta pixel.
-                return l.disciplina
-                  ? `<a class="${classi.join(' ')}" ${attributi(l)} style="${stile}" title="${completo}" href="/discipline/${esc(l.disciplina)}">${corpo}</a>`
-                  : `<article class="${classi.join(' ')}" ${attributi(l)} style="${stile}" title="${completo}">${corpo}</article>`;
-              })
-              .join('')}
-          </div>`,
-          )
+          .map((g) => `<span class="pl-giorno-testa" role="columnheader">${g.nome}</span>`)
           .join('')}
       </div>
+      ${slot
+        .map(
+          (s) => `
+        <div class="pl-tab-riga${s.stacco ? ' stacco' : ''}" role="row">
+          <span class="pl-tab-ora" role="rowheader">${esc(s.inizio)}</span>
+          ${giorniAttivi
+            .map((g) => {
+              const voci = mappa.get(g.n + '|' + s.inizio) || [];
+              return `<div class="pl-tab-cella" role="cell">${voci.map(tessera).join('')}</div>`;
+            })
+            .join('')}
+        </div>`,
+        )
+        .join('')}
     </div>`;
 
   // ─── Liste per giorno (mobile) ──────────────────────────────────────────
@@ -238,9 +199,9 @@ export function renderPlanning(dati: DatiPlanning): string {
         <section class="pl-lista" data-giorno-sez="${g.n}">
           <h3 class="pl-lista-titolo">${g.nome}</h3>
           <ul>
-            ${posizionate
+            ${lezioni
               .filter((l) => l.giorno === g.n)
-              .sort((x, y) => x.da - y.da)
+              .sort((x, y) => minuti(x.inizio) - minuti(y.inizio) || x.corso.localeCompare(y.corso, 'it'))
               .map((l) => {
                 const nome = l.disciplina
                   ? `<a href="/discipline/${esc(l.disciplina)}">${esc(l.corso)}</a>`
@@ -272,11 +233,10 @@ export function renderPlanning(dati: DatiPlanning): string {
     );
   }
 
-  return avviso + barra + griglia + mobile;
+  return avviso + barra + tabella + mobile;
 }
 
-/** Numero di colonne, per la variabile CSS della griglia. */
+/** Numero di colonne, per la variabile CSS della tabella. */
 export function colonneAttive(lezioni: Lezione[]): number {
-  const posizionate = disponi(lezioni || []);
-  return GIORNI.filter((g) => posizionate.some((l) => l.giorno === g.n)).length || 7;
+  return giorniDi(lezioni || []).length || 6;
 }

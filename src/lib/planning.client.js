@@ -144,6 +144,52 @@ export function initPlanning(root) {
     });
   }
 
+  // ─── Scheda del corso ───────────────────────────────────────────────────
+
+  /**
+   * Apre la scheda del corso dentro la pagina invece di portare via.
+   *
+   * Le schede sono già in pagina, renderizzate dal server: qui si nasconde
+   * quella aperta prima e si mostra quella richiesta. Niente da costruire,
+   * niente da scaricare, nessun momento in cui il popup è vuoto.
+   *
+   * Se la scheda non c'è — un corso senza disciplina collegata, o un orario
+   * fresco dal webhook che cita una disciplina nuova — non si intercetta
+   * niente e il link fa il suo mestiere. È il motivo per cui la tessera resta
+   * un `<a>` con un href vero e non un bottone.
+   */
+  const scheda = root.querySelector('[data-pl-scheda]');
+
+  function apriScheda(slug) {
+    if (!scheda || typeof scheda.showModal !== 'function') return false;
+    const carta = scheda.querySelector('[data-scheda="' + CSS.escape(slug) + '"]');
+    if (!carta) return false;
+
+    qa('[data-scheda]').forEach((c) => {
+      c.hidden = c !== carta;
+    });
+    if (!scheda.open) scheda.showModal();
+    scheda.scrollTop = 0;
+    return true;
+  }
+
+  function chiudiScheda() {
+    if (scheda && scheda.open) scheda.close();
+  }
+
+  if (scheda) {
+    // Il click sul backdrop ha come bersaglio il dialog stesso.
+    scheda.addEventListener('click', (ev) => {
+      const t = ev.target;
+      if (t === scheda) return chiudiScheda();
+      if (t && t.closest && t.closest('[data-pl-chiudi]')) return chiudiScheda();
+      // I CTA dentro la scheda aprono il modal del form: due dialog aperti uno
+      // sopra l'altro confondono, e tornare indietro dal form riporterebbe a
+      // una scheda che ormai non serve più.
+      if (t && t.closest && t.closest('[data-open-form]')) chiudiScheda();
+    });
+  }
+
   // ─── Aggiornamento dal webhook ──────────────────────────────────────────
 
   async function aggiorna() {
@@ -200,6 +246,16 @@ export function initPlanning(root) {
       stato.corso = '';
       stato.sala = '';
       return disegna();
+    }
+
+    // Prima dei bottoni: una tessera è un link, e va intercettata solo se la
+    // scheda esiste davvero.
+    const tessera = t.closest('[data-lezione][data-disciplina]');
+    if (tessera && tessera.dataset.disciplina && !ev.metaKey && !ev.ctrlKey && ev.button !== 1) {
+      if (apriScheda(tessera.dataset.disciplina)) {
+        ev.preventDefault();
+        return;
+      }
     }
 
     const gio = t.closest('[data-giorno-btn]');

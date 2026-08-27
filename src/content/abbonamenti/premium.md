@@ -5,15 +5,15 @@ mensile: 89
 annuale: 890
 attivazione: 0
 voci:
-  sala: true
-  spogliatoi: true
+  sala: "sì"
+  spogliatoi: "sì"
   corsi: Illimitati
-  centri: true
-  app: true
+  centri: "sì"
+  app: "sì"
   pt: Illimitato
-  acqua: true
-  spa: true
-  nutrizione: true
+  acqua: "sì"
+  spa: "sì"
+  nutrizione: "sì"
 consigliato: false
 ordine: 3
 pubblicato: true

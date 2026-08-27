@@ -5,8 +5,8 @@ mensile: 39
 annuale: 390
 attivazione: 0
 voci:
-  sala: true
-  spogliatoi: true
+  sala: "sì"
+  spogliatoi: "sì"
   corsi: 2 a settimana
 consigliato: false
 ordine: 1

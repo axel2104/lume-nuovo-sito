@@ -16,7 +16,7 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getCollection } from 'astro:content';
-import { vociAbbonamento, type Voce } from '../data/tassonomie';
+import { vociAbbonamento, vociIncluse, type Voce } from '../data/tassonomie';
 
 // `as const satisfies` nella tassonomia restringe il tipo di ogni voce, e
 // `descrizione` sparisce da quelle che non ce l'hanno. Qui serve la forma
@@ -44,8 +44,7 @@ const GUEST_PASS = 15;
 
 const euro = (n: number) => new Intl.NumberFormat('it-IT').format(n);
 
-type Voci = Record<string, boolean | string>;
-const vociDi = (p: (typeof piani)[number]) => (p.data.voci ?? {}) as Voci;
+const vociDi = (p: (typeof piani)[number]) => vociIncluse(p.data.voci);
 
 /** Il valore di una riga per un piano: `null` se il piano non la include. */
 const valore = (p: (typeof piani)[number], id: string) => vociDi(p)[id] ?? null;

@@ -8,22 +8,46 @@
  *
  * I dati viaggiano anche come JSON in pagina. Costano qualche kB, ma servono a
  * far **ricalcolare** il layout al filtro invece di limitarsi a nascondere le
- * tessere: filtrando per sala le lezioni superstiti devono riprendersi tutta la
+ * tessere: filtrando, le lezioni superstiti devono riprendersi tutta la
  * larghezza della colonna, non restare strette come quando dividevano lo spazio
  * con le altre. Il nodo JSON sta fuori dalla vista, che viene sostituita.
+ *
+ * ─── Le schede dei corsi ──────────────────────────────────────────────────
+ * Toccando una lezione si apre la scheda del corso lì dov'è, invece di portare
+ * via dalla pagina. Chi guarda un orario sta confrontando: "questo Pilates è
+ * per me?" è una domanda che nasce mentre si scorre la griglia, e mandare a
+ * un'altra pagina per rispondere significa far perdere il posto e il contesto.
+ *
+ * Le schede sono **HTML già renderizzato dal server**, nascoste dentro il
+ * dialog, non un modello riempito dal JavaScript: così le foto passano
+ * dall'ottimizzazione di Astro e non c'è markup scritto due volte. Ne finiscono
+ * in pagina solo quelle dei corsi che l'orario contiene davvero.
+ *
+ * Senza JavaScript la tessera resta il link che era: si va alla scheda intera.
+ * Si perde la comodità, non l'informazione.
  */
+import { Picture } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
 import { firma } from '../../config/planning';
 import { colonneAttive, renderPlanning, type DatiPlanning } from '../../lib/planningVista';
 
 interface Props extends DatiPlanning {
   /** Slug del centro: identifica il blocco per il refresh. */
   centro: string;
+  /** Schede dei corsi presenti nell'orario, per il popup. */
+  schede?: CollectionEntry<'discipline'>[];
 }
 
-const { centro, lezioni, aggiornatoIl, prenotaUrl, esempio = false } = Astro.props;
+const { centro, lezioni, aggiornatoIl, prenotaUrl, esempio = false, schede = [] } = Astro.props;
 
 const html = renderPlanning({ lezioni, aggiornatoIl, prenotaUrl, esempio });
 const dati = JSON.stringify({ lezioni, aggiornatoIl: aggiornatoIl ?? null });
+
+/** Solo le discipline che l'orario cita davvero: le altre sarebbero peso morto. */
+const usate = new Set(lezioni.map((l) => l.disciplina).filter(Boolean));
+const carte = schede.filter((s) => usate.has(s.id));
+
+const livelli = [1, 2, 3, 4, 5];
 ---
 
 <div
@@ -37,6 +61,84 @@ const dati = JSON.stringify({ lezioni, aggiornatoIl: aggiornatoIl ?? null });
 >
   <script is:inline type="application/json" data-planning-dati set:html={dati} />
   <div data-planning-vista set:html={html} />
+
+  {
+    carte.length > 0 && (
+      <dialog class="pl-scheda" data-pl-scheda aria-label="Scheda del corso">
+        <div class="pl-scheda-in">
+          <button type="button" class="pl-scheda-x" data-pl-chiudi aria-label="Chiudi">
+            &times;
+          </button>
+          {carte.map((s) => (
+            <article data-scheda={s.id} hidden>
+              {s.data.immagine && (
+                <Picture
+                  class="pl-scheda-foto"
+                  src={s.data.immagine}
+                  alt={s.data.nome}
+                  widths={[400, 800]}
+                  sizes="(min-width:700px) 460px, 92vw"
+                  formats={['avif', 'webp']}
+                />
+              )}
+              <div class="pl-scheda-corpo">
+                <span class="label">{s.data.categoria}</span>
+                <h3 class="d">{s.data.nome}</h3>
+                <p>{s.data.breve}</p>
+
+                {(s.data.difficolta != null || s.data.intensita != null || s.data.durata != null) && (
+                  <div class="pl-scheda-meta">
+                    {s.data.difficolta != null && (
+                      <div class="meter-row">
+                        <span>Difficoltà</span>
+                        <div class="meter">
+                          {livelli.map((n) => (
+                            <i class={n <= (s.data.difficolta ?? 0) ? 'on' : ''} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {s.data.intensita != null && (
+                      <div class="meter-row">
+                        <span>Intensità</span>
+                        <div class="meter">
+                          {livelli.map((n) => (
+                            <i class={n <= (s.data.intensita ?? 0) ? 'on' : ''} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {s.data.durata != null && (
+                      <div class="meter-row">
+                        <span>Durata tipica</span>
+                        <b>{s.data.durata} min</b>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <div class="pl-scheda-azioni">
+                  <button
+                    type="button"
+                    class="btn btn-red btn-full"
+                    data-open-form="prova"
+                    data-medium={`PlanningScheda:${s.id}`}
+                    data-centro={centro}
+                    data-interesse={s.data.interesse ?? ''}
+                  >
+                    Prova questo corso
+                  </button>
+                  <a href={`/discipline/${s.id}`} class="btn btn-out btn-full">
+                    Scheda completa
+                  </a>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </dialog>
+    )
+  }
 </div>
 
 <script>

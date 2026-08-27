@@ -66,8 +66,14 @@ const centri = defineCollection({
     planning: z
       .array(
         z.object({
-          /** 1 = lunedì … 7 = domenica. */
-          giorno: z.number().int().min(1).max(7),
+          /**
+           * 1 = lunedì … 7 = domenica.
+           *
+           * `coerce` perché la tendina di Keystatic scrive "1" e non 1: senza
+           * questo, un planning compilato dall'editor farebbe fallire la build
+           * con un errore di tipo su un campo che a schermo sembrava giusto.
+           */
+          giorno: z.coerce.number().int().min(1).max(7),
           inizio: z.string(), // "07:00"
           fine: z.string(), // "07:50"
           corso: z.string(),
@@ -79,8 +85,28 @@ const centri = defineCollection({
         }),
       )
       .default([]),
-    /** ISO dell'ultimo aggiornamento del planning qui sopra. */
-    planningAggiornatoIl: z.string().nullish(),
+    /**
+     * Avviso mostrato sopra il planning, quando serve dire qualcosa sull'orario
+     * prima che lo si legga: "stagione 26/27 provvisoria", "chiusura estiva",
+     * "dal 15 settembre cambia".
+     *
+     * Vuoto = nessun avviso. Vive nei contenuti e non nel codice perché è il
+     * tipo di frase che va messa e tolta in giornata, e se per toglierla serve
+     * un deploy resta su per mesi.
+     */
+    planningNota: z.string().nullish(),
+    /**
+     * Ultimo aggiornamento del planning qui sopra, come stringa ISO.
+     *
+     * Accetta anche un `Date` perché YAML interpreta `2026-08-27` senza apici
+     * come una data, ed è esattamente quello che scrive il selettore di
+     * Keystatic. Senza questa conversione la build si fermava con un errore di
+     * tipo su un campo che nell'editor sembrava compilato bene.
+     */
+    planningAggiornatoIl: z
+      .union([z.string(), z.date()])
+      .nullish()
+      .transform((v) => (v instanceof Date ? v.toISOString() : v)),
   }),
 });
 

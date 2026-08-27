@@ -75,6 +75,37 @@ export const vociAbbonamento = [
   { id: 'nutrizione', label: 'Piano nutrizionale' },
 ] as const satisfies readonly Voce[];
 
+/**
+ * Le voci davvero incluse in un piano, con i valori normalizzati.
+ *
+ * Nei contenuti una voce può valere `true` (inclusa senza limiti) o una
+ * stringa (inclusa con un limite: "2 a settimana"). Dall'editor arriva sempre
+ * una stringa, perché una casella di testo non sa scrivere un booleano: lì la
+ * convenzione è **vuoto = non inclusa**, **"sì" = inclusa**, qualsiasi altro
+ * testo = il limite.
+ *
+ * Senza questa normalizzazione un campo lasciato vuoto in Keystatic non
+ * risulterebbe "assente" ma "inclusa con limite: (niente)", e nella tabella
+ * comparativa comparirebbe una riga vuota al posto di una cella barrata —
+ * un piano sembrerebbe offrire qualcosa che non offre.
+ */
+const INCLUSA_SENZA_LIMITI = ['sì', 'si', 'incluso', 'inclusa', 'true', 'x', '✓'];
+
+export function vociIncluse(
+  voci?: Record<string, boolean | string | undefined> | null,
+): Record<string, true | string> {
+  const out: Record<string, true | string> = {};
+  for (const [id, v] of Object.entries(voci ?? {})) {
+    if (v === true) out[id] = true;
+    else if (typeof v === 'string') {
+      const s = v.trim();
+      if (!s) continue;
+      out[id] = INCLUSA_SENZA_LIMITI.includes(s.toLowerCase()) ? true : s;
+    }
+  }
+  return out;
+}
+
 // ─── Icone dei servizi ─────────────────────────────────────────────────────
 // Ogni id corrisponde a un SVG in `src/components/editoriale/IconaServizio.astro`.
 export const iconeServizi = [
@@ -113,24 +144,6 @@ export interface VoceLead extends Voce {
   daRivedere?: boolean;
 }
 
-/**
- * ⚠️ Etichette da riallineare ad Airtable prima di collegarle a un form.
- *
- * Il contratto vero delle attività di interesse è `INTERESSI` in
- * `src/config/forms.ts`: sono le opzioni del campo `ATTIVITA' INTERESSE NRE`
- * della tabella RICHIESTE, e nessuna delle etichette qui sotto coincide con
- * quelle ("CrossFit" vs "CrossFit/Hyrox", "Personal trainer" vs "Personal
- * Training", "Reformer / Wellback System" vs "Pilates Reformer", e
- * "Fitness (sala pesi e corsi)", "Attività in acqua adulti" e "Agonismo nuoto"
- * non esistono affatto).
- *
- * La struttura è però migliore di `INTERESSI`: separa acqua adulti, scuola
- * nuoto bambini, acqua nido e agonismo, e porta il campo `centri`. Il passo
- * successivo è unificare le due liste — questa struttura, quei valori — dopo
- * aver deciso in Airtable se aggiungere le opzioni mancanti. Fino ad allora
- * questa lista non alimenta nessun form: se la si collega così com'è, Airtable
- * crea opzioni nuove a ogni lead e la segmentazione si sbriciola in silenzio.
- */
 export const interessiLead = [
   {
     id: 'fitness',

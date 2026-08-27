@@ -5,11 +5,11 @@ mensile: 59
 annuale: 590
 attivazione: 0
 voci:
-  sala: true
-  spogliatoi: true
+  sala: "sì"
+  spogliatoi: "sì"
   corsi: Illimitati
-  centri: true
-  app: true
+  centri: "sì"
+  app: "sì"
   pt: 1 sessione al mese
 consigliato: true
 ordine: 2

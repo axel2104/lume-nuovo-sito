@@ -1,4 +1,4 @@
-import { config, collection, fields } from '@keystatic/core';
+import { config, collection, fields, singleton } from '@keystatic/core';
 
 /**
  * Configurazione Keystatic — l'editor dei contenuti del sito.
@@ -17,6 +17,61 @@ import { config, collection, fields } from '@keystatic/core';
  *    uno o due minuti: è la differenza principale rispetto a WordPress.
  */
 
+
+/**
+ * Giorni come stringhe e non come numeri: una tendina di Keystatic può salvare
+ * solo stringhe. Lo schema in `src/content.config.ts` usa `z.coerce.number()`
+ * proprio per questo.
+ */
+const GIORNI_SETTIMANA = [
+  { label: 'Lunedì', value: '1' },
+  { label: 'Martedì', value: '2' },
+  { label: 'Mercoledì', value: '3' },
+  { label: 'Giovedì', value: '4' },
+  { label: 'Venerdì', value: '5' },
+  { label: 'Sabato', value: '6' },
+  { label: 'Domenica', value: '7' },
+] as const;
+
+/**
+ * Le opzioni del campo "Attività di interesse" della tabella RICHIESTE su
+ * Airtable. Sono copiate da `src/config/forms.ts` e devono restare identiche:
+ * un valore diverso qui fa creare ad Airtable un'opzione nuova a ogni contatto,
+ * e la segmentazione dei lead si sbriciola senza che nessuno se ne accorga.
+ */
+const INTERESSI_AIRTABLE = [
+  'Sala Pesi',
+  'Corsi Fitness',
+  'Pilates Reformer',
+  'CrossFit/Hyrox',
+  'Personal Training',
+  'Scuola Nuoto Adulti',
+  'Acqua Fitness',
+  'Nuoto Libero',
+  'Scuola Nuoto Bambini',
+  'Acqua Nido',
+  'Acqua Mamma',
+].map((v) => ({ label: v, value: v }));
+
+/**
+ * Le righe della tabella comparativa degli abbonamenti: id, etichetta, nota.
+ *
+ * Duplicano `vociAbbonamento` in `src/data/tassonomie.ts`, che è la fonte per
+ * il sito. Sono ricopiate perché questo file non può importare da `src/`: la
+ * configurazione di Keystatic viene caricata anche dal browser, dove gli alias
+ * di Astro non esistono. Se aggiungi una riga là, aggiungila anche qui.
+ */
+const VOCI_ABBONAMENTO: readonly (readonly [string, string, string?])[] = [
+  ['sala', 'Sala pesi e zona cardio'],
+  ['spogliatoi', 'Spogliatoi, docce e armadietti'],
+  ['corsi', 'Corsi di gruppo'],
+  ['centri', 'Accesso a tutti i centri Lume'],
+  ['app', 'App di prenotazione'],
+  ['pt', 'Personal training'],
+  ['acqua', 'Piscina e attività in acqua', 'Solo nei centri con piscina'],
+  ['spa', 'SPA e area relax', 'Solo nei centri con SPA'],
+  ['nutrizione', 'Piano nutrizionale'],
+];
 
 const CATEGORIE_DISCIPLINE = [
   { label: 'Funzionale & atletico', value: 'Funzionale & atletico' },
@@ -72,18 +127,142 @@ const SU_GITHUB = {
  */
 const forzaGithub = import.meta.env.PUBLIC_KEYSTATIC_STORAGE === 'github';
 
+/**
+ * Titolo e descrizione per Google, uguali su ogni pagina.
+ *
+ * Stanno nel CMS e non nel codice perché sono la prima cosa che si legge nei
+ * risultati di ricerca e l'ultima che qualcuno pensa a cambiare: se per
+ * modificarli serve un deploy, non si modificano mai.
+ */
+const seo = () =>
+  fields.object(
+    {
+      titolo: fields.text({
+        label: 'Titolo nella scheda del browser e su Google',
+        description: 'Sotto i 60 caratteri, altrimenti Google lo taglia.',
+        validation: { isRequired: true },
+      }),
+      descrizione: fields.text({
+        label: 'Descrizione su Google',
+        description: 'Una o due frasi, fra 120 e 160 caratteri.',
+        multiline: true,
+        validation: { isRequired: true },
+      }),
+    },
+    { label: 'Google e social' },
+  );
+
+/**
+ * L'intestazione di una sezione: sopratitolo, titolo, riga di spiegazione.
+ *
+ * È lo stesso blocco che si ripete in tutta la home e in cima alle pagine
+ * d'elenco, quindi qui è una funzione: un ritocco alle descrizioni d'aiuto si
+ * propaga a tutte invece di andare corretto in dodici posti.
+ */
+const intestazione = (label: string, opzioni?: { testo?: boolean }) =>
+  fields.object(
+    {
+      label: fields.text({
+        label: 'Sopratitolo',
+        description: 'La righetta rossa in maiuscolo sopra al titolo.',
+      }),
+      titolo: fields.text({
+        label: 'Titolo',
+        description: 'Vai a capo con Invio dove vuoi che la riga si spezzi.',
+        multiline: true,
+        validation: { isRequired: true },
+      }),
+      ...(opzioni?.testo === false
+        ? {}
+        : {
+            testo: fields.text({
+              label: 'Testo',
+              multiline: true,
+            }),
+          }),
+    },
+    { label },
+  );
+
 export default config({
   storage: import.meta.env.DEV && !forzaGithub ? { kind: 'local' } : SU_GITHUB,
 
   ui: {
     brand: { name: 'LUMe Fitness Club' },
     navigation: {
+      'Testi delle pagine': ['home'],
       'Corsi e centri': ['discipline', 'centri'],
+      Listino: ['abbonamenti'],
       'Lume Life': ['news', 'eventi', 'servizi', 'helpdesk'],
     },
   },
 
   collections: {
+    // ─── Abbonamenti ─────────────────────────────────────────────────────
+    abbonamenti: collection({
+      label: 'Abbonamenti',
+      slugField: 'nome',
+      path: 'src/content/abbonamenti/*',
+      format: { contentField: 'content' },
+      entryLayout: 'content',
+      columns: ['nome', 'mensile'],
+      schema: {
+        nome: fields.slug({
+          name: { label: 'Nome del piano' },
+          slug: { label: 'Indirizzo' },
+        }),
+        per: fields.text({
+          label: 'A chi si rivolge',
+          description: 'Una riga sotto il nome, es. “Per chi si allena da solo e vuole solo la sala”.',
+          validation: { isRequired: true },
+        }),
+        mensile: fields.number({
+          label: 'Prezzo mensile (€)',
+          validation: { isRequired: true },
+        }),
+        annuale: fields.number({
+          label: 'Prezzo annuale (€)',
+          description:
+            'Scritto per intero, non calcolato dal mensile: lo sconto è una scelta commerciale e può cambiare da piano a piano. Il risparmio più alto finisce automaticamente sull’etichetta del selettore.',
+          validation: { isRequired: true },
+        }),
+        attivazione: fields.number({
+          label: 'Quota di attivazione (€)',
+          description: '0 = nessuna quota.',
+          defaultValue: 0,
+        }),
+        voci: fields.object(
+          Object.fromEntries(
+            VOCI_ABBONAMENTO.map(([id, label, nota]) => [
+              id,
+              fields.text({
+                label,
+                description: nota,
+                validation: { isRequired: false },
+              }),
+            ]),
+          ),
+          {
+            label: 'Cosa include',
+            description:
+              'Per ogni riga: lascia vuoto se il piano non la comprende, scrivi “sì” se la comprende senza limiti, oppure scrivi il limite (“2 a settimana”), che finisce nella cella al posto della spunta.',
+          },
+        ),
+        consigliato: fields.checkbox({
+          label: 'Il più scelto',
+          description: 'Mette in evidenza il piano in home e su /abbonamenti. Spuntane uno solo.',
+          defaultValue: false,
+        }),
+        ordine: fields.integer({
+          label: 'Ordine',
+          description: 'Dal più economico al più completo: la pagina calcola le differenze in quest’ordine.',
+          defaultValue: 99,
+        }),
+        pubblicato: fields.checkbox({ label: 'Pubblicato', defaultValue: true }),
+        content: corpo('Note sul piano'),
+      },
+    }),
+
     // ─── Discipline ──────────────────────────────────────────────────────
     discipline: collection({
       label: 'Discipline e corsi',
@@ -105,6 +284,13 @@ export default config({
           description: 'Guida i filtri della pagina Discipline e i chip del form contatti.',
           options: [...CATEGORIE_DISCIPLINE],
           defaultValue: 'Funzionale & atletico',
+        }),
+        interesse: fields.select({
+          label: 'Attività preselezionata nel form',
+          description:
+            'Quando il form si apre da questa scheda, spunta già questa attività. Lascia “usa la categoria” quasi sempre: serve solo dove la categoria porta fuori strada — il TRX Pilates sta in “Mente & corpo” ma commercialmente è Pilates Reformer.',
+          options: [{ label: '— usa la categoria —', value: '' }, ...INTERESSI_AIRTABLE],
+          defaultValue: '',
         }),
         breve: fields.text({
           label: 'Descrizione breve',
@@ -217,8 +403,102 @@ export default config({
         }),
         perfectgymUrl: fields.text({
           label: 'Link iscrizione PerfectGym',
+          description:
+            'Il portale dove si completa l’iscrizione. Finché resta “#” il rimando al portale non compare in fondo ai form: un pulsante che non porta da nessuna parte fa più danno di un pulsante assente.',
           defaultValue: '#',
         }),
+        perfectgymCorsiUrl: fields.text({
+          label: 'Link elenco corsi PerfectGym',
+          description:
+            'Alimenta il pulsante “Prenota sul portale” del planning. Il numero nell’URL è l’id del club, quindi è diverso per ogni centro.',
+          validation: { isRequired: false },
+        }),
+        calcom: fields.object(
+          {
+            visita: fields.text({
+              label: 'Visita guidata',
+              description: 'Es. lume-macerata/visita — senza https e senza cal.com.',
+              validation: { isRequired: false },
+            }),
+            richiamata: fields.text({
+              label: 'Richiamata telefonica',
+              description: 'Es. lume-macerata/richiamata.',
+              validation: { isRequired: false },
+            }),
+          },
+          {
+            label: 'Agende Cal.com',
+            description:
+              'Due agende separate perché durata e disponibilità sono diverse: una visita non è una telefonata. Se le lasci vuote i form registrano comunque il contatto e dicono “ti chiamiamo noi” — un contatto senza appuntamento vale, un calendario rotto no.',
+          },
+        ),
+
+        // ─── Planning ────────────────────────────────────────────────────
+        planning: fields.array(
+          fields.object({
+            giorno: fields.select({
+              label: 'Giorno',
+              options: [...GIORNI_SETTIMANA],
+              defaultValue: '1',
+            }),
+            inizio: fields.text({
+              label: 'Inizio',
+              description: 'Formato 24 ore, es. 07:00.',
+              validation: { isRequired: true },
+            }),
+            fine: fields.text({
+              label: 'Fine',
+              description: 'Deve essere più tardi dell’inizio, altrimenti la lezione viene scartata.',
+              validation: { isRequired: true },
+            }),
+            corso: fields.text({ label: 'Corso', validation: { isRequired: true } }),
+            disciplina: fields.relationship({
+              label: 'Scheda della disciplina',
+              description: 'Facoltativo: se la colleghi, la lezione diventa cliccabile.',
+              collection: 'discipline',
+            }),
+            sala: fields.text({
+              label: 'Sala',
+              description:
+                'Alimenta il filtro e la disposizione a colonne parallele: due lezioni alla stessa ora in sale diverse si affiancano invece di sovrapporsi.',
+              validation: { isRequired: false },
+            }),
+            istruttore: fields.text({
+              label: 'Istruttore',
+              description:
+                'Solo il nome di battesimo: questa pagina è pubblica. Compare nella vista mobile e nel tooltip.',
+              validation: { isRequired: false },
+            }),
+            prenotabile: fields.checkbox({ label: 'Prenotabile', defaultValue: true }),
+          }),
+          {
+            label: 'Planning dei corsi',
+            description:
+              'La settimana tipo, non un calendario di date. È quello che la pagina /planning mostra subito; se in futuro colleghiamo PerfectGym, questo resta come rete di sicurezza per quando il collegamento non risponde.',
+            itemLabel: (props) =>
+              [
+                GIORNI_SETTIMANA.find((g) => g.value === props.fields.giorno.value)?.label,
+                props.fields.inizio.value,
+                props.fields.corso.value,
+                props.fields.sala.value,
+              ]
+                .filter(Boolean)
+                .join(' · ') || 'Lezione',
+          },
+        ),
+        planningNota: fields.text({
+          label: 'Avviso sopra il planning',
+          description:
+            'Compare in cima all’orario, es. “Orario della stagione 26/27 ancora provvisorio”. Lascia vuoto per non mostrarlo.',
+          multiline: true,
+          validation: { isRequired: false },
+        }),
+        planningAggiornatoIl: fields.date({
+          label: 'Planning aggiornato il',
+          description: 'Mostrato sopra la griglia. Aggiornalo quando cambi l’orario.',
+          validation: { isRequired: false },
+        }),
+
         content: corpo('Presentazione del centro'),
       },
     }),
@@ -391,6 +671,129 @@ export default config({
         centri: fields.multiRelationship({ label: 'Centri', collection: 'centri' }),
         pubblicato: fields.checkbox({ label: 'Pubblicato', defaultValue: true }),
         content: corpo('Testo del pannello'),
+      },
+    }),
+  },
+
+  // ─── Testi delle pagine ────────────────────────────────────────────────
+  // Non sono contenuti che si aggiungono e si togliono come le news: sono i
+  // testi fissi di una pagina che esiste una volta sola. Da qui si cambia una
+  // frase della home senza toccare il codice; il layout resta in codice, che è
+  // il confine giusto — un CMS che sposta anche i blocchi diventa un page
+  // builder, e con un page builder si fanno pagine sgangherate.
+  singletons: {
+    home: singleton({
+      label: 'Home',
+      path: 'src/content/pagine/home',
+      format: { data: 'json' },
+      schema: {
+        seo: seo(),
+        hero: fields.object(
+          {
+            label: fields.text({ label: 'Sopratitolo' }),
+            titolo: fields.text({
+              label: 'Titolo grande',
+              description: 'Vai a capo con Invio. L’ultima parola in corsivo si scrive nel campo sotto.',
+              multiline: true,
+              validation: { isRequired: true },
+            }),
+            evidenza: fields.text({
+              label: 'Parola in evidenza',
+              description: 'Aggiunta in coda al titolo, in corsivo.',
+            }),
+            testo: fields.text({ label: 'Testo', multiline: true }),
+            ctaProva: fields.text({
+              label: 'Pulsante rosso',
+              description: 'Apre il form del pass prova. È la chiamata principale della home: a chi arriva per la prima volta si chiede di provare, non di abbonarsi.',
+            }),
+            ctaCentri: fields.text({ label: 'Pulsante secondario' }),
+          },
+          { label: 'Apertura' },
+        ),
+        stats: fields.array(
+          fields.object({
+            numero: fields.text({
+              label: 'Numero',
+              description: 'Scrivi {discipline} o {centri} per farlo contare al sito invece di aggiornarlo a mano.',
+              validation: { isRequired: true },
+            }),
+            suffisso: fields.text({ label: 'Dopo il numero', description: 'Es. + — lascia vuoto se non serve.' }),
+            etichetta: fields.text({ label: 'Etichetta', validation: { isRequired: true } }),
+          }),
+          {
+            label: 'Numeri sotto l’apertura',
+            itemLabel: (props) =>
+              [props.fields.numero.value, props.fields.etichetta.value].filter(Boolean).join(' · ') || 'Numero',
+          },
+        ),
+        chiSiamo: fields.object(
+          {
+            label: fields.text({ label: 'Sopratitolo' }),
+            titolo: fields.text({ label: 'Titolo', multiline: true, validation: { isRequired: true } }),
+            paragrafi: fields.array(fields.text({ label: 'Paragrafo', multiline: true }), {
+              label: 'Paragrafi',
+              itemLabel: (props) => (props.value || 'Paragrafo').slice(0, 60),
+            }),
+            cta: fields.text({ label: 'Pulsante' }),
+          },
+          { label: 'Chi siamo' },
+        ),
+        centri: intestazione('Sezione centri'),
+        discipline: fields.object(
+          {
+            label: fields.text({ label: 'Sopratitolo' }),
+            titolo: fields.text({ label: 'Titolo', multiline: true, validation: { isRequired: true } }),
+            testo: fields.text({
+              label: 'Testo',
+              description: 'Scrivi {discipline} per il numero di attività, così non invecchia.',
+              multiline: true,
+            }),
+            cta: fields.text({ label: 'Pulsante', description: 'Anche qui vale {discipline}.' }),
+          },
+          { label: 'Sezione discipline' },
+        ),
+        bandaProva: fields.object(
+          {
+            label: fields.text({ label: 'Sopratitolo' }),
+            titolo: fields.text({ label: 'Titolo', multiline: true, validation: { isRequired: true } }),
+            testo: fields.text({ label: 'Testo', multiline: true }),
+            ctaForm: fields.text({ label: 'Pulsante rosso', description: 'Apre il form.' }),
+            ctaPagina: fields.text({ label: 'Pulsante secondario', description: 'Porta a /prova.' }),
+          },
+          { label: 'Fascia pass prova' },
+        ),
+        abbonamenti: fields.object(
+          {
+            label: fields.text({ label: 'Sopratitolo' }),
+            titolo: fields.text({ label: 'Titolo', multiline: true, validation: { isRequired: true } }),
+            testo: fields.text({ label: 'Testo', multiline: true }),
+            nota: fields.text({
+              label: 'Riga sotto i piani',
+              description: 'I prezzi non si scrivono qui: stanno negli Abbonamenti, e home e /abbonamenti leggono gli stessi.',
+              multiline: true,
+            }),
+            notaLink: fields.text({ label: 'Testo del link nella riga' }),
+          },
+          { label: 'Sezione abbonamenti' },
+        ),
+        prevendita: fields.object(
+          {
+            label: fields.text({ label: 'Sopratitolo' }),
+            titolo: fields.text({ label: 'Titolo', multiline: true, validation: { isRequired: true } }),
+            testo: fields.text({ label: 'Testo', multiline: true }),
+            cta: fields.text({ label: 'Pulsante' }),
+          },
+          { label: 'Fascia prevendita' },
+        ),
+        wiki: fields.object(
+          {
+            label: fields.text({ label: 'Sopratitolo' }),
+            titolo: fields.text({ label: 'Titolo', multiline: true, validation: { isRequired: true } }),
+            testo: fields.text({ label: 'Testo', multiline: true }),
+            cta: fields.text({ label: 'Pulsante' }),
+          },
+          { label: 'Sezione wiki' },
+        ),
       },
     }),
   },

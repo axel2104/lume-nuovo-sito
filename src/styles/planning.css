@@ -110,18 +110,36 @@
   text-decoration: underline;
 }
 
-/* ─── Griglia settimanale (desktop) ─────────────────────────── */
-/* Nascosta di default: sotto i 1024px sette colonne non stanno in nessuno
+/* ─── Tabella per fasce (desktop) ───────────────────────────── */
+/* Nascosta di default: sotto i 1024px sei colonne non stanno in nessuno
    schermo senza diventare illeggibili, e il telefono è dove si guarda
-   l'orario prima di uscire di casa. */
-.pl-griglia {
+   l'orario prima di uscire di casa.
+
+   Non è una griglia a tempo continuo: le lezioni della stessa fascia si
+   impilano in verticale dentro la casella. Sul palinsesto vero il lunedì ha
+   fino a otto lezioni contemporaneamente aperte, e otto colonne parallele
+   davano tessere da quaranta pixel con i nomi troncati. Per fascia di inizio
+   il massimo è quattro, quasi sempre una o due. */
+.pl-tab {
   display: none;
 }
 
-.pl-testa,
-.pl-corpo {
+.pl-tab-testa,
+.pl-tab-riga {
   display: grid;
-  grid-template-columns: var(--pl-gutter) repeat(var(--pl-colonne, 7), minmax(0, 1fr));
+  grid-template-columns: var(--pl-gutter) repeat(var(--pl-colonne, 6), minmax(0, 1fr));
+  gap: 6px;
+  align-items: stretch;
+}
+.pl-tab-riga {
+  border-top: 1px solid var(--line);
+  padding: 6px 0;
+}
+/* Salto lungo fra due fasce: la pausa fra mattina e pomeriggio va vista,
+   altrimenti le 11:05 e le 13:15 sembrano consecutive. */
+.pl-tab-riga.stacco {
+  border-top: 1px solid #2a2a2a;
+  margin-top: 14px;
 }
 .pl-giorno-testa {
   font-family: 'Anton', sans-serif;
@@ -129,92 +147,58 @@
   font-size: 13px;
   letter-spacing: 0.06em;
   color: #ddd;
-  padding: 0 0 10px 10px;
+  padding: 0 0 10px 2px;
 }
-.pl-corpo {
-  position: relative;
-  border-top: 1px solid var(--line);
-}
-.pl-gutter {
-  position: relative;
-}
-.pl-ora {
-  position: absolute;
-  right: 10px;
-  /* Mezza riga di testo sopra la linea, così il numero è allineato al filo
-     dell'ora e non sembra appartenere alla fascia precedente. */
-  transform: translateY(-50%);
-  font-size: 11px;
-  color: #6a6a6a;
+.pl-tab-ora {
+  font-size: 12px;
+  color: #8a8a8a;
   font-variant-numeric: tabular-nums;
+  padding-top: 7px;
+  text-align: right;
+  padding-right: 10px;
 }
-.pl-colonna {
-  position: relative;
-  border-left: 1px solid var(--line);
-  min-height: 100%;
-}
-.pl-riga {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: #141414;
+.pl-tab-cella {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
 }
 
 .pl-lez {
-  position: absolute;
-  overflow: hidden;
   display: block;
+  min-width: 0;
   background: var(--card);
   border: 1px solid var(--line);
   border-left: 2px solid var(--red);
   border-radius: var(--pl-r);
-  padding: 6px 8px;
+  padding: 7px 9px;
   color: inherit;
   transition: 0.15s;
+}
+a.pl-lez {
+  cursor: pointer;
 }
 a.pl-lez:hover {
   border-color: var(--red);
   background: rgba(196, 0, 66, 0.12);
 }
 .pl-lez b {
-  /* Due righe al massimo: oltre, il titolo mangerebbe la riga dei metadati. */
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  font-size: 12px;
+  display: block;
+  font-size: 12.5px;
   font-weight: 600;
   line-height: 1.25;
-}
-/* Lezione breve: il titolo scende a una riga sola, così i metadati restano
-   visibili invece di essere spinti fuori dal riquadro. */
-.pl-lez.corta b {
-  -webkit-line-clamp: 1;
-  font-size: 11.5px;
-}
-/* Tre o più sale in parallelo: la colonna si divide in tessere da ~60px e il
-   testo va rimpicciolito, altrimenti si legge "Les M…" e non serve a niente. */
-.pl-lez.stretta {
-  padding: 5px 6px;
-}
-.pl-lez.stretta b {
-  font-size: 10.5px;
-  line-height: 1.2;
-}
-.pl-lez.stretta .pl-lez-meta {
-  font-size: 9px;
+  /* Nessun troncamento: la casella cresce in altezza. In una tabella per
+     fasce lo spazio verticale non è vincolato, quindi tagliare un nome
+     sarebbe una scelta senza motivo. */
+  overflow-wrap: break-word;
 }
 .pl-lez-meta {
   display: block;
   margin-top: 2px;
-  font-size: 10px;
+  font-size: 10.5px;
   color: var(--mut);
   line-height: 1.35;
   font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .pl-lez[hidden] {
   display: none;
@@ -350,10 +334,110 @@ a.pl-lez:hover {
 
 /* ─── Passaggio a griglia ───────────────────────────────────── */
 @media (min-width: 1024px) {
-  .pl-griglia {
+  .pl-tab {
     display: block;
   }
   .pl-mobile {
     display: none;
+  }
+}
+
+/* Avviso redazionale sopra il planning: "orario provvisorio", "chiusura
+   estiva". Volutamente meno gridato di `.pl-esempio`, che segnala dati finti:
+   qui i dati sono veri, è la loro validità a essere in dubbio. */
+.pl-nota {
+  margin: 0 0 18px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--red);
+  background: var(--card);
+  border-radius: var(--lf-r-s, 6px);
+  font-size: 14px;
+  color: var(--mut);
+}
+
+/* ─── Scheda del corso ─────────────────────────────────────────────────────
+   Un <dialog> nativo: il browser regala trappola del focus, chiusura con Esc,
+   backdrop e inert sul resto della pagina. Riscrivere queste quattro cose a
+   mano è il modo più comune di produrre un popup che una tastiera non sa
+   chiudere. */
+.pl-scheda {
+  width: min(460px, 92vw);
+  max-height: 88dvh;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--lf-r-m, 10px);
+  background: var(--card);
+  color: var(--txt);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.pl-scheda::backdrop {
+  background: rgba(10, 10, 10, 0.72);
+  backdrop-filter: blur(4px);
+}
+.pl-scheda-in {
+  position: relative;
+}
+.pl-scheda-x {
+  position: absolute;
+  z-index: 2;
+  top: 10px;
+  right: 10px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  line-height: 1;
+  color: #fff;
+  background: rgba(10, 10, 10, 0.55);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--lf-r-s, 6px);
+  cursor: pointer;
+}
+.pl-scheda-foto {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  display: block;
+}
+.pl-scheda-corpo {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pl-scheda-corpo h3 {
+  font-size: 26px;
+  line-height: 1.1;
+  margin: 0;
+}
+.pl-scheda-corpo > p {
+  margin: 0;
+  color: var(--mut);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+.pl-scheda-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 0;
+  margin-top: 4px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.pl-scheda-azioni {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+@media (min-width: 480px) {
+  .pl-scheda-azioni {
+    flex-direction: row;
   }
 }
