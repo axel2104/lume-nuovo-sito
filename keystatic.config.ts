@@ -426,6 +426,12 @@ export default config({
           publicPath: '../../assets/centri/',
           validation: { isRequired: false },
         }),
+        video: fields.text({
+          label: 'Video del centro',
+          description:
+            'Loop muto mostrato sopra la foto del titolo. Percorso dentro public/, es. /media/macerata-drone.mp4, oppure un URL. Un loop breve, 15-20 secondi, MP4 H.264 largo 1280 e sotto i 4 MB: l’H.265 non lo riproduce Chrome. Vuoto = resta la foto.',
+          validation: { isRequired: false },
+        }),
         perfectgymUrl: fields.text({
           label: 'Link iscrizione PerfectGym',
           description:

@@ -51,6 +51,17 @@ const centri = defineCollection({
       )
       .default([]),
     immagine: image().nullish(),
+    /**
+     * Video del centro, in loop muto sopra la foto del titolo.
+     *
+     * È un URL e non un `image()`: i video non passano dall'ottimizzazione di
+     * Astro, e questi vivranno su un CDN quando la fototeca crescerà. Per ora
+     * puntano a `public/media/`, quindi il valore è `/media/nome.mp4`.
+     *
+     * Vuoto = resta la foto, che è anche quello che si vede prima che il video
+     * arrivi e per chi ha chiesto meno movimento.
+     */
+    video: z.string().nullish(),
     perfectgymUrl: z.string().default('#'),
     /**
      * Event type Cal.com della sede, senza dominio: `lume-macerata/visita`.

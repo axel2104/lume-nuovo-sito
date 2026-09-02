@@ -40,6 +40,7 @@ sale:
     mq: 450
     dotazione: "Vogatori, air bike, bikeerg, skierg, bilancieri e bumper."
 immagine: ../../assets/centri/macerata.jpg
+video: /media/macerata-drone.mp4
 perfectgymUrl: "#"
 planningNota: "Orario della stagione 26/27 ancora provvisorio: qualche corso e qualche orario possono cambiare prima di settembre."
 planningAggiornatoIl: 2026-08-27

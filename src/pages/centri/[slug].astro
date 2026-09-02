@@ -54,6 +54,43 @@ const disc = tutte
             />
           )
         }
+        {/*
+          Il video sta SOPRA la foto, non al suo posto: la foto è il fermo
+          immagine e resta l'unica cosa che si vede finché il video non è
+          caricato, per chi ha chiesto meno movimento e per chi naviga con il
+          risparmio dati. Nessun `src` nel markup — lo mette il client solo
+          quando decide di caricarlo, altrimenti tre megabyte e mezzo
+          partirebbero a ogni visita anche a chi non li vuole.
+        */}
+        {aperto && c.video && (
+          <>
+            <video
+              class="hero-clip"
+              data-centro-video
+              data-src={c.video}
+              muted
+              loop
+              playsinline
+              preload="none"
+              aria-hidden="true"
+            />
+            <button
+              type="button"
+              class="hero-vcap hero-vcap-dx"
+              data-centro-toggle
+              hidden
+              aria-label="Metti in pausa il video"
+            >
+              <svg class="ico-pausa" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true" fill="currentColor">
+                <rect x="1" y="1" width="3.5" height="10" rx="1" /><rect x="7.5" y="1" width="3.5" height="10" rx="1" />
+              </svg>
+              <svg class="ico-play" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true" fill="currentColor">
+                <path d="M2 1l9 5-9 5z" />
+              </svg>
+              Il centro
+            </button>
+          </>
+        )}
         <div class="inner">
           <span class={`badge ${aperto ? 'open' : 'wait'}`} style="position:static;display:inline-block;margin-bottom:12px">
             {aperto ? 'Aperto' : 'Prossima apertura'}
@@ -201,3 +238,11 @@ const disc = tutte
   </main>
   <Footer />
 </Layout>
+
+<script>
+  import { initVideoCentro } from '../../lib/videoCentro.client.js';
+
+  document.querySelectorAll('[data-centro-video]').forEach((el) => {
+    if (el instanceof HTMLVideoElement) initVideoCentro(el);
+  });
+</script>
