@@ -4,11 +4,11 @@ citta: Montecassiano
 stato: aperto
 ordine: 2
 indirizzo: Via Sergio Piermanni 3, 62010 Montecassiano
-telefono: "+39 0733 000000"
+telefono: "0733 232905"
 email: montecassiano@lumefitness.it
 orari:
   feriali: "07:00 – 22:00"
-  sabato: "08:30 – 19:00"
+  sabato: "08:00 – 18:00"
   domenica: "Chiuso"
 servizi:
   - "Sala pesi 800m²"

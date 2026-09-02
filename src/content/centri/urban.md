@@ -3,6 +3,7 @@ nome: Lume Urban
 citta: Macerata (centro)
 stato: prevendita
 ordine: 4
+telefono: "0733 232905"
 email: urban@lumefitness.it
 servizi:
   - "Nel cuore della città"

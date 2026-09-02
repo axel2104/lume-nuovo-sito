@@ -4,12 +4,12 @@ citta: Macerata
 stato: aperto
 ordine: 1
 indirizzo: Piazzale Mario Fattorini 1, 62100 Macerata
-telefono: "+39 0733 000000"
+telefono: "0733 232905"
 email: macerata@lumefitness.it
 orari:
-  feriali: "06:30 – 22:30"
-  sabato: "08:00 – 20:00"
-  domenica: "09:00 – 14:00"
+  feriali: "06:00 – 23:00"
+  sabato: "08:00 – 19:00"
+  domenica: "08:00 – 19:00"
 servizi:
   - "Gym floor 500m² Technogym"
   - "Box CrossFit 450m²"

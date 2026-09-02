@@ -3,6 +3,7 @@ nome: Lume Piediripa
 citta: Piediripa (Macerata)
 stato: prevendita
 ordine: 3
+telefono: "0733 232905"
 email: piediripa@lumefitness.it
 servizi:
   - "Nuovo centro Lume"
