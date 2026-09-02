@@ -127,7 +127,10 @@ const links = [
   .nav-contatti {
     display: none;
   }
-  @media (min-width: 1024px) {
+  /* Con sette voci di menu, a 1024px "Contattaci" e "Prova Lume" non stanno
+     piu' accanto ai link: il secondo andava a capo su due righe. Da 1200 in su
+     lo spazio c'e'. Sotto resta la chiamata principale, che basta. */
+  @media (min-width: 1200px) {
     .nav-contatti {
       display: inline-flex;
     }

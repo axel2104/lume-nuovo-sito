@@ -20,24 +20,64 @@
     "titolo": "Cinque fasce d'età",
     "testo": "Gli orari sono suddivisi per età e accanto a ogni turno è indicato il livello. All'interno dello stesso orario convivono più corsi e più istruttori: per esigenze di spazio non tutti i livelli sono presenti in ogni orario.",
     "voci": [
-      { "eta": "3 – 5 anni", "livelli": "Ambientamento" },
-      { "eta": "5 – 7 anni", "livelli": "1° Livello" },
-      { "eta": "7 – 10 anni", "livelli": "2°, 3° e 4° Livello" },
-      { "eta": "10 – 14 anni", "livelli": "Principiante, Intermedio e Avanzato" },
-      { "eta": "14 – 18 anni", "livelli": "Principiante, Intermedio e Avanzato" }
-    ]
+      {
+        "eta": "3 – 5 anni",
+        "livelli": "Ambientamento",
+        "href": "https://lumefitness.perfectgym.com/clientportal2/#/Groups/2?ageLimitId=1&vacancies=1"
+      },
+      {
+        "eta": "5 – 7 anni",
+        "livelli": "1° Livello",
+        "href": "https://lumefitness.perfectgym.com/clientportal2/#/Groups/2?ageLimitId=2&vacancies=1"
+      },
+      {
+        "eta": "7 – 10 anni",
+        "livelli": "2°, 3° e 4° Livello",
+        "href": "https://lumefitness.perfectgym.com/clientportal2/#/Groups/2?ageLimitId=3&vacancies=1"
+      },
+      {
+        "eta": "10 – 14 anni",
+        "livelli": "Principiante, Intermedio e Avanzato",
+        "href": "https://lumefitness.perfectgym.com/clientportal2/#/Groups/2?ageLimitId=4&vacancies=1"
+      },
+      {
+        "eta": "14 – 18 anni",
+        "livelli": "Principiante, Intermedio e Avanzato",
+        "href": "https://lumefitness.perfectgym.com/clientportal2/#/Groups/2?ageLimitId=5&vacancies=1"
+      }
+    ],
+    "etichettaLink": "Orari e iscrizione",
+    "notaLink": "I turni disponibili, con il livello accanto a ogni orario, si vedono sul portale. Il posto si prenota lì: se non sai quale fascia sia quella giusta, scrivici prima."
   },
   "livelli": {
     "label": "Il percorso",
     "titolo": "I sei livelli",
     "testo": "La divisione nei gruppi si fa in vasca, guardando come si muovono: durante la stagione i passaggi di livello sono normali.",
     "voci": [
-      { "nome": "Ambientamento", "descrizione": "Nessuna o poca esperienza in acqua. Si lavora sulla fiducia prima che sulla tecnica." },
-      { "nome": "1° Livello", "descrizione": "Ha superato il primo approccio all'acqua, non ne ha timore e inizia a galleggiare." },
-      { "nome": "2° Livello", "descrizione": "Galleggia autonomamente a corpo libero. Si inizia il lavoro sulla gambata e sulla bracciata di dorso e crawl." },
-      { "nome": "3° Livello", "descrizione": "Nuota dorso e crawl, e si inserisce la respirazione laterale — il passaggio più difficile di tutto il percorso." },
-      { "nome": "4° Livello", "descrizione": "Ha perfezionato dorso e crawl e comincia a lavorare su rana e delfino." },
-      { "nome": "Propaganda", "descrizione": "Ha acquisito e perfezionato le quattro nuotate fondamentali e partecipa alle gare provinciali." }
+      {
+        "nome": "Ambientamento",
+        "descrizione": "Nessuna o poca esperienza in acqua. Si lavora sulla fiducia prima che sulla tecnica."
+      },
+      {
+        "nome": "1° Livello",
+        "descrizione": "Ha superato il primo approccio all'acqua, non ne ha timore e inizia a galleggiare."
+      },
+      {
+        "nome": "2° Livello",
+        "descrizione": "Galleggia autonomamente a corpo libero. Si inizia il lavoro sulla gambata e sulla bracciata di dorso e crawl."
+      },
+      {
+        "nome": "3° Livello",
+        "descrizione": "Nuota dorso e crawl, e si inserisce la respirazione laterale — il passaggio più difficile di tutto il percorso."
+      },
+      {
+        "nome": "4° Livello",
+        "descrizione": "Ha perfezionato dorso e crawl e comincia a lavorare su rana e delfino."
+      },
+      {
+        "nome": "Propaganda",
+        "descrizione": "Ha acquisito e perfezionato le quattro nuotate fondamentali e partecipa alle gare provinciali."
+      }
     ]
   },
   "listino": {
@@ -51,7 +91,10 @@
     "label": "I progressi",
     "titolo": "Brevetti e app",
     "testo": "I progressi didattici di tuo figlio si seguono direttamente dalla nostra app: la progressione dei brevetti, le prove previste e quelle già superate.",
-    "voci": ["Una sessione di brevetto a metà stagione", "Una sessione di brevetto a fine stagione"]
+    "voci": [
+      "Una sessione di brevetto a metà stagione",
+      "Una sessione di brevetto a fine stagione"
+    ]
   },
   "iscrizione": {
     "label": "Come si fa",

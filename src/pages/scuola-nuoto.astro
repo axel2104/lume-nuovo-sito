@@ -77,16 +77,32 @@ const nonRecuperabili = t.recuperi.nonRecuperabili as string[];
           <h2 class="d" id="tit-fasce">{t.fasce.titolo}</h2>
           <p>{t.fasce.testo}</p>
         </div>
+        {/* Il link al portale per fascia c'era sul vecchio sito ed è il percorso
+            di iscrizione vero: `ageLimitId` filtra i turni per età e
+            `vacancies=1` mostra solo quelli che hanno ancora posto. Chi sa già
+            cosa vuole non deve passare da un form. */}
         <ul class="sn-fasce">
           {
             t.fasce.voci.map((f) => (
               <li>
                 <b>{f.eta}</b>
                 <span>{f.livelli}</span>
+                {f.href && (
+                  <a
+                    class="sn-fascia-link"
+                    href={f.href}
+                    target="_blank"
+                    rel="noopener"
+                    data-medium={`ScuolaNuotoFascia:${f.eta}`}
+                  >
+                    <span>{t.fasce.etichettaLink} ↗</span>
+                  </a>
+                )}
               </li>
             ))
           }
         </ul>
+        {t.fasce.notaLink && <p class="sn-nota">{t.fasce.notaLink}</p>}
       </div>
     </section>
 
@@ -279,10 +295,40 @@ const nonRecuperabili = t.recuperi.nonRecuperabili as string[];
   .sn-fasce li {
     display: flex;
     flex-wrap: wrap;
-    gap: 4px 18px;
-    align-items: baseline;
+    gap: 6px 18px;
+    align-items: center;
     background: var(--bg);
     padding: 16px 20px;
+  }
+  /* Il link va in fondo alla riga sul desktop e a capo sul telefono, dove un
+     bersaglio da toccare sulla stessa riga di due testi è troppo stretto.
+     `min-height: 44px` non è decorativo: sotto i 44 pixel un dito manca il
+     bersaglio, ed è la misura minima delle linee guida. */
+  .sn-fascia-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--red-txt);
+    white-space: nowrap;
+  }
+  .sn-fascia-link span {
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+  }
+  .sn-fascia-link:hover {
+    color: var(--txt);
+  }
+  @media (min-width: 700px) {
+    .sn-fasce li {
+      flex-wrap: nowrap;
+    }
+    .sn-fasce li span {
+      flex: 1;
+    }
   }
   .sn-fasce b {
     font-family: 'Anton', sans-serif;

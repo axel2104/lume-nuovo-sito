@@ -867,12 +867,23 @@ export default config({
               fields.object({
                 eta: fields.text({ label: 'Fascia d’età', validation: { isRequired: true } }),
                 livelli: fields.text({ label: 'Livelli in questa fascia' }),
+                href: fields.url({
+                  label: 'Link al portale per questa fascia',
+                  description:
+                    'Il link PerfectGym con gli orari di questa età. Nel vecchio sito era il “CLICCA QUI”: cambia solo il numero di ageLimitId, uno per fascia in ordine. Vuoto = la riga non è cliccabile.',
+                  validation: { isRequired: false },
+                }),
               }),
               {
                 label: 'Le fasce',
                 itemLabel: (props) => props.fields.eta.value || 'Fascia',
               },
             ),
+            etichettaLink: fields.text({
+              label: 'Testo del link',
+              description: 'Uguale per tutte le fasce, es. “Orari e iscrizione”.',
+            }),
+            notaLink: fields.text({ label: 'Nota sotto le fasce', multiline: true }),
           },
           { label: 'Fasce d’età' },
         ),
