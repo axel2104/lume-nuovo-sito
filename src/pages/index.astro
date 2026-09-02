@@ -10,6 +10,7 @@ import BandaCta from '../components/BandaCta.astro';
 import { getCollection } from 'astro:content';
 import { vociAbbonamento, vociIncluse } from '../data/tassonomie';
 import { conValori, righe } from '../lib/copy';
+import { siteConfig } from '../config/site';
 import testi from '../content/pagine/home.json';
 
 const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.data.ordine);
@@ -264,14 +265,18 @@ function assaggio(p: (typeof piani)[number]) {
           <p>{testi.prevendita.testo}</p>
         </div>
         {/*
-          NON apre i form del sito: la prevendita ha un funnel suo, con contratto
-          e pagamento, e i suoi lead vivono nella tabella Prevendita Urban. Il
-          campo SEDE di RICHIESTE non conosce nemmeno quelle due sedi. Per ora
-          porta all'indice dei centri, dove le due schede in prevendita ci sono:
-          va puntato al funnel vero quando si decide dove viverà.
+          Porta alla landing della prevendita, che ha un funnel suo con
+          contratto e pagamento: i form di questo sito non c'entrano, e il
+          campo SEDE di RICHIESTE non conosce nemmeno Piediripa e Urban.
         */}
-        <a href="/centri" class="btn btn-cream btn-full" style="max-width:340px">
-          {testi.prevendita.cta}
+        <a
+          href={siteConfig.prevenditaUrl}
+          class="btn btn-cream btn-full"
+          style="max-width:340px"
+          target="_blank"
+          rel="noopener"
+        >
+          {testi.prevendita.cta} ↗
         </a>
       </div>
     </div>

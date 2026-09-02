@@ -32,6 +32,16 @@ export const siteConfig = {
    */
   webhookLead: env.PUBLIC_WEBHOOK_LEAD ?? '',
 
+  /**
+   * Landing della prevendita dei nuovi centri.
+   *
+   * Vive fuori da questo sito: ha un funnel suo, con contratto e pagamento, e
+   * i suoi lead finiscono in una tabella diversa da RICHIESTE — il campo SEDE
+   * non conosce nemmeno Piediripa e Urban. Quindi i pulsanti "prevendita"
+   * portano là e non aprono i form del sito.
+   */
+  prevenditaUrl: 'https://promo.lumefitness.it',
+
   /** Beacon di visita (opzionale). Vuoto = nessun beacon inviato. */
   webhookVisit: env.PUBLIC_WEBHOOK_VISIT ?? '',
 

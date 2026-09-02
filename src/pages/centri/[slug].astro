@@ -6,6 +6,7 @@ import Footer from '../../components/Footer.astro';
 import BandaCta from '../../components/BandaCta.astro';
 import { getCollection, render } from 'astro:content';
 import { SEDI } from '../../config/forms';
+import { siteConfig } from '../../config/site';
 
 export async function getStaticPaths() {
   const centri = await getCollection('centri');
@@ -185,7 +186,14 @@ const disc = tutte
         </div>
       ) : (
         <div style="margin-top:28px">
-          <a href="/#prevendita" class="btn btn-red">Iscriviti alla prevendita</a>
+          <a
+            href={siteConfig.prevenditaUrl}
+            class="btn btn-red"
+            target="_blank"
+            rel="noopener"
+          >
+            Iscriviti alla prevendita ↗
+          </a>
         </div>
       )}
     </div>

@@ -17,6 +17,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getCollection } from 'astro:content';
 import { vociAbbonamento, vociIncluse, type Voce } from '../data/tassonomie';
+import { siteConfig } from '../config/site';
 
 // `as const satisfies` nella tassonomia restringe il tipo di ogni voce, e
 // `descrizione` sparisce da quelle che non ce l'hanno. Qui serve la forma
@@ -277,15 +278,15 @@ const risparmioMax = Math.max(...piani.map((p) => p.data.mensile * 12 - p.data.a
                   adesso blocca la tariffa lancio e la tiene anche dopo l'apertura.
                 </p>
               </div>
-              <button
-                type="button"
+              <a
+                href={siteConfig.prevenditaUrl}
                 class="btn btn-cream btn-full"
                 style="max-width:340px"
-                data-open-form="info"
-                data-medium="AbbonamentiPrevendita"
+                target="_blank"
+                rel="noopener"
               >
-                Blocca la tariffa lancio
-              </button>
+                Blocca la tariffa lancio ↗
+              </a>
             </div>
           </div>
         </section>
