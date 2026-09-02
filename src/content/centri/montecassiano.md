@@ -11,11 +11,27 @@ orari:
   sabato: "08:30 – 19:00"
   domenica: "Chiuso"
 servizi:
-  - "Sala pesi attrezzata"
-  - "Corsi di gruppo"
+  - "Sala pesi 800m²"
   - "Piscina & Scuola nuoto"
+  - "Sala Reformer Pilates"
+  - "Sala Performance Triform"
+  - "Corsi di gruppo"
   - "Spogliatoi moderni"
-  - "Parcheggio gratuito"
+sale:
+  - nome: Sala pesi
+    mq: 800
+    dotazione: "Attrezzature Technogym, Matrix e Panatta."
+  - nome: Sala Performance Triform
+    mq: 220
+    dotazione: "8 bench Triform, 8 vogatori, kettlebell e attrezzatura Les Mills."
+  - nome: Sala fitness
+    mq: 100
+    dotazione: "Corpo libero, Pilates Matwork e Yoga: tappetini e mattoncini yoga."
+  - nome: Sala Reformer
+    mq: 70
+    dotazione: "4 Reformer Peak Pilates."
+  - nome: Piscina
+    dotazione: "Scuola nuoto bambini e adulti, corsi di acqua fitness, nuoto libero."
 immagine: ../../assets/centri/montecassiano.jpg
 perfectgymUrl: "#"
 planningNota: "Orario della stagione 26/27 ancora provvisorio: qualche corso e qualche orario possono cambiare prima di settembre."

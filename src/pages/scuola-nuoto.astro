@@ -1,0 +1,453 @@
+---
+/**
+ * Scuola nuoto bambini e ragazzi.
+ *
+ * Ricostruita dai contenuti del vecchio sito, dove viveva su una pagina
+ * Elementor che nel tempo si era stratificata: tre stagioni impilate una sotto
+ * l'altra come sezioni nascoste, con prezzi e calendari che si
+ * contraddicevano. Qui i contenuti sono divisi per tipo: quello che non scade
+ * — livelli, fasce d'età, norme, recuperi — sta in pagina, e quello che cambia
+ * ogni stagione — date e quote — è un campo del CMS.
+ *
+ * ─── Perché le sezioni vuote non spariscono, ma cambiano ────────────────────
+ * Finché il listino non c'è, al suo posto compare un invito a chiedere invece
+ * di una tabella vuota o, peggio, del prezzo dell'anno scorso. È la ragione per
+ * cui questa pagina si può pubblicare oggi: dice tutto quello che sa e non
+ * finge di sapere il resto.
+ */
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BandaCta from '../components/BandaCta.astro';
+import { righe } from '../lib/copy';
+import t from '../content/pagine/scuola-nuoto.json';
+
+/** La stagione è una riga sola solo se entrambe le date ci sono. */
+const stagione = [t.stagione.inizio, t.stagione.fine].filter(Boolean).join(' — ');
+
+/**
+ * Il listino parte vuoto, e da un array vuoto TypeScript deduce `never[]`:
+ * senza questo tipo, leggere `q.nome` dentro il ciclo è un errore di
+ * compilazione. Dichiararlo qui serve anche da documentazione della forma che
+ * Keystatic scrive.
+ */
+interface Quota {
+  nome: string;
+  prezzo: string;
+  nota?: string;
+}
+const quote = t.listino.voci as Quota[];
+const nonRecuperabili = t.recuperi.nonRecuperabili as string[];
+---
+
+<Layout title={t.seo.titolo} description={t.seo.descrizione}>
+  <Header />
+
+  <main id="contenuto">
+    <section class="sec">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">{t.intro.label}</span>
+          <h1 class="d">
+            {righe(t.intro.titolo).map((r, i) => (
+              <>
+                {i > 0 && <br />}
+                {r}
+              </>
+            ))}
+          </h1>
+          <p>{t.intro.testo}</p>
+        </div>
+
+        <p class="sn-federale">{t.intro.federale}</p>
+
+        <div class="sn-stagione">
+          <h2>{t.stagione.titolo}</h2>
+          {stagione && <p class="sn-date">{stagione}</p>}
+          <p>{t.stagione.nota}</p>
+        </div>
+      </div>
+    </section>
+
+    {/* ─── Fasce d'età ─────────────────────────────────────────────────── */}
+    <section class="sec band" aria-labelledby="tit-fasce">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">{t.fasce.label}</span>
+          <h2 class="d" id="tit-fasce">{t.fasce.titolo}</h2>
+          <p>{t.fasce.testo}</p>
+        </div>
+        <ul class="sn-fasce">
+          {
+            t.fasce.voci.map((f) => (
+              <li>
+                <b>{f.eta}</b>
+                <span>{f.livelli}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    {/* ─── Livelli ────────────────────────────────────────────────────── */}
+    <section class="sec" aria-labelledby="tit-livelli">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">{t.livelli.label}</span>
+          <h2 class="d" id="tit-livelli">{t.livelli.titolo}</h2>
+          <p>{t.livelli.testo}</p>
+        </div>
+        <ol class="sn-livelli">
+          {
+            t.livelli.voci.map((l, i) => (
+              <li>
+                <span class="sn-num" aria-hidden="true">{i + 1}</span>
+                <div>
+                  <h3>{l.nome}</h3>
+                  <p>{l.descrizione}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    {/* ─── Listino ────────────────────────────────────────────────────── */}
+    <section class="sec band" id="quote" aria-labelledby="tit-quote">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">{t.listino.label}</span>
+          <h2 class="d" id="tit-quote">{t.listino.titolo}</h2>
+          {t.listino.testo && <p>{t.listino.testo}</p>}
+        </div>
+        {
+          quote.length > 0 ? (
+            <div class="sn-quote">
+              {quote.map((q) => (
+                <article class="sn-quota">
+                  <h3>{q.nome}</h3>
+                  <div class="sn-prezzo">{q.prezzo}</div>
+                  {q.nota && <p>{q.nota}</p>}
+                </article>
+              ))}
+            </div>
+          ) : (
+            <p class="sn-attesa">
+              {t.listino.vuoto}
+              <button type="button" class="btn btn-red" data-open-form="info" data-medium="ScuolaNuotoQuote" data-centro="montecassiano" data-interesse="Scuola Nuoto Bambini">
+                Chiedi il listino
+              </button>
+            </p>
+          )
+        }
+      </div>
+    </section>
+
+    {/* ─── Brevetti e iscrizione ──────────────────────────────────────── */}
+    <section class="sec" aria-labelledby="tit-brevetti">
+      <div class="wrap sn-due">
+        <div>
+          <span class="label">{t.brevetti.label}</span>
+          <h2 class="d" id="tit-brevetti">{t.brevetti.titolo}</h2>
+          <p>{t.brevetti.testo}</p>
+          <ul class="sn-elenco">
+            {t.brevetti.voci.map((v) => <li>{v}</li>)}
+          </ul>
+        </div>
+        <div>
+          <span class="label">{t.iscrizione.label}</span>
+          <h2 class="d">{t.iscrizione.titolo}</h2>
+          <ol class="sn-passi">
+            {t.iscrizione.passi.map((p) => <li>{p}</li>)}
+          </ol>
+          <p class="sn-nota">{t.iscrizione.nota}</p>
+        </div>
+      </div>
+    </section>
+
+    {/* ─── Norme ──────────────────────────────────────────────────────── */}
+    <section class="sec band" id="norme" aria-labelledby="tit-norme">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">{t.norme.label}</span>
+          <h2 class="d" id="tit-norme">{t.norme.titolo}</h2>
+        </div>
+        <div class="sn-norme">
+          {
+            t.norme.voci.map((n) => (
+              <article class="info-card">
+                <h3>{n.titolo}</h3>
+                <p>{n.testo}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    {/* ─── Recuperi ───────────────────────────────────────────────────── */}
+    <section class="sec" aria-labelledby="tit-recuperi">
+      <div class="wrap sn-due">
+        <div>
+          <span class="label">{t.recuperi.label}</span>
+          <h2 class="d" id="tit-recuperi">{t.recuperi.titolo}</h2>
+          <p>{t.recuperi.testo}</p>
+        </div>
+        <div class="info-card">
+          <h3>{t.recuperi.titoloNonRecuperabili}</h3>
+          {
+            nonRecuperabili.length > 0 ? (
+              <ul class="sn-elenco">
+                {nonRecuperabili.map((g) => <li>{g}</li>)}
+              </ul>
+            ) : (
+              <p class="sn-nota">{t.recuperi.vuotoNonRecuperabili}</p>
+            )
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" style="padding-top:0">
+      <div class="wrap">
+        <BandaCta titolo={t.cta.titolo} testo={t.cta.testo}>
+          <button
+            type="button"
+            class="btn btn-red btn-full"
+            data-open-form="info"
+            data-medium="ScuolaNuotoBanda"
+            data-centro="montecassiano"
+            data-interesse="Scuola Nuoto Bambini"
+          >
+            {t.cta.pulsante}
+          </button>
+          <a href="/planning/montecassiano" class="btn btn-out btn-full">Guarda il planning</a>
+        </BandaCta>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .sn-federale {
+    max-width: 70ch;
+    margin: 0 0 28px;
+    padding: 16px 20px;
+    border-left: 3px solid var(--red);
+    background: var(--card);
+    color: var(--mut);
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  .sn-stagione {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--lf-r-m, 10px);
+    padding: 22px 24px;
+    max-width: 70ch;
+  }
+  .sn-stagione h2 {
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0 0 8px;
+  }
+  .sn-date {
+    font-family: 'Anton', sans-serif;
+    font-size: 26px;
+    margin: 0 0 10px;
+  }
+  .sn-stagione p:last-child {
+    margin: 0;
+    color: var(--mut);
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+
+  .sn-fasce {
+    display: grid;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--lf-r-m, 10px);
+    overflow: hidden;
+  }
+  .sn-fasce li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 18px;
+    align-items: baseline;
+    background: var(--bg);
+    padding: 16px 20px;
+  }
+  .sn-fasce b {
+    font-family: 'Anton', sans-serif;
+    font-size: 19px;
+    min-width: 8em;
+  }
+  .sn-fasce span {
+    color: var(--mut);
+    font-size: 14.5px;
+  }
+
+  .sn-livelli {
+    display: grid;
+    gap: 14px;
+  }
+  .sn-livelli li {
+    display: flex;
+    gap: 16px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--lf-r-m, 10px);
+    padding: 18px 20px;
+  }
+  .sn-num {
+    flex: none;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Anton', sans-serif;
+    color: var(--red-txt);
+    border: 1px solid var(--line);
+    border-radius: 50%;
+  }
+  .sn-livelli h3 {
+    font-size: 17px;
+    margin: 4px 0 6px;
+  }
+  .sn-livelli p {
+    margin: 0;
+    color: var(--mut);
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+
+  .sn-quote {
+    display: grid;
+    gap: 14px;
+  }
+  .sn-quota {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--lf-r-m, 10px);
+    padding: 20px;
+  }
+  .sn-prezzo {
+    font-family: 'Anton', sans-serif;
+    font-size: 30px;
+  }
+  .sn-attesa {
+    max-width: 62ch;
+    margin: 0;
+    color: var(--mut);
+    font-size: 15px;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .sn-due {
+    display: grid;
+    gap: 34px;
+  }
+  .sn-elenco {
+    display: grid;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .sn-elenco li {
+    padding-left: 18px;
+    position: relative;
+    color: var(--mut);
+    font-size: 14.5px;
+  }
+  .sn-elenco li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 6px;
+    height: 6px;
+    background: var(--red);
+    border-radius: 50%;
+  }
+  .sn-passi {
+    counter-reset: passo;
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .sn-passi li {
+    counter-increment: passo;
+    padding-left: 34px;
+    position: relative;
+    color: var(--mut);
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+  .sn-passi li::before {
+    content: counter(passo);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Anton', sans-serif;
+    font-size: 13px;
+    color: var(--red-txt);
+    border: 1px solid var(--line);
+    border-radius: 50%;
+  }
+  .sn-nota {
+    margin-top: 14px;
+    color: var(--mut);
+    font-size: 13.5px;
+    font-style: italic;
+  }
+
+  .sn-norme {
+    display: grid;
+    gap: 14px;
+  }
+  .sn-norme h3 {
+    font-size: 16px;
+    margin: 0 0 8px;
+  }
+  .sn-norme p {
+    margin: 0;
+    color: var(--mut);
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+
+  @media (min-width: 760px) {
+    .sn-quote,
+    .sn-norme {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .sn-due {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 40px;
+    }
+  }
+  @media (min-width: 1024px) {
+    .sn-norme {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .sn-quote {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

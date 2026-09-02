@@ -190,7 +190,7 @@ export default config({
   ui: {
     brand: { name: 'LUMe Fitness Club' },
     navigation: {
-      'Testi delle pagine': ['home'],
+      'Testi delle pagine': ['home', 'scuolaNuoto'],
       'Corsi e centri': ['discipline', 'centri'],
       Listino: ['abbonamenti'],
       'Lume Life': ['news', 'eventi', 'servizi', 'helpdesk'],
@@ -393,8 +393,33 @@ export default config({
         ),
         servizi: fields.array(fields.text({ label: 'Servizio' }), {
           label: 'Servizi del centro',
+          description: 'Etichette brevi per le card. Le sale con metratura e dotazione si compilano nel campo sotto.',
           itemLabel: (props) => props.value || 'Servizio',
         }),
+        sale: fields.array(
+          fields.object({
+            nome: fields.text({ label: 'Nome della sala', validation: { isRequired: true } }),
+            mq: fields.integer({
+              label: 'Metri quadri',
+              description: 'Lascia vuoto se non lo sai: meglio nessun numero che uno sbagliato su una pagina pubblica.',
+              validation: { isRequired: false },
+            }),
+            dotazione: fields.text({
+              label: 'Cosa c’è dentro',
+              description: 'Attrezzature e marchi, in una frase. Es. “6 Reformer Peak Pilates e 5 panche Wellback System”.',
+              multiline: true,
+            }),
+          }),
+          {
+            label: 'Le sale',
+            description:
+              'Metratura e dotazione, sala per sala. È il primo dato che guarda chi sta valutando una palestra.',
+            itemLabel: (props) =>
+              [props.fields.nome.value, props.fields.mq.value && props.fields.mq.value + ' m²']
+                .filter(Boolean)
+                .join(' · ') || 'Sala',
+          },
+        ),
         immagine: fields.image({
           label: 'Foto del centro',
           directory: 'src/assets/centri',
@@ -793,6 +818,179 @@ export default config({
             cta: fields.text({ label: 'Pulsante' }),
           },
           { label: 'Sezione wiki' },
+        ),
+      },
+    }),
+
+    // ─── Scuola nuoto ──────────────────────────────────────────────────
+    // Ricostruita dal vecchio sito, dove tre stagioni erano impilate sulla
+    // stessa pagina Elementor come sezioni nascoste, con prezzi e calendari
+    // che si contraddicevano. Qui quello che non scade sta in pagina e quello
+    // che cambia ogni anno — date e quote — si compila da qui.
+    scuolaNuoto: singleton({
+      label: 'Scuola nuoto',
+      path: 'src/content/pagine/scuola-nuoto',
+      format: { data: 'json' },
+      schema: {
+        seo: seo(),
+        intro: fields.object(
+          {
+            label: fields.text({ label: 'Sopratitolo' }),
+            titolo: fields.text({ label: 'Titolo', multiline: true, validation: { isRequired: true } }),
+            testo: fields.text({ label: 'Testo', multiline: true }),
+            federale: fields.text({
+              label: 'Riquadro Federazione',
+              description: 'L’adesione al progetto Scuola Nuoto Federale della FIN. Compare nel riquadro con la barra rossa.',
+              multiline: true,
+            }),
+          },
+          { label: 'Apertura' },
+        ),
+        stagione: fields.object(
+          {
+            titolo: fields.text({ label: 'Titolo del riquadro' }),
+            inizio: fields.text({
+              label: 'Inizio',
+              description: 'Es. “Lunedì 7 settembre 2026”. Se lasci vuoto uno dei due, la riga della data non compare affatto.',
+            }),
+            fine: fields.text({ label: 'Fine', description: 'Es. “Sabato 5 giugno 2027”.' }),
+            nota: fields.text({ label: 'Nota su frequenza e programma', multiline: true }),
+          },
+          { label: 'La stagione' },
+        ),
+        fasce: fields.object(
+          {
+            label: fields.text({ label: 'Sopratitolo' }),
+            titolo: fields.text({ label: 'Titolo', validation: { isRequired: true } }),
+            testo: fields.text({ label: 'Testo', multiline: true }),
+            voci: fields.array(
+              fields.object({
+                eta: fields.text({ label: 'Fascia d’età', validation: { isRequired: true } }),
+                livelli: fields.text({ label: 'Livelli in questa fascia' }),
+              }),
+              {
+                label: 'Le fasce',
+                itemLabel: (props) => props.fields.eta.value || 'Fascia',
+              },
+            ),
+          },
+          { label: 'Fasce d’età' },
+        ),
+        livelli: fields.object(
+          {
+            label: fields.text({ label: 'Sopratitolo' }),
+            titolo: fields.text({ label: 'Titolo', validation: { isRequired: true } }),
+            testo: fields.text({ label: 'Testo', multiline: true }),
+            voci: fields.array(
+              fields.object({
+                nome: fields.text({ label: 'Livello', validation: { isRequired: true } }),
+                descrizione: fields.text({ label: 'Cosa sa fare a questo livello', multiline: true }),
+              }),
+              {
+                label: 'I livelli, in ordine',
+                itemLabel: (props) => props.fields.nome.value || 'Livello',
+              },
+            ),
+          },
+          { label: 'Livelli didattici' },
+        ),
+        listino: fields.object(
+          {
+            label: fields.text({ label: 'Sopratitolo' }),
+            titolo: fields.text({ label: 'Titolo', validation: { isRequired: true } }),
+            testo: fields.text({ label: 'Testo sopra le quote', multiline: true }),
+            voci: fields.array(
+              fields.object({
+                nome: fields.text({ label: 'Nome della quota', validation: { isRequired: true } }),
+                prezzo: fields.text({
+                  label: 'Prezzo',
+                  description: 'Scritto come va mostrato, es. “590 €” o “89 €/mese”.',
+                  validation: { isRequired: true },
+                }),
+                nota: fields.text({ label: 'Nota', multiline: true }),
+              }),
+              {
+                label: 'Le quote',
+                description:
+                  'Finché è vuoto, al posto della tabella la pagina invita a chiedere il listino. È voluto: meglio nessun prezzo che il prezzo dell’anno scorso.',
+                itemLabel: (props) =>
+                  [props.fields.nome.value, props.fields.prezzo.value].filter(Boolean).join(' — ') || 'Quota',
+              },
+            ),
+            vuoto: fields.text({
+              label: 'Testo quando le quote non ci sono',
+              multiline: true,
+            }),
+          },
+          { label: 'Quote' },
+        ),
+        brevetti: fields.object(
+          {
+            label: fields.text({ label: 'Sopratitolo' }),
+            titolo: fields.text({ label: 'Titolo', validation: { isRequired: true } }),
+            testo: fields.text({ label: 'Testo', multiline: true }),
+            voci: fields.array(fields.text({ label: 'Voce' }), {
+              label: 'Sessioni di brevetto',
+              itemLabel: (props) => props.value || 'Sessione',
+            }),
+          },
+          { label: 'Brevetti e app' },
+        ),
+        iscrizione: fields.object(
+          {
+            label: fields.text({ label: 'Sopratitolo' }),
+            titolo: fields.text({ label: 'Titolo', validation: { isRequired: true } }),
+            passi: fields.array(fields.text({ label: 'Passo', multiline: true }), {
+              label: 'I passi, in ordine',
+              itemLabel: (props) => (props.value || 'Passo').slice(0, 50),
+            }),
+            nota: fields.text({ label: 'Nota finale', multiline: true }),
+          },
+          { label: 'Come si iscrive' },
+        ),
+        norme: fields.object(
+          {
+            label: fields.text({ label: 'Sopratitolo' }),
+            titolo: fields.text({ label: 'Titolo', validation: { isRequired: true } }),
+            voci: fields.array(
+              fields.object({
+                titolo: fields.text({ label: 'Titolo della norma', validation: { isRequired: true } }),
+                testo: fields.text({ label: 'Testo', multiline: true }),
+              }),
+              {
+                label: 'Le norme',
+                itemLabel: (props) => props.fields.titolo.value || 'Norma',
+              },
+            ),
+          },
+          { label: 'Norme e regolamento' },
+        ),
+        recuperi: fields.object(
+          {
+            label: fields.text({ label: 'Sopratitolo' }),
+            titolo: fields.text({ label: 'Titolo', validation: { isRequired: true } }),
+            testo: fields.text({ label: 'Come si recupera una lezione', multiline: true }),
+            titoloNonRecuperabili: fields.text({ label: 'Titolo del riquadro delle chiusure' }),
+            nonRecuperabili: fields.array(fields.text({ label: 'Giorno' }), {
+              label: 'Giorni non recuperabili',
+              description:
+                'Cambiano ogni stagione — Pasqua si sposta — quindi vanno riscritti a inizio anno. Vuoti = compare la nota qui sotto.',
+              itemLabel: (props) => props.value || 'Giorno',
+            }),
+            vuotoNonRecuperabili: fields.text({
+              label: 'Testo quando le chiusure non ci sono',
+              multiline: true,
+            }),
+          },
+          { label: 'Assenze e recuperi' },
+        ),
+        cta: fields.object(
+          {
+            titolo: fields.text({ label: 'Titolo', validation: { isRequired: true } }),
+            testo: fields.text({ label: 'Testo', multiline: true }),
+            pulsante: fields.text({ label: 'Pulsante' }),
+          },
+          { label: 'Fascia finale' },
         ),
       },
     }),

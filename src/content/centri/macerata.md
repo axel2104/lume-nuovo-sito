@@ -13,10 +13,32 @@ orari:
 servizi:
   - "Gym floor 500m² Technogym"
   - "Box CrossFit 450m²"
-  - "Sala Reformer Pilates"
-  - "Piscina & Acqua fitness"
+  - "Sala Reformer e Wellback System"
   - "Sale Les Mills"
-  - "Scuola nuoto bambini"
+  - "Sala olistica"
+  - "Spinning e Walking"
+sale:
+  - nome: Sala pesi
+    mq: 500
+    dotazione: "Attrezzature Technogym di ultima generazione, aree cardio, isotonica, pesi liberi, plate loaded, functional e stacchi. Manubri fino a 50 kg."
+  - nome: Sala fitness Les Mills
+    mq: 150
+    dotazione: "Bilancieri con carichi easy-on e step Reebok."
+  - nome: Sala olistica
+    mq: 120
+    dotazione: "Tappetini, mattoncini yoga e tessuti per la sospensione, per Yoga e Pilates Matwork."
+  - nome: Sala Reformer
+    mq: 120
+    dotazione: "6 Reformer Peak Pilates e 5 panche Wellback System."
+  - nome: Sala IntensitYOU e Boxing Hero
+    mq: 130
+    dotazione: "Attrezzatura Technogym per il circuito funzionale e la boxe."
+  - nome: Sala Spinning e Walking
+    mq: 100
+    dotazione: "15 bike e 15 tappeti."
+  - nome: Box CrossFit
+    mq: 450
+    dotazione: "Vogatori, air bike, bikeerg, skierg, bilancieri e bumper."
 immagine: ../../assets/centri/macerata.jpg
 perfectgymUrl: "#"
 planningNota: "Orario della stagione 26/27 ancora provvisorio: qualche corso e qualche orario possono cambiare prima di settembre."

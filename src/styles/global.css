@@ -190,6 +190,14 @@ footer.site{background:#060606;border-top:1px solid var(--line);padding:54px 0 2
 .info-card h4{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin:0 0 10px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1px solid #666;border-radius:999px;padding:8px 14px;font-size:13px;color:#ddd}
+/* Le sale di un centro: metratura e dotazione. Sono il dato che chi valuta una
+   palestra guarda per primo, e sul vecchio sito c'era per ogni sala. */
+.sale{display:grid;gap:14px;margin-top:14px}
+@media(min-width:760px){.sale{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.sala{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.sala h3{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;font-size:17px;margin:0 0 8px}
+.sala-mq{font-family:'Anton',sans-serif;font-size:13px;letter-spacing:.04em;color:var(--red-txt)}
+.sala p{margin:0;color:var(--mut);font-size:14.5px;line-height:1.55}
 .planning{background:var(--card);border:1px dashed #3a3a3a;border-radius:16px;padding:34px 24px;text-align:center;color:var(--mut);margin-top:14px}
 .planning .d{color:#fff;font-size:22px;margin-bottom:8px}
 

@@ -31,6 +31,25 @@ const centri = defineCollection({
     // in quali centri si tiene (campo `centri`), ed è quella l'unica fonte.
     // Una seconda lista qui divergerebbe al primo corso aggiunto.
     servizi: z.array(z.string()).default([]),
+    /**
+     * Le sale del centro, con metratura e dotazione.
+     *
+     * Separate da `servizi`, che è un elenco di etichette brevi per le card:
+     * "Sala olistica · 120 m² · tappetini, mattoncini yoga e tessuti per la
+     * sospensione" non è un'etichetta, è una scheda. Sono il dato che chi
+     * valuta una palestra guarda per primo, e sul vecchio sito c'erano per
+     * ogni sala mentre qui erano andate perse.
+     */
+    sale: z
+      .array(
+        z.object({
+          nome: z.string(),
+          /** Metratura. Nullish: meglio nessun numero che uno inventato. */
+          mq: z.number().nullish(),
+          dotazione: z.string().nullish(),
+        }),
+      )
+      .default([]),
     immagine: image().nullish(),
     perfectgymUrl: z.string().default('#'),
     /**

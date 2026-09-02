@@ -91,6 +91,25 @@ const disc = tutte
         )}
       </div>
 
+      {/* Le sale con metratura e dotazione: è il primo dato che guarda chi sta
+          valutando una palestra, e sul vecchio sito c'era per ogni sala. */}
+      {c.sale.length > 0 && (
+        <div style="margin-top:32px">
+          <span class="label">Le sale</span>
+          <div class="sale">
+            {c.sale.map((s) => (
+              <article class="sala">
+                <h3>
+                  {s.nome}
+                  {s.mq != null && <span class="sala-mq">{s.mq} m²</span>}
+                </h3>
+                {s.dotazione && <p>{s.dotazione}</p>}
+              </article>
+            ))}
+          </div>
+        </div>
+      )}
+
       {disc.length > 0 && (
         <div style="margin-top:32px">
           <span class="label">Discipline qui</span>

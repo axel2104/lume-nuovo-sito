@@ -1,0 +1,110 @@
+{
+  "seo": {
+    "titolo": "Scuola Nuoto Bambini e Ragazzi — LUMe Fitness Club",
+    "descrizione": "La scuola nuoto Lume-H2O a Montecassiano: cinque fasce d'età dai 3 ai 18 anni, sei livelli didattici, brevetti e istruttori federali. Aderente al progetto Scuola Nuoto Federale FIN."
+  },
+  "intro": {
+    "label": "Lume-H2O",
+    "titolo": "Scuola nuoto\nbambini e ragazzi",
+    "testo": "Dai 3 ai 18 anni, in gruppi divisi per livello e non per età: ogni bambino ha un grado di apprendimento diverso, e il percorso si costruisce su quello.",
+    "federale": "La scuola nuoto Lume-H2O aderisce al progetto “Scuola Nuoto Federale” della Federazione Italiana Nuoto, che impegna il centro ad attuare un programma didattico educativo-motorio di alta qualità, finalizzato all'apprendimento dell'attività acquatico-natatoria."
+  },
+  "stagione": {
+    "titolo": "La stagione",
+    "inizio": "",
+    "fine": "",
+    "nota": "Si può scegliere fra una frequenza monosettimanale e una bisettimanale. Il programma tecnico è adeguato alla frequenza scelta: chi frequenta due volte a settimana ha di norma una progressione più rapida."
+  },
+  "fasce": {
+    "label": "Come sono divisi",
+    "titolo": "Cinque fasce d'età",
+    "testo": "Gli orari sono suddivisi per età e accanto a ogni turno è indicato il livello. All'interno dello stesso orario convivono più corsi e più istruttori: per esigenze di spazio non tutti i livelli sono presenti in ogni orario.",
+    "voci": [
+      { "eta": "3 – 5 anni", "livelli": "Ambientamento" },
+      { "eta": "5 – 7 anni", "livelli": "1° Livello" },
+      { "eta": "7 – 10 anni", "livelli": "2°, 3° e 4° Livello" },
+      { "eta": "10 – 14 anni", "livelli": "Principiante, Intermedio e Avanzato" },
+      { "eta": "14 – 18 anni", "livelli": "Principiante, Intermedio e Avanzato" }
+    ]
+  },
+  "livelli": {
+    "label": "Il percorso",
+    "titolo": "I sei livelli",
+    "testo": "La divisione nei gruppi si fa in vasca, guardando come si muovono: durante la stagione i passaggi di livello sono normali.",
+    "voci": [
+      { "nome": "Ambientamento", "descrizione": "Nessuna o poca esperienza in acqua. Si lavora sulla fiducia prima che sulla tecnica." },
+      { "nome": "1° Livello", "descrizione": "Ha superato il primo approccio all'acqua, non ne ha timore e inizia a galleggiare." },
+      { "nome": "2° Livello", "descrizione": "Galleggia autonomamente a corpo libero. Si inizia il lavoro sulla gambata e sulla bracciata di dorso e crawl." },
+      { "nome": "3° Livello", "descrizione": "Nuota dorso e crawl, e si inserisce la respirazione laterale — il passaggio più difficile di tutto il percorso." },
+      { "nome": "4° Livello", "descrizione": "Ha perfezionato dorso e crawl e comincia a lavorare su rana e delfino." },
+      { "nome": "Propaganda", "descrizione": "Ha acquisito e perfezionato le quattro nuotate fondamentali e partecipa alle gare provinciali." }
+    ]
+  },
+  "listino": {
+    "label": "Quanto costa",
+    "titolo": "Le quote della stagione",
+    "testo": "",
+    "voci": [],
+    "vuoto": "Le quote della nuova stagione sono in aggiornamento. Chiedile in reception o lasciaci un contatto: ti richiamiamo con il listino e gli orari disponibili per l'età di tuo figlio."
+  },
+  "brevetti": {
+    "label": "I progressi",
+    "titolo": "Brevetti e app",
+    "testo": "I progressi didattici di tuo figlio si seguono direttamente dalla nostra app: la progressione dei brevetti, le prove previste e quelle già superate.",
+    "voci": ["Una sessione di brevetto a metà stagione", "Una sessione di brevetto a fine stagione"]
+  },
+  "iscrizione": {
+    "label": "Come si fa",
+    "titolo": "L'iscrizione, passo per passo",
+    "passi": [
+      "Scegli la fascia d'età di tuo figlio e guarda gli orari disponibili: accanto a ogni turno trovi il livello.",
+      "Seleziona il turno che ti va meglio e prosegui con l'iscrizione.",
+      "Scegli l'abbonamento fra quelli disponibili per quel turno.",
+      "Controlla il riepilogo, accetta le condizioni e firma il contratto."
+    ],
+    "nota": "Se non sai quale fascia o quale livello sia giusto, non indovinare: scrivici e lo decidiamo insieme guardando l'età e l'esperienza in acqua."
+  },
+  "norme": {
+    "label": "Prima di iniziare",
+    "titolo": "Norme e regolamento",
+    "voci": [
+      {
+        "titolo": "Certificato medico",
+        "testo": "Prima dell'inizio dell'attività è obbligatorio consegnare il certificato medico di idoneità all'attività sportiva non agonistica. Sono esentati i soli bambini fino ai 5 anni. Senza certificato il badge personale resta sospeso."
+      },
+      {
+        "titolo": "Cosa serve in borsa",
+        "testo": "Accappatoio, costume, ciabatte antiscivolo in gomma e cuffia. Senza questi non è consentito l'ingresso in vasca."
+      },
+      {
+        "titolo": "Occhialini",
+        "testo": "Nei corsi di Ambientamento e 1° Livello sono sconsigliati: servono a costruire l'acquaticità senza filtri. Le esigenze individuali si concordano con il responsabile della scuola nuoto."
+      },
+      {
+        "titolo": "Spogliatoi",
+        "testo": "Si entra 15 minuti prima dell'inizio del corso, senza scarpe, e si usa la zona segnalata “Spogliatoio bambini”. Per i bambini che hanno bisogno di assistenza è ammesso un solo accompagnatore, che dopo aver lasciato il bambino allo staff riporrà gli indumenti in una borsa negli armadietti o sui ripiani delle panche."
+      },
+      {
+        "titolo": "Fine del turno",
+        "testo": "Cinque minuti prima della fine si rientra nello spogliatoio con ciabatte o copriscarpe e si attende che gli istruttori riaccompagnino i bambini. Meglio non aspettare l'ultimo minuto: si crea la fila al tornello."
+      },
+      {
+        "titolo": "Piano vasca",
+        "testo": "Agli accompagnatori non è consentito l'accesso al piano vasca, né per assistere alla lezione né per aiutare i bambini: durante la lezione la responsabilità è degli istruttori. Sconsigliamo anche di restare davanti alla vetrata per tutta la durata del corso, perché distrae il bambino."
+      }
+    ]
+  },
+  "recuperi": {
+    "label": "Assenze",
+    "titolo": "Recuperare una lezione",
+    "testo": "Le lezioni perse si possono recuperare, ma l'assenza va dichiarata prima: si cancella la prenotazione almeno un'ora prima dell'inizio, e da quel momento si è abilitati a prenotare un recupero. Serve avere l'abbonamento attivo ed essere in regola con i pagamenti.",
+    "titoloNonRecuperabili": "Giorni non recuperabili",
+    "nonRecuperabili": [],
+    "vuotoNonRecuperabili": "Il calendario delle chiusure della nuova stagione è in aggiornamento."
+  },
+  "cta": {
+    "titolo": "Non sai da quale livello partire?",
+    "testo": "Dicci l'età e quanta acqua ha già fatto, e ti diciamo il turno giusto e cosa serve per iscriverlo.",
+    "pulsante": "Chiedi informazioni"
+  }
+}
