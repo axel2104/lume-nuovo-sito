@@ -17,7 +17,6 @@ import { config, collection, fields, singleton } from '@keystatic/core';
  *    uno o due minuti: è la differenza principale rispetto a WordPress.
  */
 
-
 /**
  * Giorni come stringhe e non come numeri: una tendina di Keystatic può salvare
  * solo stringhe. Lo schema in `src/content.config.ts` usa `z.coerce.number()`
@@ -52,26 +51,6 @@ const INTERESSI_AIRTABLE = [
   'Acqua Nido',
   'Acqua Mamma',
 ].map((v) => ({ label: v, value: v }));
-
-/**
- * Le righe della tabella comparativa degli abbonamenti: id, etichetta, nota.
- *
- * Duplicano `vociAbbonamento` in `src/data/tassonomie.ts`, che è la fonte per
- * il sito. Sono ricopiate perché questo file non può importare da `src/`: la
- * configurazione di Keystatic viene caricata anche dal browser, dove gli alias
- * di Astro non esistono. Se aggiungi una riga là, aggiungila anche qui.
- */
-const VOCI_ABBONAMENTO: readonly (readonly [string, string, string?])[] = [
-  ['sala', 'Sala pesi e zona cardio'],
-  ['spogliatoi', 'Spogliatoi, docce e armadietti'],
-  ['corsi', 'Corsi di gruppo'],
-  ['centri', 'Accesso a tutti i centri Lume'],
-  ['app', 'App di prenotazione'],
-  ['pt', 'Personal training'],
-  ['acqua', 'Piscina e attività in acqua', 'Solo nei centri con piscina'],
-  ['spa', 'SPA e area relax', 'Solo nei centri con SPA'],
-  ['nutrizione', 'Piano nutrizionale'],
-];
 
 const CATEGORIE_DISCIPLINE = [
   { label: 'Funzionale & atletico', value: 'Funzionale & atletico' },
@@ -216,7 +195,7 @@ export default config({
       path: 'src/content/abbonamenti/*',
       format: { contentField: 'content' },
       entryLayout: 'content',
-      columns: ['nome', 'mensile'],
+      columns: ['nome', 'per'],
       schema: {
         nome: fields.slug({
           name: { label: 'Nome del piano' },
@@ -224,41 +203,82 @@ export default config({
         }),
         per: fields.text({
           label: 'A chi si rivolge',
-          description: 'Una riga sotto il nome, es. “Per chi si allena da solo e vuole solo la sala”.',
+          description: 'Una riga sotto il nome, es. “Solo sala pesi e cardio, per chi si allena da solo”.',
           validation: { isRequired: true },
         }),
-        mensile: fields.number({
-          label: 'Prezzo mensile (€)',
-          validation: { isRequired: true },
-        }),
-        annuale: fields.number({
-          label: 'Prezzo annuale (€)',
-          description:
-            'Scritto per intero, non calcolato dal mensile: lo sconto è una scelta commerciale e può cambiare da piano a piano. Il risparmio più alto finisce automaticamente sull’etichetta del selettore.',
-          validation: { isRequired: true },
-        }),
-        attivazione: fields.number({
-          label: 'Quota di attivazione (€)',
-          description: '0 = nessuna quota.',
-          defaultValue: 0,
-        }),
-        voci: fields.object(
-          Object.fromEntries(
-            VOCI_ABBONAMENTO.map(([id, label, nota]) => [
-              id,
-              fields.text({
-                label,
-                description: nota,
-                validation: { isRequired: false },
-              }),
-            ]),
-          ),
+        attivita: fields.array(
+          fields.text({ label: 'Attività', validation: { isRequired: true } }),
           {
-            label: 'Cosa include',
+            label: 'Cosa puoi fare con questo piano',
             description:
-              'Per ogni riga: lascia vuoto se il piano non la comprende, scrivi “sì” se la comprende senza limiti, oppure scrivi il limite (“2 a settimana”), che finisce nella cella al posto della spunta.',
+              'Una voce per riga, come sul listino: “Sala pesi e cardio”, “Box CrossFit senza limiti”, “Accesso corsi fitness — Macerata”. Vale per TUTTE le formule di pagamento: non dipende da come paghi, quindi si scrive una volta sola. La tabella comparativa si costruisce da qui, perciò una voce presente in più piani va scritta identica — se cambia una parola diventano due righe diverse.',
+            itemLabel: (props) => props.value || 'Attività',
           },
         ),
+        formule: fields.array(
+          fields.object({
+            id: fields.select({
+              label: 'Formula',
+              options: [
+                { label: 'Annuale, in soluzione unica', value: 'annuale' },
+                { label: 'Annuale, in 12 rate', value: 'rate' },
+                { label: 'Mensile, senza vincolo', value: 'mensile' },
+              ],
+              defaultValue: 'annuale',
+            }),
+            prezzo: fields.number({ label: 'Prezzo (€)', validation: { isRequired: true } }),
+            periodo: fields.select({
+              label: 'Il prezzo si riferisce a',
+              options: [
+                { label: 'Dodici mesi', value: '12 mesi' },
+                { label: 'Un mese', value: 'mese' },
+              ],
+              defaultValue: 'mese',
+            }),
+            pagamento: fields.text({
+              label: 'Come si paga',
+              description:
+                'La riga sotto il prezzo, per esteso: “Pagamento in soluzione unica”, “Pagamento in 12 rate con Pagodil® o Pagolight®”.',
+              validation: { isRequired: true },
+            }),
+            durataMinima: fields.text({
+              label: 'Durata minima del contratto',
+              description: 'Come si dice a voce: “12 mesi”, “un mese”.',
+              defaultValue: '12 mesi',
+            }),
+            condizioni: fields.array(
+              fields.text({ label: 'Condizione', validation: { isRequired: true } }),
+              {
+                label: 'Condizioni di questa formula',
+                description:
+                  'Solo quello che dipende da COME si paga: le sospensioni, il finanziamento. Le attività NON vanno qui — stanno nel campo sopra, una volta per piano.',
+                itemLabel: (props) => props.value || 'Condizione',
+              },
+            ),
+            badge: fields.text({
+              label: 'Etichetta sulla scheda',
+              description: 'Es. “Best choice”, “Disdici quando vuoi”. Vuoto = nessuna etichetta.',
+              validation: { isRequired: false },
+            }),
+          }),
+          {
+            label: 'Formule di pagamento',
+            description:
+              'Almeno una. Se un piano non ha il mensile, non aggiungerlo: la pagina rimanda da sé al piano più economico che ce l’ha, invece di mostrare un buco.',
+            itemLabel: (props) =>
+              `${props.fields.id.value} · ${props.fields.prezzo.value ?? '?'} €`,
+          },
+        ),
+        attivazione: fields.number({
+          label: 'Quota di attivazione (€)',
+          description: 'Una volta sola, uguale per tutte le formule. 0 = nessuna quota.',
+          defaultValue: 50,
+        }),
+        preavviso: fields.text({
+          label: 'Preavviso per disdire il rinnovo',
+          description: 'Come si dice a voce: “10 giorni”.',
+          defaultValue: '10 giorni',
+        }),
         consigliato: fields.checkbox({
           label: 'Il più scelto',
           description: 'Mette in evidenza il piano in home e su /abbonamenti. Spuntane uno solo.',

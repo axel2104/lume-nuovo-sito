@@ -8,7 +8,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BandaCta from '../components/BandaCta.astro';
 import { getCollection } from 'astro:content';
-import { vociAbbonamento, vociIncluse } from '../data/tassonomie';
+import { formulaDi, euro } from '../data/abbonamenti';
 import { conValori, righe } from '../lib/copy';
 import { siteConfig } from '../config/site';
 import testi from '../content/pagine/home.json';
@@ -31,13 +31,40 @@ const piani = (await getCollection('abbonamenti'))
   .filter((p) => p.data.pubblicato)
   .sort((a, b) => a.data.ordine - b.data.ordine);
 
-/** In home solo le prime voci: il confronto completo vive su /abbonamenti. */
+/**
+ * In home il prezzo mostrato è **il più basso del piano**, con la sua formula
+ * accanto: è quello che permette di farsi un'idea in tre secondi. Il confronto
+ * fra le formule vive su /abbonamenti, dove c'è il selettore.
+ *
+ * Il prezzo mensile non si confronta con l'annuale guardandolo — 90 € al mese
+ * sembra meno di 675 € e sono 405 € in più — quindi accanto alla cifra ci va
+ * sempre su cosa è calcolata.
+ */
+function prezzoVetrina(p: (typeof piani)[number]) {
+  const rate = formulaDi(p, 'rate');
+  const scelta = rate ?? p.data.formule[0];
+  return {
+    prezzo: scelta.prezzo,
+    unita: scelta.periodo === 'mese' ? '/mese' : '/12 mesi',
+    spiega: scelta.id === 'rate' ? 'in 12 rate senza interessi' : scelta.pagamento.toLowerCase(),
+  };
+}
+
+/**
+ * Quattro voci per scheda, scegliendo prima quelle che **distinguono** il piano.
+ *
+ * Prendendo semplicemente le prime quattro, le tre schede della home
+ * mostravano quasi le stesse righe — «accesso senza limiti orari», «sala pesi
+ * e cardio», «Technogym APP» le hanno tutti — e una fila di prezzi in cui i
+ * piani sembrano identici non aiuta a scegliere: fa solo guardare la cifra.
+ * Le voci comuni restano, ma dopo, a riempire.
+ */
 function assaggio(p: (typeof piani)[number]) {
-  const voci = vociIncluse(p.data.voci);
-  return vociAbbonamento
-    .filter((v) => voci[v.id] !== undefined)
-    .slice(0, 4)
-    .map((v) => (typeof voci[v.id] === 'string' ? `${v.label}: ${String(voci[v.id]).toLowerCase()}` : v.label));
+  const comuni = new Set(
+    piani[0].data.attivita.filter((v) => piani.every((q) => q.data.attivita.includes(v))),
+  );
+  const proprie = p.data.attivita.filter((v) => !comuni.has(v));
+  return [...proprie, ...p.data.attivita.filter((v) => comuni.has(v))].slice(0, 4);
 }
 ---
 
@@ -228,24 +255,28 @@ function assaggio(p: (typeof piani)[number]) {
         <p>{testi.abbonamenti.testo}</p>
       </div>
       <div class="plans">
-        {piani.map((p) => (
-          <article class={`plan ${p.data.consigliato ? 'hot' : ''}`}>
-            {p.data.consigliato && <span class="plan-tag">Il più scelto</span>}
-            <div class="plan-testa">
-              <h3 class="pn">{p.data.nome}</h3>
-              <p class="plan-per">{p.data.per}</p>
-            </div>
-            <div class="plan-prezzo">
-              <div class="pr">{p.data.mensile}&nbsp;€<small>/mese</small></div>
-            </div>
-            <div class="plan-voci">
-              <ul>{assaggio(p).map((v) => <li>{v}</li>)}</ul>
-            </div>
-            <a href="/abbonamenti" class={`btn ${p.data.consigliato ? 'btn-red' : 'btn-out'} btn-full`}>
-              Vedi il piano {p.data.nome}
-            </a>
-          </article>
-        ))}
+        {piani.map((p) => {
+          const v = prezzoVetrina(p);
+          return (
+            <article class={`plan ${p.data.consigliato ? 'hot' : ''}`}>
+              {p.data.consigliato && <span class="plan-tag">Il più scelto</span>}
+              <div class="plan-testa">
+                <h3 class="pn">{p.data.nome}</h3>
+                <p class="plan-per">{p.data.per}</p>
+              </div>
+              <div class="plan-prezzo">
+                <div class="pr">{euro(v.prezzo)}&nbsp;€<small>{v.unita}</small></div>
+                <p class="plan-nota">{v.spiega}</p>
+              </div>
+              <div class="plan-voci">
+                <ul>{assaggio(p).map((voce) => <li>{voce}</li>)}</ul>
+              </div>
+              <a href="/abbonamenti" class={`btn ${p.data.consigliato ? 'btn-red' : 'btn-out'} btn-full`}>
+                Vedi il piano {p.data.nome}
+              </a>
+            </article>
+          );
+        })}
       </div>
       <p class="pg-note">
         {testi.abbonamenti.nota}{' '}

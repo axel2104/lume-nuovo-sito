@@ -303,10 +303,47 @@ a.chip{display:inline-flex;align-items:center;min-height:44px}
   font-variant-numeric:tabular-nums}
 .pf input:checked + label{background:var(--red);color:#fff}
 .pf input:focus-visible + label{outline:2px solid var(--red-txt);outline-offset:3px}
+/* Con tre formule la fila non ci sta piu' su un telefono piccolo: a 360px
+   sbordava di 55px. Il pezzo largo e' l'etichetta del risparmio, che pero'
+   e' gia' scritta nell'occhiello sopra ("fino a 570 € di risparmio"): qui
+   si toglie senza perdere niente, e i tre pulsanti restano tutti visibili
+   su una riga sola invece di finire in uno scorrimento che li nasconde. */
+@media(max-width:460px){
+  .pf label{padding:11px 15px;font-size:13px;gap:0}
+  .pf label span{display:none}
+}
 
-.pr-a{display:none}
-.listino:has(#f-annuale:checked) .pr-m{display:none}
-.listino:has(#f-annuale:checked) .pr-a{display:block}
+/* ─── Selettore di formula, senza JavaScript ─────────────────
+   Le tre varianti sono tutte nel markup e il CSS mostra quella
+   scelta. `annuale` e' la predefinita: se `:has()` non c'e',
+   resta visibile lei — la formula piu' conveniente, non una
+   pagina vuota. */
+[data-formula]{display:none}
+[data-formula='annuale']{display:block}
+.listino:has(#f-rate:checked) [data-formula='annuale'],
+.listino:has(#f-mensile:checked) [data-formula='annuale']{display:none}
+.listino:has(#f-rate:checked) [data-formula='rate']{display:block}
+.listino:has(#f-mensile:checked) [data-formula='mensile']{display:block}
+
+/* Le condizioni della formula: durata, preavviso, sospensioni. Piccole
+   e in grigio perche' si leggono solo quando si e' quasi deciso, ma in
+   pagina e non dietro un "dettagli" — sono i vincoli del contratto. */
+.plan-cond{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:5px}
+.plan-cond li{color:var(--mut);font-size:12.5px;line-height:1.45;padding-left:14px;position:relative}
+.plan-cond li::before{content:'·';position:absolute;left:4px;color:var(--red-txt);font-weight:700}
+
+/* Il posto del prezzo quando il piano non ha quella formula: non un
+   vuoto, ma dove andare. Un prezzo che manca senza spiegazione si
+   legge come un guasto della pagina. */
+.plan-altrove{border:1px dashed #3a3a3a;border-radius:14px;padding:16px 18px;margin-top:4px}
+.pa-tit{font-family:'Anton',sans-serif;font-size:20px;line-height:1.1;margin:0 0 6px}
+.pa-txt{color:var(--mut);font-size:13px;line-height:1.5;margin:0}
+.pa-txt b{color:#fff}
+.pa-torna{margin-top:14px;cursor:pointer}
+
+/* Le tre righe dei prezzi in fondo alla tabella comparativa. */
+.tab-prezzi th[scope='row']{color:#fff}
+.tab-prezzi td{font-family:'Anton',sans-serif;font-size:17px;font-variant-numeric:tabular-nums}
 
 /* ─── Card dei piani ────────────────────────────────────────
    `subgrid` allinea testa, prezzo e bottone fra card di altezza

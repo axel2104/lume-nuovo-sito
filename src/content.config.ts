@@ -6,7 +6,6 @@ import {
   categorieNews,
   iconeServizi,
   idDi,
-  vociAbbonamento,
 } from './data/tassonomie';
 
 // ─── Centri ──────────────────────────────────────────────────────────────
@@ -292,24 +291,60 @@ const abbonamenti = defineCollection({
     nome: z.string(),
     /** Riga sotto il nome: a chi si rivolge il piano. */
     per: z.string(),
-    mensile: z.number(),
-    // L'annuale NON si calcola dal mensile con un moltiplicatore: lo sconto è
-    // una scelta commerciale che può cambiare piano per piano, e nel codice
-    // sarebbe invisibile a chi la decide.
-    annuale: z.number(),
-    /** Una tantum all'attivazione, 0 = nessuna. */
-    attivazione: z.number().default(0),
+
     /**
-     * Cosa include il piano, riga per riga della tabella comparativa.
-     * `true` = incluso senza limiti; una stringa = incluso con un limite
-     * ("2 a settimana"), che finisce nella cella al posto della spunta.
-     * Le righe non elencate sono escluse.
+     * Cosa puoi fare con questo piano, una voce per riga.
+     *
+     * Sta sul **piano** e non sulla formula di pagamento, ed è una scelta
+     * deliberata: le attività non dipendono da come paghi. Sul portale
+     * PerfectGym lo stesso elenco è ripetuto in ogni formula, e quelle copie
+     * sono già divergite fra loro — un piano superiore aveva perso una voce
+     * che il piano inferiore teneva. Qui non c'è un secondo posto dove
+     * scriverla, quindi non può succedere.
+     *
+     * Testo libero e non una tassonomia chiusa: le voci sono quelle del
+     * listino reale ("LUME AI TOWER - SHAPE", "Box Crossfit Senza Limiti") e
+     * cambiano quando cambia l'offerta, non quando cambia il codice. La
+     * tabella comparativa si costruisce dall'unione di questi elenchi, quindi
+     * scrivere la stessa voce in due piani in modo diverso crea due righe:
+     * copiarla identica è importante.
      */
-    // `.optional()` sul valore: con una chiave enum Zod pretende TUTTE le
-    // righe su ogni piano, e un piano deve poterne omettere.
-    voci: z
-      .record(z.enum(idDi(vociAbbonamento)), z.union([z.boolean(), z.string()]).optional())
-      .default({}),
+    attivita: z.array(z.string()).default([]),
+
+    /**
+     * Le formule di pagamento dello stesso piano.
+     *
+     * Un piano può averne anche solo una: il Sala Pesi non ha un mensile, e la
+     * pagina in quel caso rimanda al piano più economico che ce l'ha invece di
+     * mostrare un buco.
+     */
+    formule: z
+      .array(
+        z.object({
+          id: z.enum(['annuale', 'rate', 'mensile']),
+          prezzo: z.number(),
+          /** Cosa copre il prezzo: `12 mesi` per l'annuale, `mese` per le altre. */
+          periodo: z.enum(['12 mesi', 'mese']),
+          /** Come si paga, per esteso: è la riga sotto il prezzo. */
+          pagamento: z.string(),
+          /** Durata minima del contratto, come la si dice: "12 mesi", "un mese". */
+          durataMinima: z.string(),
+          /**
+           * Condizioni che valgono solo per questa formula — le sospensioni,
+           * il finanziamento. Le attività NON vanno qui: vedi `attivita`.
+           */
+          condizioni: z.array(z.string()).default([]),
+          /** Etichetta sopra la scheda quando la formula è selezionata. */
+          badge: z.string().nullish(),
+        }),
+      )
+      .min(1),
+
+    /** Una tantum all'attivazione, uguale per tutte le formule. 0 = nessuna. */
+    attivazione: z.number().default(0),
+    /** Preavviso per disdire il rinnovo, come si dice: "10 giorni". */
+    preavviso: z.string().default('10 giorni'),
+
     consigliato: z.boolean().default(false),
     ordine: z.number().default(99),
     pubblicato: z.boolean().default(true),

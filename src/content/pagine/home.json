@@ -12,10 +12,26 @@
     "ctaCentri": "Scopri i centri"
   },
   "stats": [
-    { "numero": "4", "suffisso": "", "etichetta": "Centri" },
-    { "numero": "600", "suffisso": "+", "etichetta": "Iscritti" },
-    { "numero": "4.97", "suffisso": "", "etichetta": "Recensioni" },
-    { "numero": "{discipline}", "suffisso": "+", "etichetta": "Discipline" }
+    {
+      "numero": "4",
+      "suffisso": "",
+      "etichetta": "Centri"
+    },
+    {
+      "numero": "600",
+      "suffisso": "+",
+      "etichetta": "Iscritti"
+    },
+    {
+      "numero": "4.97",
+      "suffisso": "",
+      "etichetta": "Recensioni"
+    },
+    {
+      "numero": "{discipline}",
+      "suffisso": "+",
+      "etichetta": "Discipline"
+    }
   ],
   "chiSiamo": {
     "label": "Chi siamo",
@@ -47,8 +63,8 @@
   "abbonamenti": {
     "label": "Abbonamenti",
     "titolo": "Scegli il tuo piano",
-    "testo": "Attivazione rapida e gestione diretta dal portale PerfectGym.",
-    "nota": "Mensile o annuale, prevendita dei nuovi centri e domande frequenti:",
+    "testo": "Tre piani, tre modi di pagarli. I prezzi qui sotto sono in dodici rate: c'è anche l'annuale in una volta, che costa meno, e il mensile senza vincolo.",
+    "nota": "Le tre formule di pagamento, il confronto riga per riga e le domande frequenti:",
     "notaLink": "tutti i dettagli sugli abbonamenti"
   },
   "prevendita": {

@@ -44,6 +44,10 @@ if (!def) throw new Error(`Flusso "${flusso}" non definito in src/config/forms.t
  * Solo i centri che il campo `SEDE` di Airtable conosce. Un centro mostrato qui
  * e assente su Airtable produrrebbe lead che si perdono senza errori.
  */
+const piani = (await getCollection('abbonamenti'))
+  .filter((p) => p.data.pubblicato)
+  .sort((a, b) => a.data.ordine - b.data.ordine);
+
 const centri = (await getCollection('centri'))
   .filter((c) => SEDI[c.id])
   .sort((a, b) => a.data.ordine - b.data.ordine);
@@ -52,6 +56,17 @@ const centri = (await getCollection('centri'))
 function opzioniDi(campo: Campo): Opzione[] {
   if (campo.opzioni === 'interessi') return INTERESSI.map((i) => ({ valore: i, label: i }));
   if (campo.opzioni === 'centri') return [];
+  if (campo.opzioni === 'abbonamenti') {
+    // Il valore è il nome esatto del piano, perché è quello che finisce nel
+    // campo `Nome Abbonamento` di Airtable ed è quello che i pulsanti del
+    // listino passano in `data-abbonamento` per preselezionare la chip: la
+    // preselezione confronta il valore alla lettera, e un nome diverso di
+    // una parola non seleziona niente e non segnala nulla.
+    return [
+      ...piani.map((p) => ({ valore: p.data.nome, label: p.data.nome })),
+      { valore: 'Da valutare', label: 'Non lo so ancora' },
+    ];
+  }
   return campo.opzioni ?? [];
 }
 

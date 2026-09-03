@@ -13,7 +13,7 @@ non agonistica**, quello che rilascia il pediatra o il medico di base. Va
 consegnato **prima dell'inizio dell'attività**, non dopo la prima lezione.
 
 **Sono esentati i bambini fino ai 5 anni di età.** Per tutti gli altri, se il
-certificato non arriva il badge personale resta sospeso: non è una penale, è
+certificato non arriva il braccialetto resta disattivato: non è una penale, è
 che senza quel documento non possiamo far entrare in vasca.
 
 Per il **nuoto agonistico** il certificato richiesto è diverso — idoneità

@@ -9,8 +9,9 @@ pubblicato: true
 ---
 
 A Macerata il centro resta aperto anche in alcune fasce in cui **non c'è
-personale in sala**. Non è un accesso ridotto: si entra col proprio badge, si
-usa tutto quello che si usa di solito, e il club è videosorvegliato.
+personale in sala**. Non è un accesso ridotto: si entra col proprio
+braccialetto NFC, si usa tutto quello che si usa di solito, e il club è
+videosorvegliato.
 
 ## Chi può farlo
 
@@ -19,13 +20,13 @@ Servono due cose, entrambe non negoziabili:
 - il **certificato medico** consegnato e valido;
 - l'**abbonamento in regola** con i pagamenti.
 
-Se una delle due manca, il badge non apre il tornello in quelle fasce.
+Se una delle due manca, il braccialetto non apre il tornello in quelle fasce.
 
 ## Le tre regole
 
-**Passa il badge, sempre.** Anche quando non c'è nessuno a guardare. È così che
-sappiamo chi è dentro, e in caso di necessità è la prima informazione che
-serve ai soccorsi.
+**Avvicina il braccialetto al lettore, sempre.** Anche quando non c'è nessuno a
+guardare. È così che sappiamo chi è dentro, e in caso di necessità è la prima
+informazione che serve ai soccorsi.
 
 **Indossa la collana di sicurezza.** La trovi all'ingresso: ha un pulsante che
 allerta i soccorsi. Va tenuta addosso per tutto l'allenamento e riconsegnata

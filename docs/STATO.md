@@ -12,16 +12,15 @@ agende — sono nel progetto Claude come `claude/integrazioni-lume.md`.
 
 In ordine di quanto blocca.
 
-### 1. Prezzi degli abbonamenti — serve il listino
+### 1. Gli id PerfectGym dei piani
 
-`src/content/abbonamenti/*.md`, tre file, tutti con la nota «prezzi non
-confermati dal listino reale». È la pagina che converte, e i numeri non ci
-sono. Serve dal cliente: prezzi per sede se differiscono, quota di iscrizione
-una tantum se c'è, durata dei vincoli, promo attive.
+Il listino reale è pubblicato, ma i pulsanti "Richiedi" aprono il form invece
+di portare al checkout del piano scelto. Per farlo servono i `PaymentPlanId`
+delle otto combinazioni piano-formula, nella forma
+`ClientPortal2/Registration/Start?clubID=N&PaymentPlanId=NNN`.
 
-Attenzione: i `PaymentPlanId` 126, 127 e 128 trovati nel vecchio sito **non
-sono gli abbonamenti**. Sono i pacchetti nuoto estivi da 6, 8 e 12 lezioni, e
-sulla pagina d'origine i prezzi erano tutti 0 €.
+Non sono deducibili: i tre trovati nel vecchio sito (126, 127, 128) sono i
+pacchetti nuoto estivi, non gli abbonamenti.
 
 ### 2. Orari piscina — in vigore dal 7 settembre
 
@@ -93,6 +92,29 @@ assente non si vede. Le variabili d'ambiente restano e hanno la precedenza.
 pubblicitari IAB, che qui non ci sono, e in cambio appesantisce il banner con
 una lista vendor. Se entrano circuiti display programmatici, va riacceso.
 
+**Le attività di un piano stanno sul piano, non sulla formula di pagamento.**
+Sul portale PerfectGym ogni combinazione piano-formula ripete l'intero elenco:
+nove copie, e sono già divergite fra loro — il GOLD annuale in soluzione unica
+aveva perso la sospensione gratuita che l'annuale a rate aveva, e il GOLD
+mensile aveva perso lo SHAPE che il piano da 40 € in meno teneva. Nel sito
+c'è un elenco solo per piano, quindi la stessa divergenza non può ripetersi.
+Non reintrodurre le attività dentro le formule.
+
+**Il delta delle schede si calcola per contenimento, non per posizione.**
+L'ordine in cui si mostrano i piani (All Lume, GOLD, Sala Pesi) non è l'ordine
+in cui si contengono: il Sala Pesi è il più piccolo dei tre ma sta per ultimo.
+Confrontando con la scheda precedente, la sua diceva «tutto di All Lume GOLD,
+più» seguito da un elenco vuoto. E il riferimento si usa solo se viene prima
+nella pagina, altrimenti si mostra l'elenco intero: un rimando a una scheda
+che il lettore non ha ancora letto non è una sintesi.
+
+**I nomi dei piani nel form arrivano dai contenuti.** Erano cablati in
+`src/config/forms.ts` e sono sopravvissuti al cambio di listino: il form
+offriva Base, Plus e Premium, piani inesistenti, e quel nome finiva nel campo
+`Nome Abbonamento` di Airtable. `data-abbonamento` dei pulsanti del listino
+deve combaciare **alla lettera** con il `value` della chip, altrimenti la
+preselezione non seleziona niente e non segnala nulla.
+
 **Il planning è una tabella a slot, non corsie a tempo continuo.** La versione
 a corsie è stata rifatta perché con 8 lezioni sovrapposte servivano 5 corsie e
 le tessere finivano al 19% di larghezza, illeggibili. Per slot di inizio il
@@ -119,6 +141,7 @@ andava a capo a 1024px.
 | Il planning mostra tutto, con la fascia «provvisorio» | meglio un orario indicativo che una pagina vuota |
 | Durate corsi: 50 minuti per tutto | scelta del cliente, in attesa dei dati reali |
 | La piscina è solo a Montecassiano | confermato dal cliente |
+| Si entra col braccialetto NFC, non col QR code dell'app | correzione del cliente: i testi che parlavano di QR erano sbagliati |
 | La prevendita porta fuori dal sito | ha un funnel proprio, con contratto e pagamento, e i suoi lead finiscono in un'altra tabella |
 | Supabase fermo alla fase 1 | il cliente l'ha giudicata prematura. Le migrazioni sono inerti finché nessuno le applica |
 | Corso estivo non pubblicato | fuori stagione |

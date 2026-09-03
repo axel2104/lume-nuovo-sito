@@ -2,31 +2,48 @@
 /**
  * Pagina abbonamenti.
  *
- * Il cambio mensile/annuale non usa JavaScript: entrambi i prezzi sono nel
- * markup e due radio li scambiano con `:has()`. Su un sito che spedisce 658
- * byte di JS non ha senso aggiungere un listener per una cosa che il CSS fa
- * da solo — e senza `:has()` resta visibile il mensile.
+ * ─── Il selettore di formula non usa JavaScript ───────────────────────────
  *
- * Le card mostrano solo cosa AGGIUNGE un piano rispetto al precedente,
- * calcolato dal diff delle voci. La verità completa sta nella tabella qui
- * sotto: così nessuna card deve scrivere «tutto quello che c'è in Base» e
- * chi legge non tiene a mente tre elenchi.
+ * I prezzi di tutte e tre le formule sono nel markup, e tre radio li scambiano
+ * con `:has()`. Su un sito che spedisce 658 byte di JS non ha senso aggiungere
+ * un listener per una cosa che il CSS fa da solo. E se `:has()` non c'è, resta
+ * visibile l'annuale — cioè la formula predefinita, non una pagina rotta.
+ *
+ * ─── Perché il selettore e non le formule impilate nella scheda ───────────
+ *
+ * Chi arriva qui ha una domanda sola: **quale piano prendo**. Il selettore
+ * mette i tre piani a confronto a parità di formula, che è la forma di quella
+ * domanda. Impilare le tre formule dentro ogni scheda risponde a una domanda
+ * diversa — «come pago» — che viene dopo, e in cambio triplica l'altezza
+ * della pagina proprio nel punto in cui si decide.
+ *
+ * ─── Le schede mostrano il delta, non l'elenco intero ─────────────────────
+ *
+ * Fra All Lume e GOLD ci sono sei voci di differenza su tredici. Tre elenchi
+ * completi affiancati costringono a leggerli riga per riga per trovarle. La
+ * verità completa sta nella tabella qui sotto.
  */
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getCollection } from 'astro:content';
-import { vociAbbonamento, vociIncluse, type Voce } from '../data/tassonomie';
+import {
+  FORMULE,
+  formulaDi,
+  pianoPiuEconomicoCon,
+  righeConfronto,
+  include,
+  sintesiVoci,
+  euro,
+} from '../data/abbonamenti';
 import { siteConfig } from '../config/site';
-
-// `as const satisfies` nella tassonomia restringe il tipo di ogni voce, e
-// `descrizione` sparisce da quelle che non ce l'hanno. Qui serve la forma
-// larga: e' una lista da scorrere, non una costante da cui pescare.
-const righe: readonly Voce[] = vociAbbonamento;
 
 const piani = (await getCollection('abbonamenti'))
   .filter((p) => p.data.pubblicato)
   .sort((a, b) => a.data.ordine - b.data.ordine);
+
+/** Le righe della tabella: l'unione delle attività, senza tassonomia da mantenere. */
+const righe = righeConfronto(piani);
 
 const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.data.ordine);
 const aperti = centri.filter((c) => c.data.stato === 'aperto');
@@ -43,32 +60,27 @@ const faq = (await getCollection('helpdesk'))
  */
 const GUEST_PASS = 15;
 
-const euro = (n: number) => new Intl.NumberFormat('it-IT').format(n);
-
-const vociDi = (p: (typeof piani)[number]) => vociIncluse(p.data.voci);
-
-/** Il valore di una riga per un piano: `null` se il piano non la include. */
-const valore = (p: (typeof piani)[number], id: string) => vociDi(p)[id] ?? null;
-
 /**
- * Cosa questo piano aggiunge rispetto al precedente: righe nuove, oppure
- * righe già presenti ma con un limite diverso ("2 a settimana" → "Illimitati").
- * Sul primo piano è semplicemente tutto quello che include.
+ * Quanto si risparmia a pagare l'anno in una volta invece che mese per mese.
+ *
+ * Confronta l'annuale col mensile dello **stesso** piano, e solo dove esistono
+ * entrambi: sul Sala Pesi, che non ha un mensile, un risparmio non è
+ * calcolabile e inventarne uno con la formula a rate significherebbe far
+ * passare per sconto una differenza di dodici euro di commissioni.
  */
-function aggiunte(indice: number) {
-  const mio = vociDi(piani[indice]);
-  const prima = indice > 0 ? vociDi(piani[indice - 1]) : {};
-  return righe
-    .filter((v) => mio[v.id] !== undefined && mio[v.id] !== prima[v.id])
-    .map((v) => {
-      const val = mio[v.id];
-      return typeof val === 'string' ? `${v.label}: ${val.toLowerCase()}` : v.label;
-    });
+function risparmioAnnuale(p: (typeof piani)[number]): number {
+  const annuale = formulaDi(p, 'annuale');
+  const mensile = formulaDi(p, 'mensile');
+  if (!annuale || !mensile) return 0;
+  return mensile.prezzo * 12 - annuale.prezzo;
 }
 
-// Il risparmio massimo va sull'etichetta del selettore: è la leva della
-// pagina e nasconderla dietro un click la rende inutile.
-const risparmioMax = Math.max(...piani.map((p) => p.data.mensile * 12 - p.data.annuale), 0);
+// Il risparmio massimo va nell'occhiello: è la leva della pagina, e
+// nasconderla dietro un click la rende inutile.
+const risparmioMax = Math.max(...piani.map(risparmioAnnuale), 0);
+
+/** Per il rimando del Sala Pesi, che il mensile non ce l'ha. */
+const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
 ---
 
 <Layout
@@ -78,28 +90,23 @@ const risparmioMax = Math.max(...piani.map((p) => p.data.mensile * 12 - p.data.a
   <Header />
 
   <main id="contenuto">
-    <!--
-      DA TOGLIERE quando arriva il listino vero (una riga, questo <p>).
-      Finche' i prezzi vengono dal mockup, chi apre la pagina deve saperlo
-      prima di leggerli: senza avviso li prende per il listino del club.
-    -->
-    <p class="avviso-bozza">
-      <b>Bozza</b> I prezzi di questa pagina vengono dal mockup e non sono il listino reale.
-    </p>
-
     <!-- ─── Hero ──────────────────────────────────────────────────── -->
     <header class="ab-hero">
       <div class="wrap">
         <span class="label">Abbonamenti</span>
-        <h1 class="d">Un prezzo solo,<br /><em>tutti i centri</em></h1>
+        <h1 class="d">Scegli quanto<br /><em>ti serve</em></h1>
         <p class="ab-lede">
-          Lo stesso piano vale a {aperti.map((c) => c.data.citta).join(' e ')}: non paghi di più per
-          allenarti dove ti è comodo. Mensile se vuoi restare libero, annuale se hai già deciso.
+          Tre piani e tre modi di pagarli: tutto in una volta, in dodici rate senza interessi, o
+          mese per mese senza vincolo. La quota di attivazione è {euro(piani[0].data.attivazione)} €
+          una sola volta, uguale per tutti.
         </p>
         <ul class="ab-punti">
-          <li><strong>{aperti.length} centri</strong><span>stesso prezzo, nessun supplemento</span></li>
+          <li><strong>{piani.length} piani</strong><span>dalla sola sala pesi a tutto il club</span></li>
           <li><strong>7 giorni</strong><span>di prova prima di scegliere</span></li>
-          <li><strong>{euro(risparmioMax)} €</strong><span>il risparmio massimo sull'annuale</span></li>
+          <li>
+            <strong>fino a {euro(risparmioMax)} €</strong>
+            <span>di risparmio pagando l'anno in una volta</span>
+          </li>
         </ul>
       </div>
     </header>
@@ -110,19 +117,33 @@ const risparmioMax = Math.max(...piani.map((p) => p.data.mensile * 12 - p.data.a
         <h2 id="tit-piani" class="sr-only">I piani</h2>
 
         <div class="listino">
+          {/*
+            Le radio precedono le schede nel DOM perché `:has()` sul contenitore
+            deve poterle vedere. `annuale` è la predefinita: è la formula che
+            conviene, ed è quella che resta se `:has()` non è supportato.
+          */}
           <fieldset class="pf">
             <legend class="sr-only">Come vuoi pagare</legend>
-            <input type="radio" name="formula" id="f-mensile" checked />
-            <label for="f-mensile">Mensile</label>
-            <input type="radio" name="formula" id="f-annuale" />
-            <label for="f-annuale">Annuale <span>fino a −{euro(risparmioMax)} €</span></label>
+            {
+              FORMULE.map((f, i) => (
+                <>
+                  <input type="radio" name="formula" id={`f-${f.id}`} checked={i === 0} />
+                  <label for={`f-${f.id}`}>
+                    {f.label}
+                    {f.id === 'annuale' && risparmioMax > 0 && (
+                      <span>fino a −{euro(risparmioMax)} €</span>
+                    )}
+                  </label>
+                </>
+              ))
+            }
           </fieldset>
 
           <div class="plans">
             {
               piani.map((p, i) => {
-                const risparmio = p.data.mensile * 12 - p.data.annuale;
-                const nuove = aggiunte(i);
+                const { base, voci: nuove } = sintesiVoci(piani, i);
+                const risparmio = risparmioAnnuale(p);
                 return (
                   <article class={`plan ${p.data.consigliato ? 'hot' : ''}`}>
                     {p.data.consigliato && <span class="plan-tag">Il più scelto</span>}
@@ -133,40 +154,97 @@ const risparmioMax = Math.max(...piani.map((p) => p.data.mensile * 12 - p.data.a
                     </div>
 
                     <div class="plan-prezzo">
-                      <div class="pr pr-m">
-                        {euro(p.data.mensile)}&nbsp;€<small>/mese</small>
-                      </div>
-                      <div class="pr pr-a">
-                        {euro(p.data.annuale)}&nbsp;€<small>/anno</small>
-                      </div>
-                      <p class="plan-nota pr-m">
-                        {p.data.attivazione > 0
-                          ? `Più ${euro(p.data.attivazione)} € di attivazione.`
-                          : 'Nessuna quota di attivazione.'}
-                      </p>
-                      <p class="plan-nota pr-a">
-                        {risparmio > 0
-                          ? `Risparmi ${euro(risparmio)} € sull'anno.`
-                          : 'Come dodici mensilità.'}
-                      </p>
+                      {FORMULE.map((f) => {
+                        const formula = formulaDi(p, f.id);
+
+                        // Il piano non offre questa formula: al posto del
+                        // prezzo, dove andare. Un prezzo mancante senza
+                        // spiegazione si legge come un errore della pagina.
+                        if (!formula) {
+                          return (
+                            <div class="plan-altrove" data-formula={f.id}>
+                              <p class="pa-tit">Non c'è {f.label.toLowerCase()}</p>
+                              <p class="pa-txt">
+                                {p.data.nome} esiste solo a dodici mesi.
+                                {mensilePiuEconomico && f.id === 'mensile' && (
+                                  <>
+                                    {' '}Senza vincolo il piano è{' '}
+                                    <b>{mensilePiuEconomico.data.nome}</b>, a{' '}
+                                    {euro(formulaDi(mensilePiuEconomico, 'mensile')!.prezzo)} € al
+                                    mese.
+                                  </>
+                                )}
+                              </p>
+                              {/*
+                                Una `<label>` e non un pulsante: seleziona la
+                                radio dell'annuale, quindi riporta la pagina
+                                sulla formula che questo piano ha davvero,
+                                senza una riga di JavaScript. Senza di essa
+                                questa scheda resta l'unica senza un'azione.
+                              */}
+                              <label class="btn btn-out btn-full pa-torna" for="f-annuale">
+                                Vedi {p.data.nome} annuale
+                              </label>
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <div data-formula={f.id}>
+                            <div class="pr">
+                              {euro(formula.prezzo)}&nbsp;€
+                              <small>/{formula.periodo === 'mese' ? 'mese' : '12 mesi'}</small>
+                            </div>
+                            <p class="plan-nota">
+                              {formula.pagamento}. Attivazione {euro(p.data.attivazione)} € una
+                              volta sola.
+                              {f.id === 'annuale' && risparmio > 0 && (
+                                <>
+                                  {' '}
+                                  <b>Risparmi {euro(risparmio)} €</b> rispetto al mensile.
+                                </>
+                              )}
+                            </p>
+                            <ul class="plan-cond">
+                              <li>Durata minima: {formula.durataMinima}</li>
+                              <li>Preavviso di disdetta: {p.data.preavviso}</li>
+                              {formula.condizioni.map((c) => (
+                                <li>{c}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        );
+                      })}
                     </div>
 
                     <div class="plan-voci">
                       <p class="plan-delta">
-                        {i === 0 ? 'Comprende' : `Tutto di ${piani[i - 1].data.nome}, più`}
+                        {base ? `Tutto di ${base.data.nome}, più` : 'Comprende'}
                       </p>
                       <ul>{nuove.map((v) => <li>{v}</li>)}</ul>
                     </div>
 
-                    <button
-                      type="button"
-                      class={`btn ${p.data.consigliato ? 'btn-red' : 'btn-out'} btn-full`}
-                      data-open-form="iscrizione"
-                      data-medium={`Abbonamenti:${p.data.nome}`}
-                      data-abbonamento={p.data.nome}
-                    >
-                      Richiedi {p.data.nome}
-                    </button>
+                    {/*
+                      Un pulsante per formula, così il lead porta con sé anche
+                      **come** vuole pagare: senza JavaScript la pagina non può
+                      sapere quale radio è selezionata, e chiederlo di nuovo al
+                      telefono è una domanda che l'utente ha già risposto.
+                    */}
+                    <div class="plan-azioni">
+                      {FORMULE.filter((f) => formulaDi(p, f.id)).map((f) => (
+                        <div data-formula={f.id}>
+                          <button
+                            type="button"
+                            class={`btn ${p.data.consigliato ? 'btn-red' : 'btn-out'} btn-full`}
+                            data-open-form="iscrizione"
+                            data-medium={`Abbonamenti:${p.data.nome}:${f.label}`}
+                            data-abbonamento={p.data.nome}
+                          >
+                            Richiedi {p.data.nome}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
                   </article>
                 );
               })
@@ -208,35 +286,70 @@ const risparmioMax = Math.max(...piani.map((p) => p.data.mensile * 12 - p.data.a
             </thead>
             <tbody>
               {
-                righe.map((v) => (
+                righe.map((voce) => (
                   <tr>
-                    <th scope="row">
-                      {v.label}
-                      {v.descrizione && <em>{v.descrizione}</em>}
-                    </th>
+                    <th scope="row">{voce}</th>
                     {
-                      piani.map((p) => {
-                        const val = valore(p, v.id);
-                        return (
-                          <td class={p.data.consigliato ? 'hot' : ''}>
-                            {val === null ? (
-                              <span class="no" aria-label="Non incluso">
-                                —
-                              </span>
-                            ) : val === true ? (
-                              <span class="si" aria-label="Incluso">
-                                ✓
-                              </span>
-                            ) : (
-                              <span class="lim">{val}</span>
-                            )}
-                          </td>
-                        );
-                      })
+                      piani.map((p) => (
+                        <td class={p.data.consigliato ? 'hot' : ''}>
+                          {include(p, voce) ? (
+                            <span class="si" aria-label="Incluso">
+                              ✓
+                            </span>
+                          ) : (
+                            <span class="no" aria-label="Non incluso">
+                              —
+                            </span>
+                          )}
+                        </td>
+                      ))
                     }
                   </tr>
                 ))
               }
+              {/*
+                I prezzi chiudono la tabella invece di aprirla: si scorre per
+                capire cosa cambia, e il prezzo è la risposta, non la domanda.
+              */}
+              <tr class="tab-prezzi">
+                <th scope="row">Annuale, in una volta</th>
+                {
+                  piani.map((p) => {
+                    const f = formulaDi(p, 'annuale');
+                    return (
+                      <td class={p.data.consigliato ? 'hot' : ''}>
+                        {f ? `${euro(f.prezzo)} €` : <span class="no">—</span>}
+                      </td>
+                    );
+                  })
+                }
+              </tr>
+              <tr class="tab-prezzi">
+                <th scope="row">In 12 rate</th>
+                {
+                  piani.map((p) => {
+                    const f = formulaDi(p, 'rate');
+                    return (
+                      <td class={p.data.consigliato ? 'hot' : ''}>
+                        {f ? `${euro(f.prezzo)} €/mese` : <span class="no">—</span>}
+                      </td>
+                    );
+                  })
+                }
+              </tr>
+              <tr class="tab-prezzi">
+                <th scope="row">Mensile, senza vincolo</th>
+                {
+                  piani.map((p) => {
+                    const f = formulaDi(p, 'mensile');
+                    return (
+                      <td class={p.data.consigliato ? 'hot' : ''}>
+                        {f ? `${euro(f.prezzo)} €/mese` : <span class="no">—</span>}
+                      </td>
+                    );
+                  })
+                }
+              </tr>
             </tbody>
           </table>
         </div>

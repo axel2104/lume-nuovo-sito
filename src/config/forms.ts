@@ -156,8 +156,18 @@ export interface Campo {
   obbligatorio?: boolean;
   /** Testo grigio accanto alla label, es. "(opzionale)". */
   nota?: string;
-  /** Per chipsRadio/chipsCheck/scelte. `'interessi'` e `'centri'` sono risolti a build time. */
-  opzioni?: Opzione[] | 'interessi' | 'centri';
+  /**
+   * Per chipsRadio/chipsCheck/scelte. I riferimenti `'interessi'`,
+   * `'centri'` e `'abbonamenti'` sono risolti a build time dal componente,
+   * che è l'unico posto con accesso ai contenuti.
+   *
+   * Per gli abbonamenti il riferimento non è una comodità: i nomi dei piani
+   * finiscono nel campo `Nome Abbonamento` di Airtable, e cablarli qui
+   * significa che il giorno che il listino cambia il form continua a
+   * offrire piani che non esistono — è già successo, con Base, Plus e
+   * Premium rimasti in questa lista dopo che i piani reali erano tre altri.
+   */
+  opzioni?: Opzione[] | 'interessi' | 'centri' | 'abbonamenti';
   /** Messaggio mostrato quando `obbligatorio` non è soddisfatto. */
   errore?: string;
   /** Righe della textarea. */
@@ -598,12 +608,8 @@ export const FLUSSI: Record<string, Flusso> = {
             nome: 'abbonamento',
             label: 'Piano di interesse',
             nota: '(opzionale)',
-            opzioni: [
-              { valore: 'Base', label: 'Base' },
-              { valore: 'Plus', label: 'Plus' },
-              { valore: 'Premium', label: 'Premium' },
-              { valore: 'Da valutare', label: 'Non lo so ancora' },
-            ],
+            // I piani arrivano dai contenuti: vedi la nota su `opzioni`.
+            opzioni: 'abbonamenti',
           },
           campoNota('Obiettivi o domande', 'Es. mi alleno tre volte a settimana, mi interessa il nuoto'),
         ],
