@@ -81,17 +81,19 @@ a.logo{display:inline-flex;align-items:center;min-height:44px}
 .burger i{width:18px;height:2px;background:#fff;display:block}
 .nav-cta{padding:10px 18px;font-size:12px;min-height:44px;white-space:nowrap}
 
-/* HERO (video card) */
+/* HERO (galleria dei centri) */
 .hero{padding:18px 0 6px}
 .hero-grid{display:grid;grid-template-columns:1fr;gap:14px}
 .hero-video{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--line);min-height:64dvh;background:#0a0a0a}
-.hero-video video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .hero-video::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.12) 45%,rgba(10,10,10,.82) 100%)}
 .hero-chip{position:absolute;z-index:2;top:16px;left:16px;display:flex;align-items:center;gap:9px;background:rgba(10,10,10,.5);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:9px 15px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
 .hero-chip b{width:9px;height:9px;border-radius:50%;background:var(--red);display:inline-block}
 .hero-vcap{position:absolute;z-index:2;bottom:18px;left:18px;display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#eee;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:8px 14px;border-radius:999px}
 .hero-copy{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:30px 24px;display:flex;flex-direction:column;justify-content:center}
-.hero-copy h1{font-size:clamp(44px,12vw,104px);margin:16px 0 18px}
+/* Il titolo dell'hero: 88px al massimo, non 104. «Un solo mondo,» a 104px
+   non sta su una riga nella colonna del testo e andava a capo da solo in tre
+   righe, spezzando la frase nel punto sbagliato. */
+.hero-copy h1{font-size:clamp(40px,9.4vw,88px);margin:16px 0 18px}
 .hero-copy h1 em{color:var(--red-txt);font-style:normal}
 .hero-copy p{font-size:16px;color:#cfcfcf;max-width:520px;margin-bottom:24px}
 .hero-cta{display:flex;flex-direction:column;gap:12px}
@@ -495,9 +497,75 @@ a.chip{display:inline-flex;align-items:center;min-height:44px}
   .card-d:hover img { filter: grayscale(.2); }
 }
 
-/* Comando pausa dell'hero: era un <div> decorativo, ora e' un bottone
-   e come tale deve rispettare i 44px di target tattile. */
-.hero-vcap { min-height: 44px; gap: 9px; }
-.hero-vcap .ico-play { display: none; }
-.hero-vcap.is-in-pausa .ico-pausa { display: none; }
-.hero-vcap.is-in-pausa .ico-play { display: block; }
+/* Il pulsante dell'hero: era un <div> decorativo, ora e' un bottone e come
+   tale deve rispettare i 44px di target tattile. Non commuta piu' pausa e
+   play — apre lo showreel in un riquadro — quindi ha una sola icona. */
+.hero-vcap { min-height: 44px; gap: 9px; cursor: pointer; }
+
+/* ─── Galleria dei centri nell'hero ───────────────────────
+   Le foto sono impilate nello stesso riquadro e si scambiano in dissolvenza:
+   nessun reflow, nessun salto di altezza. Il gradiente di .hero-video::after
+   resta sopra e tiene leggibili chip e pulsanti.
+   `display:contents` sul <picture> serve perche' <Picture> avvolge l'<img>:
+   senza, il wrapper resta una scatola inline in mezzo al riquadro. */
+.hero-video picture { display: contents; }
+.hero-video .hero-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity .9s ease;
+}
+.hero-video .hero-slide.is-attiva { opacity: 1; }
+
+.hero-punti { position: absolute; z-index: 2; right: 14px; bottom: 16px; display: flex; gap: 0; }
+.hero-punti button {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.hero-punti button i {
+  display: block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .32);
+  border: 1px solid rgba(255, 255, 255, .55);
+  transition: background .25s ease, transform .25s ease;
+}
+.hero-punti button[aria-current='true'] i { background: #fff; transform: scale(1.2); }
+
+/* Lo showreel in un <dialog> nativo. */
+.hero-reel {
+  width: min(980px, 94vw);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #000;
+  overflow: hidden;
+}
+.hero-reel::backdrop { background: rgba(10, 10, 10, .82); backdrop-filter: blur(4px); }
+.hero-reel video { display: block; width: 100%; max-height: 82dvh; background: #000; }
+.hero-reel-x {
+  position: absolute;
+  z-index: 2;
+  top: 10px;
+  right: 10px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+  background: rgba(10, 10, 10, .6);
+  border: 1px solid rgba(255, 255, 255, .18);
+  cursor: pointer;
+}

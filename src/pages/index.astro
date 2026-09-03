@@ -16,6 +16,34 @@ import testi from '../content/pagine/home.json';
 const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.data.ordine);
 const discipline = (await getCollection('discipline')).sort((a, b) => a.data.ordine - b.data.ordine);
 
+/**
+ * I centri che possono entrare nella galleria dell'hero: aperti e con una
+ * foto. Piediripa e Urban non ce l'hanno ancora, e un riquadro vuoto in
+ * apertura di homepage e' peggio di un riquadro in meno.
+ */
+const vetrinaCentri = centri
+  .filter((c) => c.data.stato === 'aperto' && c.data.immagine)
+  .map((c) => ({ nome: c.data.nome, foto: c.data.immagine! }));
+
+/**
+ * Le ore di corsi di tutto l'ecosistema, contate dal planning dei centri
+ * invece che scritte a mano: un corso aggiunto o spostato aggiorna il numero
+ * da se', e nessuno resta con una cifra vecchia in prima pagina.
+ *
+ * E' la settimana tipo, non un totale annuale. Piscina, scuola nuoto e sala
+ * pesi non stanno nel planning dei corsi, quindi qui non sono contate: il
+ * numero dice quante ore di lezione a calendario ci sono, ed e' verificabile.
+ */
+const minutiDi = (ora: string) => {
+  const [h, m] = ora.split(':').map(Number);
+  return (h || 0) * 60 + (m || 0);
+};
+const oreCorsi = Math.round(
+  centri
+    .flatMap((c) => c.data.planning ?? [])
+    .reduce((tot, l) => tot + Math.max(0, minutiDi(l.fine) - minutiDi(l.inizio)), 0) / 60,
+);
+
 // In homepage una vetrina, non il catalogo: una disciplina per categoria, così
 // si capisce l'ampiezza dell'offerta senza srotolare trenta card.
 const vetrina = Object.values(
@@ -75,27 +103,55 @@ function assaggio(p: (typeof piani)[number]) {
   <header class="hero">
     <div class="wrap">
       <div class="hero-grid">
-        <div class="hero-video">
-          <video
-            data-hero-video
-            autoplay
-            muted
-            loop
-            playsinline
-            preload="metadata"
-            poster="/media/hero-poster.jpg"
-          >
-            <source src="/media/lume-hero.mp4" type="video/mp4" />
-          </video>
-          <div class="hero-chip"><b></b>Lume Fitness Club</div>
-          <!--
-            Il video è un loop in autoplay da 2,3 MB: serve un comando per
-            fermarlo. Era un <div> decorativo con il glifo ▶ come icona.
-          -->
-          <button type="button" class="hero-vcap" data-hero-toggle aria-label="Metti in pausa il video">
-            <svg class="ico-pausa" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true" fill="currentColor">
-              <rect x="1" y="1" width="3.5" height="10" rx="1" /><rect x="7.5" y="1" width="3.5" height="10" rx="1" />
-            </svg>
+        <div class="hero-video" data-hero-galleria>
+          {/*
+            Al posto del montaggio in autoplay girano le foto dei centri: chi
+            arriva vede dove metterà piede. Sono immagini ottimizzate da
+            Astro, impilate nello stesso riquadro e scambiate in dissolvenza,
+            quindi non c'è mai un salto di altezza mentre cambiano.
+          */}
+          {vetrinaCentri.map((c, i) => (
+            <Picture
+              class:list={['hero-slide', { 'is-attiva': i === 0 }]}
+              src={c.foto}
+              alt={c.nome}
+              widths={[640, 960, 1200]}
+              sizes="(min-width: 900px) 46vw, 100vw"
+              formats={['avif', 'webp']}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              data-hero-slide={c.nome}
+            />
+          ))}
+          {/*
+            La chip dice quale centro si sta guardando, e il testo lo cambia
+            il JavaScript insieme alla foto. Senza JavaScript resta il nome
+            del primo: incompleto sì, sbagliato mai.
+          */}
+          <div class="hero-chip">
+            <b />
+            <span data-hero-nome>{vetrinaCentri[0]?.nome ?? 'Lume Fitness Club'}</span>
+          </div>
+          {vetrinaCentri.length > 1 && (
+            <div class="hero-punti" role="group" aria-label="Foto dei centri">
+              {vetrinaCentri.map((c, i) => (
+                <button
+                  type="button"
+                  data-hero-punto={i}
+                  aria-current={i === 0 ? 'true' : 'false'}
+                  aria-label={`Mostra ${c.nome}`}
+                >
+                  <i />
+                </button>
+              ))}
+            </div>
+          )}
+          {/*
+            Lo showreel non è sparito: sta dietro al pulsante e il file parte
+            solo quando qualcuno lo chiede (`preload="none"`, `src` messo al
+            primo click). Prima erano 2,3 MB scaricati da tutti, anche da chi
+            il video non l'avrebbe mai guardato.
+          */}
+          <button type="button" class="hero-vcap" data-hero-showreel aria-haspopup="dialog">
             <svg class="ico-play" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true" fill="currentColor">
               <path d="M2 1l9 5-9 5z" />
             </svg>
@@ -110,7 +166,13 @@ function assaggio(p: (typeof piani)[number]) {
                 {i > 0 && <br />}
                 {r}
               </>
-            ))}{' '}
+            ))}
+            {/*
+              L'evidenza sta sull'ultima riga per conto suo: «Un solo mondo,»
+              e sotto «il tuo» in rosso. L'andata a capo è una scelta grafica,
+              quindi vive qui e non in un campo del CMS.
+            */}
+            <br />
             <em>{testi.hero.evidenza}</em>
           </h1>
           <p>{testi.hero.testo}</p>
@@ -127,11 +189,29 @@ function assaggio(p: (typeof piani)[number]) {
           </div>
         </div>
       </div>
+      {/*
+        Un <dialog> nativo: focus intrappolato, chiusura con Esc, backdrop e
+        `inert` sul resto della pagina in regalo dal browser. Sta fuori dal
+        riquadro della galleria, che ha `overflow:hidden`.
+      */}
+      <dialog class="hero-reel" data-hero-reel aria-label="Showreel Lume Fitness Club">
+        <button type="button" class="hero-reel-x" data-hero-reel-x aria-label="Chiudi lo showreel">
+          &times;
+        </button>
+        <video
+          data-hero-reel-video
+          data-src="/media/lume-hero.mp4"
+          controls
+          playsinline
+          preload="none"
+          poster="/media/hero-poster.jpg"
+        />
+      </dialog>
       <div class="stats">
         {testi.stats.map((s) => (
           <div class="stat">
             <b>
-              {conValori(s.numero, { discipline: discipline.length, centri: centri.length })}
+              {conValori(s.numero, { discipline: discipline.length, centri: centri.length, oreCorsi })}
               {s.suffisso && <em>{s.suffisso}</em>}
             </b>
             <span>{s.etichetta}</span>
@@ -338,33 +418,84 @@ function assaggio(p: (typeof piani)[number]) {
 </Layout>
 
 <script>
-  // Il loop in autoplay non deve partire per chi ha chiesto meno movimento.
-  const video = document.querySelector('[data-hero-video]');
-  const toggle = document.querySelector('[data-hero-toggle]');
+  /* ─── Galleria dell'hero ───────────────────────────────
+     Le foto si alternano da sé, tranne per chi ha chiesto meno movimento: in
+     quel caso resta la prima e si cambia solo dai pallini. Il giro si ferma
+     quando la scheda passa in secondo piano — tempo di CPU speso per nessuno
+     — e quando qualcuno sceglie una foto a mano. */
+  const galleria = document.querySelector('[data-hero-galleria]');
 
-  if (video instanceof HTMLVideoElement && toggle) {
-    const mostraStato = () => {
-      const inPausa = video.paused;
-      toggle.classList.toggle('is-in-pausa', inPausa);
-      toggle.setAttribute('aria-label', inPausa ? 'Riproduci il video' : 'Metti in pausa il video');
-    };
+  if (galleria) {
+    const slide = Array.from(galleria.querySelectorAll('[data-hero-slide]'));
+    const punti = Array.from(galleria.querySelectorAll('[data-hero-punto]'));
+    const nome = galleria.querySelector('[data-hero-nome]');
 
     let ridotto = false;
     try {
       ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     } catch (e) {}
-    if (ridotto) {
-      video.removeAttribute('autoplay');
-      video.pause();
-    }
 
-    toggle.addEventListener('click', () => {
-      if (video.paused) video.play();
-      else video.pause();
+    let attiva = 0;
+    let giro = 0;
+
+    const mostra = (n: number) => {
+      attiva = (n + slide.length) % slide.length;
+      slide.forEach((s, i) => s.classList.toggle('is-attiva', i === attiva));
+      punti.forEach((p, i) => p.setAttribute('aria-current', i === attiva ? 'true' : 'false'));
+      const etichetta = slide[attiva].getAttribute('data-hero-slide');
+      if (nome && etichetta) nome.textContent = etichetta;
+    };
+
+    const avvia = () => {
+      if (giro || ridotto || slide.length < 2) return;
+      giro = window.setInterval(() => mostra(attiva + 1), 5200);
+    };
+    const ferma = () => {
+      if (!giro) return;
+      window.clearInterval(giro);
+      giro = 0;
+    };
+
+    punti.forEach((p, i) =>
+      p.addEventListener('click', () => {
+        ferma();
+        mostra(i);
+      }),
+    );
+
+    document.addEventListener('visibilitychange', () => (document.hidden ? ferma() : avvia()));
+    avvia();
+  }
+
+  /* ─── Showreel a richiesta ─────────────────────────────
+     Il video non è più in pagina: il `src` viene messo al primo click, così i
+     2,3 MB li scarica solo chi vuole guardarlo. */
+  const reel = document.querySelector('[data-hero-reel]');
+  const reelVideo = document.querySelector('[data-hero-reel-video]');
+  const apriReel = document.querySelector('[data-hero-showreel]');
+
+  if (reel instanceof HTMLDialogElement && reelVideo instanceof HTMLVideoElement && apriReel) {
+    const chiudi = () => {
+      reelVideo.pause();
+      if (reel.open) reel.close();
+    };
+
+    apriReel.addEventListener('click', () => {
+      const src = reelVideo.getAttribute('data-src');
+      if (src && !reelVideo.getAttribute('src')) reelVideo.setAttribute('src', src);
+      reel.showModal();
+      const avvio = reelVideo.play();
+      if (avvio && typeof avvio.catch === 'function') avvio.catch(() => {});
     });
-    video.addEventListener('play', mostraStato);
-    video.addEventListener('pause', mostraStato);
-    mostraStato();
+
+    const chiusura = reel.querySelector('[data-hero-reel-x]');
+    if (chiusura) chiusura.addEventListener('click', chiudi);
+
+    // Il target è il <dialog> stesso solo quando si clicca il backdrop.
+    reel.addEventListener('click', (e) => {
+      if (e.target === reel) chiudi();
+    });
+    reel.addEventListener('close', () => reelVideo.pause());
   }
 </script>
 
