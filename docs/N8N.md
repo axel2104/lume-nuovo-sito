@@ -4,8 +4,28 @@ Documento autosufficiente: chi lo implementa non ha bisogno di leggere il
 codice del sito. Ogni payload qui sotto è copiato da quello che il browser
 manda davvero.
 
-**Stato attuale: nessun webhook esiste.** Le variabili d'ambiente sono vuote,
-quindi oggi il sito si comporta così — di proposito, non per errore:
+**Stato al 3 settembre 2026: i workflow esistono, il sito non li chiama
+ancora.** Gli endpoint sono stati creati su `n8n.lumeflow.it`; le variabili
+d'ambiente del sito sono ancora vuote di proposito, e si accendono incollando
+gli URL nelle env di Netlify — non nel codice.
+
+| Variabile | Endpoint |
+|---|---|
+| `PUBLIC_WEBHOOK_CHECK` | `https://n8n.lumeflow.it/webhook/lume-verifica` |
+| `PUBLIC_WEBHOOK_LEAD` | `https://n8n.lumeflow.it/webhook/lume-lead` |
+| `PUBLIC_WEBHOOK_VISIT` | `https://n8n.lumeflow.it/webhook/lume-visita` |
+| `PUBLIC_WEBHOOK_PLANNING` | nessuno: il planning resta statico |
+
+Fuori dal sito, da incollare nei webhook di Cal.com sull'evento
+`BOOKING_CREATED`: `https://n8n.lumeflow.it/webhook/lume-booking`.
+
+**`lume-verifica` va accesa per ultima.** La sua risposta è pubblica e i campi
+opzionali `nome`, `cognome` e `cellulare` — quelli sconsigliati più sotto —
+esporrebbero i dati di un iscritto a chiunque provi un'email. Si accende
+quando il workflow risponde col solo `stato`.
+
+Finché le variabili sono vuote il sito si comporta così — di proposito, non
+per errore:
 
 | Cosa | Cosa fa adesso |
 |---|---|

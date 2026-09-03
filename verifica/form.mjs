@@ -4,7 +4,12 @@
  * Verifica quello che nessun controllo sul markup può verificare: che i tre
  * passi si passino lo stato, che il centro scelto arrivi fino in fondo, e che
  * la schermata finale offra un modo di prenotare — l'embed Cal.com se
- * configurato, l'agenda Calendly della segreteria altrimenti.
+ * configurato, il link di un'agenda altrimenti.
+ *
+ * Da settembre 2026 gli event type Cal.com sono compilati su entrambe le sedi
+ * aperte, quindi il ripiego non scatta piu': i controlli che lo riguardano
+ * restano perche' tornerebbero a servire il giorno che un centro nuovo apre
+ * senza agenda.
  *
  * Gira su `dist/`, dove i webhook non sono configurati: è la condizione in cui
  * gira il sito pubblicato oggi, quindi è quella giusta da controllare.
@@ -37,13 +42,17 @@ const passo1 = await p.evaluate((centro) => {
   if (!sede) return { ok: false, perche: 'chip del centro non trovata' };
   sede.click();
   document.querySelector('input[data-campo="attivita"]')?.click();
-  return { ok: true, calendly: sede.getAttribute('data-calendly') || '' };
+  return {
+    ok: true,
+    calVisita: sede.getAttribute('data-cal-visita') || '',
+    calRichiamata: sede.getAttribute('data-cal-richiamata') || '',
+  };
 }, CENTRO);
 esito(passo1.ok, 'passo 1: la sede è selezionabile', passo1.perche ?? '');
 esito(
-  passo1.calendly.includes('calendly.com'),
-  'passo 1: la chip porta l\'agenda della sua sede',
-  passo1.calendly || '(vuoto)',
+  passo1.calVisita.includes(CENTRO) && passo1.calRichiamata.length > 0,
+  'passo 1: la chip porta gli event type Cal.com della sua sede',
+  [passo1.calVisita, passo1.calRichiamata].filter(Boolean).join(' · ') || '(vuoto)',
 );
 
 await p.fill('input[data-campo="email"]', 'prova@example.com');
@@ -124,7 +133,7 @@ esito(
   'la conferma offre un modo di prenotare',
 );
 if (finale.agenda) {
-  esito(finale.href.includes('calendly.com'), 'il ripiego porta a un\'agenda vera', finale.href);
+  esito(/^https?:\/\//.test(finale.href), 'il ripiego porta a un\'agenda vera', finale.href);
   esito(finale.altezza >= 44, 'il link dell\'agenda è un bersaglio da 44px', `${finale.altezza}px`);
   esito(!finale.attesa, 'con l\'agenda non si mostra anche il messaggio di attesa');
 }
