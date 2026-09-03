@@ -148,6 +148,49 @@ for (const via of ['/', '/scuola-nuoto/', '/abbonamenti/', '/centri/macerata/'])
 }
 await q.close();
 
+// ─── Il planning: settimana intera, colorata, e il PDF ────────────────────
+// Tre cose che la richiesta del cliente nomina esplicitamente, quindi tre
+// cose che vanno sorvegliate: la settimana visibile senza cambiare giorno, i
+// colori attaccati alle tessere, e il PDF scaricabile.
+for (const [slug, giorniAttesi] of [['macerata', 6], ['montecassiano', 6]]) {
+  const g = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await g.goto(`${origine}/planning/${slug}/`, { waitUntil: 'domcontentloaded' });
+
+  const pl = await g.evaluate(() => {
+    const tess = [...document.querySelectorAll('.pl-lez')];
+    const colore = (el) => getComputedStyle(el).borderLeftColor;
+    return {
+      giorni: document.querySelectorAll('.pl-giorno-testa').length,
+      tessere: tess.length,
+      // Il grigio di ripiego: una tessera così è una lezione senza disciplina
+      // collegata, quindi senza categoria e senza colore.
+      grigie: tess.filter((el) => colore(el) === 'rgb(74, 74, 74)').length,
+      tinte: new Set(tess.map(colore)).size,
+      // I pulsanti dei giorni non devono esistere più: erano loro a impedire
+      // di vedere la settimana.
+      pulsantiGiorno: document.querySelectorAll('[data-giorno-btn]').length,
+      legenda: document.querySelectorAll('.pl-legenda li').length,
+      pdf: document.querySelector('.pl-pdf')?.getAttribute('href') ?? '',
+    };
+  });
+
+  esito(pl.giorni === giorniAttesi, `${slug}: la griglia mostra ${giorniAttesi} giorni`, String(pl.giorni));
+  esito(pl.pulsantiGiorno === 0, `${slug}: nessun selettore di giorno`, String(pl.pulsantiGiorno));
+  esito(pl.grigie === 0, `${slug}: ogni lezione ha una categoria`, `${pl.grigie} senza`);
+  esito(pl.tinte >= 4, `${slug}: le tessere sono colorate`, `${pl.tinte} tinte su ${pl.tessere} lezioni`);
+  esito(pl.legenda > 0 && pl.legenda === pl.tinte, `${slug}: la legenda copre le tinte usate`,
+    `legenda ${pl.legenda}, tinte ${pl.tinte}`);
+
+  // Il PDF esiste, è un PDF, e non è un file vuoto.
+  const r = await g.request.get(origine + pl.pdf).catch(() => null);
+  const tipo = r?.headers()['content-type'] ?? '';
+  const peso = Number(r?.headers()['content-length'] ?? 0) || (await r?.body())?.length || 0;
+  esito(r?.status() === 200 && tipo.includes('pdf') && peso > 2000,
+    `${slug}: il PDF si scarica`, `${r?.status()} ${tipo} ${peso}B`);
+
+  await g.close();
+}
+
 esito(erroriJs.length === 0, 'nessun errore JavaScript', erroriJs.slice(0, 3).join(' | '));
 
 await p.close();

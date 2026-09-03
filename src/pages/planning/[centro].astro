@@ -94,6 +94,7 @@ const raccogliLead = Boolean(SEDI[entry.id]);
           prenotaUrl={c.perfectgymCorsiUrl}
           esempio={usaEsempio}
           schede={discipline}
+          pdfUrl={lezioni.length > 0 ? `/planning/${entry.id}.pdf` : null}
         />
 
         {

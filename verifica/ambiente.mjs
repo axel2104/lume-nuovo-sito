@@ -33,6 +33,7 @@ const TIPI = {
   '.webp': 'image/webp',
   '.avif': 'image/avif',
   '.mp4': 'video/mp4',
+  '.pdf': 'application/pdf',
   '.woff2': 'font/woff2',
   '.woff': 'font/woff',
   '.ico': 'image/x-icon',

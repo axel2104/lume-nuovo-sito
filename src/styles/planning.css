@@ -6,7 +6,7 @@
 
 .pl {
   --pl-r: var(--lf-r-s, 2px);
-  --pl-gutter: 54px;
+  --pl-gutter: 28px;
 }
 
 /* ─── Avviso dati di esempio ────────────────────────────────── */
@@ -121,7 +121,7 @@
    davano tessere da quaranta pixel con i nomi troncati. Per fascia di inizio
    il massimo è quattro, quasi sempre una o due. */
 .pl-tab {
-  display: none;
+  display: block;
 }
 
 .pl-tab-testa,
@@ -204,142 +204,104 @@ a.pl-lez:hover {
   display: none;
 }
 
-/* ─── Liste per giorno (mobile) ─────────────────────────────── */
-.pl-giorni {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  padding-bottom: 14px;
-  margin-bottom: 6px;
-  /* Il selettore resta a portata di pollice mentre si scorre la giornata. */
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  background: var(--bg, #060606);
-  scrollbar-width: none;
-}
-.pl-giorni::-webkit-scrollbar {
-  display: none;
-}
-.pl-gio {
-  flex: none;
-  display: grid;
-  gap: 2px;
-  justify-items: center;
-  min-width: 52px;
-  padding: 9px 10px;
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: var(--pl-r);
-  color: #bbb;
-  font-family: inherit;
-  cursor: pointer;
-  transition: 0.15s;
-}
-.pl-gio b {
-  font-family: 'Anton', sans-serif;
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 1;
-}
-.pl-gio span {
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #6a6a6a;
-}
-.pl-gio.on {
-  border-color: var(--red);
-  background: rgba(196, 0, 66, 0.14);
-  color: #fff;
-}
-.pl-gio.on span {
-  color: #d9a3b6;
+/* ─── La griglia della settimana, a ogni larghezza ───────────
+   Prima sotto i 1024px c'era una vista diversa: un giorno per
+   volta, scelto con sei pulsanti. Mostrava meno di quello che
+   serve — chi guarda un planning vuole sapere QUANDO puo'
+   venire, e quella domanda si risponde solo vedendo i giorni
+   accanto. Ora la griglia e' una e cambia densita': tessere
+   compatte col solo nome sul telefono, tessere con orario e
+   sala da 1024px in su.
+
+   Il conto della larghezza su un telefono da 360px: 34px di
+   colonna delle ore + 6 colonne da 51px + i gap. Sta, ma senza
+   margine: se aggiungi qualcosa nella tessera, misura prima. */
+
+.pl-lez b {
+  /* Due righe al massimo, poi i puntini. Su telefono una
+     tessera e' alta 20px: un nome su tre righe spingerebbe la
+     riga della fascia a 60px e la settimana non entrerebbe piu'
+     in una schermata. Il nome intero resta nel `title` e nella
+     scheda che si apre toccando. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.pl-lista {
+/* ─── Colori per categoria ───────────────────────────────────
+   Le tinte stanno in `src/data/categorie.ts`, che e' anche la
+   sorgente dei colori del PDF: una palette sola, altrimenti il
+   planning sullo schermo e quello stampato cominciano a dire
+   cose diverse dello stesso corso.
+
+   Il colore non e' mai l'unica informazione: ogni tessera porta
+   il nome del corso. Con otto categorie nessuna palette e'
+   davvero leggibile per chi confonde rosso e verde, e affiancare
+   una parola al colore risolve il problema invece di far finta
+   che non esista. */
+.pl-lez {
+  --cat: #4A4A4A; /* sovrascritto da .cat-* */
+  border-left-color: var(--cat);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--cat) 22%, transparent), var(--card) 62%);
+}
+a.pl-lez:hover,
+a.pl-lez:focus-visible {
+  border-color: var(--cat);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--cat) 40%, transparent), var(--card) 70%);
+}
+/* Le regole `.pl-lez.cat-*` che assegnano `--cat` NON stanno qui: le genera
+   `cssCategorie()` in `src/data/categorie.ts`, che e' la stessa fonte dei
+   colori del PDF. Qui si sa come usare `--cat`, non quanto vale. */
+
+/* ─── Legenda ────────────────────────────────────────────────
+   Sotto la griglia e non sopra: si consulta quando si e' visto
+   un colore e non si sa cos'e', non prima di guardare. */
+.pl-legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
   margin-top: 18px;
-}
-/* Senza JavaScript la classe `singolo` non viene mai aggiunta: tutti i giorni
-   restano visibili uno sotto l'altro. Pagina lunga, ma completa. */
-.pl-lista.singolo:not(.on) {
-  display: none;
-}
-.pl-lista.singolo .pl-lista-titolo {
-  display: none;
-}
-.pl-lista-titolo {
-  font-family: 'Anton', sans-serif;
-  font-weight: 400;
-  text-transform: uppercase;
-  font-size: 15px;
-  letter-spacing: 0.08em;
-  color: var(--mut);
-  margin: 0 0 10px;
-}
-.pl-lista ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.pl-lista li {
-  display: grid;
-  grid-template-columns: 62px 1fr;
-  gap: 14px;
-  align-items: baseline;
-  padding: 13px 0;
+  padding-top: 16px;
   border-top: 1px solid var(--line);
+  list-style: none;
 }
-.pl-lista li[hidden] {
-  display: none;
-}
-.pl-ml-ora {
-  display: grid;
-  font-variant-numeric: tabular-nums;
-}
-.pl-ml-ora b {
-  font-size: 15px;
-  font-weight: 600;
-}
-.pl-ml-ora i {
-  font-style: normal;
-  font-size: 11px;
-  color: #6a6a6a;
-}
-.pl-ml-corpo {
-  display: grid;
-  gap: 3px;
-}
-.pl-ml-corpo b,
-.pl-ml-corpo a {
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.3;
-}
-.pl-ml-corpo a {
-  color: var(--txt);
-}
-.pl-ml-corpo a:hover {
-  color: var(--red);
-}
-.pl-ml-meta {
+.pl-legenda li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   font-size: 12px;
   color: var(--mut);
 }
-.pl-lista-vuota {
-  font-size: 13px;
-  color: var(--mut);
-  margin: 12px 0 0;
+.pl-legenda i {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex: none;
+  background: var(--cat);
 }
 
-/* ─── Passaggio a griglia ───────────────────────────────────── */
-@media (min-width: 1024px) {
-  .pl-tab {
-    display: block;
-  }
-  .pl-mobile {
-    display: none;
-  }
+/* ─── Scarica il PDF ─────────────────────────────────────────
+   Accanto alla legenda: chi arriva in fondo alla griglia e' chi
+   la vuole portare via. */
+.pl-pdf {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-top: 16px;
+  padding: 0 18px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: #e9e9e9;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.15s;
+}
+.pl-pdf:hover {
+  border-color: var(--red);
+  color: #fff;
 }
 
 /* Avviso redazionale sopra il planning: "orario provvisorio", "chiusura
@@ -439,5 +401,143 @@ a.pl-lez:hover {
 @media (min-width: 480px) {
   .pl-scheda-azioni {
     flex-direction: row;
+  }
+}
+
+/* ─── Densita' compatta: il default, cioe' il telefono ────────
+   Mobile-first per una ragione pratica: 360px e' la larghezza
+   in cui la griglia rischia di rompersi, quindi e' quella che
+   deve stare nel caso base e non dietro una media query.
+
+   Il conto a 360px: 34px per la colonna delle ore + 6 colonne
+   da ~51px + i gap da 3px. Sta, ma senza margine — se aggiungi
+   qualcosa nella tessera, misura prima. */
+.pl-tab-testa,
+.pl-tab-riga {
+  gap: 2px;
+}
+.pl-tab-riga {
+  padding: 3px 0;
+}
+.pl-tab-cella {
+  gap: 2px;
+}
+.pl-tab-ora {
+  font-size: 9.5px;
+  padding-top: 3px;
+  padding-right: 3px;
+}
+.pl-giorno-testa {
+  font-size: 11px;
+  text-align: center;
+  padding: 0 0 6px;
+}
+/* Il giorno ha tre forme nel markup — "L", "Lun", "Lunedi'" —
+   e qui si scopre la piu' corta. Le altre restano nel DOM ma
+   `aria-hidden`, cosi' chi ascolta la pagina sente la parola
+   intera invece di una lettera. */
+.pl-giorno-testa i,
+.pl-giorno-testa > span {
+  display: none;
+}
+.pl-lez {
+  padding: 2px 3px 2px 4px;
+  border-left-width: 3px;
+}
+.pl-lez b {
+  font-size: 8px;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+/* Delle due forme del nome, nella vista compatta si mostra la breve.
+   Il selettore include `b` di proposito: `.pl-lez b` piu' sopra imposta
+   `display:-webkit-box` per il taglio a due righe, e con specificita' (0,1,1)
+   batte una classe sola (0,1,0). Scritto come `b.pl-lez-pieno` fa (0,2,1) e
+   vince — senza questo dettaglio il nome intero non si nascondeva affatto, ed
+   e' esattamente il guasto in cui sono inciampato misurando. */
+.pl-lez b.pl-lez-pieno {
+  display: none;
+}
+/* Sul telefono l'orario dentro la tessera e' ridondante: lo dice
+   la riga della fascia, a sinistra. Toglierlo e' cio' che fa
+   stare una tessera in venti pixel. */
+.pl-lez-meta {
+  display: none;
+}
+
+@media (min-width: 480px) {
+  .pl-tab-testa,
+  .pl-tab-riga {
+    gap: 4px;
+  }
+  .pl-giorno-testa b {
+    display: none;
+  }
+  .pl-giorno-testa i {
+    display: inline;
+    font-style: normal;
+  }
+  .pl-lez {
+    padding: 4px 6px 4px 7px;
+  }
+  .pl-lez b {
+    font-size: 10px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --pl-gutter: 54px;
+  }
+  .pl-tab-testa,
+  .pl-tab-riga {
+    gap: 6px;
+  }
+  .pl-tab-riga {
+    padding: 6px 0;
+  }
+  .pl-tab-cella {
+    gap: 4px;
+  }
+  .pl-tab-ora {
+    font-size: 12px;
+    padding-top: 7px;
+    padding-right: 10px;
+  }
+  .pl-giorno-testa {
+    font-size: 13px;
+    text-align: left;
+    padding: 0 0 10px 2px;
+  }
+  .pl-giorno-testa i {
+    display: none;
+  }
+  .pl-giorno-testa > span {
+    display: inline;
+  }
+  .pl-lez {
+    padding: 7px 9px;
+    border-left-width: 2px;
+  }
+  /* Da qui lo spazio c'e': torna l'orario, e il nome non si
+     taglia piu' perche' la casella puo' crescere in altezza. */
+  .pl-lez-meta {
+    display: block;
+  }
+  .pl-lez b {
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+    font-size: 12.5px;
+    line-height: 1.25;
+    letter-spacing: 0;
+  }
+  /* Da qui c'e' spazio per il nome intero, marchio del licenziante compreso.
+     Stessa cautela sulla specificita' del blocco compatto. */
+  .pl-lez b.pl-lez-pieno {
+    display: block;
+  }
+  .pl-lez b.pl-lez-breve {
+    display: none;
   }
 }

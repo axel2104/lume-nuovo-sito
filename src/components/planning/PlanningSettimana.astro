@@ -30,22 +30,51 @@ import { Picture } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import { firma } from '../../config/planning';
 import { colonneAttive, renderPlanning, type DatiPlanning } from '../../lib/planningVista';
+import { CATEGORIE, SENZA_CATEGORIA, categoriaDiNome, cssCategorie } from '../../data/categorie';
 
 interface Props extends DatiPlanning {
   /** Slug del centro: identifica il blocco per il refresh. */
   centro: string;
   /** Schede dei corsi presenti nell'orario, per il popup. */
   schede?: CollectionEntry<'discipline'>[];
+  /** Indirizzo del PDF del planning. Vuoto = il pulsante non compare. */
+  pdfUrl?: string | null;
 }
 
-const { centro, lezioni, aggiornatoIl, prenotaUrl, esempio = false, schede = [] } = Astro.props;
+const { centro, lezioni, aggiornatoIl, prenotaUrl, esempio = false, schede = [],
+  pdfUrl = null } = Astro.props;
 
-const html = renderPlanning({ lezioni, aggiornatoIl, prenotaUrl, esempio });
-const dati = JSON.stringify({ lezioni, aggiornatoIl: aggiornatoIl ?? null });
+/**
+ * Slug della disciplina → id della categoria, per colorare le tessere.
+ *
+ * Si risolve qui perché è qui che la collection delle discipline esiste. Va
+ * nel payload JSON insieme alle lezioni: la griglia che il client ridisegna
+ * dopo il fetch deve avere gli stessi colori di quella del server, e se la
+ * mappa restasse lato server la seconda uscirebbe grigia.
+ */
+const categorie: Record<string, string> = {};
+for (const s of schede) {
+  const cat = categoriaDiNome(s.data.categoria);
+  categorie[s.id] = cat ? cat.id : SENZA_CATEGORIA.id;
+}
+
+const html = renderPlanning({ lezioni, aggiornatoIl, prenotaUrl, esempio, categorie });
+const dati = JSON.stringify({ lezioni, aggiornatoIl: aggiornatoIl ?? null, categorie });
 
 /** Solo le discipline che l'orario cita davvero: le altre sarebbero peso morto. */
 const usate = new Set(lezioni.map((l) => l.disciplina).filter(Boolean));
 const carte = schede.filter((s) => usate.has(s.id));
+
+/**
+ * Solo le categorie che l'orario usa davvero.
+ *
+ * Una legenda con otto voci di cui tre non compaiono nella griglia fa cercare
+ * un colore che non c'e'. Montecassiano non ha il Combat: sulla sua legenda
+ * il Combat non deve esistere.
+ */
+const categorieUsate = CATEGORIE.filter((c) =>
+  carte.some((s) => s.data.categoria === c.nome),
+);
 
 const livelli = [1, 2, 3, 4, 5];
 ---
@@ -59,8 +88,33 @@ const livelli = [1, 2, 3, 4, 5];
   data-esempio={esempio ? '1' : ''}
   style={`--pl-colonne:${colonneAttive(lezioni)}`}
 >
+  {/* I colori delle categorie, generati dalla palette condivisa col PDF. */}
+  <style is:inline set:html={cssCategorie()} />
   <script is:inline type="application/json" data-planning-dati set:html={dati} />
   <div data-planning-vista set:html={html} />
+
+  {
+    categorieUsate.length > 0 && (
+      <ul class="pl-legenda" aria-label="Cosa significano i colori">
+        {categorieUsate.map((c) => (
+          <li>
+            <i style={`--cat:${c.schermo}`} aria-hidden="true" />
+            {c.nome}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    pdfUrl && (
+      <a class="pl-pdf" href={pdfUrl} download>
+        {/* `download` fa scaricare invece di aprire nel visualizzatore: chi
+            tocca questo pulsante vuole il file, per stamparlo o mandarlo. */}
+        <span aria-hidden="true">↓</span> Scarica il planning in PDF
+      </a>
+    )
+  }
 
   {
     carte.length > 0 && (

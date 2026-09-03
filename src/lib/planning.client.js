@@ -1,11 +1,11 @@
 /**
- * Interattività del planning: filtri, cambio giorno su mobile, aggiornamento
- * dal webhook n8n.
+ * Interattività del planning: filtri, scheda del corso, aggiornamento dal
+ * webhook n8n.
  *
  * Tutto è progressive enhancement. La pagina renderizzata dal server è già un
- * planning completo e utilizzabile: se questo file non gira si perdono i filtri e
- * la vista mobile resta una lista lunga — che è come funzionava il planning del
- * vecchio sito, quindi non un regresso.
+ * planning completo e utilizzabile: se questo file non gira si perdono i filtri
+ * e il popup della scheda, e la griglia resta quella che è — leggibile, con i
+ * suoi colori, e le tessere che portano alla pagina della disciplina.
  *
  * ─── Il filtro ridisegna, non nasconde ────────────────────────────────────
  * Nascondere le tessere lascerebbe le superstiti strette come quando dividevano
@@ -28,19 +28,6 @@ const TTL = 10 * 60 * 1000;
 
 function cfg() {
   return (typeof window !== 'undefined' && window.LUME_CFG) || {};
-}
-
-/** Giorno ISO (1 = lunedì) secondo l'ora di Roma, non del browser: chi guarda
- *  l'orario da un altro fuso deve vedere il giorno della palestra. */
-function oggiIso() {
-  try {
-    const f = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Rome', weekday: 'short' });
-    const mappa = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 7 };
-    return mappa[f.format(new Date())] || 1;
-  } catch (e) {
-    const g = new Date().getDay();
-    return g === 0 ? 7 : g;
-  }
 }
 
 function daCache(centro) {
@@ -75,7 +62,7 @@ export function initPlanning(root) {
   if (!Array.isArray(dati.lezioni)) return null;
 
   /** Filtri correnti e giorno mostrato su mobile. */
-  const stato = { corso: '', sala: '', giorno: oggiIso() };
+  const stato = { corso: '', sala: '' };
 
   const qa = (sel) => Array.from(root.querySelectorAll(sel));
 
@@ -109,6 +96,10 @@ export function initPlanning(root) {
       // sopravvissuti al filtro corrente.
       opzioniDa: dati.lezioni,
       vuotoPerFiltri: filtrate.length === 0,
+      // La mappa dei colori arriva dal payload del server: senza, la griglia
+      // ridisegnata dopo un filtro perderebbe le tinte e sembrerebbe un'altra
+      // pagina.
+      categorie: dati.categorie,
     });
 
     root.style.setProperty('--pl-colonne', String(colonneAttive(filtrate.length ? filtrate : dati.lezioni)));
@@ -120,28 +111,6 @@ export function initPlanning(root) {
       b.hidden = !(stato.corso || stato.sala);
     });
 
-    mostraGiorno(stato.giorno);
-  }
-
-  // ─── Giorno su mobile ───────────────────────────────────────────────────
-
-  function mostraGiorno(n) {
-    const sezioni = qa('[data-giorno-sez]');
-    if (!sezioni.length) return;
-
-    // Se il giorno richiesto non esiste (domenica chiusa, o filtrato via) si
-    // ricade sul primo disponibile: meglio lunedì che una pagina vuota.
-    const esiste = sezioni.some((s) => Number(s.dataset.giornoSez) === n);
-    const scelto = esiste ? n : Number(sezioni[0].dataset.giornoSez);
-    stato.giorno = scelto;
-
-    sezioni.forEach((s) => {
-      s.classList.add('singolo');
-      s.classList.toggle('on', Number(s.dataset.giornoSez) === scelto);
-    });
-    qa('[data-giorno-btn]').forEach((b) => {
-      b.classList.toggle('on', Number(b.dataset.giornoBtn) === scelto);
-    });
   }
 
   // ─── Scheda del corso ───────────────────────────────────────────────────
@@ -257,16 +226,9 @@ export function initPlanning(root) {
         return;
       }
     }
-
-    const gio = t.closest('[data-giorno-btn]');
-    if (gio) {
-      ev.preventDefault();
-      return mostraGiorno(Number(gio.dataset.giornoBtn));
-    }
   });
 
-  mostraGiorno(stato.giorno);
   void aggiorna();
 
-  return { aggiorna, disegna, mostraGiorno };
+  return { aggiorna, disegna };
 }

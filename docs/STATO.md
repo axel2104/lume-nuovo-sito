@@ -115,6 +115,36 @@ offriva Base, Plus e Premium, piani inesistenti, e quel nome finiva nel campo
 deve combaciare **alla lettera** con il `value` della chip, altrimenti la
 preselezione non seleziona niente e non segnala nulla.
 
+**Il planning mostra la settimana intera a ogni larghezza.** Sotto i 1024px
+c'era una vista diversa — un giorno per volta, scelto con sei pulsanti — e i
+clienti si lamentavano di non vedere il palinsesto. Ora la griglia è una e
+cambia densità: tessere da 8px col solo nome sul telefono, con orario e nome
+intero da 1024. Non reintrodurre il selettore di giorno: è quello che
+impediva di rispondere alla domanda con cui la gente arriva, «quando posso
+venire».
+
+**Montecassiano sta in una schermata, Macerata no.** 14 fasce contro 26: a
+390px la griglia è alta 586px e 1106px. Non è un difetto da correggere
+stringendo il testo — a 8px si è già al limite del leggibile — ed è il motivo
+per cui esiste il PDF.
+
+**I colori delle categorie stanno in `src/data/categorie.ts` e in nessun altro
+posto.** Li usano la griglia e il PDF: se finissero anche in `planning.css`,
+il giorno che si cambia una tinta il planning stampato resterebbe indietro
+senza che nessuno lo noti. Il foglio di stile sa *come* usare `--cat`, non
+quanto vale.
+
+**Nella vista compatta il nome perde il prefisso «LesMills».** Con 41px per il
+testo, "LesMills BodyPump" finiva troncato proprio sulla parola che distingue
+il corso. Il nome intero torna da 1024px e sta sempre nel `title` e nel popup.
+E i nomi composti hanno un `<wbr>` al maiuscolo interno, altrimenti si
+spezzavano in "BodyPum/p" con una lettera orfana.
+
+**Attenzione alla specificità di `.pl-lez b`.** Vale (0,1,1) e batte una
+classe sola: `.pl-lez-pieno { display: none }` non nascondeva niente, e la
+vista compatta mostrava comunque il nome intero. Va scritto
+`.pl-lez b.pl-lez-pieno`. Trovato misurando, non leggendo.
+
 **Il planning è una tabella a slot, non corsie a tempo continuo.** La versione
 a corsie è stata rifatta perché con 8 lezioni sovrapposte servivano 5 corsie e
 le tessere finivano al 19% di larghezza, illeggibili. Per slot di inizio il
@@ -162,6 +192,9 @@ errore, quindi nessuno se ne accorge.
 
 - `PUBLIC_PLANNING_ESEMPIO` va **rimossa** dalle variabili Netlify: il
   planning ora è quello reale e la variabile può solo confondere.
+- Nel planning di Macerata la stessa lezione compare come «LesMills BodyPump»
+  e come «Bodypump»: sono lo stesso corso scritto in due modi, e il filtro
+  dei corsi li elenca come due voci. Da uniformare dal CMS.
 - `interessiLead` in `src/config/tassonomie.ts` è codice morto con
   un'intestazione di avvertimento. Va rimosso o usato.
 - `Lume_Urban.mp4` è verticale 1080×1920 e non ha una collocazione nel design.
