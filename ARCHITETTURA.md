@@ -1,7 +1,47 @@
 # LUMe Fitness Club — Architettura del nuovo sito
 
-> Documento di lavoro condiviso. Stato: **brainstorm / da approvare**. Nessuna implementazione avviata.
-> Ultimo aggiornamento: 22 luglio 2026
+> ## ⚠️ Documento di progetto del 22 luglio 2026 — in parte superato
+>
+> Questo era il piano **prima** dell'implementazione, e diverse sue scelte sono
+> state cambiate costruendo. Vale ancora come racconto del perché il progetto
+> esiste e di com'era il vecchio sito, non come descrizione di com'è fatto
+> quello nuovo.
+>
+> **Per com'è fatto oggi: [`AGENTS.md`](AGENTS.md). Per lo stato del lavoro:
+> [`docs/STATO.md`](docs/STATO.md).**
+>
+> ### Cosa è cambiato rispetto a questo documento
+>
+> | Qui si diceva | Com'è andata |
+> |---|---|
+> | Tailwind CSS + token nel config | CSS scritto a mano in `src/styles/`. Nessuna dipendenza da Tailwind |
+> | Contenuti gestiti «da sviluppatori via git, nessun CMS» | **Keystatic**, proprio per non far dipendere da un deploy ogni cambio di prezzo o orario |
+> | Form e lead su Supabase via Netlify Functions | **webhook n8n** → Airtable (`docs/N8N.md`). Supabase è fermo alla fase 1 e inerte |
+> | Stripe per la prevendita | la prevendita vive fuori dal sito, su `promo.lumefitness.it`, con funnel e tabella lead propri |
+> | `ClubsMap` con maplibre-gl, `VideoPlayer` con hls.js, isole React | niente di tutto questo: il sito è statico e i video sono `<video>` con MP4 |
+> | Tipografia Teko + Roboto Condensed | **Anton** (display) + **Inter** (testo), self-hostati |
+> | Struttura `/corsi`, `/blog`, `/prevendita` | `/discipline`, `/lume-life` (news, eventi, help desk, servizi), `/scuola-nuoto`, `/planning/[centro]`. La prevendita è un link esterno |
+> | Il quarto centro indicato come «Centro» | è **Urban**. I quattro sono Macerata, Montecassiano, Piediripa, Urban |
+> | Wiki con Starlight su `/wiki` | non fatta, e non in programma a breve |
+>
+> ### Cosa invece regge, e resta la direzione
+>
+> - Astro + adapter Netlify, statico per costruzione, zero JS dove non serve.
+> - Content Collections con schema validato — solo con Keystatic sopra.
+> - Abbonamenti come deep-link a PerfectGym, nessun pagamento gestito dal sito.
+> - **Video su S3 + CloudFront** (§12): ancora da fare, ed è la strada giusta.
+>   Oggi i due video dei centri stanno in `public/media/` per non bloccare il
+>   lancio. Il campo `video` dei centri è una stringa qualunque, quindi il
+>   passaggio al CDN è sostituire un valore dal CMS, senza toccare il codice.
+> - Immagini da `astro:assets`, font self-hostati e non da Google Fonts.
+>
+> ### Le «decisioni aperte» del §13, oggi
+>
+> Hosting video S3+CloudFront: confermato, non ancora fatto. Nomi dei quattro
+> centri: risolto. URL PerfectGym: trovati nel dump del vecchio sito, ma l'id
+> del club per l'elenco corsi è un'inferenza da verificare in reception (vedi
+> `docs/STATO.md`). Prevendita con pagamento: risolto, vive fuori dal sito.
+> Design: fatto. Indirizzi di Piediripa e Urban: **ancora aperti**.
 
 ---
 

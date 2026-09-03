@@ -8,6 +8,13 @@ commit. Se scrivi in inglese, stoni.
 **Lo stato del lavoro — cosa è fatto, cosa manca, cosa aspetta il cliente — è
 in [`docs/STATO.md`](docs/STATO.md). Leggilo prima di decidere cosa fare.**
 
+Attenzione a [`ARCHITETTURA.md`](ARCHITETTURA.md): è il documento di progetto
+del 22 luglio, scritto *prima* di implementare, e diverse sue scelte sono
+state poi cambiate — Tailwind, Supabase per i form, Stripe, la mappa, la
+tipografia. Ha un'intestazione che elenca le differenze una per una. È utile
+per capire perché il progetto esiste, dannoso se preso per la descrizione di
+com'è fatto oggi.
+
 ## Comandi
 
 ```bash

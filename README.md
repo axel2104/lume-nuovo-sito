@@ -28,6 +28,7 @@ npm run verifica:tutto   # tutto, browser compreso
 | [`docs/PLANNING.md`](docs/PLANNING.md) | come funziona il planning e il suo aggiornamento |
 | [`docs/PLANNING-PISCINA.md`](docs/PLANNING-PISCINA.md) | orari piscina 2024/25, trascritti e non pubblicati |
 | [`docs/SUPABASE.md`](docs/SUPABASE.md) | anagrafica e richieste, fase 1, inerte |
+| [`ARCHITETTURA.md`](ARCHITETTURA.md) | il piano di luglio, **in parte superato**: leggilo per il perché del progetto, non per com'è fatto |
 
 ## Contenuti
 

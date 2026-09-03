@@ -142,6 +142,11 @@ errore, quindi nessuno se ne accorge.
 - `interessiLead` in `src/config/tassonomie.ts` è codice morto con
   un'intestazione di avvertimento. Va rimosso o usato.
 - `Lume_Urban.mp4` è verticale 1080×1920 e non ha una collocazione nel design.
+- I video stanno in `public/media/`, ma il piano (già deciso a luglio, §12 di
+  `ARCHITETTURA.md`) è **S3 + CloudFront**. Il campo `video` dei centri è una
+  stringa qualunque: quando il CDN c'è, si sostituisce il valore dal CMS senza
+  toccare il codice. Da fare: policy CORS sul bucket e un `preconnect` verso
+  il dominio CloudFront.
 - Il gate dei consensi non è mai stato visto renderizzato: `cdn.iubenda.com`
   era bloccato dalla rete dell'ambiente di sviluppo. Verificato il ripiego, il
   Consent Mode e i link; il documento incorporato va guardato una volta in un
