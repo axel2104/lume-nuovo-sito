@@ -298,7 +298,8 @@ textarea.lf-in {
   border: 1px solid var(--line);
   background: var(--card);
 }
-.lf-cal-ko {
+.lf-cal-ko,
+.lf-cal-alt {
   margin: 16px 0 4px;
   font-size: 13px;
   line-height: 1.5;
@@ -306,6 +307,17 @@ textarea.lf-in {
   border: 1px solid var(--line);
   border-radius: var(--lf-r-m);
   padding: 14px 16px;
+}
+/* Il link all'agenda e' l'azione della schermata, non una nota a margine:
+   sta su una riga sua e ha l'altezza minima di un bersaglio per il pollice. */
+.lf-cal-alt a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 4px;
+  color: var(--red);
+  font-weight: 600;
+  text-decoration: underline;
 }
 
 /* ─── Honeypot ─────────────────────────────────────────────────

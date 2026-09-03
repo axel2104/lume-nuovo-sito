@@ -540,3 +540,53 @@
   margin-top: 6px;
   letter-spacing: 0.04em;
 }
+
+/* ============================================================
+   Pagine legali — informativa privacy e cookie policy
+   ============================================================ */
+
+/* Il documento Iubenda arriva col suo tema chiaro. Invece di combatterlo con
+   !important su selettori che non controlliamo, gli si dà una superficie
+   bianca dichiarata: si legge come il documento che e', distinto dal sito. */
+.leg-doc {
+  background: #fff;
+  color: #1a1a1a;
+  border-radius: 16px;
+  padding: 28px 26px;
+  margin: 22px 0 26px;
+  /* I documenti legali hanno tabelle larghe (l'elenco dei servizi terzi):
+     senza questo la pagina scorre in orizzontale su mobile. */
+  overflow-x: auto;
+}
+.leg-doc a {
+  color: #a80c2e;
+}
+.leg-doc h1,
+.leg-doc h2,
+.leg-doc h3,
+.leg-doc h4 {
+  color: #111;
+  font-family: inherit;
+}
+.leg-doc table {
+  max-width: 100%;
+}
+
+.leg-fuori,
+.leg-altro {
+  color: var(--mut);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.leg-fuori a,
+.leg-altro a {
+  color: var(--red);
+}
+.leg-altro {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  margin-top: 8px;
+}
+.leg-pref {
+  margin: 18px 0 4px;
+}

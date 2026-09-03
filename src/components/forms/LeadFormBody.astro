@@ -216,6 +216,7 @@ const id = (step: Step, nome: string) => `${P}-${step.id}-${nome}`;
                           data-cal-visita={c.data.calcom?.visita ?? ''}
                           data-cal-richiamata={c.data.calcom?.richiamata ?? ''}
                           data-pg={c.data.perfectgymUrl ?? '#'}
+                          data-calendly={c.data.calendlyUrl ?? ''}
                         />
                         <span>{c.data.nome}</span>
                       </label>
@@ -294,9 +295,29 @@ const id = (step: Step, nome: string) => `${P}-${step.id}-${nome}`;
         {step.prenotazione && (
           <>
             <div class="lf-cal" id={id(step, 'cal')} data-cal-embed />
+            {/*
+              Due ripieghi diversi, perché sono due situazioni diverse.
+
+              Senza nessuna agenda collegata l'unica cosa onesta da dire è che
+              richiamiamo noi. Se invece la sede ha una pagina Calendly, il
+              messaggio non deve chiedere di aspettare: chi ha appena chiesto
+              un appuntamento è nel momento esatto in cui vuole fissarlo, e
+              rimandarlo a una telefonata futura è dove si perdono.
+
+              Sono due paragrafi separati e non uno con il testo riscritto da
+              JavaScript: così il testo resta nell'HTML, dove si legge e si
+              traduce, e il codice deve solo scegliere quale mostrare.
+            */}
             <p class="lf-cal-ko" id={id(step, 'cal-ko')} data-cal-ko hidden>
               Il calendario non è raggiungibile in questo momento, ma la tua richiesta
               è arrivata: ti contattiamo noi per fissare l’appuntamento.
+            </p>
+            <p class="lf-cal-alt" id={id(step, 'cal-alt')} data-cal-alt hidden>
+              La tua richiesta è arrivata. Se preferisci scegliere tu l’orario, l’agenda
+              della segreteria è qui:{' '}
+              <a href="#" target="_blank" rel="noopener" data-cal-alt-link
+                >Prenota un appuntamento ↗</a
+              >
             </p>
           </>
         )}

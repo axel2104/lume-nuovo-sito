@@ -1,0 +1,41 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import InformativaIubenda from '../components/InformativaIubenda.astro';
+import { siteConfig } from '../config/site';
+
+const url = `https://www.iubenda.com/privacy-policy/${siteConfig.iubendaCookiePolicyId}`;
+---
+
+<Layout
+  title="Informativa privacy — LUMe Fitness Club"
+  description="Come Lume Fitness Club tratta i dati personali di chi visita il sito, compila i form o si iscrive ai corsi."
+>
+  <Header />
+
+  <main id="contenuto">
+    <section class="sec">
+      <div class="wrap wrap-stretto">
+        <div class="sec-head">
+          <span class="label">Privacy</span>
+          <h2 class="d">Informativa privacy</h2>
+          <p>
+            Cosa raccogliamo quando ci lasci un contatto, perché lo raccogliamo e come puoi
+            chiederne la cancellazione.
+          </p>
+        </div>
+
+        <InformativaIubenda url={url} titolo="Informativa privacy" />
+
+        <p class="leg-altro">
+          Per i soli cookie e le tecnologie di tracciamento c'è un documento a parte: la <a
+            href="/cookie-policy">cookie policy</a
+          >.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

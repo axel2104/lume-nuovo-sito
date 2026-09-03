@@ -82,6 +82,21 @@ const centri = defineCollection({
     perfectgymCorsiUrl: z.string().nullish(),
 
     /**
+     * Pagina Calendly della segreteria: il ponte finché Cal.com non è pronto.
+     *
+     * Non sostituisce `calcom` e non gli fa concorrenza. L'embed Cal.com, se
+     * configurato, resta la strada buona: sta dentro il form, arriva già
+     * compilato e rimanda la prenotazione al webhook che la ricuce al lead.
+     * Questo è solo il ripiego, e serve a cambiare la natura di quel ripiego:
+     * senza, chi chiede un appuntamento legge "ti contattiamo noi" e aspetta;
+     * con, sceglie l'orario da sé mentre ha ancora la pagina aperta.
+     *
+     * Resta un link e non un secondo embed: nessuno script terzo in più, e
+     * quindi nessun'altra voce da dichiarare nella cookie policy.
+     */
+    calendlyUrl: z.string().nullish(),
+
+    /**
      * Planning: la **settimana tipo** della sede, non un calendario di date.
      *
      * È l'ultimo orario noto e fa da fondo pagina: la pagina lo mostra subito,

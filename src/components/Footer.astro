@@ -1,5 +1,18 @@
 ---
+import { consensoGestito } from '../config/site';
+
 const anno = new Date().getFullYear();
+
+/**
+ * Il numero è uno per tutti i centri: chi risponde smista.
+ * Il formato `tel:` va senza spazi, quello visibile con: sono due cose diverse.
+ */
+const telefono = { visibile: '0733 232905', link: '+390733232905' };
+
+const social = [
+  { nome: 'Instagram', url: 'https://www.instagram.com/lumefitnessclub/' },
+  { nome: 'Facebook', url: 'https://www.facebook.com/lumefitnessclub/' },
+];
 ---
 
 <footer class="site">
@@ -38,8 +51,16 @@ const anno = new Date().getFullYear();
         <ul>
           <li><a href="/contatti">Scrivici</a></li>
           <li><a href="mailto:info@lumefitness.it">info@lumefitness.it</a></li>
-          <li><a href="tel:+390733000000">+39 0733 000000</a></li>
-          <li>Instagram · Facebook</li>
+          <li><a href={`tel:${telefono.link}`}>{telefono.visibile}</a></li>
+          <li class="foot-social">
+            {
+              social.map((s) => (
+                <a href={s.url} target="_blank" rel="noopener me">
+                  {s.nome}
+                </a>
+              ))
+            }
+          </li>
         </ul>
       </div>
     </div>
@@ -47,7 +68,21 @@ const anno = new Date().getFullYear();
       <span>© {anno} Lume Fitness Club</span>
       <span>
         <a href="/privacy">Privacy</a> ·
-        <a href="#" class="iubenda-advertising-preferences-link">Preferenze cookie</a>
+        <a href="/cookie-policy">Cookie</a>
+        {/*
+          `iubenda-cs-preferences-link` riapre l'intero banner. La classe
+          `iubenda-advertising-preferences-link` che stava qui prima apre solo
+          le preferenze pubblicitarie TCF: sulla maggior parte delle
+          configurazioni non apre niente, e il link resta un salto a inizio
+          pagina. E senza gestore configurato non lo mostriamo affatto:
+          "Preferenze cookie" che non fa nulla è peggio che assente.
+        */}
+        {consensoGestito && (
+          <>
+            {' · '}
+            <a href="#" class="iubenda-cs-preferences-link">Preferenze cookie</a>
+          </>
+        )}
       </span>
     </div>
   </div>

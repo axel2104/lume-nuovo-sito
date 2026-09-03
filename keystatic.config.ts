@@ -125,7 +125,18 @@ const SU_GITHUB = {
  * `npm run dev` e apri /keystatic. Finita la procedura le credenziali sono
  * nel `.env` e vanno copiate su Netlify.
  */
-const forzaGithub = import.meta.env.PUBLIC_KEYSTATIC_STORAGE === 'github';
+/**
+ * `import.meta.env` lo definisce Vite: fuori da una build — per esempio quando
+ * il test di round-trip importa questo file con Node — non esiste affatto, e
+ * leggerlo senza `?.` fa fallire l'import prima di arrivare allo schema. Il
+ * fallback su `process.env` fa sì che lo stesso file si comporti allo stesso
+ * modo nei due contesti invece di funzionare solo in uno.
+ */
+const ambiente: Record<string, string | undefined> =
+  (import.meta as unknown as { env?: Record<string, string | undefined> }).env ??
+  (typeof process !== 'undefined' ? process.env : {});
+
+const forzaGithub = ambiente.PUBLIC_KEYSTATIC_STORAGE === 'github';
 
 /**
  * Titolo e descrizione per Google, uguali su ogni pagina.
@@ -185,7 +196,7 @@ const intestazione = (label: string, opzioni?: { testo?: boolean }) =>
   );
 
 export default config({
-  storage: import.meta.env.DEV && !forzaGithub ? { kind: 'local' } : SU_GITHUB,
+  storage: ambiente.DEV && !forzaGithub ? { kind: 'local' } : SU_GITHUB,
 
   ui: {
     brand: { name: 'LUMe Fitness Club' },
@@ -441,7 +452,13 @@ export default config({
         perfectgymCorsiUrl: fields.text({
           label: 'Link elenco corsi PerfectGym',
           description:
-            'Alimenta il pulsante “Prenota sul portale” del planning. Il numero nell’URL è l’id del club, quindi è diverso per ogni centro.',
+            'Alimenta il pulsante “Prenota sul portale” del planning. Il numero in “Classes/N/List” è l’id del club: 1 è Macerata, 2 Montecassiano. Attenzione a non copiarlo da un centro all’altro — il link funziona comunque, ma mostra i corsi della sede sbagliata.',
+          validation: { isRequired: false },
+        }),
+        calendlyUrl: fields.text({
+          label: 'Pagina Calendly della segreteria',
+          description:
+            'Usata solo se gli event type Cal.com qui sotto sono vuoti: al posto di “ti contattiamo noi”, chi ha appena compilato il form si sceglie l’orario da sé. Quando Cal.com è configurato questo campo viene ignorato.',
           validation: { isRequired: false },
         }),
         calcom: fields.object(

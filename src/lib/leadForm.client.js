@@ -229,6 +229,8 @@ export function initForm(root, options) {
           sede: el.getAttribute('data-sede') || '',
           calVisita: el.getAttribute('data-cal-visita') || '',
           calRichiamata: el.getAttribute('data-cal-richiamata') || '',
+          /** Agenda Calendly della segreteria: ripiego se Cal.com manca. */
+          calendly: el.getAttribute('data-calendly') || '',
           // Portale PerfectGym della sede: il passo successivo per chi arriva
           // con un piano già scelto.
           pg: el.getAttribute('data-pg') || '',
@@ -520,15 +522,27 @@ export function initForm(root, options) {
 
     const contenitore = byId(idConferma + '-cal');
     const ripiego = byId(idConferma + '-cal-ko');
+    const alternativa = byId(idConferma + '-cal-alt');
     if (!contenitore) return;
 
     const centro = stato.valori.centro || {};
     const calLink = conferma.prenotazione === 'visita' ? centro.calVisita : centro.calRichiamata;
 
-    /** Il contenitore riserva 420px per l'iframe: senza embed è spazio morto. */
+    /**
+     * Il contenitore riserva 420px per l'iframe: senza embed è spazio morto.
+     *
+     * Se la sede ha un'agenda Calendly si mostra quella invece del messaggio
+     * di attesa. È lo stesso vicolo cieco di prima, con un'uscita.
+     */
     const soloRipiego = () => {
       contenitore.hidden = true;
-      if (ripiego) ripiego.hidden = false;
+      const link = alternativa && alternativa.querySelector('[data-cal-alt-link]');
+      if (centro.calendly && link) {
+        link.href = centro.calendly;
+        alternativa.hidden = false;
+      } else if (ripiego) {
+        ripiego.hidden = false;
+      }
     };
 
     if (!calLink) return soloRipiego();
@@ -641,7 +655,7 @@ export function initForm(root, options) {
       smontaPrenotazione(el);
       el.hidden = false;
     });
-    qa('[data-cal-ko]').forEach((el) => {
+    qa('[data-cal-ko], [data-cal-alt]').forEach((el) => {
       el.hidden = true;
     });
     qa('[data-pg-link]').forEach((el) => {

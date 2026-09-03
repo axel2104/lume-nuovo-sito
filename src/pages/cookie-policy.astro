@@ -1,0 +1,53 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import InformativaIubenda from '../components/InformativaIubenda.astro';
+import { siteConfig, consensoGestito } from '../config/site';
+
+const url = `https://www.iubenda.com/privacy-policy/${siteConfig.iubendaCookiePolicyId}/cookie-policy`;
+---
+
+<Layout
+  title="Cookie policy — LUMe Fitness Club"
+  description="I cookie e le tecnologie di tracciamento usati su lumefitness.it, a cosa servono e come cambiare le proprie preferenze."
+>
+  <Header />
+
+  <main id="contenuto">
+    <section class="sec">
+      <div class="wrap wrap-stretto">
+        <div class="sec-head">
+          <span class="label">Cookie</span>
+          <h2 class="d">Cookie policy</h2>
+          <p>Quali cookie usiamo, a cosa servono e come cambiare idea in qualsiasi momento.</p>
+        </div>
+
+        {
+          consensoGestito && (
+            <p class="leg-pref">
+              {/*
+                La stessa classe del link nel footer: è Iubenda a intercettare
+                il click e riaprire il banner. Se il gestore non è configurato
+                il pulsante non compare, perché non avrebbe nulla da aprire.
+              */}
+              <a href="#" class="iubenda-cs-preferences-link btn btn-out">
+                Cambia le tue preferenze
+              </a>
+            </p>
+          )
+        }
+
+        <InformativaIubenda url={url} titolo="Cookie policy" />
+
+        <p class="leg-altro">
+          Il trattamento dei dati che ci lasci nei form è descritto nell'<a href="/privacy"
+            >informativa privacy</a
+          >.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>

@@ -1,0 +1,63 @@
+---
+/**
+ * Un documento legale generato da Iubenda, incorporato nella pagina.
+ *
+ * Perché incorporato e non un semplice link verso iubenda.com: l'informativa
+ * è il documento che l'utente deve poter leggere *prima* di spuntare la
+ * casella di consenso in un form. Mandarlo su un altro dominio, con un'altra
+ * grafica, nel mezzo di una compilazione, è il modo più efficace di far
+ * spuntare la casella senza leggere niente.
+ *
+ * Il testo resta però ospitato da Iubenda e aggiornato da loro: quando cambia
+ * un servizio, il documento cambia da solo. Non c'è una copia da mantenere
+ * qui, che è esattamente il tipo di copia che dopo sei mesi mente.
+ *
+ * Il fallback è la cosa importante. `iubenda-embed` inietta il documento via
+ * JavaScript: se lo script non arriva — connessione, blocco, JS disattivato —
+ * l'ancora **resta un link funzionante** al documento su iubenda.com. E il
+ * paragrafo con il link diretto sta in pagina sempre, non solo nel caso
+ * peggiore: un documento legale deve essere raggiungibile anche quando la
+ * pagina è mezza rotta.
+ */
+interface Props {
+  /** L'URL Iubenda del documento. */
+  url: string;
+  /** Il titolo del link, usato anche come testo di ripiego. */
+  titolo: string;
+}
+
+const { url, titolo } = Astro.props;
+---
+
+<p class="leg-fuori">
+  Il documento è ospitato e mantenuto aggiornato da Iubenda. Se non si carica qui sotto, si può
+  leggere direttamente su <a href={url} target="_blank" rel="noopener">iubenda.com</a>.
+</p>
+
+<div class="leg-doc">
+  <a
+    href={url}
+    class="iubenda-white iubenda-noiframe iubenda-embed no-brand iubenda-noiframe"
+    title={titolo}>{titolo}</a
+  >
+</div>
+
+{/*
+  Il loader ufficiale Iubenda. `is:inline` perché deve restare così com'è:
+  passarlo per il bundler lo trasformerebbe in un modulo, e il caricamento
+  `on load` è ciò che permette al documento di arrivare senza bloccare il
+  rendering della pagina.
+*/}
+<script
+  is:inline
+  set:html={`(function (w, d) {
+  var loader = function () {
+    var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0];
+    s.src = "https://cdn.iubenda.com/iubenda.js";
+    tag.parentNode.insertBefore(s, tag);
+  };
+  if (w.addEventListener) { w.addEventListener("load", loader, false); }
+  else if (w.attachEvent) { w.attachEvent("onload", loader); }
+  else { w.onload = loader; }
+})(window, document);`}
+></script>

@@ -34,7 +34,9 @@ sale:
     dotazione: "Scuola nuoto bambini e adulti, corsi di acqua fitness, nuoto libero."
 immagine: ../../assets/centri/montecassiano.jpg
 video: /media/montecassiano-drone.mp4
-perfectgymUrl: "#"
+perfectgymUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Registration"
+perfectgymCorsiUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Classes/2/List"
+calendlyUrl: "https://calendly.com/montecassiano-lumefitness"
 planningNota: "Orario della stagione 26/27 ancora provvisorio: qualche corso e qualche orario possono cambiare prima di settembre."
 planningAggiornatoIl: 2026-08-27
 planning:

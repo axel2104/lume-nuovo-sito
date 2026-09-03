@@ -15,9 +15,23 @@ export const siteConfig = {
   /** Container Google Tag Manager, es. "GTM-XXXXXXX". Vuoto = GTM non caricato. */
   gtmId: env.PUBLIC_GTM_ID ?? '',
 
-  /** Iubenda Cookie Solution. Entrambi necessari perché il banner venga caricato. */
-  iubendaSiteId: env.PUBLIC_IUBENDA_SITE_ID ?? '',
-  iubendaCookiePolicyId: env.PUBLIC_IUBENDA_COOKIE_POLICY_ID ?? '',
+  /**
+   * Iubenda Cookie Solution. Entrambi necessari perché il banner venga caricato.
+   *
+   * I default non sono segnaposto: sono gli ID reali dell'account Lume,
+   * recuperati dalla configurazione del vecchio sito. Stanno qui e non solo
+   * fra le variabili Netlify per una ragione precisa — sono **identificativi
+   * pubblici**, presenti in chiaro nell'HTML di qualunque sito che usi
+   * Iubenda, quindi non c'è niente da proteggere; e se li lasciassimo vuoti in
+   * attesa di configurare l'ambiente, una build fatta prima di quel passaggio
+   * andrebbe online senza banner. Un default sbagliato si vede subito, un
+   * banner assente no.
+   *
+   * Le variabili d'ambiente restano e hanno la precedenza: servono per gli
+   * ambienti di prova, dove va usato un altro account.
+   */
+  iubendaSiteId: env.PUBLIC_IUBENDA_SITE_ID ?? '3771007',
+  iubendaCookiePolicyId: env.PUBLIC_IUBENDA_COOKIE_POLICY_ID ?? '91706111',
 
   /**
    * Webhook "verifica iscritto": riceve { email, centro, attivita, pagina, cta, utm, vid },
