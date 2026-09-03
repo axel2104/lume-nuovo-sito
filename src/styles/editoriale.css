@@ -35,8 +35,13 @@
   margin-bottom: 10px;
 }
 .ed-more {
-  display: inline-block;
-  margin-top: 14px;
+  /* Era alto 22px: e' l'azione principale della scheda, non una nota, e a
+     22px si sbaglia il tocco. `inline-flex` con min-height lo porta a 44
+     senza toccare la tipografia. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 6px;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.1em;

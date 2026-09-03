@@ -256,7 +256,11 @@ const risparmioMax = Math.max(...piani.map((p) => p.data.mensile * 12 - p.data.a
               Lume.
             </p>
           </div>
-          <a href="/guest-pass" class="btn btn-cream">Attiva il pass</a>
+          {/*
+            Puntava a /guest-pass, che non esiste: la pagina del pass è /prova.
+            Un 404 proprio sul pulsante che chiude la pagina dei prezzi.
+          */}
+          <a href="/prova" class="btn btn-cream">Attiva il pass</a>
         </div>
       </div>
     </section>
