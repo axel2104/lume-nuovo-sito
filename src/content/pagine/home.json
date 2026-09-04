@@ -14,17 +14,15 @@
   "stats": [
     {
       "numero": "4",
-      "suffisso": "",
       "etichetta": "Centri"
     },
     {
-      "numero": "{oreCorsi}",
-      "suffisso": "",
+      "numero": "130",
+      "suffisso": "+",
       "etichetta": "Ore di corsi a settimana"
     },
     {
       "numero": "4.97",
-      "suffisso": "",
       "etichetta": "Recensioni"
     },
     {
