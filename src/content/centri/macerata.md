@@ -44,8 +44,8 @@ video: /media/macerata-drone.mp4
 perfectgymUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Registration"
 perfectgymCorsiUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Classes/1/List"
 calcom:
-  visita: alex-pop-ge92dg/visita-macerata
-  richiamata: alex-pop-ge92dg/richiamata
+  visita: lumefitness/visita-macerata
+  richiamata: lumefitness/richiamata
 planningNota: "Orario della stagione 26/27 ancora provvisorio: qualche corso e qualche orario possono cambiare prima di settembre."
 planningAggiornatoIl: 2026-08-27
 planning:

@@ -37,8 +37,8 @@ video: /media/montecassiano-drone.mp4
 perfectgymUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Registration"
 perfectgymCorsiUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Classes/2/List"
 calcom:
-  visita: alex-pop-ge92dg/visita-montecassiano
-  richiamata: alex-pop-ge92dg/richiamata
+  visita: lumefitness/visita-montecassiano
+  richiamata: lumefitness/richiamata
 planningNota: "Orario della stagione 26/27 ancora provvisorio: qualche corso e qualche orario possono cambiare prima di settembre."
 planningAggiornatoIl: 2026-08-27
 planning:
