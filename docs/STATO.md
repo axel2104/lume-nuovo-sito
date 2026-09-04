@@ -73,6 +73,19 @@ non aprono.
 Le 33 discipline sono state mandate al cliente come xlsx da compilare. Finché
 torna, le schede mostrano quello che c'è.
 
+### 8. Foto delle attività
+
+Le otto foto in `src/assets/discipline/` sono di repertorio, non scatti Lume.
+In attesa di quelli veri la vetrina della homepage mostra il logo in filigrana
+al posto della foto: `fotoAttivita = false` in `src/pages/index.astro`, da
+rimettere a `true` quando le foto vere sono nei contenuti. La filigrana la
+disegna `.card-d:not(:has(img))::before` in `editoriale.css`, quindi vale per
+ogni tessera senza foto, non solo in home.
+
+Nota: la vetrina mostra sei tessere, una per categoria in ordine di `ordine`,
+e le categorie sono otto — **Acqua e Danza restano fuori**. Se la piscina deve
+comparire in homepage va abbassato l'`ordine` di una disciplina Acqua.
+
 ## Cose fatte che è facile rompere
 
 **La mappa del footer è un'immagine statica, non si aggiorna da sola.** La

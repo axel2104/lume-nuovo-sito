@@ -517,6 +517,18 @@
     linear-gradient(160deg, #1a1a1a, #0d0d0d);
   border: 1px solid var(--line);
 }
+/* Il logo in filigrana sulla sfumatura: una tessera senza foto resta
+   riconoscibile come Lume invece di essere un rettangolo colorato. Sta sul
+   ::before perché il ::after della card è già la sfumatura di leggibilità del
+   testo, e va sopra il logo. `opacity` bassa: è uno sfondo, non un marchio da
+   leggere, e il titolo della disciplina deve restare la cosa più leggibile. */
+.card-d:not(:has(img))::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('/logo-lume.png') no-repeat center 42% / 84px auto;
+  opacity: 0.16;
+}
 .card-d[data-cat='Acqua']:not(:has(img)) {
   background:
     radial-gradient(120% 90% at 20% 0%, rgba(0, 122, 196, 0.3), transparent 60%),

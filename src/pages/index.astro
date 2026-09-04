@@ -58,12 +58,20 @@ const oreCorsi = Math.round(
 
 // In homepage una vetrina, non il catalogo: una disciplina per categoria, così
 // si capisce l'ampiezza dell'offerta senza srotolare trenta card.
+// Sei e non otto: la griglia è a tre colonne, sei riempiono due righe piene
+// mentre otto lasciavano un'ultima riga spaiata da due tessere.
 const vetrina = Object.values(
   discipline.reduce<Record<string, (typeof discipline)[number]>>((acc, d) => {
     acc[d.data.categoria] ??= d;
     return acc;
   }, {}),
-).slice(0, 8);
+).slice(0, 6);
+
+// Le foto nelle tessere della vetrina sono di repertorio, non scatti Lume.
+// Finché non arrivano quelli veri le tessere mostrano il logo al posto della
+// foto (la sfumatura per categoria e il logo li mette editoriale.css, sulle
+// card senza <img>). Quando le foto ci sono: rimettere a true.
+const fotoAttivita = false;
 
 // I piani non stanno più qui: erano tre oggetti cablati che nessuno fuori dal
 // repo poteva cambiare, e che divergevano da /abbonamenti al primo ritocco.
@@ -303,7 +311,7 @@ function assaggio(p: (typeof piani)[number]) {
       <div class="grid3">
         {vetrina.map((d) => (
           <a class="card-d" href={`/discipline/${d.id}`} data-cat={d.data.categoria}>
-            {d.data.immagine && (
+            {fotoAttivita && d.data.immagine && (
               <Picture src={d.data.immagine} alt={d.data.nome} widths={[400, 800]} sizes="(min-width:1024px) 25vw, 100vw" formats={['avif', 'webp']}
             />
             )}
