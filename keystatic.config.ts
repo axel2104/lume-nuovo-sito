@@ -412,6 +412,15 @@ export default config({
         }),
         ordine: fields.integer({ label: 'Ordine', defaultValue: 99 }),
         indirizzo: fields.text({ label: 'Indirizzo', validation: { isRequired: false } }),
+        // Pin della mappa nel footer. Per i centri senza indirizzo ancora
+        // comunicabile (prevendita) il pin segna la zona, non un civico.
+        coordinate: fields.object(
+          {
+            lat: fields.number({ label: 'Latitudine' }),
+            lng: fields.number({ label: 'Longitudine' }),
+          },
+          { label: 'Coordinate (mappa nel footer)' },
+        ),
         telefono: fields.text({ label: 'Telefono', validation: { isRequired: false } }),
         email: fields.text({ label: 'Email', validation: { isRequired: false } }),
         orari: fields.object(
@@ -439,6 +448,13 @@ export default config({
               label: 'Cosa c’è dentro',
               description: 'Attrezzature e marchi, in una frase. Es. “6 Reformer Peak Pilates e 5 panche Wellback System”.',
               multiline: true,
+            }),
+            foto: fields.image({
+              label: 'Foto della sala',
+              description: 'Foto vera scattata nella sala. Vuota = la pagina mostra un’immagine di repertorio.',
+              directory: 'src/assets/centri',
+              publicPath: '../../assets/centri/',
+              validation: { isRequired: false },
             }),
           }),
           {
@@ -479,6 +495,13 @@ export default config({
           label: 'Pagina Calendly della segreteria',
           description:
             'Usata solo se gli event type Cal.com qui sotto sono vuoti: al posto di “ti contattiamo noi”, chi ha appena compilato il form si sceglie l’orario da sé. Quando Cal.com è configurato questo campo viene ignorato.',
+          validation: { isRequired: false },
+        }),
+        videoPoster: fields.image({
+          label: 'Fermo immagine del video',
+          description: 'La foto mostrata nel lettore finché il video non parte. Vuota = la foto del centro.',
+          directory: 'src/assets/centri',
+          publicPath: '../../assets/centri/',
           validation: { isRequired: false },
         }),
         calcom: fields.object(

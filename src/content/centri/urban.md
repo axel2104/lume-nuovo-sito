@@ -3,6 +3,10 @@ nome: Lume Urban
 citta: Macerata (centro)
 stato: prevendita
 ordine: 4
+indirizzo: Viale Giacomo Leopardi 91, 62100 Macerata
+coordinate:
+  lat: 43.3014296
+  lng: 13.4558179
 telefono: "0733 232905"
 email: urban@lumefitness.it
 servizi:

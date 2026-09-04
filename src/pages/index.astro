@@ -1,5 +1,5 @@
 ---
-import { Picture } from 'astro:assets';
+import { Picture, getImage } from 'astro:assets';
 import salaPesi from '../assets/pagine/sala-pesi.jpg';
 import reformerFoto from '../assets/pagine/reformer.jpg';
 import functional from '../assets/pagine/functional.jpg';
@@ -21,9 +21,20 @@ const discipline = (await getCollection('discipline')).sort((a, b) => a.data.ord
  * foto. Piediripa e Urban non ce l'hanno ancora, e un riquadro vuoto in
  * apertura di homepage e' peggio di un riquadro in meno.
  */
-const vetrinaCentri = centri
-  .filter((c) => c.data.stato === 'aperto' && c.data.immagine)
-  .map((c) => ({ nome: c.data.nome, foto: c.data.immagine! }));
+const vetrinaCentri = await Promise.all(
+  centri
+    .filter((c) => c.data.stato === 'aperto' && c.data.immagine)
+    .map(async (c) => ({
+      nome: c.data.nome,
+      foto: c.data.immagine!,
+      video: c.data.video ?? '',
+      // Fermo immagine scelto dal CMS (per Macerata è la foto vera della sala
+      // pesi); senza, il video si apre sulla foto del centro già visibile.
+      poster: c.data.videoPoster
+        ? (await getImage({ src: c.data.videoPoster, width: 1280, format: 'webp' })).src
+        : '',
+    })),
+);
 
 /**
  * Le ore di corsi di tutto l'ecosistema, contate dal planning dei centri
@@ -120,6 +131,8 @@ function assaggio(p: (typeof piani)[number]) {
               formats={['avif', 'webp']}
               loading={i === 0 ? 'eager' : 'lazy'}
               data-hero-slide={c.nome}
+              data-hero-video={c.video}
+              data-hero-poster={c.poster}
             />
           ))}
           {/*
@@ -146,16 +159,17 @@ function assaggio(p: (typeof piani)[number]) {
             </div>
           )}
           {/*
-            Lo showreel non è sparito: sta dietro al pulsante e il file parte
-            solo quando qualcuno lo chiede (`preload="none"`, `src` messo al
-            primo click). Prima erano 2,3 MB scaricati da tutti, anche da chi
-            il video non l'avrebbe mai guardato.
+            Il video parte solo a richiesta (`preload="none"`, `src` messo al
+            click): niente megabyte a chi non lo guarderà mai. Quale video lo
+            decide la foto visibile: il pulsante apre il video drone del
+            centro che si sta guardando, non un montaggio unico per tutti —
+            il vecchio showreel (girato a Urban) non è più in pagina.
           */}
           <button type="button" class="hero-vcap" data-hero-showreel aria-haspopup="dialog">
             <svg class="ico-play" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true" fill="currentColor">
               <path d="M2 1l9 5-9 5z" />
             </svg>
-            Showreel
+            Video del centro
           </button>
         </div>
         <div class="hero-copy">
@@ -194,13 +208,14 @@ function assaggio(p: (typeof piani)[number]) {
         `inert` sul resto della pagina in regalo dal browser. Sta fuori dal
         riquadro della galleria, che ha `overflow:hidden`.
       */}
-      <dialog class="hero-reel" data-hero-reel aria-label="Showreel Lume Fitness Club">
-        <button type="button" class="hero-reel-x" data-hero-reel-x aria-label="Chiudi lo showreel">
+      <dialog class="hero-reel" data-hero-reel aria-label="Video drone del centro">
+        <button type="button" class="hero-reel-x" data-hero-reel-x aria-label="Chiudi il video">
           &times;
         </button>
+        {/* Nessun `src` qui: lo mette il click sul pulsante, ed è quello del
+            centro la cui foto è visibile in quel momento. */}
         <video
           data-hero-reel-video
-          data-src="https://pub-90d4a80741cd4aadb6d995599fefc986.r2.dev/site/lume-hero.mp4"
           controls
           playsinline
           preload="none"
@@ -467,9 +482,11 @@ function assaggio(p: (typeof piani)[number]) {
     avvia();
   }
 
-  /* ─── Showreel a richiesta ─────────────────────────────
-     Il video non è più in pagina: il `src` viene messo al primo click, così i
-     2,3 MB li scarica solo chi vuole guardarlo. */
+  /* ─── Video del centro a richiesta ─────────────────────
+     Il `src` non esiste nel markup: lo mette il click, ed è quello del centro
+     la cui foto è visibile in quel momento (data-hero-video sulla slide).
+     Chi cambia foto coi pallini e poi apre il video sente parlare del centro
+     che sta guardando, non di un altro. */
   const reel = document.querySelector('[data-hero-reel]');
   const reelVideo = document.querySelector('[data-hero-reel-video]');
   const apriReel = document.querySelector('[data-hero-showreel]');
@@ -481,8 +498,19 @@ function assaggio(p: (typeof piani)[number]) {
     };
 
     apriReel.addEventListener('click', () => {
-      const src = reelVideo.getAttribute('data-src');
-      if (src && !reelVideo.getAttribute('src')) reelVideo.setAttribute('src', src);
+      const corrente = document.querySelector('.hero-slide.is-attiva');
+      const src = corrente ? corrente.getAttribute('data-hero-video') : '';
+      if (src && reelVideo.getAttribute('src') !== src) reelVideo.setAttribute('src', src);
+      // Il poster è il fermo immagine scelto dal CMS; se manca, la foto che
+      // si sta già guardando: in entrambi i casi niente stacco visivo.
+      const posterCustom = corrente ? corrente.getAttribute('data-hero-poster') : '';
+      if (posterCustom) {
+        reelVideo.setAttribute('poster', posterCustom);
+      } else if (corrente instanceof HTMLImageElement && corrente.currentSrc) {
+        reelVideo.setAttribute('poster', corrente.currentSrc);
+      }
+      const nomeCentro = corrente ? corrente.getAttribute('data-hero-slide') : '';
+      if (nomeCentro) reel.setAttribute('aria-label', `Video drone — ${nomeCentro}`);
       reel.showModal();
       const avvio = reelVideo.play();
       if (avvio && typeof avvio.catch === 'function') avvio.catch(() => {});

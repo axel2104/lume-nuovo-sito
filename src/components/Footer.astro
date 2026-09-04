@@ -1,7 +1,15 @@
 ---
+import { getCollection } from 'astro:content';
 import { consensoGestito } from '../config/site';
 
 const anno = new Date().getFullYear();
+
+// L'ordine dei pin in mappa (1-4) segue il campo `ordine` dei contenuti:
+// la legenda sotto l'immagine usa lo stesso numero, quindi NON riordinare
+// qui in modo diverso dallo script scripts/genera_mappa_centri.py.
+const centri = (await getCollection('centri')).sort(
+  (a, b) => a.data.ordine - b.data.ordine
+);
 
 /**
  * Il numero è uno per tutti i centri: chi risponde smista.
@@ -17,9 +25,63 @@ const social = [
 
 <footer class="site">
   <div class="wrap">
+    {/*
+      Mappa statica generata da scripts/genera_mappa_centri.py a partire dal
+      campo `coordinate` dei centri: se cambia un indirizzo o apre un centro,
+      va rilanciato lo script, l'immagine non si aggiorna da sola. È statica
+      di proposito (ARCHITETTURA.md: niente isole JS per la mappa): le
+      indicazioni stradali partono dal link, che apre Google Maps solo a chi
+      lo sceglie — niente cookie di terze parti nel footer di ogni pagina.
+    */}
+    <span class="label">Le sedi</span>
+    <div class="foot-mappa">
+      <div class="foot-mappa-img">
+        <picture>
+          <source srcset="/media/mappa-centri.webp" type="image/webp" />
+          <img
+            src="/media/mappa-centri.png"
+            width="1700"
+            height="1100"
+            alt="Mappa della zona di Macerata con la posizione dei quattro centri Lume"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
+        <span class="foot-mappa-cred">© OpenStreetMap contributors</span>
+      </div>
+      <ol class="foot-mappa-elenco">
+        {
+          centri.map((c, i) => (
+            <li>
+              <span class:list={['foot-mappa-num', { aperto: c.data.stato === 'aperto' }]}>
+                {i + 1}
+              </span>
+              <span class="foot-mappa-txt">
+                <b>{c.data.nome}</b>
+                <small>{c.data.indirizzo ?? `${c.data.citta} — indirizzo in arrivo`}</small>
+              </span>
+              {c.data.indirizzo ? (
+                <a
+                  class="foot-mappa-link"
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(c.data.indirizzo)}`}
+                  target="_blank"
+                  rel="noopener"
+                >
+                  Indicazioni
+                </a>
+              ) : (
+                <a class="foot-mappa-link" href={`/centri/${c.id}`}>
+                  Prevendita
+                </a>
+              )}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
     <div class="foot">
       <div class="brand">
-        <div class="logo">LUM<span style="color:var(--red)">e</span>.</div>
+        <div class="logo"><img src="/logo-lume.png" alt="" width="34" height="34" />LUM<span style="color:var(--red)">e</span>.</div>
         <p class="tag">Lume Fitness Club — Benessere a 360°. Quattro centri nelle Marche.</p>
       </div>
       <div>

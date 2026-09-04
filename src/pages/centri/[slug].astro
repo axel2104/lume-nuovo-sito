@@ -33,6 +33,47 @@ const tutte = await getCollection('discipline');
 const disc = tutte
   .filter((d) => d.data.centri.includes(entry.id))
   .sort((a, b) => a.data.ordine - b.data.ordine);
+
+/**
+ * I numeri in testa rispondono alla prima domanda di chi valuta una palestra:
+ * "quanto è grande, quanto c'è da fare". Sono tutti calcolati dai contenuti,
+ * così restano veri da soli quando una sala o un corso cambia nel CMS.
+ */
+const planning = c.planning || [];
+const mqTotali = c.sale.reduce((t, s) => t + (s.mq || 0), 0);
+const GIORNI = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
+const perGiorno = GIORNI.map((_, i) => planning.filter((p) => String(p.giorno) === String(i + 1)).length);
+const maxGiorno = Math.max(1, ...perGiorno);
+
+/**
+ * Repertorio per le sale senza foto vera (campo `foto` nel contenuto, si
+ * carica dal CMS). Scelta per parola chiave sul nome: la prima chiave che
+ * compare nel nome vince. Man mano che arrivano le foto vere questa mappa
+ * serve sempre meno.
+ */
+const FOTO_SALE: Array<[string, string]> = [
+  ['crossfit', '/media/crossfit.jpg'],
+  ['reformer', '/media/reformer.jpg'],
+  ['boxing', '/media/boxing.jpg'],
+  ['intensityou', '/media/boxing.jpg'],
+  ['spinning', '/media/cardio.jpg'],
+  ['walking', '/media/cardio.jpg'],
+  ['les mills', '/media/weights.jpg'],
+  ['pesi', '/media/gym1.jpg'],
+];
+const fotoSala = (nome: string) => {
+  const n = nome.toLowerCase();
+  for (const [k, f] of FOTO_SALE) if (n.includes(k)) return f;
+  return '/media/gym2.jpg';
+};
+
+/**
+ * Le FAQ del club, non del piano: chi è su una pagina centro vuole sapere
+ * come si entra, come si prenota e cosa si può fare — non quanto costa.
+ */
+const faq = (await getCollection('helpdesk'))
+  .filter((v) => v.data.pubblicato && ['accesso', 'prenotazioni', 'regolamento'].includes(v.data.categoria))
+  .sort((a, b) => a.data.ordine - b.data.ordine);
 ---
 
 <Layout title={`${c.nome} — LUMe Fitness Club`}>
@@ -100,9 +141,147 @@ const disc = tutte
         </div>
       </div>
 
+      {aperto && (mqTotali > 0 || planning.length > 0) && (
+        <div class="stats centro-stats">
+          {mqTotali > 0 && (
+            <div class="stat">
+              <b>{mqTotali.toLocaleString('it-IT')} <em>m²</em></b>
+              <span>di spazio</span>
+            </div>
+          )}
+          {c.sale.length > 0 && (
+            <div class="stat">
+              <b>{c.sale.length}</b>
+              <span>sale e ambienti</span>
+            </div>
+          )}
+          {disc.length > 0 && (
+            <div class="stat">
+              <b>{disc.length}</b>
+              <span>discipline</span>
+            </div>
+          )}
+          {planning.length > 0 && (
+            <div class="stat">
+              <b>{planning.length}</b>
+              <span>lezioni a settimana</span>
+            </div>
+          )}
+        </div>
+      )}
+
       <div style="max-width:760px;margin-top:28px;color:#cbcbcb;font-size:17px">
         <Content />
       </div>
+
+      {c.sale.length > 0 && (
+        <div style="margin-top:40px">
+          <span class="label">Le sale</span>
+          <div class="sale-vis">
+            {c.sale.map((s) => (
+              <article class="sala-vis">
+                <div class="sala-vis-foto">
+                  {s.foto ? (
+                    <Picture
+                      src={s.foto}
+                      alt={s.nome}
+                      widths={[400, 800]}
+                      sizes="(max-width: 700px) 100vw, 400px"
+                      formats={['avif', 'webp']}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <img src={fotoSala(s.nome)} alt={s.nome} loading="lazy" />
+                  )}
+                  {s.mq != null && <span class="sala-vis-mq">{s.mq} m²</span>}
+                </div>
+                <div class="sala-vis-body">
+                  <h3>{s.nome}</h3>
+                  {s.dotazione && <p>{s.dotazione}</p>}
+                </div>
+              </article>
+            ))}
+          </div>
+          {c.sale.some((s) => !s.foto) && (
+            <p class="pg-note" style="margin-top:14px">
+              Le foto vere delle sale stanno arrivando: quelle mancanti sono
+              immagini di repertorio.
+            </p>
+          )}
+        </div>
+      )}
+
+      {disc.length > 0 && (
+        <div style="margin-top:44px">
+          <span class="label">Cosa puoi fare qui</span>
+          <div class="disc-vis">
+            {disc.map((d) => (
+              <a class="disc-vis-card" href={`/discipline/${d.id}`}>
+                {d.data.immagine && (
+                  <Picture
+                    src={d.data.immagine}
+                    alt={d.data.nome}
+                    widths={[400, 800]}
+                    sizes="(max-width: 700px) 50vw, 320px"
+                    formats={['avif', 'webp']}
+                  />
+                )}
+                <div class="disc-vis-body">
+                  <h3>{d.data.nome}</h3>
+                  {d.data.breve && <p>{d.data.breve}</p>}
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {aperto && planning.length > 0 && (
+        <div class="planning">
+          <div class="d">Una settimana qui</div>
+          <p>
+            {planning.length} lezioni in programma ogni settimana. Ecco come si
+            distribuiscono — l'orario completo, con sale e istruttori, è nella
+            pagina del planning.
+          </p>
+          <div class="settimana" aria-label="Lezioni per giorno della settimana">
+            {GIORNI.map((g, i) => (
+              <div class="giorno">
+                <div class="giorno-bar" style={`height:${Math.round((perGiorno[i] / maxGiorno) * 100)}%`} />
+                <b>{perGiorno[i]}</b>
+                <span>{g}</span>
+              </div>
+            ))}
+          </div>
+          <a href={`/planning/${entry.id}`} class="btn btn-out" style="margin-top:16px">
+            Vedi l’orario dei corsi
+          </a>
+        </div>
+      )}
+
+      {!aperto && (
+        <div class="planning">
+          <div class="d">Planning {c.nome.replace('Lume ', '')}</div>
+          <p>L’orario dei corsi sarà pubblicato all’apertura del centro.</p>
+        </div>
+      )}
+
+      {aperto && faq.length > 0 && (
+        <div style="margin-top:44px">
+          <span class="label">Domande frequenti</span>
+          <div class="faq">
+            {faq.map((v) => (
+              <details>
+                <summary>{v.data.titolo}</summary>
+                <div class="faq-in">
+                  <p>{v.data.sintesi}</p>
+                  <a href={`/lume-life/help/${v.id}`}>Leggi la risposta completa</a>
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div class="info-grid">
         {c.indirizzo && (
@@ -128,51 +307,6 @@ const disc = tutte
           </div>
         )}
       </div>
-
-      {/* Le sale con metratura e dotazione: è il primo dato che guarda chi sta
-          valutando una palestra, e sul vecchio sito c'era per ogni sala. */}
-      {c.sale.length > 0 && (
-        <div style="margin-top:32px">
-          <span class="label">Le sale</span>
-          <div class="sale">
-            {c.sale.map((s) => (
-              <article class="sala">
-                <h3>
-                  {s.nome}
-                  {s.mq != null && <span class="sala-mq">{s.mq} m²</span>}
-                </h3>
-                {s.dotazione && <p>{s.dotazione}</p>}
-              </article>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {disc.length > 0 && (
-        <div style="margin-top:32px">
-          <span class="label">Discipline qui</span>
-          <div class="chips" style="margin-top:14px">
-            {disc.map((d) => <a class="chip" href={`/discipline/${d.id}`}>{d.data.nome}</a>)}
-          </div>
-        </div>
-      )}
-
-      {/* Il planning ha una pagina sua, indicizzabile e condivisibile: qui basta
-          la porta d'ingresso. */}
-      {aperto ? (
-        <div class="planning">
-          <div class="d">Planning {c.nome.replace('Lume ', '')}</div>
-          <p>Orario settimanale dei corsi: sala, acqua, Reformer e discipline su prenotazione.</p>
-          <a href={`/planning/${entry.id}`} class="btn btn-out" style="margin-top:16px">
-            Vedi l’orario dei corsi
-          </a>
-        </div>
-      ) : (
-        <div class="planning">
-          <div class="d">Planning {c.nome.replace('Lume ', '')}</div>
-          <p>L’orario dei corsi sarà pubblicato all’apertura del centro.</p>
-        </div>
-      )}
 
       {/*
         Le CTA della sede portano il centro già selezionato: chi è su questa
@@ -246,6 +380,180 @@ const disc = tutte
   </main>
   <Footer />
 </Layout>
+
+<style>
+  .centro-stats {
+    margin-top: 24px;
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media (max-width: 700px) {
+    .centro-stats {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .sale-vis {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .sala-vis {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .sala-vis-foto {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+  .sala-vis-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .sala-vis-mq {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(10, 10, 10, 0.85);
+    border: 1px solid var(--line);
+    color: var(--red-txt);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 5px 10px;
+    border-radius: 999px;
+  }
+  .sala-vis-body {
+    padding: 16px 18px 18px;
+  }
+  .sala-vis-body h3 {
+    font-family: 'Anton', sans-serif;
+    text-transform: uppercase;
+    font-size: 19px;
+    letter-spacing: 0.02em;
+    margin: 0 0 6px;
+  }
+  .sala-vis-body p {
+    color: var(--mut);
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .disc-vis {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .disc-vis-card {
+    display: block;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow: hidden;
+    color: inherit;
+    transition: border-color 0.2s;
+  }
+  .disc-vis-card:hover {
+    border-color: var(--red-txt);
+  }
+  .disc-vis-card img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    display: block;
+  }
+  .disc-vis-body {
+    padding: 14px 16px 16px;
+  }
+  .disc-vis-body h3 {
+    font-family: 'Anton', sans-serif;
+    text-transform: uppercase;
+    font-size: 17px;
+    margin: 0 0 4px;
+  }
+  .disc-vis-body p {
+    color: var(--mut);
+    font-size: 13px;
+    margin: 0;
+  }
+
+  .settimana {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-top: 18px;
+    align-items: end;
+  }
+  .giorno {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    height: 120px;
+    justify-content: flex-end;
+  }
+  .giorno-bar {
+    width: 100%;
+    min-height: 3px;
+    background: var(--red);
+    border-radius: 6px 6px 0 0;
+  }
+  .giorno b {
+    font-family: 'Anton', sans-serif;
+    font-size: 16px;
+  }
+  .giorno span {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mut);
+  }
+
+  .faq {
+    margin-top: 16px;
+    display: grid;
+    gap: 8px;
+  }
+  .faq details {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 0;
+  }
+  .faq summary {
+    cursor: pointer;
+    padding: 16px 18px;
+    font-weight: 600;
+    min-height: 44px;
+    list-style: none;
+  }
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq summary::after {
+    content: '+';
+    float: right;
+    color: var(--red-txt);
+    font-family: 'Anton', sans-serif;
+  }
+  .faq details[open] summary::after {
+    content: '–';
+  }
+  .faq-in {
+    padding: 0 18px 16px;
+    color: var(--mut);
+    font-size: 15px;
+  }
+  .faq-in a {
+    color: var(--red-txt);
+  }
+</style>
 
 <script>
   import { initVideoCentro } from '../../lib/videoCentro.client.js';

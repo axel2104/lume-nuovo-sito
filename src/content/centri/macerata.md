@@ -4,6 +4,9 @@ citta: Macerata
 stato: aperto
 ordine: 1
 indirizzo: Piazzale Mario Fattorini 1, 62100 Macerata
+coordinate:
+  lat: 43.2984439
+  lng: 13.4258303
 telefono: "0733 232905"
 email: macerata@lumefitness.it
 orari:
@@ -21,6 +24,7 @@ sale:
   - nome: Sala pesi
     mq: 500
     dotazione: "Attrezzature Technogym di ultima generazione, aree cardio, isotonica, pesi liberi, plate loaded, functional e stacchi. Manubri fino a 50 kg."
+    foto: ../../assets/centri/macerata-sala-pesi.jpg
   - nome: Sala fitness Les Mills
     mq: 150
     dotazione: "Bilancieri con carichi easy-on e step Reebok."
@@ -41,6 +45,7 @@ sale:
     dotazione: "Vogatori, air bike, bikeerg, skierg, bilancieri e bumper."
 immagine: ../../assets/centri/macerata.jpg
 video: https://pub-90d4a80741cd4aadb6d995599fefc986.r2.dev/site/macerata-drone.mp4
+videoPoster: ../../assets/centri/macerata-sala-pesi.jpg
 perfectgymUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Registration"
 perfectgymCorsiUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Classes/1/List"
 calcom:

@@ -75,6 +75,15 @@ torna, le schede mostrano quello che c'è.
 
 ## Cose fatte che è facile rompere
 
+**La mappa del footer è un'immagine statica, non si aggiorna da sola.** La
+genera `scripts/genera_mappa_centri.py` (Python + Pillow) leggendo il campo
+`coordinate` dei centri: se cambia un indirizzo, una coordinata o apre un
+centro nuovo, va rilanciato a mano. I pin numerati seguono il campo `ordine`
+dei contenuti e la legenda usa lo stesso ordine — chi cambia uno dei due deve
+cambiare entrambi. L'attribuzione «© OpenStreetMap contributors» è obbligatoria
+per licenza, non decorazione. È statica di proposito: niente tile di terze
+parti né consensi extra su ogni pagina.
+
 **Il video dei centri compare solo all'evento `playing`.** Non appena gli si
 dà un `src`. La differenza non è teorica: un browser senza codec H.264 accetta
 l'`src`, non riproduce niente, e mostrarlo comunque significa un rettangolo

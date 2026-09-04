@@ -46,6 +46,8 @@ const centri = defineCollection({
           /** Metratura. Nullish: meglio nessun numero che uno inventato. */
           mq: z.number().nullish(),
           dotazione: z.string().nullish(),
+          /** Foto vera della sala. Finché manca, la pagina usa un repertorio. */
+          foto: image().nullish(),
         }),
       )
       .default([]),
@@ -61,6 +63,8 @@ const centri = defineCollection({
      * arrivi e per chi ha chiesto meno movimento.
      */
     video: z.string().nullish(),
+    /** Fermo immagine del video, mostrato finché non parte. Nullish = foto del centro. */
+    videoPoster: image().nullish(),
     perfectgymUrl: z.string().default('#'),
     /**
      * Event type Cal.com della sede, senza dominio: `lume-macerata/visita`.

@@ -68,7 +68,8 @@ a{color:inherit;text-decoration:none}
 /* NAV */
 nav.site{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.9);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;height:62px}
-.logo{font-family:'Anton',sans-serif;font-size:24px;text-transform:uppercase;letter-spacing:.02em}
+.logo{font-family:'Anton',sans-serif;font-size:24px;text-transform:uppercase;letter-spacing:.02em;display:inline-flex;align-items:center;gap:9px}
+.logo img{display:block}
 .logo span{color:var(--red-txt)}
 /* Il logo della barra e' un link verso la home, e come bersaglio era alto
    38px. Portarlo a 44 non cambia niente a vedersi — nella barra lo spazio
@@ -183,6 +184,24 @@ footer.site{background:#060606;border-top:1px solid var(--line);padding:54px 0 2
 .foot li{padding:6px 0;color:#cfcfcf;font-size:14px}
 .foot .logo{font-size:28px;margin-bottom:12px}
 .foot .tag{color:var(--mut);font-size:14px;max-width:300px}
+
+/* Mappa sedi nel footer: immagine statica (script scripts/genera_mappa_centri.py)
+   + legenda numerata allineata ai pin. */
+.foot-mappa{display:grid;grid-template-columns:1.4fr 1fr;gap:22px;align-items:center;margin:14px 0 38px}
+.foot-mappa-img{position:relative}
+.foot-mappa-img img{width:100%;height:auto;display:block;border-radius:16px;border:1px solid var(--line)}
+.foot-mappa-cred{position:absolute;right:10px;bottom:10px;font-size:10px;color:#b9b9b9;background:rgba(10,10,10,.8);padding:3px 9px;border-radius:999px}
+.foot-mappa-elenco{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.foot-mappa-elenco li{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.foot-mappa-num{flex:none;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Anton',sans-serif;font-size:13px;color:#fff;background:#101010;border:2px solid var(--red)}
+.foot-mappa-num.aperto{background:var(--red);border-color:#fff}
+.foot-mappa-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.foot-mappa-txt b{font-size:14px}
+.foot-mappa-txt small{color:var(--mut);font-size:12px}
+/* I link della legenda sono bersagli tattili: 44px come il resto del sito */
+.foot-mappa-link{flex:none;display:inline-flex;align-items:center;min-height:44px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--red-txt);text-decoration:none}
+.foot-mappa-link:hover{text-decoration:underline}
+@media (max-width:900px){.foot-mappa{grid-template-columns:1fr}}
 /* I due social su una riga sola, con lo spazio fra le aree cliccabili: senza
    il gap i due link si toccano e si sbaglia bersaglio col pollice. */
 .foot-social{display:flex;gap:18px;flex-wrap:wrap}
