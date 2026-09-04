@@ -3,10 +3,10 @@ titolo: Consulenza nutrizionale
 ordine: 2
 icona: nutrizione
 breve: Biologi nutrizionisti in sede, su appuntamento.
-centri: [macerata]
-pubblicato: true
+centri:
+  - macerata
+pubblicato: false
 ---
-
 In sede ricevono **biologi nutrizionisti iscritti all'albo**, non improvvisati: la prima
 visita comprende anamnesi, bioimpedenziometria e piano alimentare personalizzato.
 

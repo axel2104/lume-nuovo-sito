@@ -1,12 +1,13 @@
 ---
 titolo: Masterclass Reformer con Giulia Marchetti
 data: 2026-10-04
-ora: "10:00"
+ora: '10:00'
 categoria: masterclass
-descrizione: Due ore di lavoro su respirazione, allineamento e controllo del core, guidate da una delle istruttrici più esperte del circuito.
+descrizione: >-
+  Due ore di lavoro su respirazione, allineamento e controllo del core, guidate
+  da una delle istruttrici più esperte del circuito.
 luogo: Lume Montecassiano
 centro: montecassiano
-immagine: ../../assets/eventi/masterclass-reformer.jpg
 postiLimitati: true
-pubblicato: true
+pubblicato: false
 ---

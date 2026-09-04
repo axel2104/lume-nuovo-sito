@@ -1,11 +1,6 @@
 ---
 nome: Sala Pesi
 per: Solo sala pesi e cardio a Montecassiano, per chi si allena da solo
-attivazione: 50
-preavviso: 10 giorni
-consigliato: false
-ordine: 1
-pubblicato: true
 attivita:
   - Accesso senza limiti orari
   - Sala pesi e cardio
@@ -18,10 +13,10 @@ formule:
     periodo: 12 mesi
     pagamento: Pagamento in soluzione unica
     durataMinima: 12 mesi
-    badge: Best choice
     condizioni:
       - Una sospensione di 30 giorni gratuita
       - Sospensioni aggiuntive 21 € al mese
+    badge: Best choice
   - id: rate
     prezzo: 52
     periodo: mese
@@ -30,8 +25,19 @@ formule:
     condizioni:
       - Una sospensione di 30 giorni gratuita
       - Sospensioni aggiuntive 21 € al mese
+  - id: mensile
+    prezzo: 90
+    periodo: mese
+    pagamento: Addebito su carta di credito
+    durataMinima: 1 mese
+    condizioni: []
+    badge: Disdici quando vuoi
+attivazione: 50
+preavviso: 10 giorni
+consigliato: false
+ordine: 1
+pubblicato: true
 ---
-
 Non ha una formula mensile: esiste solo a dodici mesi. Chi non vuole il
 vincolo annuale prende All Lume Mensile, che costa più del Sala Pesi ma
 comprende anche i corsi fitness.

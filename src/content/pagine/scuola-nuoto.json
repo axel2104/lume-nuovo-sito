@@ -11,8 +11,6 @@
   },
   "stagione": {
     "titolo": "La stagione",
-    "inizio": "",
-    "fine": "",
     "nota": "Si può scegliere fra una frequenza monosettimanale e una bisettimanale. Il programma tecnico è adeguato alla frequenza scelta: chi frequenta due volte a settimana ha di norma una progressione più rapida."
   },
   "fasce": {
@@ -77,13 +75,16 @@
       {
         "nome": "Propaganda",
         "descrizione": "Ha acquisito e perfezionato le quattro nuotate fondamentali e partecipa alle gare provinciali."
+      },
+      {
+        "nome": "Agonismo",
+        "descrizione": "Ha acquisito e perfezionato le quattro nuotate fondamentali e partecipa alle gare regionali\n."
       }
     ]
   },
   "listino": {
     "label": "Quanto costa",
     "titolo": "Le quote della stagione",
-    "testo": "",
     "voci": [],
     "vuoto": "Le quote della nuova stagione sono in aggiornamento. Chiedile in reception o lasciaci un contatto: ti richiamiamo con il listino e gli orari disponibili per l'età di tuo figlio."
   },
