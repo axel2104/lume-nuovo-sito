@@ -129,6 +129,19 @@
   background: linear-gradient(180deg, rgba(10, 10, 10, 0.05) 25%, rgba(10, 10, 10, 0.88) 100%);
   pointer-events: none;
 }
+/* Senza foto il velo non serve a rendere leggibile niente: e' un elemento
+   vuoto, e lo riusiamo per il logo in filigrana invece di aggiungere markup.
+   Il ::before (sfumatura) e il ::after (trama a puntini) sono gia' occupati.
+   Opacita' bassa di proposito: sopra la trama a puntini il logo deve leggersi
+   come materia, non come un timbro su ognuna delle trentacinque tessere. */
+.tessera:not(:has(.t-foto)):not(:has(.t-video)) .t-velo {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: url('/logo-lume.png') no-repeat center / 76px auto;
+  opacity: 0.12;
+  pointer-events: none;
+}
 .tessera:hover:has(.t-foto)::before,
 .tessera:hover:has(.t-video)::before {
   opacity: 0.55;
@@ -475,6 +488,17 @@
 }
 .disc-hero.senza-media {
   min-height: 30vh;
+}
+/* Logo in filigrana finché la disciplina non ha una foto sua, come sulle
+   tessere (.card-d in editoriale.css): un'intestazione con solo la sfumatura
+   sembra un caricamento non finito. Sul ::before perché il ::after è già la
+   sfumatura che tiene leggibile il titolo, e deve stare sopra. */
+.disc-hero.senza-media::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('/logo-lume.png') no-repeat center 40% / 108px auto;
+  opacity: 0.14;
 }
 /* Dentro il pannello l'intestazione fa da presentazione, non da copertina:
    più bassa, e senza stacco dal bordo superiore. */

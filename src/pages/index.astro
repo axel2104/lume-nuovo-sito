@@ -67,12 +67,6 @@ const vetrina = Object.values(
   }, {}),
 ).slice(0, 6);
 
-// Le foto nelle tessere della vetrina sono di repertorio, non scatti Lume.
-// Finché non arrivano quelli veri le tessere mostrano il logo al posto della
-// foto (la sfumatura per categoria e il logo li mette editoriale.css, sulle
-// card senza <img>). Quando le foto ci sono: rimettere a true.
-const fotoAttivita = false;
-
 // I piani non stanno più qui: erano tre oggetti cablati che nessuno fuori dal
 // repo poteva cambiare, e che divergevano da /abbonamenti al primo ritocco.
 const piani = (await getCollection('abbonamenti'))
@@ -311,7 +305,7 @@ function assaggio(p: (typeof piani)[number]) {
       <div class="grid3">
         {vetrina.map((d) => (
           <a class="card-d" href={`/discipline/${d.id}`} data-cat={d.data.categoria}>
-            {fotoAttivita && d.data.immagine && (
+            {d.data.immagine && (
               <Picture src={d.data.immagine} alt={d.data.nome} widths={[400, 800]} sizes="(min-width:1024px) 25vw, 100vw" formats={['avif', 'webp']}
             />
             )}

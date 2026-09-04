@@ -3,7 +3,6 @@ nome: "Reformer Pilates"
 categoria: "Reformer & postura"
 breve: "Il pilates sulle macchine Reformer: controllo del core, forza e postura."
 centri: [macerata, montecassiano]
-immagine: ../../assets/discipline/reformer.jpg
 rilievo: grande
 ordine: 24
 varianti:

@@ -3,7 +3,6 @@ nome: "CrossFit"
 categoria: "Funzionale & atletico"
 breve: "Movimenti funzionali costantemente variati, ad alta intensità, in classe guidata."
 centri: [macerata]
-immagine: ../../assets/discipline/crossfit.jpg
 rilievo: panoramico
 ordine: 2
 daRivedere: true

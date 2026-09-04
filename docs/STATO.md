@@ -73,18 +73,31 @@ non aprono.
 Le 33 discipline sono state mandate al cliente come xlsx da compilare. Finché
 torna, le schede mostrano quello che c'è.
 
-### 8. Foto delle attività
+### 8. Foto delle attività — il cliente le sta preparando
 
-Le otto foto in `src/assets/discipline/` sono di repertorio, non scatti Lume.
-In attesa di quelli veri la vetrina della homepage mostra il logo in filigrana
-al posto della foto: `fotoAttivita = false` in `src/pages/index.astro`, da
-rimettere a `true` quando le foto vere sono nei contenuti. La filigrana la
-disegna `.card-d:not(:has(img))::before` in `editoriale.css`, quindi vale per
-ogni tessera senza foto, non solo in home.
+Le otto foto che c'erano in `src/assets/discipline/` erano di repertorio, non
+scatti Lume: mostrarle significava vendere la palestra di qualcun altro. Il
+campo `immagine` è stato **svuotato su tutte e 35 le discipline**, e i file
+sono rimasti su disco (orfani: nessun contenuto li cita, quindi Astro non li
+manda al browser) in attesa di essere sostituiti.
 
-Nota: la vetrina mostra sei tessere, una per categoria in ordine di `ordine`,
-e le categorie sono otto — **Acqua e Danza restano fuori**. Se la piscina deve
-comparire in homepage va abbassato l'`ordine` di una disciplina Acqua.
+Finché il campo è vuoto compare il logo in filigrana sulla sfumatura di
+categoria, in tutti e tre i posti dove una disciplina si mostra:
+
+| Dove | Regola |
+|---|---|
+| tessere della home | `.card-d:not(:has(img))::before` — `editoriale.css` |
+| bento di `/discipline` | `.tessera:not(:has(.t-foto)):not(:has(.t-video)) .t-velo` — `bento.css` |
+| intestazione della scheda | `.disc-hero.senza-media::before` — `bento.css` |
+
+**Niente da riattivare quando arrivano le foto**: basta caricarle dal CMS sul
+campo `immagine` della disciplina e la filigrana sparisce da sola, una
+disciplina per volta. Non c'è nessun interruttore globale da ricordarsi.
+
+Nota sulla vetrina in home: sei tessere, una per categoria in ordine di
+`ordine`, e le categorie sono otto — **Acqua e Danza restano fuori**. Se la
+piscina deve comparire in homepage va abbassato l'`ordine` di una disciplina
+Acqua.
 
 ## Cose fatte che è facile rompere
 
