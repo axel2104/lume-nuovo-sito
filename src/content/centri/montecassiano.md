@@ -33,7 +33,7 @@ sale:
   - nome: Piscina
     dotazione: "Scuola nuoto bambini e adulti, corsi di acqua fitness, nuoto libero."
 immagine: ../../assets/centri/montecassiano.jpg
-video: /media/montecassiano-drone.mp4
+video: https://pub-90d4a80741cd4aadb6d995599fefc986.r2.dev/site/montecassiano-drone.mp4
 perfectgymUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Registration"
 perfectgymCorsiUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Classes/2/List"
 calcom:

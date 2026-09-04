@@ -40,7 +40,7 @@ sale:
     mq: 450
     dotazione: "Vogatori, air bike, bikeerg, skierg, bilancieri e bumper."
 immagine: ../../assets/centri/macerata.jpg
-video: /media/macerata-drone.mp4
+video: https://pub-90d4a80741cd4aadb6d995599fefc986.r2.dev/site/macerata-drone.mp4
 perfectgymUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Registration"
 perfectgymCorsiUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Classes/1/List"
 calcom:
