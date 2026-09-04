@@ -9,6 +9,9 @@
  * Quindi due sole convenzioni, entrambe innocue:
  *  - **andare a capo** con un vero ritorno a capo → `righe()`
  *  - **inserire un numero calcolato** con `{discipline}` → `conValori()`
+ *
+ * E una terza cosa, che non è una convenzione ma una difesa: `campo()`, per
+ * leggere quello che Keystatic può non aver scritto.
  */
 
 /**
@@ -42,4 +45,29 @@ export function conValori(testo?: string | null, valori: Record<string, string |
   return String(testo ?? '').replace(/\{(\w+)\}/g, (intero, nome) =>
     nome in valori ? String(valori[nome]) : intero,
   );
+}
+
+/**
+ * Legge un campo che nel JSON può non esserci.
+ *
+ * **Keystatic non salva i campi vuoti.** Se in editor un campo opzionale resta
+ * vuoto, dal JSON scompare del tutto. Le pagine importano quei JSON
+ * direttamente (`import t from '../content/pagine/scuola-nuoto.json'`), quindi
+ * il tipo non viene da uno schema ma dedotto da TypeScript dal file: un campo
+ * scomparso non diventa `undefined`, diventa `Property 'inizio' does not
+ * exist` — e `astro check` ferma la build di Netlify.
+ *
+ * È accaduto il 4 settembre 2026: un salvataggio della pagina scuola nuoto ha
+ * fatto sparire `stagione.inizio`, `stagione.fine` e `listino.testo`, che
+ * erano vuoti di proposito, e il deploy si è fermato. La pagina sapeva già
+ * gestire il vuoto; quello che non sapeva gestire era l'assenza.
+ *
+ * Va usata per ogni campo che l'editor può lasciare vuoto. Per i campi sempre
+ * presenti l'accesso diretto va benissimo: è più leggibile, e se sparisce un
+ * campo obbligatorio è giusto che la build si fermi.
+ */
+export function campo<T = string>(oggetto: unknown, chiave: string): T | undefined {
+  if (!oggetto || typeof oggetto !== 'object') return undefined;
+  const valore = (oggetto as Record<string, unknown>)[chiave];
+  return (valore === '' || valore == null ? undefined : (valore as T));
 }

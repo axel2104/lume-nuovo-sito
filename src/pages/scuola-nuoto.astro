@@ -19,11 +19,21 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BandaCta from '../components/BandaCta.astro';
-import { righe } from '../lib/copy';
+import { campo, righe } from '../lib/copy';
 import t from '../content/pagine/scuola-nuoto.json';
 
-/** La stagione è una riga sola solo se entrambe le date ci sono. */
-const stagione = [t.stagione.inizio, t.stagione.fine].filter(Boolean).join(' — ');
+/**
+ * La stagione è una riga sola solo se entrambe le date ci sono.
+ *
+ * Le date e il testo del listino si leggono con `campo()` e non con l'accesso
+ * diretto: sono i campi che restano vuoti finché il cliente non manda i dati
+ * della stagione, e Keystatic i campi vuoti non li scrive — vedi la nota su
+ * `campo()` in `src/lib/copy.ts`.
+ */
+const stagione = [campo(t.stagione, 'inizio'), campo(t.stagione, 'fine')]
+  .filter(Boolean)
+  .join(' — ');
+const listinoTesto = campo(t.listino, 'testo');
 
 /**
  * Il listino parte vuoto, e da un array vuoto TypeScript deduce `never[]`:
@@ -136,7 +146,7 @@ const nonRecuperabili = t.recuperi.nonRecuperabili as string[];
         <div class="sec-head">
           <span class="label">{t.listino.label}</span>
           <h2 class="d" id="tit-quote">{t.listino.titolo}</h2>
-          {t.listino.testo && <p>{t.listino.testo}</p>}
+          {listinoTesto && <p>{listinoTesto}</p>}
         </div>
         {
           quote.length > 0 ? (
