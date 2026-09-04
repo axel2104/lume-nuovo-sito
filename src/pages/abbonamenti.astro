@@ -35,6 +35,7 @@ import {
   include,
   sintesiVoci,
   euro,
+  PASS,
 } from '../data/abbonamenti';
 import { siteConfig } from '../config/site';
 
@@ -53,12 +54,6 @@ const faq = (await getCollection('helpdesk'))
   .filter((v) => v.data.pubblicato && ['abbonamenti', 'pagamenti'].includes(v.data.categoria))
   .sort((a, b) => a.data.ordine - b.data.ordine);
 
-/**
- * Prezzo pieno del Guest Pass. Chi arriva da un invito paga meno, ma quel
- * prezzo vive nel link di invito: esporlo qui vorrebbe dire dire a tutti che
- * esiste una porta più economica. L'importo vero lo decide n8n, non il sito.
- */
-const GUEST_PASS = 15;
 
 /**
  * Quanto si risparmia a pagare l'anno in una volta invece che mese per mese.
@@ -364,7 +359,7 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
             <span class="label">Prima di decidere</span>
             <h2 class="d">Sette giorni di Guest Pass</h2>
             <p>
-              Accesso completo al centro per una settimana a {euro(GUEST_PASS)} €, con un istruttore
+              Accesso completo al centro per una settimana a {euro(PASS.pieno)} €, con un istruttore
               che ti accompagna al primo ingresso. Solo per chi non ha mai avuto un abbonamento
               Lume.
             </p>

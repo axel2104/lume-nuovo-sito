@@ -444,7 +444,34 @@ curl -sS -i -X OPTIONS "$LEAD" \
 Un `curl` che passa e un form che fallisce = quasi sempre CORS. `curl` non
 applica la politica di origine, il browser sì.
 
-## 9. Checklist
+## 9. Referral — le due cose che deve fare
+
+Il sito non genera codici e non applica sconti: non ha un server, e qualunque
+cosa scrivesse sarebbe modificabile dall'utente nella barra degli indirizzi.
+
+**1. Il socio chiede il link** — arriva un lead con `flusso: "referral"` e
+`medium: "FormReferral"`, dall'email del socio (il check l'ha già riconosciuta
+come `iscritto` o `esiste`; il campo `verifica` lo dice). Il workflow genera un
+codice legato a quella persona e le manda per email `https://<sito>/prova?ref=<codice>`.
+Il codice va salvato da qualche parte che si possa interrogare al punto 2 — chi
+l'ha chiesto e quando basta.
+
+**2. L'amico usa il link** — arriva un normale lead `flusso: "prova"`, con
+`utm.ref` valorizzato. Prima di applicare qualsiasi prezzo, **verificare che quel
+codice esista** e a chi appartiene: se non esiste è un pass a prezzo pieno, non un
+errore da segnalare. Se esiste, il pass va a 5 € invece di 15 € e il lead va
+attribuito anche al socio che ha invitato.
+
+Il resto delle condizioni del pass (mai stato iscritto, un solo pass per persona)
+lo garantisce già il check del flusso `prova`: `verifica` diverso da `nuovo`
+significa che quella persona è già in archivio.
+
+⚠️ `Tipo Richiesta` per il flusso `referral` è `ASSISTENZA`, perché il campo
+Airtable non ha l'opzione `REFERRAL`. Quando la si crea, va cambiata una riga in
+`src/config/forms.ts` — non aggiungerla dal nodo Airtable con la creazione
+automatica delle opzioni, che deve restare disattivata.
+
+## 10. Checklist
 
 - [ ] Tre webhook creati e **attivati** (non in bozza)
 - [ ] `Access-Control-Allow-Origin` sul dominio del sito, su tutti e tre, e `OPTIONS` gestito
@@ -458,3 +485,4 @@ applica la politica di origine, il browser sì.
 - [ ] Consenso `marketing: false` rispettato dalle automazioni a valle
 - [ ] Le tre variabili su Netlify e un deploy nuovo
 - [ ] Prova end-to-end dal sito, non solo con curl
+- [ ] Referral: il link col codice arriva al socio, e un `utm.ref` inventato non sconta niente

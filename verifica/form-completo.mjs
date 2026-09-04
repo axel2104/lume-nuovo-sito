@@ -7,6 +7,12 @@
  * cinque diramazioni, prova, iscrizione, newsletter, e i casi in cui il form
  * NON deve inviare niente.
  *
+ * ponytail: il flusso `referral` (pagina /invita) non è ancora qui dentro —
+ * usa lo stesso motore già coperto dagli altri, e i suoi invarianti statici
+ * stanno in `test/referral.test.mjs`. Da aggiungere quando si tocca il
+ * referral per la prima volta: il caso che conta è il check ribaltato,
+ * `iscritto` che prosegue e `nuovo` che finisce nel vicolo cieco.
+ *
  * ─── Perché i webhook sono finti, e su un host inesistente ────────────────
  * Le tre URL qui sotto puntano a `n8n.esempio.invalid`: il TLD `.invalid` non
  * esiste per definizione (RFC 2606), quindi anche se un'intercettazione

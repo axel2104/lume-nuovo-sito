@@ -9,17 +9,29 @@ già fatta: qui c'è esattamente cosa arriva, quando, e dove va messo.
 
 ---
 
-## 1. I quattro flussi
+## 1. I cinque flussi
 
 | Flusso | Sostituisce | `Tipo Richiesta` | Prenotazione |
 |---|---|---|---|
 | `info` | Typeform `infoMacerata` + `infoMonte` | `INFO ADULTI` / `INFO JUNIOR` / `TOUR` | sì (visita o richiamata) |
 | `prova` | `n8n.../form/guest-pass` + Typeform `/provagratis` | `RICHIESTA PROVA` | sì |
 | `iscrizione` | `n8n.../form/iscrizioni` | `ABBONAMENTI` | sì (opzionale) |
+| `referral` | niente: sul vecchio sito il referral non esisteva online | `ASSISTENZA` (finché non c'è `REFERRAL`) | no |
 | `newsletter` | i due form del blog (che non salvavano nulla) | `NEWSLETTER` | no |
 
 In tutti i flussi, se il check dice che l'utente è già iscritto il tipo diventa
 `ASSISTENZA`: non è un lead commerciale, è la segreteria che deve rispondere.
+
+`referral` è l'unico flusso col check **ribaltato**: lo usa un socio, quindi
+`iscritto` è la strada buona e `nuovo` il vicolo cieco. E non chiede i dati
+dell'amico — sarebbero dati di un terzo, raccolti da qualcun altro, per mandargli
+un messaggio commerciale. Il socio riceve un link, lo gira lui, e l'amico
+compila il form `prova` da sé arrivando su `/prova?ref=<codice>`.
+
+Il codice di invito viaggia in `utm.ref` del payload (`ref` è fra i parametri
+catturati da `tracking.js`). **Non è una prova di niente**: sta nella query
+string e chiunque può scriverselo. Il prezzo ridotto lo decide n8n guardando se
+quel codice esiste davvero, esattamente come per `utm_source`.
 
 ---
 
@@ -57,7 +69,7 @@ senza interpretarlo:
 |---|---|---|
 | `nuovo` | email mai vista | chiede l'anagrafica e prosegue |
 | `esiste` | contatto già in anagrafica, non iscritto | salta l'anagrafica (i dati ci sono già) |
-| `iscritto` | ha un abbonamento attivo | `info`/`iscrizione` → assistenza; `prova` → offerta negata |
+| `iscritto` | ha un abbonamento attivo | `info`/`iscrizione` → assistenza; `prova` → offerta negata; `referral` → **prosegue**, è il caso buono |
 
 ### Campi opzionali della risposta
 

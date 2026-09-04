@@ -1,0 +1,209 @@
+---
+/**
+ * Landing dell'invito: un socio chiede il link da girare a un amico.
+ *
+ * Il pezzo che manca al pass prova. `/prova` sa accogliere chi arriva invitato
+ * (`?ref=…`), ma finora nessuna pagina permetteva di *diventare* invitante:
+ * l'unico modo era chiederlo in reception, quindi il referral esisteva solo per
+ * chi ci passava davanti.
+ *
+ * Sul vecchio sito non c'era: il censimento dei form ha trovato quattro
+ * Typeform — i due informativi per sede, il Guest Pass e la scuola nuoto — e
+ * nessuno di questi raccoglieva inviti.
+ *
+ * Il prezzo ridotto NON è scritto qui: la pagina è pubblica, e il form lo mostra
+ * solo dopo che il check ha riconosciuto un socio. Vedi `PASS` in
+ * `src/data/abbonamenti.ts`.
+ */
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import FormInline from '../components/forms/FormInline.astro';
+
+const passi = [
+  {
+    titolo: 'Ti riconosciamo',
+    testo: 'Metti l’email con cui sei iscritto e il centro dove ti alleni. Nient’altro.',
+  },
+  {
+    titolo: 'Ti mandiamo il link',
+    testo: 'Arriva sulla stessa email. È personale: chi lo usa risulta arrivato da te.',
+  },
+  {
+    titolo: 'Lo giri a chi vuoi',
+    testo: 'WhatsApp, di persona, come preferisci. Il pass lo richiede lui, non tu.',
+  },
+];
+---
+
+<Layout
+  title="Invita un amico — Lume Fitness Club"
+  description="Sei iscritto a Lume? Chiedi il tuo link personale e fai provare il club a chi vuoi: una settimana intera di accesso completo, a prezzo ridotto."
+>
+  <Header />
+
+  {/*
+    Il vantaggio per chi invita non è deciso: oggi la pagina promette qualcosa
+    all'amico e niente al socio, e prometterlo a caso sarebbe peggio che
+    tacerlo. Quando il club sceglie (un mese omaggio, crediti, un ingresso
+    ospite) va scritto nella colonna qui sotto, e questa fascia si cancella.
+  */}
+  <p class="avviso-bozza">
+    <b>Bozza</b>
+    Il vantaggio per chi invita è ancora da definire: al momento la pagina
+    racconta solo cosa ottiene la persona invitata.
+  </p>
+
+  <main>
+    <section class="sec">
+      <div class="wrap">
+        <div class="inv-grid">
+          <div>
+            <span class="label">Porta un amico</span>
+            <h1 class="d">Allenarsi in due<br />è un'altra cosa.</h1>
+            <p class="inv-lead">
+              Chi si allena con qualcuno molla molto meno. Se hai in mente la persona
+              giusta, fagliela provare: una settimana intera di accesso completo, a un
+              prezzo che tieni solo tu.
+            </p>
+
+            <div class="inv-passi">
+              {
+                passi.map((p, i) => (
+                  <div class="inv-passo">
+                    <span class="inv-num">{i + 1}</span>
+                    <div>
+                      <h3>{p.titolo}</h3>
+                      <p>{p.testo}</p>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+
+            <div class="inv-note">
+              <h4>Le regole, senza asterischi</h4>
+              <ul>
+                <li>Il pass è per chi non ha mai avuto un abbonamento o un pass Lume.</li>
+                <li>Puoi invitare quante persone vuoi, ma ognuna può usarlo una volta sola.</li>
+                <li>Il codice va attivato entro 30 giorni dalla richiesta.</li>
+                <li>Il primo ingresso si fa in reception con un documento.</li>
+                <li>
+                  Non ci serve l'email del tuo amico: il link lo giri tu, la richiesta la fa
+                  lui.
+                </li>
+              </ul>
+            </div>
+
+            <p class="inv-alt">
+              Non sei ancora iscritto? Il pass di sette giorni puoi <a href="/prova">
+                richiederlo per te</a
+              >.
+            </p>
+          </div>
+
+          <div class="inv-form">
+            <FormInline flusso="referral" medium="PaginaInvita" />
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .inv-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  /* Come su /prova: gli h1 in global.css ereditano la dimensione dal contesto
+     (`.hero-copy`, `.page-hero`, `.sec-head`) e questa pagina non ne ha nessuno. */
+  .inv-grid h1 {
+    font-size: clamp(38px, 8.5vw, 72px);
+    margin: 14px 0 16px;
+  }
+  .inv-lead {
+    max-width: 52ch;
+    padding-bottom: 26px;
+    border-bottom: 1px solid var(--line);
+  }
+  .inv-passi {
+    display: grid;
+    gap: 20px;
+    margin: 26px 0 30px;
+  }
+  .inv-passo {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .inv-num {
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    line-height: 1;
+    color: var(--red);
+    min-width: 24px;
+  }
+  .inv-passo h3 {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 16px;
+    letter-spacing: 0.03em;
+    margin: 0 0 5px;
+  }
+  .inv-passo p {
+    font-size: 14px;
+    color: var(--mut);
+    margin: 0;
+  }
+  .inv-note {
+    border: 1px solid var(--line);
+    border-radius: var(--lf-r-m);
+    padding: 22px 24px;
+    margin-bottom: 22px;
+  }
+  .inv-note h4 {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    margin: 0 0 12px;
+  }
+  .inv-note ul {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 7px;
+  }
+  .inv-note li {
+    font-size: 13px;
+    line-height: 1.55;
+    color: #cfcfcf;
+  }
+  .inv-alt {
+    font-size: 13px;
+    color: var(--mut);
+  }
+
+  @media (min-width: 640px) {
+    .inv-passi {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 1024px) {
+    .inv-grid {
+      grid-template-columns: 1fr 0.85fr;
+      gap: 48px;
+    }
+    .inv-form {
+      position: sticky;
+      top: 96px;
+    }
+  }
+</style>

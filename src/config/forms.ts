@@ -19,6 +19,8 @@
  * Il contratto completo del payload è in `docs/FORM.md`.
  */
 
+import { PASS } from '../data/abbonamenti';
+
 // ─── Tassonomie vincolate da Airtable ─────────────────────────────────────
 
 /**
@@ -478,7 +480,7 @@ export const FLUSSI: Record<string, Flusso> = {
         titolo: '7 giorni in Lume',
         sub: 'Un pass completo per provare tutto, senza vincoli di rinnovo.',
         riquadro: {
-          titolo: 'Cosa comprende — 15 €',
+          titolo: `Cosa comprende — ${PASS.pieno} €`,
           voci: [
             'Sala pesi e zona cardio',
             'Corsi fitness in licenza Les Mills',
@@ -557,6 +559,120 @@ export const FLUSSI: Record<string, Flusso> = {
         sub: 'Scegli quando possiamo chiamarti per organizzare il primo ingresso.',
         finale: true,
         prenotazione: 'richiamata',
+        chiudi: 'Ho finito',
+      },
+      confermaAssistenza,
+    ],
+  },
+
+  /**
+   * REFERRAL — un socio chiede il link da girare a un amico.
+   *
+   * ─── Perché non chiediamo i dati dell'amico ───────────────────────────────
+   *
+   * La tentazione è far compilare al socio nome ed email di chi invita, e
+   * scrivere noi all'amico. Sono i dati di una persona che non ci ha mai
+   * contattato e non ha acconsentito a niente: li raccoglieremmo da un terzo,
+   * per mandarle un messaggio commerciale. Con i consensi del vecchio Typeform
+   * già da rivedere, non è il momento di aprire un secondo fronte.
+   *
+   * Quindi il socio riceve un link e lo gira lui. L'amico atterra su
+   * `/prova?ref=…` e compila il form prova, che già esiste, già ha il check che
+   * blocca chi è di casa — che è esattamente la regola del referral — e già
+   * porta l'attribuzione dentro il payload. Zero campi nuovi, zero dati di
+   * terzi, e chi si iscrive lo fa scrivendo da sé.
+   *
+   * Il check qui è ribaltato rispetto agli altri flussi: `iscritto` è la strada
+   * buona, `nuovo` il vicolo cieco. Non è una barriera — chi vuole può sempre
+   * inventarsi un `ref` a mano — è solo il modo di dirlo prima, invece di
+   * lasciare il socio ad aspettare un'email che n8n non gli manderà.
+   */
+  referral: {
+    titolo: 'Invita un amico',
+    /**
+     * Il campo `Tipo Richiesta` non ha (ancora) l'opzione `REFERRAL`, e una
+     * stringa fuori elenco su Airtable si perde o crea un'opzione nuova che
+     * rompe i filtri salvati dei consulenti — vedi la nota in testa al file.
+     * `ASSISTENZA` è la casella onesta nel frattempo: è un socio che scrive.
+     * A opzione creata, si cambia questa riga e basta: nel payload il flusso si
+     * riconosce già da `flusso: 'referral'` e da `medium: 'FormReferral'`.
+     */
+    tipoRichiesta: TIPO_RICHIESTA.assistenza,
+    medium: 'FormReferral',
+    passi: 2,
+    steps: [
+      {
+        id: 'identita',
+        passo: 1,
+        titolo: 'Il tuo invito',
+        sub: 'Ti riconosciamo dall’email con cui sei iscritto: il link da girare arriva lì.',
+        campi: campiIdentita('In quale centro sei iscritto'),
+        avanti: 'Continua',
+        azione: 'check',
+        // `esiste` passa: un ex socio che riporta qualcuno resta un ex socio che
+        // riporta qualcuno. Se il club preferisce riservarlo a chi ha
+        // l'abbonamento attivo, questa riga diventa 'non-iscritto'.
+        dopoCheck: { iscritto: 'invito', esiste: 'invito', nuovo: 'non-iscritto' },
+      },
+      {
+        id: 'invito',
+        passo: 2,
+        titolo: 'Ecco come funziona',
+        sub: 'Ti mandiamo un link personale: chi lo usa richiede il pass da sé, tu non devi lasciarci i suoi dati.',
+        // Il prezzo ridotto sta nel markup della pagina — è statica, non c'è
+        // modo di tenerlo fuori — ma a schermo lo vede solo chi è arrivato
+        // fin qui, cioè chi il check ha riconosciuto. Non è un segreto: è il
+        // non metterlo in vetrina accanto al prezzo pieno.
+        riquadro: {
+          titolo: `Chi arriva col tuo link paga ${PASS.referral} € invece di ${PASS.pieno} €`,
+          voci: [
+            'Sette giorni di accesso completo, come il pass pieno',
+            'Il link lo giri a chi vuoi, da WhatsApp o come preferisci',
+            'Nessun limite di quante persone puoi invitare',
+          ],
+          nota: `Vale per chi non ha mai avuto un abbonamento o un pass Lume: il pass a ${PASS.referral} € è un primo ingresso, non un rinnovo.`,
+        },
+        campi: [
+          campoNota(
+            'Chi stai invitando',
+            'Es. Marco, un collega — così in reception sanno che arriva da parte tua',
+          ),
+        ],
+        avanti: 'Mandami il link',
+        azione: 'invia',
+        conferma: 'conferma-invito',
+        indietro: 'identita',
+      },
+      {
+        id: 'non-iscritto',
+        titolo: 'Questa email non risulta iscritta',
+        sub: 'Il link da invitare è per chi si allena da noi. Se vuoi provare Lume, il pass di sette giorni è qui in pagina; se pensi che sia un errore scrivici e controlliamo.',
+        tipoRichiesta: TIPO_RICHIESTA.assistenza,
+        campi: [
+          {
+            tipo: 'textarea',
+            nome: 'messaggio',
+            label: 'Come possiamo aiutarti',
+            placeholder: 'Es. sono iscritto a Macerata ma con un’altra email',
+            righe: 4,
+            obbligatorio: true,
+            minLunghezza: 10,
+            errore: 'Scrivi almeno due righe, così possiamo risponderti bene.',
+          },
+          // Qui il contatto è nuovo per noi: il check ha detto `nuovo`, quindi
+          // non c'è nessun consenso in archivio da cui partire.
+          { tipo: 'consensi', nome: 'consensi' },
+        ],
+        avanti: 'Invia richiesta',
+        azione: 'invia',
+        conferma: 'conferma-assistenza',
+        indietro: 'identita',
+      },
+      {
+        id: 'conferma-invito',
+        titolo: 'Link in arrivo',
+        sub: 'Te lo mandiamo via email: girarlo è tutto quello che devi fare. Chi lo apre trova il pass già scontato.',
+        finale: true,
         chiudi: 'Ho finito',
       },
       confermaAssistenza,

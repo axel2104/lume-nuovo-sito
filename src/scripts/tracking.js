@@ -41,6 +41,11 @@
     // QR in sede, vecchie email — arrivano senza attribuzione.
     'source',
     'medium',
+    // `ref` è il codice di invito di un socio (`/prova?ref=…`). Sta qui e non
+    // in un campo a parte per un motivo pratico: così sopravvive in
+    // sessionStorage come gli utm, e chi apre il link, gira per il sito e poi
+    // torna sulla pagina prova arriva comunque col suo invito addosso.
+    'ref',
     'centro',
     'email',
     'userId',

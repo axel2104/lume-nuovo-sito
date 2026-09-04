@@ -14,6 +14,7 @@ import Footer from '../components/Footer.astro';
 import FormInline from '../components/forms/FormInline.astro';
 import { getCollection } from 'astro:content';
 import { SEDI } from '../config/forms';
+import { PASS } from '../data/abbonamenti';
 
 const centri = (await getCollection('centri'))
   .filter((c) => SEDI[c.id])
@@ -29,7 +30,7 @@ const incluso = [
 
 <Layout
   title="Prova Lume 7 giorni — Lume Fitness Club"
-  description="Sette giorni di accesso completo ai centri Lume a 15 €: sala pesi, corsi fitness, acqua, CrossFit e Pilates Reformer. Nessun vincolo di rinnovo."
+  description={`Sette giorni di accesso completo ai centri Lume a ${PASS.pieno} €: sala pesi, corsi fitness, acqua, CrossFit e Pilates Reformer. Nessun vincolo di rinnovo.`}
 >
   <Header />
 
@@ -38,6 +39,21 @@ const incluso = [
       <div class="wrap">
         <div class="prova-grid">
           <div>
+            {/*
+              Sta nel markup ma parte nascosto, e lo accende solo `?ref=`: la
+              pagina è statica e servita identica a tutti, quindi il prezzo
+              ridotto non può essere tolto dal sorgente — può però non stare
+              in vetrina accanto al prezzo pieno, che è il punto.
+              Il codice qui non lo verifica nessuno: lo sconto vero lo applica
+              n8n sul lead, vedi `PASS`.
+            */}
+            <p class="prova-ref" data-prova-ref hidden>
+              <b>Ti ha invitato un socio Lume</b>
+              Con questo invito la settimana di prova ti costa {PASS.referral} € invece di {
+                PASS.pieno
+              } €. Compila qui sotto: in reception ti aspettano già scontato.
+            </p>
+
             <span class="label">Pass prova</span>
             <h1 class="d">Sette giorni.<br />Tutto incluso.</h1>
             <p class="prova-lead">
@@ -46,7 +62,7 @@ const incluso = [
             </p>
 
             <div class="prova-prezzo">
-              <b>15 €</b>
+              <b>{PASS.pieno} €</b>
               <span>una volta sola · 7 giorni consecutivi</span>
             </div>
 
@@ -118,6 +134,26 @@ const incluso = [
   }
   .prova-lead {
     max-width: 52ch;
+  }
+  /* Non è un avviso di sistema: è un benvenuto. Bordo rosso a sinistra come le
+     citazioni editoriali, non un riquadro d'errore. */
+  .prova-ref {
+    border-left: 3px solid var(--red);
+    padding: 14px 0 14px 16px;
+    margin: 18px 0 0;
+    font-size: 14px;
+    line-height: 1.55;
+    color: #ddd;
+  }
+  .prova-ref b {
+    display: block;
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 15px;
+    color: #fff;
+    margin-bottom: 4px;
   }
   .prova-prezzo {
     display: flex;
@@ -222,3 +258,15 @@ const incluso = [
     }
   }
 </style>
+
+<script>
+  // Solo chi arriva con un invito vede il prezzo dell'invito.
+  try {
+    const ref = (new URLSearchParams(location.search).get('ref') || '').trim();
+    if (ref) {
+      document.querySelectorAll('[data-prova-ref]').forEach((el) => {
+        if (el instanceof HTMLElement) el.hidden = false;
+      });
+    }
+  } catch (e) {}
+</script>

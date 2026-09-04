@@ -170,3 +170,19 @@ export function eUnaCatena(piani: Piano[]): boolean {
 /** Formattazione italiana degli importi: mai `toFixed`, che scrive il punto. */
 export const euro = (n: number) =>
   new Intl.NumberFormat('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(n);
+
+/**
+ * Il pass prova, nei suoi due prezzi.
+ *
+ * `pieno` è quello di listino, quello che vedono tutti. `referral` è quello di
+ * chi arriva invitato da un socio, e **non va scritto nelle pagine pubbliche**:
+ * dirlo a tutti significa dire a tutti che esiste una porta più economica, e da
+ * quel momento nessuno paga più 15 €. Vive in due soli posti — dentro il link
+ * di invito (`/prova?ref=…`) e nel form referral dopo che il check ha
+ * riconosciuto un socio.
+ *
+ * ⚠️ Sono cifre da **mostrare**, non da applicare. `ref` sta nella query string
+ * e chiunque può scriverselo: il prezzo che si paga davvero lo decide n8n sul
+ * lead, come già fa per `utm_source`. Il sito non ha modo di verificarlo.
+ */
+export const PASS = { pieno: 15, referral: 5 } as const;

@@ -33,6 +33,7 @@ const PAGINE = [
   '/lume-life/',
   '/contatti/',
   '/prova/',
+  '/invita/',
   '/iscriviti/',
   '/privacy/',
   '/cookie-policy/',
