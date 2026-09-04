@@ -160,9 +160,9 @@ export const GET: APIRoute = async ({ props }) => {
     y = H - MARGINE;
 
     if (prima) {
-      pagina.drawText('LUMe', { x: MARGINE, y: y - 14, size: 17, font: grassetto, color: NERO });
+      pagina.drawText('Lume', { x: MARGINE, y: y - 14, size: 17, font: grassetto, color: NERO });
       pagina.drawText('.', {
-        x: MARGINE + grassetto.widthOfTextAtSize('LUMe', 17),
+        x: MARGINE + grassetto.widthOfTextAtSize('Lume', 17),
         y: y - 14,
         size: 17,
         font: grassetto,

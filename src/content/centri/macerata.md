@@ -43,7 +43,7 @@ sale:
   - nome: Box CrossFit
     mq: 450
     dotazione: "Vogatori, air bike, bikeerg, skierg, bilancieri e bumper."
-immagine: ../../assets/centri/macerata.jpg
+immagine: ../../assets/centri/macerata-sala-pesi.jpg
 video: https://pub-90d4a80741cd4aadb6d995599fefc986.r2.dev/site/macerata-drone.mp4
 videoPoster: ../../assets/centri/macerata-sala-pesi.jpg
 perfectgymUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Registration"
