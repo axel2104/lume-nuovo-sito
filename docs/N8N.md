@@ -462,6 +462,18 @@ codice esista** e a chi appartiene: se non esiste è un pass a prezzo pieno, non
 errore da segnalare. Se esiste, il pass va a 5 € invece di 15 € e il lead va
 attribuito anche al socio che ha invitato.
 
+**3. L'invitato si iscrive → 50 € al socio** — è il terzo momento, e il sito non
+lo vede: l'iscrizione avviene su PerfectGym, non su una pagina. Quando il
+contratto esiste, il premio va accreditato a chi ha invitato — 50 € da usare sul
+suo rinnovo, per ogni persona iscritta col suo link. Il collegamento fra i due è
+il codice: `utm.ref` sul lead prova dice chi ha invitato, il contratto dice se si
+è iscritta davvero.
+
+⚠️ **Il premio non scatta sulla prova.** 50 € accreditati per un pass da 5 €
+sono una perdita a ogni invito: la condizione è l'iscrizione, ed è quello che la
+pagina `/invita` promette. Se un giorno si decide di premiare la sola prova, si
+cambia la riga in `/invita` prima del workflow, non dopo.
+
 Il resto delle condizioni del pass (mai stato iscritto, un solo pass per persona)
 lo garantisce già il check del flusso `prova`: `verifica` diverso da `nuovo`
 significa che quella persona è già in archivio.
@@ -486,3 +498,4 @@ automatica delle opzioni, che deve restare disattivata.
 - [ ] Le tre variabili su Netlify e un deploy nuovo
 - [ ] Prova end-to-end dal sito, non solo con curl
 - [ ] Referral: il link col codice arriva al socio, e un `utm.ref` inventato non sconta niente
+- [ ] Referral: i 50 € al socio partono dall'iscrizione dell'invitato, non dalla sua prova

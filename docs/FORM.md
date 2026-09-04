@@ -28,6 +28,10 @@ dell'amico — sarebbero dati di un terzo, raccolti da qualcun altro, per mandar
 un messaggio commerciale. Il socio riceve un link, lo gira lui, e l'amico
 compila il form `prova` da sé arrivando su `/prova?ref=<codice>`.
 
+Chi invita ha **50 € sul proprio rinnovo per ogni persona che si iscrive** col
+suo link — non per la sola settimana di prova. È l'unico numero del referral che
+la pagina dice ad alta voce: è l'incentivo, non lo sconto.
+
 Il codice di invito viaggia in `utm.ref` del payload (`ref` è fra i parametri
 catturati da `tracking.js`). **Non è una prova di niente**: sta nella query
 string e chiunque può scriverselo. Il prezzo ridotto lo decide n8n guardando se

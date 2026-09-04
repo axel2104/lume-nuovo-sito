@@ -11,14 +11,18 @@
  * Typeform — i due informativi per sede, il Guest Pass e la scuola nuoto — e
  * nessuno di questi raccoglieva inviti.
  *
- * Il prezzo ridotto NON è scritto qui: la pagina è pubblica, e il form lo mostra
- * solo dopo che il check ha riconosciuto un socio. Vedi `PASS` in
- * `src/data/abbonamenti.ts`.
+ * Due numeri, due trattamenti opposti. Il **premio per chi invita** sta nel
+ * titolo: è l'incentivo, e una pagina che non lo dice non serve a niente. Il
+ * **prezzo ridotto del pass** non è scritto qui: la pagina è pubblica, e
+ * metterlo in vetrina accanto ai 15 € di listino significa che nessuno paga più
+ * il pieno. Lo mostra il form, dopo che il check ha riconosciuto un socio.
+ * Vedi `PASS` e `PREMIO_INVITO` in `src/data/abbonamenti.ts`.
  */
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import FormInline from '../components/forms/FormInline.astro';
+import { PREMIO_INVITO } from '../data/abbonamenti';
 
 const passi = [
   {
@@ -33,6 +37,10 @@ const passi = [
     titolo: 'Lo giri a chi vuoi',
     testo: 'WhatsApp, di persona, come preferisci. Il pass lo richiede lui, non tu.',
   },
+  {
+    titolo: 'Il tuo rinnovo si alleggerisce',
+    testo: `Quando si iscrive, ${PREMIO_INVITO} € finiscono sul tuo prossimo rinnovo. Te lo diciamo noi.`,
+  },
 ];
 ---
 
@@ -41,18 +49,6 @@ const passi = [
   description="Sei iscritto a Lume? Chiedi il tuo link personale e fai provare il club a chi vuoi: una settimana intera di accesso completo, a prezzo ridotto."
 >
   <Header />
-
-  {/*
-    Il vantaggio per chi invita non è deciso: oggi la pagina promette qualcosa
-    all'amico e niente al socio, e prometterlo a caso sarebbe peggio che
-    tacerlo. Quando il club sceglie (un mese omaggio, crediti, un ingresso
-    ospite) va scritto nella colonna qui sotto, e questa fascia si cancella.
-  */}
-  <p class="avviso-bozza">
-    <b>Bozza</b>
-    Il vantaggio per chi invita è ancora da definire: al momento la pagina
-    racconta solo cosa ottiene la persona invitata.
-  </p>
 
   <main>
     <section class="sec">
@@ -63,9 +59,14 @@ const passi = [
             <h1 class="d">Allenarsi in due<br />è un'altra cosa.</h1>
             <p class="inv-lead">
               Chi si allena con qualcuno molla molto meno. Se hai in mente la persona
-              giusta, fagliela provare: una settimana intera di accesso completo, a un
-              prezzo che tieni solo tu.
+              giusta, fagliela provare: lei entra per una settimana intera a un prezzo
+              che tieni solo tu, e quando si iscrive il tuo rinnovo costa meno.
             </p>
+
+            <div class="inv-premio">
+              <b>{PREMIO_INVITO} €</b>
+              <span>sul tuo rinnovo · per ogni persona che si iscrive col tuo link</span>
+            </div>
 
             <div class="inv-passi">
               {
@@ -86,6 +87,11 @@ const passi = [
               <ul>
                 <li>Il pass è per chi non ha mai avuto un abbonamento o un pass Lume.</li>
                 <li>Puoi invitare quante persone vuoi, ma ognuna può usarlo una volta sola.</li>
+                <li>
+                  I {PREMIO_INVITO} € arrivano quando la persona che hai invitato si iscrive,
+                  non quando fa la settimana di prova, e si usano sul rinnovo del tuo
+                  abbonamento.
+                </li>
                 <li>Il codice va attivato entro 30 giorni dalla richiesta.</li>
                 <li>Il primo ingresso si fa in reception con un documento.</li>
                 <li>
@@ -128,13 +134,34 @@ const passi = [
   }
   .inv-lead {
     max-width: 52ch;
-    padding-bottom: 26px;
-    border-bottom: 1px solid var(--line);
+  }
+  /* Stessa scala del prezzo su /prova: e' il numero che deve fermare l'occhio,
+     perche' e' l'unico motivo per cui un socio compila questo form. */
+  .inv-premio {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 24px 0 0;
+  }
+  .inv-premio b {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(40px, 9vw, 62px);
+    line-height: 1;
+    color: var(--red);
+  }
+  .inv-premio span {
+    font-size: 13px;
+    color: var(--mut);
+    max-width: 26ch;
   }
   .inv-passi {
     display: grid;
     gap: 20px;
     margin: 26px 0 30px;
+    padding-top: 26px;
+    border-top: 1px solid var(--line);
   }
   .inv-passo {
     display: flex;

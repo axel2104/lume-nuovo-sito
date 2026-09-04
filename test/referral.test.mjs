@@ -18,12 +18,11 @@ const invita = leggi('../dist/invita/index.html');
 const tracking = leggi('../src/scripts/tracking.js');
 // I due prezzi si leggono dal sorgente invece di importarlo: `node --test` non
 // mangia TypeScript, e per due numeri non vale un transpile.
+const prezzi = leggi('../src/data/abbonamenti.ts');
 const PASS = Object.fromEntries(
-  [...leggi('../src/data/abbonamenti.ts').matchAll(/(pieno|referral):\s*(\d+)/g)].map((m) => [
-    m[1],
-    Number(m[2]),
-  ]),
+  [...prezzi.matchAll(/(pieno|referral):\s*(\d+)/g)].map((m) => [m[1], Number(m[2])]),
 );
+const PREMIO = Number(/PREMIO_INVITO = (\d+)/.exec(prezzi)[1]);
 
 test('la fascia dell’invito parte nascosta su /prova', () => {
   const i = prova.indexOf('data-prova-ref');
@@ -60,4 +59,24 @@ test('`ref` è fra i parametri che il tracciamento cattura', () => {
   // Senza questo il codice di invito non arriva nel payload, e n8n non ha modo
   // di sapere che quel lead va scontato: l'invito diventa decorativo.
   assert.match(tracking, /^\s*'ref',$/m, "'ref' non è più fra le KEYS di tracking.js");
+});
+
+test('il premio per chi invita è scritto su /invita', () => {
+  // L'unico numero del referral che va detto ad alta voce: se sparisce dalla
+  // pagina resta un form che chiede un'email senza dire perché compilarlo.
+  assert.ok(
+    invita.includes(`${PREMIO} €`),
+    `/invita non dice più quanto vale un invito (${PREMIO} €)`,
+  );
+});
+
+test('/invita non mette in vetrina il prezzo ridotto del pass', () => {
+  // Il riquadro del form lo contiene — è nel markup di tutti gli step — ma la
+  // colonna editoriale no: lì accanto ci sarebbe il confronto col prezzo pieno.
+  const colonna = invita.slice(0, invita.indexOf('data-flusso="referral"'));
+  assert.doesNotMatch(
+    colonna,
+    new RegExp(`(^|\D)${PASS.referral} €`),
+    `il prezzo dell’invito (${PASS.referral} €) è finito nella parte pubblica di /invita`,
+  );
 });

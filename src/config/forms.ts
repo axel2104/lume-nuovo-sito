@@ -19,7 +19,7 @@
  * Il contratto completo del payload è in `docs/FORM.md`.
  */
 
-import { PASS } from '../data/abbonamenti';
+import { PASS, PREMIO_INVITO } from '../data/abbonamenti';
 
 // ─── Tassonomie vincolate da Airtable ─────────────────────────────────────
 
@@ -629,6 +629,7 @@ export const FLUSSI: Record<string, Flusso> = {
             'Sette giorni di accesso completo, come il pass pieno',
             'Il link lo giri a chi vuoi, da WhatsApp o come preferisci',
             'Nessun limite di quante persone puoi invitare',
+            `${PREMIO_INVITO} € sul tuo rinnovo per ognuna che si iscrive`,
           ],
           nota: `Vale per chi non ha mai avuto un abbonamento o un pass Lume: il pass a ${PASS.referral} € è un primo ingresso, non un rinnovo.`,
         },

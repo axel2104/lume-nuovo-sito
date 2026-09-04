@@ -186,3 +186,18 @@ export const euro = (n: number) =>
  * lead, come già fa per `utm_source`. Il sito non ha modo di verificarlo.
  */
 export const PASS = { pieno: 15, referral: 5 } as const;
+
+/**
+ * Quanto vale un invito per chi lo fa: 50 € sul proprio rinnovo.
+ *
+ * Al contrario del prezzo ridotto del pass, questo **va detto ad alta voce**:
+ * è l'incentivo, non lo sconto. Nasconderlo vorrebbe dire avere un referral che
+ * nessuno sa di poter usare.
+ *
+ * ⚠️ Il premio scatta quando la persona invitata **si iscrive**, non quando fa
+ * la settimana di prova: 50 € per un pass da 5 € sarebbe una perdita a ogni
+ * invito. Il momento esatto lo decide n8n incrociando `utm.ref` col contratto,
+ * vedi `docs/N8N.md §9`; il sito non ha modo di sapere se l'iscrizione è
+ * avvenuta e non prova a indovinarlo.
+ */
+export const PREMIO_INVITO = 50;
