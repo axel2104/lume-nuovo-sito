@@ -14,16 +14,14 @@
  * La prenotazione arricchisce un lead che esiste già; non lo crea.
  *
  * ─── Consenso ─────────────────────────────────────────────────────────────
- * Lo script viene caricato SOLO dopo un'azione esplicita dell'utente (ha appena
- * inviato il form chiedendo un appuntamento), quindi è strettamente necessario
- * a fornire il servizio richiesto, non tracciamento.
+ * Lo script viene caricato solo dove il calendario è il servizio richiesto:
+ * nella schermata di conferma di chi ha appena chiesto un appuntamento, e
+ * sulla pagina /prenota, che esiste per prenotare. È strettamente necessario
+ * a fornire quel servizio, non tracciamento.
  * Attenzione: l'autoblocking di Iubenda blocca gli script di terze parti che
  * riconosce. Il tag viene marcato `_iub_cs_skip` per non farsi bloccare —
  * senza questo, in produzione il calendario resta vuoto e senza errori evidenti.
  */
-
-/** Una sola istanza dello script per pagina, anche con più form montati. */
-let caricamento = null;
 
 function origine() {
   const cfg = (typeof window !== 'undefined' && window.LUME_CFG) || {};
@@ -31,50 +29,104 @@ function origine() {
 }
 
 /**
- * Carica `embed.js` e restituisce la funzione globale `Cal`.
+ * Origine da cui si carica l'embed, e da cui l'iframe carica il booker.
  *
- * Lo snippet ufficiale di Cal.com crea una coda sincrona (`Cal.q`) che accumula
- * le chiamate finché lo script non è pronto: per questo possiamo invocare `Cal`
- * subito, senza aspettare il `load`.
+ * Sul cloud il booker vive su `app.cal.com`: `cal.com/<handle>/<slug>` è la
+ * pagina pubblica e reindirizza, ma l'embed vuole l'origine applicativa.
+ * Su un'istanza self-hosted il dominio è uno solo e questa funzione non fa
+ * niente. I link di ripiego continuano a usare `origine()`, che è l'indirizzo
+ * da mostrare a una persona.
  */
-function api() {
-  if (caricamento) return caricamento;
+function origineEmbed() {
+  const o = origine().replace(/\/$/, '');
+  return /^https:\/\/(www\.)?cal\.com$/.test(o) ? 'https://app.cal.com' : o;
+}
 
-  caricamento = new Promise((risolvi, rifiuta) => {
-    const origin = origine();
-    const src = origin.replace(/\/$/, '') + '/embed/embed.js';
+/**
+ * Crea la coda ufficiale di Cal.com e restituisce `window.Cal`.
+ *
+ * **Qui c'era il guasto, e valeva la pena capirlo:** la coda scritta prima
+ * accodava soltanto in `Cal.q`, senza `Cal.ns`, senza la gestione di `init` e
+ * senza marcare `Cal.loaded`. `embed.js` si aspetta la coda ufficiale: caricato
+ * sopra una coda finta muore con «Cal is not defined. This shouldn't happen»,
+ * `Cal.ns` resta `undefined` e il chiamante non riceve alcun errore — il
+ * contenitore resta su «Carico il calendario…» per sempre, senza che nessuno
+ * sappia perché. Quello che segue è lo snippet documentato da Cal.com, con la
+ * sola aggiunta della classe `_iub_cs_skip` sul tag (vedi la nota sul consenso
+ * in testa al file).
+ */
+function coda() {
+  if (typeof window.Cal === 'function') return window.Cal;
 
-    if (window.Cal && window.Cal.loaded) return risolvi(window.Cal);
+  const d = document;
+  const src = origineEmbed() + '/embed/embed.js';
+  const accoda = (a, ar) => a.q.push(ar);
 
-    // Coda ufficiale Cal.com: ogni chiamata prima del load finisce in Cal.q
-    if (!window.Cal) {
-      window.Cal = function () {
-        const c = window.Cal;
-        c.q = c.q || [];
-        c.q.push(arguments);
-      };
+  window.Cal = function () {
+    const cal = window.Cal;
+    const ar = arguments;
+
+    if (!cal.loaded) {
+      cal.ns = {};
+      cal.q = cal.q || [];
+      const s = d.createElement('script');
+      s.src = src;
+      s.async = true;
+      s.className = '_iub_cs_skip';
+      s.setAttribute('data-lume-calcom', '');
+      d.head.appendChild(s);
+      cal.loaded = true;
     }
 
-    const esistente = document.querySelector('script[data-lume-calcom]');
-    if (esistente) {
-      esistente.addEventListener('load', () => risolvi(window.Cal));
-      esistente.addEventListener('error', rifiuta);
+    if (ar[0] === 'init') {
+      const api = function () {
+        accoda(api, arguments);
+      };
+      const nome = ar[1];
+      api.q = api.q || [];
+      if (typeof nome === 'string') {
+        cal.ns[nome] = cal.ns[nome] || api;
+        accoda(cal.ns[nome], ar);
+        accoda(cal, ['initNamespace', nome]);
+      } else {
+        accoda(cal, ar);
+      }
       return;
     }
 
-    const s = document.createElement('script');
-    s.src = src;
-    s.async = true;
-    s.setAttribute('data-lume-calcom', '');
-    // Vedi nota sul consenso in testa al file: senza questa classe l'autoblocking
-    // di Iubenda impedisce il caricamento e il calendario non compare mai.
-    s.className = '_iub_cs_skip';
-    s.onload = () => risolvi(window.Cal);
-    s.onerror = () => rifiuta(new Error('Cal.com embed non raggiungibile'));
-    document.head.appendChild(s);
-  });
+    accoda(cal, ar);
+  };
 
-  return caricamento;
+  return window.Cal;
+}
+
+/**
+ * Aspetta che l'iframe compaia nel contenitore.
+ *
+ * L'embed non ha un modo di dire «non ce l'ho fatto»: se il dominio è
+ * bloccato, se l'event type non esiste o se lo script non arriva, non chiama
+ * nessuna callback. L'unico segnale osservabile è l'iframe che non compare, e
+ * senza questo controllo il ripiego non scatta mai.
+ */
+function attendiIframe(elemento, entro) {
+  return new Promise((risolvi) => {
+    if (elemento.querySelector('iframe')) return risolvi(true);
+
+    let osservatore = null;
+    const scaduto = setTimeout(() => {
+      if (osservatore) osservatore.disconnect();
+      risolvi(!!elemento.querySelector('iframe'));
+    }, entro);
+
+    osservatore = new MutationObserver(() => {
+      if (elemento.querySelector('iframe')) {
+        clearTimeout(scaduto);
+        if (osservatore) osservatore.disconnect();
+        risolvi(true);
+      }
+    });
+    osservatore.observe(elemento, { childList: true, subtree: true });
+  });
 }
 
 /**
@@ -96,16 +148,11 @@ export async function montaPrenotazione(elemento, opzioni) {
   // calendari sovrapposti.
   if (elemento.getAttribute('data-cal-montato') === '1') return true;
 
-  let Cal;
-  try {
-    Cal = await api();
-  } catch (e) {
-    return false;
-  }
+  const Cal = coda();
 
   const namespace = 'lume-' + calLink.replace(/[^a-z0-9]+/gi, '-');
 
-  Cal('init', namespace, { origin: origine() });
+  Cal('init', namespace, { origin: origineEmbed() });
 
   // I metadata viaggiano come `metadata[chiave]`: è il formato che Cal.com
   // inoltra al webhook BOOKING_CREATED, dove n8n li ritrova per ricucire la
@@ -144,6 +191,13 @@ export async function montaPrenotazione(elemento, opzioni) {
         } catch (e) {}
       },
     });
+  }
+
+  // Nove secondi: piu' di quanto serve a una rete lenta, meno di quanto serve
+  // a far pensare che la pagina sia rotta.
+  if (!(await attendiIframe(elemento, 9000))) {
+    smontaPrenotazione(elemento);
+    return false;
   }
 
   elemento.setAttribute('data-cal-montato', '1');
