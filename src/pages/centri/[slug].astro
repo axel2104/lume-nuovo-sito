@@ -196,6 +196,14 @@ const disc = tutte
             >
               Prova 7 giorni
             </button>
+            {/*
+              Un link, non un pulsante di form: porta al calendario con la sede
+              gia' scelta. Chi vuole solo fissare una visita non deve passare
+              da un form per arrivarci.
+            */}
+            <a href={`/prenota?centro=${entry.id}`} class="btn btn-out btn-full">
+              Prenota una visita
+            </a>
             <button
               type="button"
               class="btn btn-out btn-full"

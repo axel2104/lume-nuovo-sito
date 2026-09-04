@@ -83,9 +83,9 @@ function api() {
  * @param {HTMLElement} elemento   contenitore vuoto, già visibile
  * @param {object} opzioni
  * @param {string} opzioni.calLink  es. "lume-macerata/visita" (senza dominio)
- * @param {object} opzioni.prefill  { nome, email, telefono, note }
- * @param {object} opzioni.meta     coppie chiave/valore passate come metadata a Cal.com
- * @param {function} opzioni.onPrenotato  chiamata a prenotazione confermata
+ * @param {object} [opzioni.prefill]  { nome, email, telefono, note }
+ * @param {object} [opzioni.meta]     coppie chiave/valore passate come metadata a Cal.com
+ * @param {function} [opzioni.onPrenotato]  chiamata a prenotazione confermata
  * @returns {Promise<boolean>} false se l'embed non è disponibile
  */
 export async function montaPrenotazione(elemento, opzioni) {

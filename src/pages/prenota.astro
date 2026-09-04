@@ -1,0 +1,437 @@
+---
+/**
+ * Pagina di prenotazione — il calendario Cal.com in pagina, senza form.
+ *
+ * Esiste perché il calendario viveva solo in coda ai form, sulla schermata di
+ * conferma: chi voleva soltanto fissare una visita doveva prima raccontarsi.
+ * Qui la scelta è di due click, sede e tipo, e il calendario è quello vero
+ * della segreteria.
+ *
+ * **Il rovescio, ed è importante:** chi prenota da qui non passa dal form,
+ * quindi non c'è nessun POST a `lume-lead` e nessuna riga in RICHIESTE. Il
+ * contatto arriva dal webhook `BOOKING_CREATED` di Cal.com
+ * (`n8n.lumeflow.it/webhook/lume-booking`): finché quello non è collegato, la
+ * prenotazione resta solo sul calendario. I metadata che passiamo all'embed
+ * (`centro`, `agenda`, `origine`) servono esattamente a quel workflow per
+ * sapere da dove arriva.
+ *
+ * Le sedi mostrate sono quelle che hanno un event type: Piediripa e Urban
+ * restano fuori da sé, senza righe di codice dedicate.
+ */
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getCollection } from 'astro:content';
+import { siteConfig } from '../config/site';
+
+const AGENDE = [
+  {
+    id: 'visita',
+    etichetta: 'Visita guidata',
+    testo: 'Vieni in sede: ti facciamo vedere le sale e ti spieghiamo come funziona. Dura una mezz’ora, non si firma niente.',
+  },
+  {
+    id: 'richiamata',
+    etichetta: 'Ti richiamiamo',
+    testo: 'Preferisci sentirci prima? Scegli l’ora che ti va bene e ti chiamiamo noi.',
+  },
+] as const;
+
+const centri = (await getCollection('centri'))
+  .filter((c) => c.data.calcom?.visita || c.data.calcom?.richiamata)
+  .sort((a, b) => a.data.ordine - b.data.ordine)
+  .map((c) => ({
+    id: c.id,
+    nome: c.data.nome,
+    citta: c.data.citta,
+    indirizzo: c.data.indirizzo,
+    orari: c.data.orari,
+    visita: c.data.calcom?.visita ?? '',
+    richiamata: c.data.calcom?.richiamata ?? '',
+  }));
+
+const origine = siteConfig.calcomOrigin.replace(/\/$/, '');
+---
+
+<Layout
+  title="Prenota una visita — LUMe Fitness Club"
+  description="Fissa una visita guidata a Lume Macerata o Montecassiano, oppure scegli quando farti richiamare. Calendario in tempo reale della segreteria, nessun form da compilare."
+>
+  <Header />
+
+  <main id="contenuto">
+    <section class="sec">
+      <div class="wrap">
+        {/*
+          `.sec-head` non e' decorazione: in global.css gli h1 ereditano la
+          dimensione dal contesto, e un h1 senza contesto resta a 16px. Questo
+          e' il pattern delle intestazioni di sezione del sito.
+        */}
+        <div class="sec-head">
+          <span class="label">Prenota</span>
+          <h1 class="d">Scegli tu<br />quando <em>venire</em></h1>
+          <p>
+            Il calendario qui sotto è quello della segreteria: gli orari che vedi sono
+            liberi adesso. Scegli la sede, l’ora, e ti aspettiamo — senza compilare nulla.
+          </p>
+        </div>
+
+        {centri.length === 0 ? (
+          <p class="pren-vuoto">
+            Le agende non sono ancora collegate. Chiamaci allo <a href="tel:+390733232905">0733 232905</a>
+            oppure scrivici dalla <a href="/contatti">pagina contatti</a>.
+          </p>
+        ) : (
+          <div class="pren" data-prenota data-cal-origine={origine}>
+            <div class="pren-scelte">
+              <div class="pren-gruppo" role="group" aria-label="Scegli la sede">
+                <span class="label">Dove</span>
+                <div class="pren-chips">
+                  {centri.map((c, i) => (
+                    <button
+                      type="button"
+                      class="pren-chip"
+                      data-pren-centro={c.id}
+                      data-cal-visita={c.visita}
+                      data-cal-richiamata={c.richiamata}
+                      aria-pressed={i === 0 ? 'true' : 'false'}
+                    >
+                      {c.nome.replace('Lume ', '')}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div class="pren-gruppo" role="group" aria-label="Scegli cosa prenotare">
+                <span class="label">Cosa</span>
+                <div class="pren-chips">
+                  {AGENDE.map((a, i) => (
+                    <button
+                      type="button"
+                      class="pren-chip"
+                      data-pren-tipo={a.id}
+                      aria-pressed={i === 0 ? 'true' : 'false'}
+                    >
+                      {a.etichetta}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {AGENDE.map((a, i) => (
+              <p class="pren-nota" data-pren-nota={a.id} hidden={i !== 0}>{a.testo}</p>
+            ))}
+
+            {/*
+              Il contenitore riserva l'altezza prima che l'iframe arrivi, così la
+              pagina non salta sotto il dito di chi ha già cominciato a scorrere.
+            */}
+            <div class="pren-cal" data-pren-cal>
+              <p class="pren-attesa" data-pren-attesa>Carico il calendario…</p>
+            </div>
+
+            {/*
+              Se l'embed non arriva — rete, blocco, estensione — il link diretto
+              all'agenda funziona comunque. Un calendario che non si carica e non
+              dice niente è un appuntamento perso in silenzio.
+            */}
+            <p class="pren-ko" data-pren-ko hidden>
+              Il calendario non si carica in questa pagina.
+              <a data-pren-ko-link href={origine} target="_blank" rel="noopener"
+                >Apri l’agenda su Cal.com ↗</a
+              >
+            </p>
+
+            <noscript>
+              <p class="pren-ko">
+                Il calendario ha bisogno di JavaScript. Le agende sono raggiungibili anche
+                direttamente:
+              </p>
+              <ul class="pren-diretti">
+                {centri.map((c) => (
+                  <li>
+                    {c.nome}:{' '}
+                    {c.visita && (
+                      <a href={`${origine}/${c.visita}`} target="_blank" rel="noopener">
+                        visita guidata
+                      </a>
+                    )}
+                    {c.visita && c.richiamata && ' · '}
+                    {c.richiamata && (
+                      <a href={`${origine}/${c.richiamata}`} target="_blank" rel="noopener">
+                        richiamata
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </noscript>
+
+            <div class="pren-dopo">
+              <h2>Cosa succede dopo</h2>
+              <p>
+                Ricevi subito la conferma per email, con il posto e l’ora. Se ti serve
+                spostarla o disdirla, il link per farlo è dentro quella stessa email.
+                Per qualsiasi altra cosa siamo allo <a href="tel:+390733232905">0733 232905</a>.
+              </p>
+              <div class="pren-sedi">
+                {centri.map((c) => (
+                  <div class="info-card">
+                    <h4>{c.nome}</h4>
+                    {c.indirizzo && <p>{c.indirizzo}</p>}
+                    {c.orari && (
+                      <p class="pren-orari">Lun–Ven {c.orari.feriali} · Sab {c.orari.sabato}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  /* L'evidenza in rosso: `.sec-head h1 em` non ce l'ha, l'hanno solo l'hero
+     e la pagina abbonamenti. */
+  .sec-head h1 em {
+    color: var(--red-txt);
+    font-style: normal;
+  }
+  .pren-vuoto {
+    border: 1px solid var(--line);
+    border-radius: var(--lf-r-m);
+    padding: 22px 24px;
+  }
+  .pren-scelte {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 18px;
+  }
+  .pren-gruppo .label {
+    display: block;
+    margin-bottom: 10px;
+  }
+  .pren-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  /* Stessa forma delle chip dei form: la scala dei raggi ridotti vive in
+     leadform.css e queste la seguono, non quella del resto del sito. */
+  .pren-chip {
+    min-height: 44px;
+    padding: 10px 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--lf-r-s, 6px);
+    background: transparent;
+    color: #ddd;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .2s ease, background .2s ease, color .2s ease;
+  }
+  .pren-chip:hover {
+    border-color: #555;
+  }
+  .pren-chip[aria-pressed='true'] {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+  }
+  .pren-nota {
+    font-size: 14px;
+    color: var(--mut);
+    max-width: 60ch;
+    margin: 0 0 22px;
+  }
+  .pren-cal {
+    min-height: 620px;
+    border: 1px solid var(--line);
+    border-radius: var(--lf-r-m);
+    overflow: hidden;
+    background: var(--card);
+  }
+  .pren-attesa {
+    padding: 28px 24px;
+    margin: 0;
+    font-size: 14px;
+    color: var(--mut);
+  }
+  .pren-ko {
+    margin-top: 16px;
+    font-size: 14px;
+    color: #cfcfcf;
+  }
+  .pren-ko a {
+    color: var(--red-txt);
+    text-decoration: underline;
+    margin-left: 6px;
+  }
+  .pren-diretti {
+    font-size: 14px;
+    color: #cfcfcf;
+    padding-left: 18px;
+  }
+  .pren-diretti a {
+    color: var(--red-txt);
+    text-decoration: underline;
+  }
+  .pren-dopo {
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+  .pren-dopo h2 {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 18px;
+    letter-spacing: 0.04em;
+    margin: 0 0 10px;
+  }
+  .pren-dopo p {
+    font-size: 14px;
+    color: #cfcfcf;
+    max-width: 62ch;
+  }
+  .pren-dopo a {
+    color: var(--red-txt);
+    text-decoration: underline;
+  }
+  .pren-sedi {
+    display: grid;
+    gap: 12px;
+    margin-top: 22px;
+  }
+  .pren-sedi .info-card {
+    border-radius: var(--lf-r-m);
+  }
+  .pren-sedi p {
+    font-size: 13px;
+    color: #ddd;
+    margin: 0 0 4px;
+  }
+  .pren-orari {
+    color: var(--mut) !important;
+    font-size: 12px !important;
+  }
+
+  @media (min-width: 640px) {
+    .pren-scelte {
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    .pren-sedi {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
+
+<script>
+  import { montaPrenotazione, smontaPrenotazione } from '../lib/calcom.client.js';
+
+  const radice = document.querySelector('[data-prenota]');
+
+  if (radice) {
+    const contenitore = radice.querySelector('[data-pren-cal]');
+    const attesa = radice.querySelector('[data-pren-attesa]');
+    const ko = radice.querySelector('[data-pren-ko]');
+    const koLink = radice.querySelector('[data-pren-ko-link]');
+    const chipCentri = Array.from(radice.querySelectorAll('[data-pren-centro]'));
+    const chipTipi = Array.from(radice.querySelectorAll('[data-pren-tipo]'));
+    const note = Array.from(radice.querySelectorAll('[data-pren-nota]'));
+    const origine = (radice.getAttribute('data-cal-origine') || 'https://cal.com').replace(/\/$/, '');
+
+    /**
+     * Sede e tipo arrivano anche dalla query string: `?centro=montecassiano`
+     * e `?tipo=richiamata`. Serve ai pulsanti delle pagine sede, che mandano
+     * qui con la scelta già fatta invece di farla rifare.
+     */
+    const q = new URLSearchParams(window.location.search);
+
+    const scegli = (lista: Element[], attributo: string, valore: string | null) => {
+      const trovata = valore ? lista.find((e) => e.getAttribute(attributo) === valore) : null;
+      const attiva = trovata || lista[0];
+      lista.forEach((e) => e.setAttribute('aria-pressed', e === attiva ? 'true' : 'false'));
+      return attiva ? attiva.getAttribute(attributo) || '' : '';
+    };
+
+    let centro = scegli(chipCentri, 'data-pren-centro', q.get('centro'));
+    let tipo = scegli(chipTipi, 'data-pren-tipo', q.get('tipo'));
+
+    const linkDi = () => {
+      const chip = chipCentri.find((e) => e.getAttribute('data-pren-centro') === centro);
+      if (!chip) return '';
+      return chip.getAttribute(tipo === 'richiamata' ? 'data-cal-richiamata' : 'data-cal-visita') || '';
+    };
+
+    const mostraNota = () => {
+      note.forEach((n) => {
+        (n as HTMLElement).hidden = n.getAttribute('data-pren-nota') !== tipo;
+      });
+    };
+
+    const monta = async () => {
+      if (!(contenitore instanceof HTMLElement)) return;
+      const calLink = linkDi();
+
+      smontaPrenotazione(contenitore);
+      contenitore.hidden = false;
+      if (attesa) contenitore.appendChild(attesa);
+      if (ko) (ko as HTMLElement).hidden = true;
+
+      if (!calLink) {
+        if (attesa) attesa.textContent = 'Per questa sede l’agenda non è ancora attiva.';
+        return;
+      }
+
+      const ok = await montaPrenotazione(contenitore, {
+        calLink,
+        // Li ritrova n8n nel webhook BOOKING_CREATED: senza, una prenotazione
+        // fatta da qui non si sa a quale sede appartiene.
+        meta: { centro, agenda: tipo, origine: 'PaginaPrenota' },
+      });
+
+      if (!ok) {
+        // Un riquadro vuoto da 620px al posto del calendario e' peggio del
+        // messaggio: si nasconde e parla il ripiego.
+        contenitore.innerHTML = '';
+        contenitore.hidden = true;
+        if (ko && koLink) {
+          koLink.setAttribute('href', origine + '/' + calLink);
+          (ko as HTMLElement).hidden = false;
+        }
+      }
+    };
+
+    const aggiorna = () => {
+      mostraNota();
+      // La query string segue la scelta: così il link si può copiare e mandare
+      // a qualcuno con la sede giusta già selezionata.
+      const nuova = new URLSearchParams({ centro, tipo });
+      window.history.replaceState(null, '', window.location.pathname + '?' + nuova.toString());
+      void monta();
+    };
+
+    chipCentri.forEach((chip) =>
+      chip.addEventListener('click', () => {
+        centro = scegli(chipCentri, 'data-pren-centro', chip.getAttribute('data-pren-centro'));
+        aggiorna();
+      }),
+    );
+    chipTipi.forEach((chip) =>
+      chip.addEventListener('click', () => {
+        tipo = scegli(chipTipi, 'data-pren-tipo', chip.getAttribute('data-pren-tipo'));
+        aggiorna();
+      }),
+    );
+
+    aggiorna();
+  }
+</script>
