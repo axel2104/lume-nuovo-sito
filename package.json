@@ -12,9 +12,10 @@
     "test": "node --test \"test/**/*.test.mjs\"",
     "verifica": "npm run verifica:contenuti && npm run test",
     "verifica:contenuti": "node verifica/contenuti.mjs",
-    "verifica:browser": "npm run verifica:pagine && npm run verifica:form && npm run verifica:video",
+    "verifica:browser": "npm run verifica:pagine && npm run verifica:form && npm run verifica:form-completo && npm run verifica:video",
     "verifica:pagine": "node verifica/pagine.mjs",
     "verifica:form": "node verifica/form.mjs",
+    "verifica:form-completo": "node verifica/form-completo.mjs",
     "verifica:video": "node verifica/video.mjs",
     "verifica:tutto": "npm run build && npm run verifica && npm run verifica:browser"
   },

@@ -398,7 +398,15 @@ const origine = siteConfig.calcomOrigin.replace(/\/$/, '');
         meta: { centro, agenda: tipo, origine: 'PaginaPrenota' },
       });
 
-      if (!ok) {
+      if (ok) {
+        // Il calendario e' arrivato: via l'avviso di attesa, che altrimenti
+        // resta appeso sopra l'iframe («Carico il calendario…» con il
+        // calendario sotto, visto in produzione il 4 settembre).
+        if (attesa && attesa.parentElement) attesa.remove();
+        return;
+      }
+
+      {
         // Un riquadro vuoto da 620px al posto del calendario e' peggio del
         // messaggio: si nasconde e parla il ripiego.
         contenitore.innerHTML = '';
