@@ -1,0 +1,20 @@
+# Fine-riga normalizzati, e non e' pignoleria.
+#
+# Il 4 settembre 2026 sei file di contenuto risultavano modificati senza che
+# nessuno li avesse toccati: Keystatic in locale, su Windows, li aveva
+# riscritti con CRLF mentre nel repo stanno con LF. `git status` mostrava 254
+# righe cambiate su 254, contenuto identico, e il `git pull` si rifiutava di
+# partire per via del working tree sporco. Con questa riga git normalizza in
+# ingresso e il problema non si ripresenta.
+* text=auto eol=lf
+
+# Binari: mai toccati.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.mp4 binary
+*.woff binary
+*.woff2 binary
+*.pdf binary
