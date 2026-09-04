@@ -224,7 +224,7 @@ const paga = (visti) => JSON.parse(visti.lead[0] || '{}');
 
 // ─── check "iscritto": il ramo assistenza ─────────────────────────────────
 {
-  const { p, visti, errori } = await pagina({ check: { stato: 'iscritto_scadenza' } });
+  const { p, errori } = await pagina({ check: { stato: 'iscritto_scadenza' } });
   await vai(p, '/contatti/');
   const f = inline(p);
   await compilaIdentita(f, { email: 'iscritto@example.com' });
@@ -381,7 +381,7 @@ const paga = (visti) => JSON.parse(visti.lead[0] || '{}');
 
 // ─── calendario irraggiungibile: compare il ripiego ───────────────────────
 {
-  const { p, visti, errori } = await pagina({ calDown: true });
+  const { p, errori } = await pagina({ calDown: true });
   await vai(p, '/prenota/');
   await p.waitForTimeout(11000);
   esito(await p.$eval('[data-pren-ko]', (e) => !e.hidden), '/prenota: senza embed compare il ripiego');

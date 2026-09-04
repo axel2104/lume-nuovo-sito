@@ -20,7 +20,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BandaCta from '../components/BandaCta.astro';
 import { campo, righe } from '../lib/copy';
-import t from '../content/pagine/scuola-nuoto.json';
+import { testiScuolaNuoto as t } from '../data/testi';
 
 /**
  * La stagione è una riga sola solo se entrambe le date ci sono.
@@ -93,7 +93,7 @@ const nonRecuperabili = t.recuperi.nonRecuperabili as string[];
             cosa vuole non deve passare da un form. */}
         <ul class="sn-fasce">
           {
-            t.fasce.voci.map((f) => (
+            t.fasce.voci.map((f: any) => (
               <li>
                 <b>{f.eta}</b>
                 <span>{f.livelli}</span>
@@ -126,7 +126,7 @@ const nonRecuperabili = t.recuperi.nonRecuperabili as string[];
         </div>
         <ol class="sn-livelli">
           {
-            t.livelli.voci.map((l, i) => (
+            t.livelli.voci.map((l: any, i: number) => (
               <li>
                 <span class="sn-num" aria-hidden="true">{i + 1}</span>
                 <div>
@@ -179,14 +179,14 @@ const nonRecuperabili = t.recuperi.nonRecuperabili as string[];
           <h2 class="d" id="tit-brevetti">{t.brevetti.titolo}</h2>
           <p>{t.brevetti.testo}</p>
           <ul class="sn-elenco">
-            {t.brevetti.voci.map((v) => <li>{v}</li>)}
+            {t.brevetti.voci.map((v: string) => <li>{v}</li>)}
           </ul>
         </div>
         <div>
           <span class="label">{t.iscrizione.label}</span>
           <h2 class="d">{t.iscrizione.titolo}</h2>
           <ol class="sn-passi">
-            {t.iscrizione.passi.map((p) => <li>{p}</li>)}
+            {t.iscrizione.passi.map((p: string) => <li>{p}</li>)}
           </ol>
           <p class="sn-nota">{t.iscrizione.nota}</p>
         </div>
@@ -202,7 +202,7 @@ const nonRecuperabili = t.recuperi.nonRecuperabili as string[];
         </div>
         <div class="sn-norme">
           {
-            t.norme.voci.map((n) => (
+            t.norme.voci.map((n: any) => (
               <article class="info-card">
                 <h3>{n.titolo}</h3>
                 <p>{n.testo}</p>

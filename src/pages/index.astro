@@ -11,7 +11,7 @@ import { getCollection } from 'astro:content';
 import { formulaDi, euro } from '../data/abbonamenti';
 import { conValori, righe } from '../lib/copy';
 import { siteConfig } from '../config/site';
-import testi from '../content/pagine/home.json';
+import { testiHome as testi } from '../data/testi';
 
 const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.data.ordine);
 const discipline = (await getCollection('discipline')).sort((a, b) => a.data.ordine - b.data.ordine);
@@ -208,7 +208,7 @@ function assaggio(p: (typeof piani)[number]) {
         />
       </dialog>
       <div class="stats">
-        {testi.stats.map((s) => (
+        {testi.stats.map((s: any) => (
           <div class="stat">
             <b>
               {conValori(s.numero, { discipline: discipline.length, centri: centri.length, oreCorsi })}
@@ -233,7 +233,7 @@ function assaggio(p: (typeof piani)[number]) {
             </>
           ))}
         </h2>
-        {testi.chiSiamo.paragrafi.map((par) => (
+        {testi.chiSiamo.paragrafi.map((par: any) => (
           <p>{par}</p>
         ))}
         <a href="/centri" class="btn btn-out" style="margin-top:12px">{testi.chiSiamo.cta}</a>
