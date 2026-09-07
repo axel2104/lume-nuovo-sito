@@ -1054,6 +1054,12 @@ export default config({
                 'Cambiano ogni stagione — Pasqua si sposta — quindi vanno riscritti a inizio anno. Vuoti = compare la nota qui sotto.',
               itemLabel: (props) => props.value || 'Giorno',
             }),
+            notaChiusure: fields.text({
+              label: 'Nota sotto l’elenco delle chiusure',
+              description:
+                'Es. il periodo dei Giochi di Natale con lezioni accorpate: non è un giorno di chiusura, quindi non sta nell’elenco. Vuota = non compare.',
+              multiline: true,
+            }),
             vuotoNonRecuperabili: fields.text({
               label: 'Testo quando le chiusure non ci sono',
               multiline: true,

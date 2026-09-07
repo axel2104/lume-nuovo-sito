@@ -48,6 +48,9 @@ interface Quota {
 }
 const quote = t.listino.voci as Quota[];
 const nonRecuperabili = t.recuperi.nonRecuperabili as string[];
+// Nota sotto le chiusure (es. Giochi di Natale): non è un giorno, quindi non
+// sta nell'elenco. Come le date di stagione, vuota sparisce — vedi `campo()`.
+const notaChiusure = campo(t.recuperi, 'notaChiusure');
 ---
 
 <Layout title={t.seo.titolo} description={t.seo.descrizione}>
@@ -232,6 +235,7 @@ const nonRecuperabili = t.recuperi.nonRecuperabili as string[];
               <p class="sn-nota">{t.recuperi.vuotoNonRecuperabili}</p>
             )
           }
+          {notaChiusure && <p class="sn-nota">{notaChiusure}</p>}
         </div>
       </div>
     </section>

@@ -11,6 +11,8 @@
   },
   "stagione": {
     "titolo": "La stagione",
+    "inizio": "Lunedì 7 settembre 2026",
+    "fine": "Sabato 5 giugno 2027",
     "nota": "Si può scegliere fra una frequenza monosettimanale e una bisettimanale. Il programma tecnico è adeguato alla frequenza scelta: chi frequenta due volte a settimana ha di norma una progressione più rapida."
   },
   "fasce": {
@@ -143,7 +145,17 @@
     "titolo": "Recuperare una lezione",
     "testo": "Le lezioni perse si possono recuperare, ma l'assenza va dichiarata prima: si cancella la prenotazione almeno un'ora prima dell'inizio, e da quel momento si è abilitati a prenotare un recupero. Serve avere l'abbonamento attivo ed essere in regola con i pagamenti.",
     "titoloNonRecuperabili": "Giorni non recuperabili",
-    "nonRecuperabili": [],
+    "nonRecuperabili": [
+      "1 novembre",
+      "8 dicembre",
+      "24, 25, 26 e 31 dicembre",
+      "1, 2 e 6 gennaio",
+      "27 e 29 marzo (Pasqua)",
+      "25 aprile",
+      "1 maggio",
+      "2 giugno"
+    ],
+    "notaChiusure": "Dal 21 dicembre al 5 gennaio la scuola nuoto bambini fa i Giochi di Natale in acqua: in quel periodo le lezioni potrebbero essere accorpate.",
     "vuotoNonRecuperabili": "Il calendario delle chiusure della nuova stagione è in aggiornamento."
   },
   "cta": {
