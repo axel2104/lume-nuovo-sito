@@ -1,0 +1,9 @@
+# robots.txt — lumefitness.it
+# Tutto indicizzabile tranne l'editor Keystatic e le sue rotte OAuth:
+# non sono contenuti e non devono consumare crawl budget.
+User-agent: *
+Allow: /
+Disallow: /keystatic
+Disallow: /api/keystatic
+
+Sitemap: https://lumefitness.it/sitemap-index.xml

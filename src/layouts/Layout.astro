@@ -52,6 +52,33 @@ const clientConfig = {
 };
 
 const { gtmId, iubendaSiteId, iubendaCookiePolicyId } = siteConfig;
+
+// Dati strutturati globali (schema.org): dicono a Google chi è Lume e qual è
+// il sito ufficiale. Le pagine dei centri aggiungono il loro ExerciseGym
+// tramite lo slot "head" qui sotto.
+const jsonldGlobale = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': new URL('/#org', base).toString(),
+      name: 'Lume Fitness Club',
+      url: base.toString(),
+      logo: new URL('/logo-lume.png', base).toString(),
+      sameAs: [
+        'https://www.facebook.com/lumefitnessclub/',
+        'https://www.instagram.com/lumefitnessclub/',
+      ],
+    },
+    {
+      '@type': 'WebSite',
+      name: 'Lume Fitness Club',
+      url: base.toString(),
+      publisher: { '@id': new URL('/#org', base).toString() },
+      inLanguage: 'it-IT',
+    },
+  ],
+});
 ---
 
 <!doctype html>
@@ -166,6 +193,12 @@ _iub.csConfiguration = {
     <meta property="og:image" content={ogImage} />
     <meta property="og:locale" content="it_IT" />
     <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={jsonldGlobale} />
+    <!--
+      Slot per dati strutturati di pagina (es. ExerciseGym dei centri).
+      Solo <script> JSON-LD: non è un canale per markup generico.
+    -->
+    <slot name="head" />
   </head>
   <body>
     <a class="skip-link" href="#contenuto">Salta al contenuto</a>

@@ -7,17 +7,10 @@
 [build.environment]
   NODE_VERSION = "22"
 
-# ─────────────────────────────────────────────────────────────────────────
-# STAGING — DA RIMUOVERE AL GO-LIVE
-# Finché il sito vive sull'URL *.netlify.app e www.lumefitness.it è ancora il
-# WordPress, questo blocco tiene il nuovo sito fuori dagli indici: due versioni
-# degli stessi contenuti indicizzate insieme si cannibalizzano a vicenda.
-# Quando si passa in produzione: cancellare questo blocco headers.
-# ─────────────────────────────────────────────────────────────────────────
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Robots-Tag = "noindex, nofollow"
+# Il sito è in produzione su lumefitness.it: niente X-Robots-Tag noindex.
+# (Il blocco staging che lo impostava è stato rimosso al go-live: tenerlo
+# avrebbe detto a Google di non indicizzare nulla, lasciando in indice
+# solo le vecchie pagine WordPress.)
 
 # Asset con hash nel nome: immutabili, cache lunga.
 [[headers]]
@@ -104,5 +97,168 @@
 [[redirects]]
   from = "/infoMonte"
   to = "/contatti?centro=montecassiano"
+  status = 301
+  force = true
+
+# ─────────────────────────────────────────────────────────────────────────
+# REDIRECT SEO — VECCHIE PAGINE WORDPRESS
+#
+# Il WordPress aveva una decina di pagine editoriali indicizzate da Google
+# (/macerata/, /corsi-fitness/, …). Dopo il cambio sito risponderebbero 404:
+# ogni 301 qui sotto porta utenti e ranking sulla pagina nuova equivalente
+# e fa sparire il vecchio URL dall'indice in qualche settimana.
+#
+# Ogni percorso è dichiarato con e senza slash finale: il matching dei
+# redirect Netlify non normalizza le due forme, e Google le ha indicizzate
+# entrambe nel tempo.
+# ─────────────────────────────────────────────────────────────────────────
+
+# Le due sedi (più le varianti "home-" usate dal vecchio menu).
+[[redirects]]
+  from = "/macerata"
+  to = "/centri/macerata"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/macerata/"
+  to = "/centri/macerata"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/home-macerata"
+  to = "/centri/macerata"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/home-macerata/"
+  to = "/centri/macerata"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/montecassiano"
+  to = "/centri/montecassiano"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/montecassiano/"
+  to = "/centri/montecassiano"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/home-montecassiano"
+  to = "/centri/montecassiano"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/home-montecassiano/"
+  to = "/centri/montecassiano"
+  status = 301
+  force = true
+
+# Il ramo "Palestra" del vecchio menu: oggi è l'indice delle discipline.
+[[redirects]]
+  from = "/palestra"
+  to = "/discipline"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/palestra/"
+  to = "/discipline"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/corsi-fitness"
+  to = "/discipline"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/corsi-fitness/"
+  to = "/discipline"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/crossfit"
+  to = "/discipline/crossfit"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/crossfit/"
+  to = "/discipline/crossfit"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/reformer"
+  to = "/discipline/reformer"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/reformer/"
+  to = "/discipline/reformer"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/scuola-nuoto-bambini"
+  to = "/scuola-nuoto"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/scuola-nuoto-bambini/"
+  to = "/scuola-nuoto"
+  status = 301
+  force = true
+
+# "Regole Automazione" (norme di accesso badge): non ha una pagina dedicata
+# nel sito nuovo, le stesse risposte stanno nelle FAQ dei centri e nei contatti.
+[[redirects]]
+  from = "/lp-istruzioni-automazione"
+  to = "/contatti"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/lp-istruzioni-automazione/"
+  to = "/contatti"
+  status = 301
+  force = true
+
+# Rotte tecniche WordPress: archivi, tassonomie e API REST. Nessun equivalente
+# e nessun valore da conservare: vanno alla home invece che in 404.
+[[redirects]]
+  from = "/wp-json/*"
+  to = "/"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/category/*"
+  to = "/"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/tag/*"
+  to = "/"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/author/*"
+  to = "/"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/feed/*"
+  to = "/"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/2023/*"
+  to = "/"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/2024/*"
+  to = "/"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/2025/*"
+  to = "/"
   status = 301
   force = true

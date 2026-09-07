@@ -74,9 +74,42 @@ const fotoSala = (nome: string) => {
 const faq = (await getCollection('helpdesk'))
   .filter((v) => v.data.pubblicato && ['accesso', 'prenotazioni', 'regolamento'].includes(v.data.categoria))
   .sort((a, b) => a.data.ordine - b.data.ordine);
+
+// Description e dati strutturati della pagina: ExerciseGym con indirizzo,
+// contatti e coordinate — è il segnale che alimenta i risultati locali
+// ("palestra macerata" mostra scheda e mappa). Tutto dai contenuti del CMS.
+const base = Astro.site ?? new URL('https://lumefitness.it');
+const description = c.indirizzo
+  ? `${c.nome} a ${c.citta}: ${c.indirizzo}. Sale, discipline, orari e planning del centro — vieni a provare.`
+  : `${c.nome} a ${c.citta}: sale, discipline, orari e planning del centro.`;
+const jsonldCentro = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ExerciseGym',
+  name: c.nome,
+  url: new URL(Astro.url.pathname, base).toString(),
+  ...(c.indirizzo && {
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: c.indirizzo,
+      addressLocality: c.citta,
+      addressCountry: 'IT',
+    },
+  }),
+  ...(c.telefono && { telephone: c.telefono }),
+  ...(c.email && { email: c.email }),
+  ...(c.coordinate && {
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: c.coordinate.lat,
+      longitude: c.coordinate.lng,
+    },
+  }),
+  parentOrganization: { '@id': new URL('/#org', base).toString() },
+});
 ---
 
-<Layout title={`${c.nome} — Lume Fitness Club`}>
+<Layout title={`${c.nome} — Lume Fitness Club`} description={description}>
+  <script type="application/ld+json" slot="head" set:html={jsonldCentro} />
   <Header />
   <main id="contenuto">
   <section class="sec" style="padding-top:0">

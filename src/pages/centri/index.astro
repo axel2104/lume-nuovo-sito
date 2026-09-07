@@ -9,7 +9,10 @@ import { getCollection } from 'astro:content';
 const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.data.ordine);
 ---
 
-<Layout title="I nostri centri — Lume Fitness Club">
+<Layout
+  title="I nostri centri — Lume Fitness Club"
+  description="I centri Lume nelle Marche: Macerata, Montecassiano, Urban e Motion. Sale pesi, corsi, piscina e scuola nuoto — scegli il più vicino a te."
+>
   <Header />
   <main id="contenuto">
   <section class="sec">
