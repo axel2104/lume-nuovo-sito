@@ -22,12 +22,19 @@ delle otto combinazioni piano-formula, nella forma
 Non sono deducibili: i tre trovati nel vecchio sito (126, 127, 128) sono i
 pacchetti nuoto estivi, non gli abbonamenti.
 
-### 2. Orari piscina — in vigore dal 7 settembre
+### 2. Orari piscina — pubblicati il 7 settembre 2026
 
-Il cliente manda il file. Quelli che manda vanno sostituiti il 7 settembre,
-quando entrano in vigore gli orari di tutto l'anno. Gli orari 2024/25 sono già
-trascritti in [`PLANNING-PISCINA.md`](PLANNING-PISCINA.md) ma **non
-pubblicati**, perché sono di una stagione scaduta.
+FATTO il 7/9/26: il planning piscina 26/27 è caricato in
+`src/content/centri/montecassiano.md` sotto le lezioni di sala (60 voci:
+acqua fitness + fasce scuola nuoto bambini/ragazzi, tutte con
+`sala: Piscina`; la scuola nuoto ha `prenotabile: false` perché è un corso a
+iscrizione, non una lezione prenotabile). Fonte: il file del cliente
+"PLANNING FITNESS 2026-2027.docx", tabella «dal 07/09». La tabella
+«IPOTETICO DAL 19/10» dello stesso file NON è pubblicata: se l'apertura di
+Piediripa sposta qualche corso, il planning va aggiornato a mano.
+
+Gli orari 2024/25 restano in [`PLANNING-PISCINA.md`](PLANNING-PISCINA.md)
+come storico, non vanno ripubblicati.
 
 ### 3. Scuola nuoto — stagione e listino
 

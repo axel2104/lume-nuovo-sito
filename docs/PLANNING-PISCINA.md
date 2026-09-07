@@ -1,4 +1,10 @@
-# Planning piscina Montecassiano — da confermare, NON pubblicato
+# Planning piscina Montecassiano — 2024/25, superato (storico)
+
+**Aggiornamento 7/9/26: gli orari piscina 26/27 sono pubblicati** nel campo
+`planning` di `src/content/centri/montecassiano.md` (fonte: file del cliente
+"PLANNING FITNESS 2026-2027.docx", tabella «dal 07/09»). Questo documento
+resta solo come storico della stagione 2024/25: non incollare il blocco in
+fondo, è di una stagione scaduta.
 
 Il planning pubblicato di Montecassiano ha 51 lezioni e **non contiene una sola
 lezione di acqua fitness**. Il foglio "Ipotesi Planning 26/27" non ha un foglio

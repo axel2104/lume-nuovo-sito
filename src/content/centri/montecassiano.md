@@ -42,8 +42,8 @@ perfectgymCorsiUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Classes/
 calcom:
   visita: lumefitness/visita-montecassiano
   richiamata: lumefitness/richiamata
-planningNota: "Orario della stagione 26/27 ancora provvisorio: qualche corso e qualche orario possono cambiare prima di settembre."
-planningAggiornatoIl: 2026-08-27
+planningNota: "Orario della stagione 26/27 in vigore dal 7 settembre, piscina compresa. Dal 19 ottobre, con l'apertura del centro di Piediripa, qualche corso e qualche orario possono cambiare."
+planningAggiornatoIl: 2026-09-07
 planning:
   - giorno: '1'
     inizio: '09:30'
@@ -300,6 +300,364 @@ planning:
     fine: '11:35'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
+  - giorno: '1'
+    inizio: '07:30'
+    fine: '08:20'
+    corso: 'AcquaGYM'
+    disciplina: acquagym
+    sala: Piscina
+  - giorno: '1'
+    inizio: '08:30'
+    fine: '09:15'
+    corso: 'AcquaCROSS'
+    disciplina: acquacross
+    sala: Piscina
+  - giorno: '1'
+    inizio: '09:30'
+    fine: '10:15'
+    corso: 'AcquaFIT'
+    disciplina: acquafit
+    sala: Piscina
+  - giorno: '1'
+    inizio: '12:45'
+    fine: '13:30'
+    corso: 'AcquaCROSS'
+    disciplina: acquacross
+    sala: Piscina
+  - giorno: '1'
+    inizio: '13:45'
+    fine: '14:30'
+    corso: 'AcquaGYM'
+    disciplina: acquagym
+    sala: Piscina
+  - giorno: '1'
+    inizio: '17:15'
+    fine: '18:00'
+    corso: 'AcquaWALKING'
+    disciplina: acquawalking
+    sala: Piscina
+  - giorno: '1'
+    inizio: '18:15'
+    fine: '19:00'
+    corso: 'AcquaGYM'
+    disciplina: acquagym
+    sala: Piscina
+  - giorno: '1'
+    inizio: '19:15'
+    fine: '20:00'
+    corso: 'AcquaBIKE'
+    disciplina: acquabike
+    sala: Piscina
+  - giorno: '1'
+    inizio: '20:10'
+    fine: '21:00'
+    corso: 'LesMills AquaWork'
+    disciplina: lesmills-aqua
+    sala: Piscina
+  - giorno: '1'
+    inizio: '17:20'
+    fine: '18:10'
+    corso: 'Scuola Nuoto Bambini'
+    sala: Piscina
+    prenotabile: false
+  - giorno: '1'
+    inizio: '19:10'
+    fine: '20:00'
+    corso: 'Scuola Nuoto Ragazzi'
+    sala: Piscina
+    prenotabile: false
+  - giorno: '2'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'AcquaWALKING'
+    disciplina: acquawalking
+    sala: Piscina
+  - giorno: '2'
+    inizio: '10:00'
+    fine: '10:45'
+    corso: 'LesMills AquaDynamic'
+    disciplina: lesmills-aqua
+    sala: Piscina
+  - giorno: '2'
+    inizio: '12:45'
+    fine: '13:30'
+    corso: 'AcquaWALKING'
+    disciplina: acquawalking
+    sala: Piscina
+  - giorno: '2'
+    inizio: '13:40'
+    fine: '14:25'
+    corso: 'LesMills AquaWork'
+    disciplina: lesmills-aqua
+    sala: Piscina
+  - giorno: '2'
+    inizio: '17:30'
+    fine: '18:15'
+    corso: 'AcquaGYM'
+    disciplina: acquagym
+    sala: Piscina
+  - giorno: '2'
+    inizio: '18:30'
+    fine: '19:15'
+    corso: 'AcquaBIKE'
+    disciplina: acquabike
+    sala: Piscina
+  - giorno: '2'
+    inizio: '19:30'
+    fine: '20:15'
+    corso: 'LesMills Acquatonus'
+    disciplina: lesmills-aqua
+    sala: Piscina
+  - giorno: '2'
+    inizio: '16:25'
+    fine: '17:15'
+    corso: 'Scuola Nuoto Bambini'
+    sala: Piscina
+    prenotabile: false
+  - giorno: '2'
+    inizio: '17:20'
+    fine: '18:10'
+    corso: 'Scuola Nuoto Bambini'
+    sala: Piscina
+    prenotabile: false
+  - giorno: '2'
+    inizio: '19:10'
+    fine: '20:00'
+    corso: 'Scuola Nuoto Ragazzi'
+    sala: Piscina
+    prenotabile: false
+  - giorno: '3'
+    inizio: '07:45'
+    fine: '08:30'
+    corso: 'AcquaWALKING'
+    disciplina: acquawalking
+    sala: Piscina
+  - giorno: '3'
+    inizio: '08:45'
+    fine: '09:30'
+    corso: 'AcquaGYM'
+    disciplina: acquagym
+    sala: Piscina
+  - giorno: '3'
+    inizio: '09:45'
+    fine: '10:30'
+    corso: 'AcquaFIT'
+    disciplina: acquafit
+    sala: Piscina
+  - giorno: '3'
+    inizio: '11:30'
+    fine: '12:20'
+    corso: 'AcquaMAMMA'
+    sala: Piscina
+  - giorno: '3'
+    inizio: '13:00'
+    fine: '13:45'
+    corso: 'LesMills AquaDynamic'
+    disciplina: lesmills-aqua
+    sala: Piscina
+  - giorno: '3'
+    inizio: '14:00'
+    fine: '14:45'
+    corso: 'AcquaBIKE'
+    disciplina: acquabike
+    sala: Piscina
+  - giorno: '3'
+    inizio: '17:15'
+    fine: '18:00'
+    corso: 'AcquaGYM'
+    disciplina: acquagym
+    sala: Piscina
+  - giorno: '3'
+    inizio: '18:20'
+    fine: '19:05'
+    corso: 'AcquaWALKING'
+    disciplina: acquawalking
+    sala: Piscina
+  - giorno: '3'
+    inizio: '19:20'
+    fine: '20:05'
+    corso: 'AcquaBIKE'
+    disciplina: acquabike
+    sala: Piscina
+  - giorno: '3'
+    inizio: '16:25'
+    fine: '17:15'
+    corso: 'Scuola Nuoto Bambini'
+    sala: Piscina
+    prenotabile: false
+  - giorno: '3'
+    inizio: '17:20'
+    fine: '18:10'
+    corso: 'Scuola Nuoto Bambini'
+    sala: Piscina
+    prenotabile: false
+  - giorno: '3'
+    inizio: '18:15'
+    fine: '19:05'
+    corso: 'Scuola Nuoto Bambini'
+    sala: Piscina
+    prenotabile: false
+  - giorno: '3'
+    inizio: '19:10'
+    fine: '20:00'
+    corso: 'Scuola Nuoto Ragazzi'
+    sala: Piscina
+    prenotabile: false
+  - giorno: '4'
+    inizio: '09:00'
+    fine: '09:45'
+    corso: 'AcquaFIT'
+    disciplina: acquafit
+    sala: Piscina
+  - giorno: '4'
+    inizio: '10:00'
+    fine: '10:45'
+    corso: 'AcquaGYM'
+    disciplina: acquagym
+    sala: Piscina
+  - giorno: '4'
+    inizio: '12:45'
+    fine: '13:30'
+    corso: 'AcquaGYM'
+    disciplina: acquagym
+    sala: Piscina
+  - giorno: '4'
+    inizio: '13:45'
+    fine: '14:30'
+    corso: 'AcquaWALKING'
+    disciplina: acquawalking
+    sala: Piscina
+  - giorno: '4'
+    inizio: '18:15'
+    fine: '19:00'
+    corso: 'AcquaBIKE'
+    disciplina: acquabike
+    sala: Piscina
+  - giorno: '4'
+    inizio: '19:15'
+    fine: '20:00'
+    corso: 'LesMills AquaDynamic'
+    disciplina: lesmills-aqua
+    sala: Piscina
+  - giorno: '4'
+    inizio: '20:10'
+    fine: '21:00'
+    corso: 'LesMills AquaWork'
+    disciplina: lesmills-aqua
+    sala: Piscina
+  - giorno: '4'
+    inizio: '17:20'
+    fine: '18:10'
+    corso: 'Scuola Nuoto Bambini'
+    sala: Piscina
+    prenotabile: false
+  - giorno: '4'
+    inizio: '18:15'
+    fine: '19:05'
+    corso: 'Scuola Nuoto Bambini'
+    sala: Piscina
+    prenotabile: false
+  - giorno: '4'
+    inizio: '19:10'
+    fine: '20:00'
+    corso: 'Scuola Nuoto Ragazzi'
+    sala: Piscina
+    prenotabile: false
+  - giorno: '5'
+    inizio: '07:30'
+    fine: '08:15'
+    corso: 'LesMills AquaWork'
+    disciplina: lesmills-aqua
+    sala: Piscina
+  - giorno: '5'
+    inizio: '08:30'
+    fine: '09:15'
+    corso: 'LesMills Acquatonus'
+    disciplina: lesmills-aqua
+    sala: Piscina
+  - giorno: '5'
+    inizio: '10:00'
+    fine: '10:45'
+    corso: 'AcquaWALKING'
+    disciplina: acquawalking
+    sala: Piscina
+  - giorno: '5'
+    inizio: '12:30'
+    fine: '13:15'
+    corso: 'AcquaBIKE'
+    disciplina: acquabike
+    sala: Piscina
+  - giorno: '5'
+    inizio: '13:30'
+    fine: '14:15'
+    corso: 'AcquaGYM'
+    disciplina: acquagym
+    sala: Piscina
+  - giorno: '5'
+    inizio: '18:20'
+    fine: '19:10'
+    corso: 'AcquaMAMMA'
+    sala: Piscina
+  - giorno: '5'
+    inizio: '19:15'
+    fine: '20:00'
+    corso: 'AcquaWALKING'
+    disciplina: acquawalking
+    sala: Piscina
+  - giorno: '5'
+    inizio: '20:15'
+    fine: '21:00'
+    corso: 'AcquaBIKE'
+    disciplina: acquabike
+    sala: Piscina
+  - giorno: '5'
+    inizio: '16:25'
+    fine: '17:15'
+    corso: 'Scuola Nuoto Bambini'
+    sala: Piscina
+    prenotabile: false
+  - giorno: '5'
+    inizio: '17:20'
+    fine: '18:10'
+    corso: 'Scuola Nuoto Bambini'
+    sala: Piscina
+    prenotabile: false
+  - giorno: '5'
+    inizio: '19:10'
+    fine: '20:00'
+    corso: 'Scuola Nuoto Ragazzi'
+    sala: Piscina
+    prenotabile: false
+  - giorno: '6'
+    inizio: '08:45'
+    fine: '09:30'
+    corso: 'AcquaBIKE'
+    disciplina: acquabike
+    sala: Piscina
+  - giorno: '6'
+    inizio: '09:40'
+    fine: '10:30'
+    corso: 'AcquaGYM'
+    disciplina: acquagym
+    sala: Piscina
+  - giorno: '6'
+    inizio: '15:30'
+    fine: '16:20'
+    corso: 'Scuola Nuoto Bambini'
+    sala: Piscina
+    prenotabile: false
+  - giorno: '6'
+    inizio: '16:25'
+    fine: '17:15'
+    corso: 'Scuola Nuoto Bambini'
+    sala: Piscina
+    prenotabile: false
+  - giorno: '6'
+    inizio: '17:20'
+    fine: '18:10'
+    corso: 'Scuola Nuoto Bambini'
+    sala: Piscina
+    prenotabile: false
 ---
 
 Ambienti luminosi e moderni, sala pesi completa, corsi di gruppo, piscina e
