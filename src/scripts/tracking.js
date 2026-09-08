@@ -12,6 +12,8 @@
  *
  * Regole invariabili:
  *  - la CATTURA (scrittura su storage) avviene solo dopo consenso analytics;
+ *  - il Meta Pixel parte solo dopo consenso marketing, ed è l'unico posto da
+ *    cui parte: niente tag in <head>, niente fbq sparso nelle pagine;
  *  - la PROPAGAZIONE degli UTM sui link interni gira sempre: riscrive solo href,
  *    non tocca lo storage, quindi è innocua anche senza consenso;
  *  - il vid si genera una volta sola per browser e non cambia mai, qualunque
@@ -65,8 +67,81 @@
         }
       }
       window.dataLayer.push(ev);
+      pixelEvento(nome, ev);
     } catch (e) {}
   };
+
+  // ─── Meta Pixel ─────────────────────────────────────────────────────────
+  /**
+   * Nome dell'evento interno → evento standard Meta.
+   *
+   * Solo eventi standard, e solo questi tre: sono quelli su cui una campagna
+   * può ottimizzare. Un evento in più (una email digitata, uno step aperto)
+   * finisce in Events Manager come rumore su cui nessuno farà mai un'
+   * inserzione, e intanto è un dato in più mandato a Meta. Chi aggiunge una
+   * riga qui sta scegliendo di condividere quell'evento: che sia una scelta.
+   */
+  var EVENTI_META = {
+    generate_lead: 'Lead',
+    appuntamento_prenotato: 'Schedule',
+    newsletter_iscrizione: 'CompleteRegistration',
+  };
+
+  var pixelAttivo = false;
+  var marketingOk = false;
+
+  /**
+   * Carica fbevents.js e manda la PageView. Idempotente, e inerte senza ID.
+   *
+   * Viene chiamata dal ponte del consenso, non all'avvio: prima del sì di
+   * Iubenda sulla finalità 5 non parte nessuna richiesta a Meta e non si
+   * scrive il cookie `_fbp`.
+   */
+  function caricaPixel() {
+    if (pixelAttivo || !CFG.metaPixelId) return;
+    pixelAttivo = true;
+    try {
+      // Loader ufficiale del pixel, ridotto all'essenziale: la coda `queue`
+      // regge le chiamate fatte prima che lo script sia arrivato.
+      var f = (window.fbq = function () {
+        f.callMethod ? f.callMethod.apply(f, arguments) : f.queue.push(arguments);
+      });
+      if (!window._fbq) window._fbq = f;
+      f.push = f;
+      f.loaded = true;
+      f.version = '2.0';
+      f.queue = [];
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://connect.facebook.net/en_US/fbevents.js';
+      document.head.appendChild(s);
+      window.fbq('init', CFG.metaPixelId);
+      window.fbq('track', 'PageView');
+    } catch (e) {}
+  }
+
+  /**
+   * Inoltra al pixel un evento già finito nel dataLayer.
+   *
+   * Gli eventi emessi prima del consenso non vengono recuperati: restano nel
+   * dataLayer per GTM e per Meta sono persi. È il comportamento giusto —
+   * senza consenso non c'era niente da mandare.
+   */
+  function pixelEvento(nome, ev) {
+    if (!pixelAttivo || !marketingOk || typeof window.fbq !== 'function') return;
+    var standard = EVENTI_META[nome];
+    if (!standard) return;
+    try {
+      var dati = {};
+      // Solo il centro, e come parametro standard: è l'unica dimensione su cui
+      // una campagna Lume segmenta davvero. Niente email, niente id: quelli
+      // sono dati personali e la loro strada è la Conversions API da n8n,
+      // dove passano hashati e non dal browser.
+      if (ev.centro) dati.content_name = ev.centro;
+      if (ev.lead_medium) dati.content_category = ev.lead_medium;
+      window.fbq('track', standard, dati);
+    } catch (e) {}
+  }
 
   // ─── Attribuzione ───────────────────────────────────────────────────────
   function utmDaUrl() {
@@ -225,6 +300,13 @@
 
   // ─── Ponte Consent Mode v2 ──────────────────────────────────────────────
   function aggiornaConsenso(analytics, marketing, personalizzazione) {
+    // Il pixel sta prima del `return`: è la stessa finalità che apre
+    // `ad_storage`, e non deve dipendere dalla presenza di gtag. La revoca
+    // conta quanto il consenso: fbevents.js una volta caricato non si
+    // scarica, ma `marketingOk` torna falso e gli eventi non partono più,
+    // anche se Iubenda non ricarica la pagina.
+    marketingOk = !!marketing;
+    if (marketingOk) caricaPixel();
     if (typeof window.gtag !== 'function') return;
     window.gtag('consent', 'update', {
       analytics_storage: analytics ? 'granted' : 'denied',

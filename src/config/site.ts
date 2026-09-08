@@ -16,6 +16,24 @@ export const siteConfig = {
   gtmId: env.PUBLIC_GTM_ID ?? '',
 
   /**
+   * Meta Pixel: il dataset ID di Events Manager, 15-16 cifre. Vuoto = nessun
+   * pixel, e il codice resta in pagina ma inerte: si accende impostando
+   * questa variabile su Netlify, senza toccare il repo.
+   *
+   * L'ID è pubblico per costruzione — sta nell'HTML di ogni sito che usi il
+   * pixel — ma qui non ha un default, al contrario degli ID Iubenda: un
+   * pixel scritto nel codice manderebbe eventi al dataset di produzione
+   * anche dalle anteprime di deploy, e in Events Manager quei numeri non si
+   * separano più. Il token della Conversions API, quando servirà, non passa
+   * da qui: è un segreto e vive in n8n.
+   *
+   * Il consenso non è un'opzione di questo campo: il pixel parte solo se
+   * Iubenda concede la finalità 5, targeting e pubblicità. Vedi
+   * `src/scripts/tracking.js`.
+   */
+  metaPixelId: env.PUBLIC_META_PIXEL_ID ?? '',
+
+  /**
    * Iubenda Cookie Solution. Entrambi necessari perché il banner venga caricato.
    *
    * I default non sono segnaposto: sono gli ID reali dell'account Lume,

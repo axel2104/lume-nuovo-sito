@@ -46,6 +46,9 @@ const clientConfig = {
   webhookVisit: siteConfig.webhookVisit,
   calcomOrigin: siteConfig.calcomOrigin,
   webhookPlanning: siteConfig.webhookPlanning,
+  // Il pixel lo carica tracking.js dopo il consenso, non un tag in <head>:
+  // così l'unico posto che decide se e quando partire resta uno.
+  metaPixelId: siteConfig.metaPixelId,
   consensoGestito,
   // In produzione senza banner il tracciamento resta spento: vedi tracking.js.
   produzione: import.meta.env.PROD,
