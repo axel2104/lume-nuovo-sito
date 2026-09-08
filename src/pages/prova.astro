@@ -1,151 +1,594 @@
 ---
 /**
- * Landing del pass prova — destinazione dei redirect da `/provagratis` e
- * `n8n.lumeflow.it/form/guest-pass`.
+ * Landing del pass prova — la pagina che deve vendere i sette giorni.
  *
- * Il vecchio sito mandava questa richiesta su due strumenti diversi (un form
- * nativo n8n e un Typeform) con offerte descritte in modo diverso. Qui c'è una
- * pagina sola, e il form è quello del sito: l'utente non cambia dominio, e
- * l'attribuzione non si perde nel passaggio.
+ * Destinazione dei redirect da `/provagratis` e da
+ * `n8n.lumeflow.it/form/guest-pass`, e delle campagne a pagamento. È l'unica
+ * pagina del sito **senza header e senza footer**: chi arriva da un'inserzione
+ * ha una domanda sola in testa, e ogni link che porta altrove è un modo di
+ * perderlo. La navigazione ricompare quando ha deciso.
+ *
+ * ─── L'ordine, e perché è questo ───────────────────────────────────────────
+ * Il form sta **nell'hero**: su desktop è la colonna destra, su mobile è la
+ * prima cosa dopo il prezzo. Chi è già convinto non deve scorrere niente.
+ * Sotto, in ordine: cosa si apre (foto, non elenchi), cosa entra nei sette
+ * giorni, i numeri, chi è Lume, come funziona, dove, le regole senza
+ * asterischi, le domande. Una barra in basso riporta al form da qualunque
+ * punto.
+ *
+ * **Un solo form in pagina.** Due istanze dello stesso flusso significano id
+ * duplicati e due lead dalla stessa persona: tutti i pulsanti portano allo
+ * stesso `#richiedi`.
+ *
+ * ─── Le foto ───────────────────────────────────────────────────────────────
+ * Sono quelle vere delle sale, prese dagli asset delle discipline e dei
+ * centri: ogni etichetta dice quello che si vede. Dell'acqua non c'è uno
+ * scatto in repository, quindi quel riquadro è testo — una foto della sala
+ * pesi con scritto «piscina» sarebbe una bugia detta con un'immagine, che è
+ * la più difficile da smentire. Quando arriva la foto della piscina, entra lì.
+ *
+ * ─── Cosa NON si dichiara ──────────────────────────────────────────────────
+ * Nessun contatore di posti rimasti, nessuna scadenza inventata. I numeri —
+ * ore di corsi, discipline, media recensioni — sono gli stessi dei contenuti
+ * del sito, calcolati dove è possibile calcolarli. Su un'offerta da 15 € la
+ * fiducia è l'unica leva che conta davvero.
  */
 import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
 import FormInline from '../components/forms/FormInline.astro';
+import { Picture } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import { SEDI } from '../config/forms';
 import { PASS } from '../data/abbonamenti';
+
+// Foto vere dei due centri, arrivate dalle PSD e dagli scatti della piscina.
+// Sono la ragione per cui in questa pagina lo stock è ridotto al minimo: una
+// panoramica della sala pesi con la gente dentro vende più di qualsiasi
+// immagine comprata.
+import panoSalaPesi from '../assets/centri/macerata-sala-pesi-pano.jpg';
+import panoGymFloor from '../assets/centri/macerata-gymfloor-pano.jpg';
+import interniMacerata from '../assets/centri/macerata-interni.jpg';
+import piscina from '../assets/centri/montecassiano-piscina.jpg';
+import acquabike from '../assets/centri/montecassiano-acquabike.jpg';
+import bodycombat from '../assets/discipline/lesmills-bodycombat.jpg';
+import salaCorsi from '../assets/discipline/sala-corsi.jpg';
+// Stock, per le sale di cui non abbiamo ancora uno scatto nostro.
+import functional from '../assets/pagine/functional.jpg';
+import gymFloor from '../assets/discipline/gym-floor.jpg';
+import crossfit from '../assets/discipline/crossfit.jpg';
+import reformer from '../assets/discipline/reformer.jpg';
+import bodypump from '../assets/discipline/lesmills-bodypump.jpg';
+import boxing from '../assets/discipline/boxing-hero.jpg';
+import intensityou from '../assets/discipline/intensityou.jpg';
+import pilates from '../assets/discipline/pilates.jpg';
+import walking from '../assets/discipline/walking.jpg';
 
 const centri = (await getCollection('centri'))
   .filter((c) => SEDI[c.id])
   .sort((a, b) => a.data.ordine - b.data.ordine);
 
+const discipline = await getCollection('discipline');
+
+/**
+ * Le ore di corsi della settimana tipo, contate dal planning dei centri.
+ *
+ * Lo stesso numero della home, calcolato allo stesso modo: un corso aggiunto
+ * lo aggiorna da sé. Su una landing un numero scritto a mano invecchia e
+ * diventa una bugia — e qui è uno degli argomenti di vendita.
+ */
+const minutiDi = (ora: string) => {
+  const [h, m] = ora.split(':').map(Number);
+  return (h || 0) * 60 + (m || 0);
+};
+const oreCorsi = Math.round(
+  (await getCollection('centri'))
+    .flatMap((c) => c.data.planning ?? [])
+    .reduce((tot, l) => tot + Math.max(0, minutiDi(l.fine) - minutiDi(l.inizio)), 0) / 60,
+);
+
+/**
+ * Il mosaico: ogni riquadro è una sala vera, con l'etichetta di quello che si
+ * vede. L'etichetta non abbellisce lo scatto, lo dichiara — un riquadro che
+ * promette una sala e ne mostra un'altra è la bugia più facile da raccontare
+ * su una landing, e la più facile da smascherare all'ingresso.
+ *
+ * In testa c'è una striscia panoramica: le foto vere della sala pesi sono
+ * 3:1, e ritagliarle dentro una tessera quadrata butterebbe via proprio la
+ * cosa che le rende utili, cioè quanto è grande la sala.
+ */
+const mosaico = [
+  { foto: bodycombat, tag: 'Corsi Les Mills', nota: 'BodyPump, BodyCombat, RPM' },
+  { foto: piscina, tag: 'Piscina', nota: '6 corsie a Montecassiano' },
+  { foto: salaCorsi, tag: 'Sala corsi', nota: 'Neon, specchi, impianto' },
+  { foto: reformer, tag: 'Sala Reformer', nota: 'Peak Pilates e Wellback' },
+  { foto: boxing, tag: 'Boxing Hero', nota: 'Tecnica e sacchi' },
+  { foto: intensityou, tag: 'IntensitYOU', nota: 'Circuito funzionale' },
+];
+
 const incluso = [
-  { titolo: 'Sala pesi e cardio', testo: 'Accesso libero al gym floor, con la scheda impostata da un tecnico.' },
-  { titolo: 'Corsi fitness', testo: 'Tutti i corsi di gruppo in licenza Les Mills, prenotabili da app.' },
-  { titolo: 'Acqua', testo: 'Acqua fitness e nuoto libero assistito, dove la piscina c’è.' },
-  { titolo: 'CrossFit e Reformer', testo: 'Anche le discipline su prenotazione, non solo la sala.' },
+  {
+    foto: gymFloor,
+    titolo: 'Sala pesi e cardio',
+    testo:
+      'Gym floor Technogym. Il primo ingresso lo fai con un tecnico che ti imposta la scheda: non ti lasciamo davanti a una macchina a indovinare.',
+  },
+  {
+    foto: bodypump,
+    titolo: `${discipline.length} discipline, corsi inclusi`,
+    testo: `Tutti i corsi di gruppo in licenza Les Mills, prenotabili da app. ${oreCorsi} ore di lezione a settimana fra i due centri: il problema è scegliere.`,
+  },
+  {
+    foto: crossfit,
+    titolo: 'CrossFit e Reformer',
+    testo:
+      'Anche le discipline su prenotazione. Non sono un extra da pagare a parte: nei sette giorni sono dentro come tutto il resto.',
+  },
+  {
+    foto: acquabike,
+    titolo: 'Acqua',
+    testo:
+      'Nuoto libero assistito, acquagym, acquabike, AcquaWalk. La piscina è a Montecassiano, e il pass vale anche lì.',
+  },
+];
+
+const passi = [
+  {
+    n: '1',
+    titolo: 'Compili il form',
+    testo: 'Trenta secondi: dove vuoi allenarti, come ti chiami, dove ti richiamiamo.',
+  },
+  {
+    n: '2',
+    titolo: 'Ti richiamiamo e attivi',
+    testo:
+      `Ti chiamiamo per fissare il primo ingresso. Il pass si attiva in reception con un documento e ${PASS.pieno} €, entro 30 giorni dalla richiesta.`,
+  },
+  {
+    n: '3',
+    titolo: 'Sette giorni pieni',
+    testo:
+      'Dal primo ingresso, sette giorni consecutivi di accesso completo. Nessun rinnovo automatico: quando finiscono, finiscono.',
+  },
+];
+
+const domande = [
+  {
+    d: 'Cosa costa esattamente, e cosa no?',
+    r: 'Quindici euro, una volta sola, per sette giorni consecutivi. Nessuna quota di attivazione, nessun rinnovo automatico, nessuna carta da lasciare. La quota di attivazione da 50 € riguarda gli abbonamenti, non il pass.',
+  },
+  {
+    d: 'Chi può richiederlo?',
+    r: 'Chi non ha mai avuto un abbonamento o un pass Lume. È una prova, non una tariffa: per questo è uno per persona. Se sei già stato nostro socio, in reception ti dicono le condizioni per rientrare.',
+  },
+  {
+    d: 'Devo sapere già cosa fare in palestra?',
+    r: 'No, ed è il punto. Al primo ingresso un tecnico ti accompagna, guarda come ti muovi e ti imposta una scheda. Nei sette giorni provi i corsi che vuoi: nessuno si aspetta che tu sappia già usare tutto.',
+  },
+  {
+    d: 'Posso allenarmi in entrambi i centri?',
+    r: 'Sì. Il pass vale su Macerata e Montecassiano, con gli orari di ciascuno. La piscina è a Montecassiano, il Box CrossFit a Macerata.',
+  },
+  {
+    d: 'E se dopo volessi abbonarmi?',
+    r: 'Se decidi di restare, gli abbonamenti partono da 52 € al mese in dodici rate. Ma non è una cosa da decidere adesso: i sette giorni servono a capirlo, e nessuno ti chiederà di firmare niente prima.',
+  },
 ];
 ---
 
 <Layout
-  title="Prova Lume 7 giorni — Lume Fitness Club"
-  description={`Sette giorni di accesso completo ai centri Lume a ${PASS.pieno} €: sala pesi, corsi fitness, acqua, CrossFit e Pilates Reformer. Nessun vincolo di rinnovo.`}
+  title={`7 giorni a Lume per ${PASS.pieno} € — tutto aperto, poi decidi`}
+  description={`Sette giorni di accesso completo ai centri Lume a ${PASS.pieno} €: sala pesi Technogym, ${discipline.length} discipline, corsi Les Mills, piscina, CrossFit e Reformer. Una volta sola, nessun rinnovo automatico.`}
+  image={bodycombat}
 >
-  <Header />
+  <main class="lp" id="contenuto">
+    {/*
+      Non è un header: nessuna navigazione, nessun link che porti fuori. Il
+      logo dice dove si è arrivati, il telefono serve a chi preferisce
+      chiamare — che su una landing è la seconda conversione più frequente.
+    */}
+    <div class="lp-top">
+      {/*
+        Il marchio nella forma decisa a monte: logo, LUME tutto bianco, e
+        «Fitness Club» in piccolo sotto con l'accento rosso. Qui non è un
+        link — su una landing il logo che riporta alla home è una via
+        d'uscita, e l'unica uscita che vogliamo offrire è il telefono.
+      */}
+      <span class="lp-logo">
+        <img src="/logo-lume.png" alt="" width="30" height="30" />
+        <span class="lp-logo-txt">LUME<span class="lp-logo-sub">Fitness Club</span></span>
+      </span>
+      <a class="lp-tel" href="tel:+390733232905">
+        <span aria-hidden="true">●</span> 0733 232905
+      </a>
+    </div>
 
-  <main>
-    <section class="sec">
-      <div class="wrap">
-        <div class="prova-grid">
-          <div>
+    <header class="lp-hero">
+      <div class="lp-hero-sfondo" aria-hidden="true">
+        <Picture
+          src={panoSalaPesi}
+          alt=""
+          widths={[720, 1200, 1800]}
+          sizes="100vw"
+          formats={['avif', 'webp']}
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+
+      <div class="lp-hero-in">
+        <div class="lp-hero-copy">
+          <span class="lp-eyebrow">Pass prova · 7 giorni · {PASS.pieno} €</span>
+          <h1 class="d">
+            Sette giorni.<br />
+            Tutto Lume.<br />
             {/*
-              Sta nel markup ma parte nascosto, e lo accende solo `?ref=`: la
-              pagina è statica e servita identica a tutti, quindi il prezzo
-              ridotto non può essere tolto dal sorgente — può però non stare
-              in vetrina accanto al prezzo pieno, che è il punto.
-              Il codice qui non lo verifica nessuno: lo sconto vero lo applica
-              n8n sul lead, vedi `PASS`.
+              Scritto a parole, non da `PASS.pieno`: in un titolo su tre righe
+              «Quindici euro» batte «15 €» di distacco. Va da sé che se il
+              prezzo cambia questa riga si cambia a mano — ed è giusto, perché
+              a quel punto cambia il titolo, non un numero.
             */}
-            <p class="prova-ref" data-prova-ref hidden>
-              <b>Ti ha invitato un socio Lume</b>
-              Con questo invito la settimana di prova ti costa {PASS.referral} € invece di {
-                PASS.pieno
-              } €. Compila qui sotto: in reception ti aspettano già scontato.
-            </p>
+            <em>Quindici euro.</em>
+          </h1>
+          <p class="lp-lead">
+            Sala pesi, {discipline.length} discipline, corsi Les Mills, piscina, CrossFit,
+            Reformer. Tutto aperto, per sette giorni consecutivi. Poi decidi tu.
+          </p>
 
-            <span class="label">Pass prova</span>
-            <h1 class="d">Sette giorni.<br />Tutto incluso.</h1>
-            <p class="prova-lead">
-              Un pass completo per capire se Lume è il posto giusto per te, prima di firmare
-              qualsiasi cosa. Nessun vincolo di rinnovo: se non torni, non succede niente.
-            </p>
-
-            <div class="prova-prezzo">
-              <b>{PASS.pieno} €</b>
-              <span>una volta sola · 7 giorni consecutivi</span>
-            </div>
-
-            <div class="prova-voci">
-              {
-                incluso.map((i) => (
-                  <div class="prova-voce">
-                    <h3>{i.titolo}</h3>
-                    <p>{i.testo}</p>
-                  </div>
-                ))
-              }
-            </div>
-
-            <div class="prova-note">
-              <h4>Le regole, senza asterischi</h4>
-              <ul>
-                <li>Riservato a chi non ha mai avuto un abbonamento o un pass Lume.</li>
-                <li>Il codice va attivato entro 30 giorni dalla richiesta.</li>
-                <li>Il primo ingresso si fa in reception con un documento.</li>
-                <li>Un solo pass per persona.</li>
-              </ul>
-            </div>
-
-            <div class="prova-sedi">
-              <span class="label">Dove</span>
-              <div class="prova-sedi-lista">
-                {
-                  centri.map((c) => (
-                    <div class="info-card">
-                      <h4>{c.data.nome}</h4>
-                      {c.data.indirizzo && <p>{c.data.indirizzo}</p>}
-                      {c.data.orari && (
-                        <p class="prova-orari">
-                          Lun–Ven {c.data.orari.feriali} · Sab {c.data.orari.sabato}
-                        </p>
-                      )}
-                    </div>
-                  ))
-                }
-              </div>
-            </div>
+          <div class="lp-prezzo">
+            <b>{PASS.pieno} €</b>
+            <span>
+              una volta sola<br />
+              7 giorni consecutivi
+            </span>
           </div>
 
-          <div class="prova-form">
-            <FormInline flusso="prova" medium="PaginaProva" />
+          {/*
+            L'invito di un socio: sta nel markup ma parte nascosto, e lo
+            accende solo `ref`. La pagina è statica e servita identica a
+            tutti, quindi il prezzo ridotto non può essere tolto dal
+            sorgente — può però non stare in vetrina accanto al prezzo
+            pieno, che è il punto. Il codice qui non lo verifica nessuno:
+            lo sconto vero lo applica n8n sul lead.
+          */}
+          <p class="lp-invito" data-prova-ref hidden>
+            <b>Ti ha invitato un socio Lume</b>
+            Con questo invito la settimana ti costa {PASS.referral} € invece di {PASS.pieno} €.
+            {/* Non «qui accanto» né «qui sotto»: il form sta a destra su
+                schermo grande e sotto sul telefono. */}
+            Compila il form: in reception ti aspettano già scontato.
+          </p>
+
+          <ul class="lp-punte">
+            <li>Nessun rinnovo automatico</li>
+            <li>Accesso completo, non ridotto</li>
+            <li>Primo ingresso con un tecnico</li>
+          </ul>
+
+          <div class="lp-numeri">
+            <div><b>{oreCorsi}</b><span>ore di corsi<br />a settimana</span></div>
+            <div><b>{discipline.length}</b><span>discipline<br />in licenza</span></div>
+            <div><b>4.97</b><span>media<br />recensioni</span></div>
           </div>
+        </div>
+
+        {/*
+          Il form nell'hero, non in fondo: chi è già convinto non deve
+          scorrere. È l'unica istanza in pagina.
+        */}
+        <div class="lp-form" id="richiedi">
+          <FormInline flusso="prova" medium="PaginaProva" />
+        </div>
+      </div>
+    </header>
+
+    {/* ─── Il mosaico: si vede prima di leggere ──────────────────────────── */}
+    <section class="lp-sez" id="dove-entri">
+      <div class="lp-wrap">
+        <span class="lp-eyebrow">Guarda dove entri</span>
+        <h2 class="d">Questo è quello che apri</h2>
+        <p class="lp-sub">
+          Sei sale, un pass. Nei sette giorni non ci sono aree riservate a chi ha
+          l'abbonamento: si apre tutto.
+        </p>
+
+        <figure class="lp-striscia">
+          <Picture
+            src={panoGymFloor}
+            alt="La sala pesi di Lume Macerata vista dall'alto, con i soci che si allenano"
+            widths={[900, 1600, 2400]}
+            sizes="(min-width: 1100px) 1040px, 96vw"
+            formats={['avif', 'webp']}
+            loading="lazy"
+          />
+          <figcaption>
+            <b>Sala pesi Technogym</b>
+            <span>Macerata · cardio, isotonica, pesi liberi</span>
+          </figcaption>
+        </figure>
+
+        <div class="lp-mosaico">
+          {mosaico.map((m) => (
+            <figure class="lp-tessera">
+              <Picture
+                src={m.foto}
+                alt={m.tag}
+                widths={[400, 800]}
+                sizes="(min-width: 1000px) 33vw, 46vw"
+                formats={['avif', 'webp']}
+                loading="lazy"
+              />
+              <figcaption>
+                <b>{m.tag}</b>
+                <span>{m.nota}</span>
+              </figcaption>
+            </figure>
+          ))}
         </div>
       </div>
     </section>
-  </main>
 
-  <Footer />
+    {/* ─── La banda dei numeri, su foto ──────────────────────────────────── */}
+    <section class="lp-banda">
+      <div class="lp-banda-sfondo" aria-hidden="true">
+        <Picture
+          src={walking}
+          alt=""
+          widths={[900, 1600]}
+          sizes="100vw"
+          formats={['avif', 'webp']}
+          loading="lazy"
+        />
+      </div>
+      <div class="lp-wrap lp-banda-in">
+        <h2 class="d">Non devi scegliere cosa provare</h2>
+        <div class="lp-banda-numeri">
+          <div><b>{oreCorsi}</b><span>ore di corsi<br />a settimana</span></div>
+          <div><b>{discipline.length}</b><span>discipline<br />in licenza</span></div>
+          <div><b>2</b><span>centri<br />un solo pass</span></div>
+          <div><b>7</b><span>giorni<br />consecutivi</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lp-sez lp-sez-scura" id="incluso">
+      <div class="lp-wrap">
+        <span class="lp-eyebrow">Cosa entra nei sette giorni</span>
+        <h2 class="d">Tutto aperto. Niente escluso.</h2>
+
+        <div class="lp-griglia">
+          {incluso.map((i) => (
+            <article class={i.foto ? 'lp-card lp-card-foto' : 'lp-card'}>
+              {i.foto ? (
+                <Picture
+                  src={i.foto}
+                  alt={i.titolo}
+                  widths={[400, 800]}
+                  sizes="(min-width: 700px) 45vw, 92vw"
+                  formats={['avif', 'webp']}
+                  loading="lazy"
+                />
+              ) : (
+                /*
+                  Ripiego, oggi non usato: tutte e quattro le schede hanno la
+                  loro foto. Resta perché è la regola da seguire quando una
+                  foto manca — un pannello che si vede per quello che è, non
+                  lo scatto di un'altra sala con sopra l'etichetta giusta.
+                */
+                <div class="lp-card-grafica" aria-hidden="true">
+                  <b>{i.titolo}</b>
+                  <span>Lume</span>
+                </div>
+              )}
+              <div class="lp-card-testo">
+                <h3>{i.titolo}</h3>
+                <p>{i.testo}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="lp-sez lp-sez-foto" id="lume">
+      <div class="lp-wrap lp-due">
+        <div>
+          <span class="lp-eyebrow">Chi siamo</span>
+          <h2 class="d">Benessere a 360°, detto senza retorica</h2>
+          <p>
+            Lume non è una sala pesi con qualche corso attorno. Sono due centri aperti nelle
+            Marche — Macerata e Montecassiano — con {oreCorsi} ore di lezione a settimana,
+            attrezzature Technogym, licenze Les Mills, una piscina, un Box CrossFit da
+            450 m², una sala Reformer e una sala olistica.
+          </p>
+          <p>
+            La differenza però non la fanno i metri quadri: la fa chi c'è dentro. Il primo
+            ingresso lo fai con un tecnico che ti guarda muovere e ti imposta una scheda, e
+            nelle sale trovi qualcuno che corregge, non solo qualcuno che apre il tornello.
+            È la ragione per cui la media delle recensioni sta a 4.97.
+          </p>
+          <p class="lp-nota">
+            Altri due centri, Piediripa e Urban, apriranno presto. Il pass prova vale sui
+            due aperti.
+          </p>
+        </div>
+        <div class="lp-foto-coppia">
+          <Picture
+            class="lp-foto-sinistra"
+            src={interniMacerata}
+            alt="Il corridoio delle sale di Lume Macerata"
+            widths={[400, 800]}
+            sizes="(min-width: 1000px) 22vw, 45vw"
+            formats={['avif', 'webp']}
+            loading="lazy"
+          />
+          <Picture
+            src={pilates}
+            alt="Un istruttore corregge la posizione durante un esercizio"
+            widths={[400, 800]}
+            sizes="(min-width: 1000px) 22vw, 45vw"
+            formats={['avif', 'webp']}
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section class="lp-sez" id="come">
+      <div class="lp-wrap">
+        <span class="lp-eyebrow">Come funziona</span>
+        <h2 class="d">Tre passaggi, nessuna sorpresa</h2>
+        <ol class="lp-passi">
+          {passi.map((p) => (
+            <li>
+              <b aria-hidden="true">{p.n}</b>
+              <div>
+                <h3>{p.titolo}</h3>
+                <p>{p.testo}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    {/* ─── I due centri, con la loro foto ────────────────────────────────── */}
+    <section class="lp-sez lp-sez-scura" id="dove">
+      <div class="lp-wrap">
+        <span class="lp-eyebrow">Dove</span>
+        <h2 class="d">Due centri, un pass</h2>
+        <div class="lp-sedi">
+          {centri.map((c, i) => (
+            <article class="lp-sede">
+              {c.data.immagine && (
+                <Picture
+                  src={c.data.immagine}
+                  alt={c.data.nome}
+                  widths={[500, 1000]}
+                  sizes="(min-width: 700px) 45vw, 92vw"
+                  formats={['avif', 'webp']}
+                  loading="lazy"
+                />
+              )}
+              <div class="lp-sede-testo">
+                <h3>{c.data.nome}</h3>
+                {c.data.indirizzo && <p>{c.data.indirizzo}</p>}
+                {c.data.orari && (
+                  <p class="lp-orari">
+                    Lun–Ven {c.data.orari.feriali} · Sab {c.data.orari.sabato} · Dom{' '}
+                    {c.data.orari.domenica}
+                  </p>
+                )}
+                <p class="lp-sede-nota">
+                  {i === 0 ? 'Qui c’è il Box CrossFit da 450 m².' : 'Qui c’è la piscina.'}
+                </p>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="lp-sez lp-sez-regole" id="regole">
+      <div class="lp-wrap lp-stretto">
+        <span class="lp-eyebrow">Le regole, senza asterischi</span>
+        <h2 class="d">Quello che c'è da sapere prima</h2>
+        <p class="lp-sub">
+          Preferiamo dirlo qui che in reception: se una di queste condizioni non torna, il
+          pass non è la strada giusta, e te lo diciamo subito.
+        </p>
+        <ul class="lp-regole">
+          <li>Riservato a chi non ha mai avuto un abbonamento o un pass Lume.</li>
+          <li>Un solo pass per persona.</li>
+          <li>Il codice va attivato entro 30 giorni dalla richiesta.</li>
+          <li>Il primo ingresso si fa in reception con un documento.</li>
+          <li>Sette giorni consecutivi dal primo ingresso, non sette ingressi sparsi.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="lp-sez" id="domande">
+      <div class="lp-wrap lp-stretto">
+        <span class="lp-eyebrow">Domande</span>
+        <h2 class="d">Prima che tu lo chieda</h2>
+        <div class="lp-faq">
+          {domande.map((q) => (
+            <details>
+              <summary>{q.d}</summary>
+              <p>{q.r}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="lp-chiusura">
+      <div class="lp-chiusura-sfondo" aria-hidden="true">
+        <Picture
+          src={functional}
+          alt=""
+          widths={[900, 1600]}
+          sizes="100vw"
+          formats={['avif', 'webp']}
+          loading="lazy"
+        />
+      </div>
+      <div class="lp-wrap lp-stretto lp-chiusura-in">
+        <h2 class="d">Decidi dopo sette giorni. Non adesso.</h2>
+        <p>
+          Una visita non dice niente, un mese è un impegno. Sette giorni sono la misura
+          giusta: entri, provi i corsi, sbagli qualche esercizio, ti fai correggere. Poi
+          decidi — e se decidi che non è il posto giusto, hai speso quindici euro.
+        </p>
+        <a class="btn btn-red lp-cta-grande" href="#richiedi">Richiedi il pass · {PASS.pieno} €</a>
+        <p class="lp-chiusura-tel">
+          Preferisci parlare con qualcuno? <a href="tel:+390733232905">0733 232905</a>,
+          Macerata e Montecassiano.
+        </p>
+      </div>
+    </section>
+
+    {/*
+      Non è il footer del sito: nessuna navigazione, nessuna sitemap. È la riga
+      legale minima, che serve comunque — le piattaforme pubblicitarie
+      pretendono privacy e cookie raggiungibili dalla pagina su cui atterra
+      l'annuncio, e un consenso cookie senza modo di cambiarlo non è consenso.
+    */}
+    <div class="lp-legale">
+      <span>© {new Date().getFullYear()} Lume Fitness Club</span>
+      <nav aria-label="Informative">
+        <a href="/privacy"><span>Privacy</span></a>
+        <a href="/cookie-policy"><span>Cookie</span></a>
+        <a href="#" class="iubenda-cs-preferences-link"><span>Preferenze cookie</span></a>
+      </nav>
+    </div>
+
+    {/*
+      La barra compare quando il form dell'hero è uscito dallo schermo, e
+      riporta lì. Senza JavaScript resta visibile: un pulsante in più in fondo
+      non ha mai fatto danni, un pulsante che non c'è sì.
+    */}
+    <div class="lp-barra" data-lp-barra>
+      <div>
+        <b>{PASS.pieno} €</b>
+        <span>7 giorni, tutto incluso</span>
+      </div>
+      <a class="btn btn-red" href="#richiedi">Richiedi il pass</a>
+    </div>
+  </main>
 </Layout>
 
 <style>
-  .prova-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 32px;
-    align-items: start;
-  }
-  /* Il titolo era a 16px: in global.css gli h1 ereditano la dimensione dal
-     contesto (`.hero-copy h1`, `.page-hero h1`, `.sec-head h1`) e questa
-     pagina non ne aveva nessuno. */
-  .prova-grid h1 {
-    font-size: clamp(38px, 8.5vw, 72px);
-    margin: 14px 0 16px;
-  }
-  .prova-lead {
-    max-width: 52ch;
-  }
-  /* Non è un avviso di sistema: è un benvenuto. Bordo rosso a sinistra come le
-     citazioni editoriali, non un riquadro d'errore. */
-  .prova-ref {
+  /* L'invito non è un avviso di sistema: è un benvenuto. Barra rossa a
+     sinistra come le citazioni editoriali del sito, non un riquadro d'errore. */
+  .lp-invito {
     border-left: 3px solid var(--red);
-    padding: 14px 0 14px 16px;
-    margin: 18px 0 0;
+    padding: 12px 0 12px 16px;
+    margin: 0 0 22px;
+    max-width: 46ch;
     font-size: 14px;
     line-height: 1.55;
     color: #ddd;
   }
-  .prova-ref b {
+  .lp-invito b {
     display: block;
     font-family: 'Anton', sans-serif;
     font-weight: 400;
@@ -155,118 +598,821 @@ const incluso = [
     color: #fff;
     margin-bottom: 4px;
   }
-  .prova-prezzo {
+
+  /* La riga legale: presente, leggibile, e visivamente fuori dal percorso di
+     conversione. Non deve competere con la CTA che le sta sopra. */
+  .lp-legale {
     display: flex;
-    align-items: baseline;
-    gap: 12px;
-    margin: 26px 0;
-    padding-bottom: 22px;
-    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    align-items: center;
+    justify-content: space-between;
+    /* Lo spazio in fondo è per la barra fissa: senza, i link legali finiscono
+       sotto di lei e diventano irraggiungibili proprio in fondo alla pagina. */
+    padding: 8px 24px 84px;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.4);
   }
-  .prova-prezzo b {
-    font-family: 'Anton', sans-serif;
-    font-weight: 400;
-    font-size: clamp(40px, 9vw, 62px);
-    line-height: 1;
-    color: var(--red);
+  .lp-legale nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
   }
-  .prova-prezzo span {
-    font-size: 13px;
-    color: var(--mut);
+  .lp-legale a {
+    /* Bersaglio da pollice: il testo resta piccolo, l'area cliccabile no.
+       In fondo alla pagina, su telefono, un link alto 21px si sbaglia. */
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: inherit;
+    text-decoration: none;
   }
-  .prova-voci {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 18px;
-    margin-bottom: 30px;
+  .lp-legale a span {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
   }
-  .prova-voce h3 {
-    font-family: 'Anton', sans-serif;
-    font-weight: 400;
-    text-transform: uppercase;
-    font-size: 16px;
-    letter-spacing: 0.03em;
-    margin: 0 0 5px;
+  .lp-legale a:hover,
+  .lp-legale a:focus-visible {
+    color: #fff;
   }
-  .prova-voce p {
-    font-size: 14px;
-    color: var(--mut);
-    margin: 0;
-  }
-  .prova-note {
-    border: 1px solid var(--line);
-    border-radius: var(--lf-r-m);
-    padding: 22px 24px;
-    margin-bottom: 30px;
-  }
-  .prova-note h4 {
-    font-family: 'Anton', sans-serif;
-    font-weight: 400;
-    text-transform: uppercase;
-    font-size: 14px;
-    letter-spacing: 0.08em;
-    margin: 0 0 12px;
-  }
-  .prova-note ul {
-    margin: 0;
-    padding-left: 18px;
-    display: grid;
-    gap: 7px;
-  }
-  .prova-note li {
-    font-size: 13px;
-    line-height: 1.55;
-    color: #cfcfcf;
-  }
-  .prova-sedi-lista {
-    display: grid;
-    gap: 12px;
-  }
-  /* `.info-card` arriva da global.css con 16px: qui segue la scala dei form,
-     senza toccare le altre pagine che la usano. */
-  .prova-sedi-lista .info-card {
-    border-radius: var(--lf-r-m);
-  }
-  .prova-sedi-lista p {
-    font-size: 13px;
-    color: #ddd;
-    margin: 0 0 4px;
-  }
-  .prova-orari {
-    color: var(--mut) !important;
-    font-size: 12px !important;
+  .lp-legale a:hover span,
+  .lp-legale a:focus-visible span {
+    border-bottom-color: #fff;
   }
 
-  @media (min-width: 640px) {
-    .prova-voci {
+  /* La landing non usa .sec/.wrap del sito: ha una scala sua, più larga, perché
+     non deve convivere con header e footer. */
+  .lp {
+    background: var(--bg);
+    overflow-x: clip;
+  }
+  .lp-wrap {
+    width: min(1180px, 92vw);
+    margin: 0 auto;
+  }
+  .lp-stretto {
+    width: min(760px, 92vw);
+  }
+  .lp-eyebrow {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--red-txt);
+    margin-bottom: 14px;
+  }
+  .lp h2.d {
+    font-size: clamp(30px, 5.4vw, 50px);
+    margin: 0 0 16px;
+  }
+  .lp h3 {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 17px;
+    margin: 0 0 8px;
+  }
+  .lp p {
+    color: #cfcfcf;
+    line-height: 1.6;
+  }
+  .lp-sub {
+    max-width: 60ch;
+    color: var(--mut) !important;
+  }
+  .lp-nota {
+    font-size: 13px;
+    color: var(--mut) !important;
+  }
+
+  /* ─── Barra in cima: logo e telefono, niente navigazione ─────────────── */
+  .lp-top {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: min(1180px, 92vw);
+    margin: 0 auto;
+    padding: 18px 0 0;
+  }
+  .lp-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+    font-family: 'Anton', sans-serif;
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: #fff;
+  }
+  .lp-logo img {
+    display: block;
+  }
+  .lp-logo-txt {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+  .lp-logo-sub {
+    color: var(--red-txt);
+    font-size: 0.4em;
+    letter-spacing: 0.3em;
+    margin-top: 4px;
+  }
+  .lp-tel {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #eee;
+  }
+  .lp-tel span {
+    color: var(--red);
+    font-size: 10px;
+  }
+
+  /* ─── Hero ────────────────────────────────────────────────────────────── */
+  .lp-hero {
+    position: relative;
+    padding: 40px 0 56px;
+  }
+  .lp-hero-sfondo,
+  .lp-banda-sfondo,
+  .lp-chiusura-sfondo {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .lp-hero-sfondo :global(img),
+  .lp-banda-sfondo :global(img),
+  .lp-chiusura-sfondo :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .lp-hero-sfondo :global(img) {
+    opacity: 0.34;
+  }
+  /* Il gradiente non è decorazione: senza, il titolo bianco su una foto chiara
+     diventa illeggibile a metà. */
+  .lp-hero-sfondo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(10, 10, 10, 0.5) 0%, rgba(10, 10, 10, 0.9) 72%, var(--bg) 100%),
+      radial-gradient(60% 50% at 20% 20%, rgba(196, 0, 66, 0.24), transparent 70%);
+  }
+  .lp-hero-in {
+    position: relative;
+    z-index: 2;
+    width: min(1180px, 92vw);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  /* 66px e non 76: sopra, «Tutto Lume.» e la riga del prezzo perdono il ritmo
+     e il titolo va a capo dove non deve. */
+  .lp-hero h1 {
+    font-size: clamp(36px, 8.4vw, 66px);
+    margin: 14px 0 18px;
+  }
+  .lp-hero h1 em {
+    color: var(--red-txt);
+    font-style: normal;
+  }
+  .lp-lead {
+    font-size: 17px;
+    max-width: 46ch;
+    margin-bottom: 26px;
+  }
+  .lp-prezzo {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 22px;
+  }
+  .lp-prezzo b {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(44px, 10vw, 64px);
+    line-height: 1;
+    color: var(--red-txt);
+  }
+  .lp-prezzo span {
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--mut);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .lp-punte {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 26px;
+    display: grid;
+    gap: 9px;
+  }
+  .lp-punte li {
+    position: relative;
+    padding-left: 24px;
+    font-size: 15px;
+    color: #ddd;
+  }
+  .lp-punte li::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--red);
+  }
+  .lp-numeri {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    /* Allineati in alto: le etichette hanno lunghezze diverse, e su schermo
+       stretto una che va a capo non deve trascinare giù la cifra accanto. */
+    align-items: start;
+    justify-content: start;
+    gap: 22px;
+  }
+  .lp-numeri b {
+    display: block;
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: 30px;
+    line-height: 1;
+    color: #fff;
+  }
+  .lp-numeri span {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mut);
+  }
+  /* Il form ha un fondo pieno: sopra una foto, un form trasparente non si legge
+     e non sembra un posto dove scrivere. */
+  .lp-form {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--lf-r-m, 10px);
+    padding: 6px;
+    scroll-margin-top: 20px;
+  }
+
+  /* ─── Sezioni ─────────────────────────────────────────────────────────── */
+  .lp-sez {
+    padding: 62px 0;
+    border-top: 1px solid var(--line);
+  }
+  .lp-sez-scura {
+    background: var(--card);
+  }
+  .lp-sez-foto {
+    background: var(--card);
+  }
+  .lp-sez-regole {
+    background: linear-gradient(180deg, rgba(196, 0, 66, 0.06), transparent);
+  }
+
+  /* ─── Mosaico ─────────────────────────────────────────────────────────── */
+  .lp-mosaico {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .lp-tessera {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--lf-r-m, 10px);
+    border: 1px solid var(--line);
+    min-height: 190px;
+  }
+  .lp-tessera :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .lp-tessera:hover :global(img) {
+    transform: scale(1.04);
+  }
+  /* Il velo scuro in basso: le etichette bianche su una foto chiara
+     spariscono, e un'etichetta illeggibile è peggio di nessuna etichetta. */
+  .lp-tessera figcaption {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 2;
+    padding: 34px 16px 14px;
+    background: linear-gradient(180deg, transparent, rgba(10, 10, 10, 0.88));
+  }
+  .lp-tessera figcaption b {
+    display: block;
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-size: 15px;
+    color: #fff;
+  }
+  .lp-tessera figcaption span {
+    font-size: 12px;
+    color: #cfcfcf;
+  }
+  /* La striscia: le panoramiche sono 3:1 e vanno mostrate per quello che sono.
+     Su telefono il rapporto si stringe a 2:1, altrimenti alta 90px non
+     racconta niente. */
+  .lp-striscia {
+    position: relative;
+    margin: 28px 0 10px;
+    overflow: hidden;
+    border-radius: var(--lf-r-m, 10px);
+    border: 1px solid var(--line);
+    aspect-ratio: 2 / 1;
+  }
+  .lp-striscia :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  /* Come nelle tessere: una sfumatura, non un'ombra. Su una sala pesi chiara
+     e piena di dettagli il testo con la sola ombra non si legge. */
+  .lp-striscia figcaption {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 2;
+    padding: 44px 18px 14px;
+    background: linear-gradient(180deg, transparent, rgba(10, 10, 10, 0.9));
+    font-size: 12px;
+    color: #cfcfcf;
+  }
+  .lp-striscia figcaption b {
+    display: block;
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: 17px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  /* ─── Banda dei numeri su foto ────────────────────────────────────────── */
+  .lp-banda {
+    position: relative;
+    padding: 70px 0;
+    border-top: 1px solid var(--line);
+  }
+  .lp-banda-sfondo :global(img) {
+    opacity: 0.3;
+  }
+  .lp-banda-sfondo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(10, 10, 10, 0.82), rgba(10, 10, 10, 0.92));
+  }
+  .lp-banda-in {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+  .lp-banda-numeri {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 26px 16px;
+    margin-top: 30px;
+  }
+  .lp-banda-numeri b {
+    display: block;
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: clamp(38px, 9vw, 58px);
+    line-height: 1;
+    color: #fff;
+  }
+  .lp-banda-numeri span {
+    display: block;
+    margin-top: 6px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mut);
+    line-height: 1.5;
+  }
+
+  /* ─── Cosa è incluso, con foto ────────────────────────────────────────── */
+  .lp-griglia {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 30px;
+  }
+  .lp-card {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--lf-r-m, 10px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .lp-card :global(img),
+  .lp-card-grafica {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+  .lp-card-grafica {
+    display: grid;
+    place-content: center;
+    text-align: center;
+    gap: 4px;
+    background:
+      radial-gradient(80% 80% at 30% 20%, rgba(196, 0, 66, 0.35), transparent 70%),
+      linear-gradient(140deg, #16181c, #0d0f12 60%, #1a1d22);
+    border-bottom: 1px solid var(--line);
+  }
+  .lp-card-grafica b {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: clamp(26px, 5vw, 40px);
+    color: #fff;
+  }
+  .lp-card-grafica span {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--mut);
+  }
+  .lp-card-testo {
+    padding: 22px;
+  }
+  .lp-card p {
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .lp-due {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .lp-foto-coppia {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .lp-foto-coppia :global(img) {
+    width: 100%;
+    height: 100%;
+    /* Verticali: due foto orizzontali basse lasciavano vuota mezza colonna
+       accanto a un testo lungo. */
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: var(--lf-r-m, 10px);
+  }
+  /* Nello scatto del corridoio la prospettiva sta a sinistra e le macchine a
+     destra: ritagliato al centro si vede solo il ferro scuro, che in verticale
+     non dice niente. */
+  .lp-foto-coppia :global(img.lp-foto-sinistra) {
+    object-position: 18% center;
+  }
+
+  .lp-passi {
+    list-style: none;
+    padding: 0;
+    margin: 30px 0 0;
+    display: grid;
+    gap: 16px;
+  }
+  .lp-passi li {
+    display: grid;
+    grid-template-columns: 54px 1fr;
+    gap: 16px;
+    align-items: start;
+    padding: 22px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--lf-r-m, 10px);
+  }
+  .lp-passi b {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: 34px;
+    line-height: 1;
+    color: var(--red-txt);
+  }
+  .lp-passi p {
+    font-size: 14px;
+    margin: 0;
+  }
+
+  /* ─── I centri ────────────────────────────────────────────────────────── */
+  .lp-sedi {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 28px;
+  }
+  .lp-sede {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--lf-r-m, 10px);
+    overflow: hidden;
+  }
+  .lp-sede :global(img) {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+  }
+  .lp-sede-testo {
+    padding: 22px;
+  }
+  .lp-sede p {
+    font-size: 14px;
+    margin: 0 0 4px;
+  }
+  .lp-orari {
+    color: var(--mut) !important;
+    font-size: 13px !important;
+  }
+  .lp-sede-nota {
+    margin-top: 10px !important;
+    font-size: 13px !important;
+    color: var(--red-txt) !important;
+  }
+
+  .lp-regole {
+    margin: 0;
+    padding-left: 20px;
+    display: grid;
+    gap: 10px;
+  }
+  .lp-regole li {
+    color: #ddd;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .lp-faq {
+    margin-top: 26px;
+    border-top: 1px solid var(--line);
+  }
+  .lp-faq details {
+    border-bottom: 1px solid var(--line);
+  }
+  .lp-faq summary {
+    cursor: pointer;
+    padding: 20px 34px 20px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    position: relative;
+    list-style: none;
+    min-height: 44px;
+  }
+  .lp-faq summary::-webkit-details-marker {
+    display: none;
+  }
+  .lp-faq summary::after {
+    content: '+';
+    position: absolute;
+    right: 4px;
+    top: 18px;
+    font-size: 22px;
+    line-height: 1;
+    color: var(--red-txt);
+  }
+  .lp-faq details[open] summary::after {
+    content: '–';
+  }
+  .lp-faq p {
+    margin: 0 0 22px;
+    font-size: 15px;
+    max-width: 68ch;
+  }
+
+  /* ─── Chiusura ────────────────────────────────────────────────────────── */
+  .lp-chiusura {
+    position: relative;
+    padding: 84px 0 120px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+  }
+  .lp-chiusura-sfondo :global(img) {
+    opacity: 0.26;
+  }
+  .lp-chiusura-sfondo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(70% 60% at 50% 0%, rgba(196, 0, 66, 0.2), transparent 70%),
+      linear-gradient(180deg, rgba(10, 10, 10, 0.86), rgba(10, 10, 10, 0.94));
+  }
+  .lp-chiusura-in {
+    position: relative;
+    z-index: 2;
+  }
+  .lp-chiusura p {
+    max-width: 58ch;
+    margin: 0 auto 28px;
+  }
+  .lp-cta-grande {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 56px;
+    padding: 0 34px;
+    font-size: 15px;
+  }
+  .lp-chiusura-tel {
+    margin-top: 24px !important;
+    font-size: 14px;
+    color: var(--mut) !important;
+  }
+  .lp-chiusura-tel a {
+    color: var(--red-txt);
+    text-decoration: underline;
+  }
+
+  /* ─── Barra di richiamo ───────────────────────────────────────────────── */
+  .lp-barra {
+    position: fixed;
+    z-index: 40;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 12px 16px;
+    background: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--line);
+    transform: translateY(110%);
+    transition: transform 0.3s ease;
+  }
+  .lp-barra.si-vede {
+    transform: translateY(0);
+  }
+  .lp-barra b {
+    font-family: 'Anton', sans-serif;
+    font-weight: 400;
+    font-size: 22px;
+    color: #fff;
+    margin-right: 10px;
+  }
+  .lp-barra span {
+    font-size: 12px;
+    color: var(--mut);
+  }
+  .lp-barra .btn {
+    min-height: 44px;
+    padding: 0 20px;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 700px) {
+    .lp-griglia,
+    .lp-sedi {
       grid-template-columns: 1fr 1fr;
     }
-    .prova-sedi-lista {
-      grid-template-columns: 1fr 1fr;
+    .lp-passi {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .lp-banda-numeri {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .lp-barra b {
+      font-size: 26px;
     }
   }
-  @media (min-width: 1024px) {
-    .prova-grid {
-      grid-template-columns: 1fr 0.85fr;
-      gap: 48px;
+
+  @media (min-width: 1000px) {
+    .lp-hero {
+      padding: 30px 0 80px;
+      min-height: 92dvh;
+      display: flex;
+      align-items: center;
     }
-    /* Il form segue la lettura invece di finire fuori schermo sulle colonne
-       lunghe: chi ha già deciso lo trova sempre a portata di click. */
-    .prova-form {
-      position: sticky;
-      top: 96px;
+    .lp-hero-in {
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 56px;
+      align-items: center;
+    }
+    .lp-sez {
+      padding: 92px 0;
+    }
+    .lp-banda {
+      padding: 96px 0;
+    }
+    .lp-due {
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+    .lp-passi li {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    /* Il mosaico su desktop: quattro colonne, la prima tessera occupa due
+       colonne e due righe. */
+    /* Tre colonne per sei tessere: due righe piene, nessuna orfana. La
+       striscia panoramica sopra fa da tessera grande, e lo fa meglio — le
+       foto vere della sala pesi sono panoramiche. */
+    .lp-mosaico {
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: 230px;
+    }
+    .lp-tessera {
+      min-height: 0;
+    }
+    .lp-striscia {
+      aspect-ratio: 3 / 1;
+      margin-bottom: 12px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lp-barra {
+      transition: none;
+    }
+    .lp-tessera:hover :global(img) {
+      transform: none;
     }
   }
 </style>
 
 <script>
-  // Solo chi arriva con un invito vede il prezzo dell'invito.
-  try {
-    const ref = (new URLSearchParams(location.search).get('ref') || '').trim();
-    if (ref) {
-      document.querySelectorAll('[data-prova-ref]').forEach((el) => {
-        if (el instanceof HTMLElement) el.hidden = false;
-      });
+  /* La barra appare quando il form dell'hero è uscito dallo schermo: mentre il
+     form si vede, un pulsante che dice «vai al form» è rumore. */
+  const barra = document.querySelector('[data-lp-barra]');
+  const form = document.getElementById('richiedi');
+
+  if (barra instanceof HTMLElement && form) {
+    if ('IntersectionObserver' in window) {
+      const osserva = new IntersectionObserver(
+        ([voce]) => barra.classList.toggle('si-vede', !voce.isIntersecting),
+        { rootMargin: '-80px 0px 0px 0px' },
+      );
+      osserva.observe(form);
+    } else {
+      // Senza IntersectionObserver la barra resta visibile: meglio un pulsante
+      // in più che nessun modo di tornare al form.
+      barra.classList.add('si-vede');
     }
-  } catch (e) {}
+  }
+
+  /*
+    Solo chi arriva con un invito vede il prezzo dell'invito.
+
+    Due posti dove guardare, non uno: `?ref=` nell'URL, e l'attribuzione che
+    `tracking.js` tiene in sessionStorage. Serve il secondo perché chi apre il
+    link di un amico, gira per il sito e poi torna qui arriva senza `?ref=`
+    nell'URL ma col suo invito ancora addosso — il lead lo porta comunque, e
+    allora tanto vale dirglielo anche in pagina.
+  */
+  const mostraInvito = () => {
+    let ref = '';
+    try {
+      ref = (new URLSearchParams(location.search).get('ref') || '').trim();
+    } catch (e) {}
+    if (!ref) {
+      try {
+        ref = String((window.lumeGetUtm && window.lumeGetUtm().ref) || '').trim();
+      } catch (e) {}
+    }
+    if (!ref) return;
+    document.querySelectorAll('[data-prova-ref]').forEach((el) => {
+      if (el instanceof HTMLElement) el.hidden = false;
+    });
+  };
+
+  // `tracking.js` può non essere ancora arrivato: si riprova a caricamento finito.
+  mostraInvito();
+  window.addEventListener('load', mostraInvito, { once: true });
 </script>

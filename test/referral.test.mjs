@@ -36,7 +36,13 @@ test('la fascia dell’invito parte nascosta su /prova', () => {
 test('il prezzo pieno resta quello che si vede su /prova', () => {
   // Il prezzo grande della pagina: se qui finisse la cifra del referral, la
   // pagina offrirebbe a tutti lo sconto dell'invito.
-  const i = prova.indexOf('class="prova-prezzo"');
+  // `lp-prezzo` è la classe della landing (`/prova` è stata riscritta come
+  // pagina di conversione); `prova-prezzo` era quella della pagina precedente.
+  // Il controllo accetta entrambe: quello che conta è che il prezzo grande
+  // esista e sia quello di listino, non come si chiama il div.
+  const i = ['lp-prezzo', 'prova-prezzo']
+    .map((cls) => prova.indexOf(`class="${cls}"`))
+    .find((j) => j > 0) ?? -1;
   assert.ok(i > 0, 'il blocco del prezzo non c’è più');
   const blocco = prova.slice(i, prova.indexOf('</div>', i));
   assert.ok(blocco.includes(`${PASS.pieno} €`), `il prezzo in evidenza non è più ${PASS.pieno} €`);

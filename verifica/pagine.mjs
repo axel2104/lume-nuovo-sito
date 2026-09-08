@@ -136,7 +136,7 @@ for (const larghezza of LARGHEZZE) {
 // il controllo darebbe quattro allarmi ogni volta, e un controllo che grida
 // sempre è un controllo che non viene più letto.
 const q = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true });
-for (const via of ['/', '/scuola-nuoto/', '/abbonamenti/', '/centri/macerata/']) {
+for (const via of ['/', '/scuola-nuoto/', '/abbonamenti/', '/centri/macerata/', '/prova/']) {
   await q.goto(origine + via, { waitUntil: 'domcontentloaded' });
   const piccoli = await q.evaluate(() =>
     [...document.querySelectorAll('a, button')]
@@ -190,6 +190,27 @@ for (const [slug, giorniAttesi] of [['macerata', 6], ['montecassiano', 6]]) {
     `${slug}: il PDF si scarica`, `${r?.status()} ${tipo} ${peso}B`);
 
   await g.close();
+}
+
+// ─── L'invito si vede solo a chi ha l'invito ──────────────────────────────
+//
+// `test/referral.test.mjs` controlla che la fascia parta nascosta nell'HTML;
+// qui si controlla l'altra metà, che quella statica non può vedere: che con
+// `?ref=` si accenda davvero, e senza resti spenta. Le due cose insieme sono
+// il guardrail del prezzo ridotto — se si accendesse per tutti, la pagina
+// offrirebbe lo sconto dell'invito a chiunque, senza che nulla si rompa.
+{
+  const v = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  const fasciaVisibile = async (via) => {
+    await v.goto(origine + via, { waitUntil: 'load' });
+    return v.evaluate(() => {
+      const el = document.querySelector('[data-prova-ref]');
+      return el ? !el.hidden : null;
+    });
+  };
+  esito((await fasciaVisibile('/prova/')) === false, "/prova: senza invito la fascia resta spenta");
+  esito((await fasciaVisibile('/prova/?ref=VERIFICA')) === true, "/prova?ref: l'invito si vede");
+  await v.close();
 }
 
 esito(erroriJs.length === 0, 'nessun errore JavaScript', erroriJs.slice(0, 3).join(' | '));
