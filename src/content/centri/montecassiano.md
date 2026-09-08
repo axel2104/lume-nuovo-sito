@@ -35,6 +35,7 @@ sale:
     dotazione: "4 Reformer Peak Pilates."
   - nome: Piscina
     dotazione: "Scuola nuoto bambini e adulti, corsi di acqua fitness, nuoto libero."
+    foto: ../../assets/centri/montecassiano-piscina.jpg
 immagine: ../../assets/centri/montecassiano.jpg
 video: https://pub-90d4a80741cd4aadb6d995599fefc986.r2.dev/site/montecassiano-drone.mp4
 perfectgymUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Registration"

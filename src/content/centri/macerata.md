@@ -24,10 +24,11 @@ sale:
   - nome: Sala pesi
     mq: 500
     dotazione: "Attrezzature Technogym di ultima generazione, aree cardio, isotonica, pesi liberi, plate loaded, functional e stacchi. Manubri fino a 50 kg."
-    foto: ../../assets/centri/macerata-sala-pesi.jpg
+    foto: ../../assets/centri/macerata-sala-pesi-pano.jpg
   - nome: Sala fitness Les Mills
     mq: 150
     dotazione: "Bilancieri con carichi easy-on e step Reebok."
+    foto: ../../assets/discipline/sala-corsi.jpg
   - nome: Sala olistica
     mq: 120
     dotazione: "Tappetini, mattoncini yoga e tessuti per la sospensione, per Yoga e Pilates Matwork."
@@ -37,6 +38,7 @@ sale:
   - nome: Sala IntensitYOU e Boxing Hero
     mq: 130
     dotazione: "Attrezzatura Technogym per il circuito funzionale e la boxe."
+    foto: ../../assets/centri/macerata-interni.jpg
   - nome: Sala Spinning e Walking
     mq: 100
     dotazione: "15 bike e 15 tappeti."
