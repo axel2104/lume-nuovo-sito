@@ -119,10 +119,11 @@ function assaggio(p: (typeof piani)[number]) {
       <div class="hero-grid">
         <div class="hero-video" data-hero-galleria>
           {/*
-            Al posto del montaggio in autoplay girano le foto dei centri: chi
-            arriva vede dove metterà piede. Sono immagini ottimizzate da
-            Astro, impilate nello stesso riquadro e scambiate in dissolvenza,
-            quindi non c'è mai un salto di altezza mentre cambiano.
+            Le foto dei centri fanno da fondo e da fermo immagine: chi arriva
+            vede dove metterà piede anche prima che parta il video, e le
+            immagini sono ottimizzate da Astro, impilate nello stesso riquadro
+            e scambiate in dissolvenza, quindi non c'è mai un salto di altezza
+            mentre cambiano.
           */}
           {vetrinaCentri.map((c, i) => (
             <Picture
@@ -138,6 +139,15 @@ function assaggio(p: (typeof piani)[number]) {
               data-hero-poster={c.poster}
             />
           ))}
+          {/*
+            Il video del centro visibile parte da sé, muto, sopra la sua foto.
+            Un solo elemento per tutta la galleria e nessun `src` nel markup:
+            lo mette il JavaScript e lo cambia a ogni centro, quindi scarica
+            un video alla volta e solo quello che si sta guardando. Resta la
+            foto, e nient'altro, per chi ha chiesto meno movimento, per chi
+            naviga col risparmio dati e se l'autoplay viene negato.
+          */}
+          <video class="hero-clip" data-hero-clip muted playsinline preload="none" aria-hidden="true"></video>
           {/*
             La chip dice quale centro si sta guardando, e il testo lo cambia
             il JavaScript insieme alla foto. Senza JavaScript resta il nome
@@ -437,24 +447,63 @@ function assaggio(p: (typeof piani)[number]) {
 
 <script>
   /* ─── Galleria dell'hero ───────────────────────────────
-     Le foto si alternano da sé, tranne per chi ha chiesto meno movimento: in
-     quel caso resta la prima e si cambia solo dai pallini. Il giro si ferma
-     quando la scheda passa in secondo piano — tempo di CPU speso per nessuno
-     — e quando qualcuno sceglie una foto a mano. */
+     Il video del centro visibile parte da sé sopra la sua foto, e quando
+     finisce passa al centro dopo: la durata del filmato è il tempo della
+     slide. Senza video (o se l'autoplay viene negato) le foto si alternano a
+     tempo come prima. Chi ha chiesto meno movimento vede la prima foto e
+     cambia dai pallini, e chi naviga col risparmio dati o in 3G non scarica
+     nessun video. Tutto si ferma quando la scheda passa in secondo piano —
+     banda e CPU spese per nessuno — e quando qualcuno sceglie a mano. */
   const galleria = document.querySelector('[data-hero-galleria]');
 
   if (galleria) {
     const slide = Array.from(galleria.querySelectorAll('[data-hero-slide]'));
     const punti = Array.from(galleria.querySelectorAll('[data-hero-punto]'));
     const nome = galleria.querySelector('[data-hero-nome]');
+    const clip = galleria.querySelector('[data-hero-clip]');
 
     let ridotto = false;
     try {
       ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     } catch (e) {}
 
+    /* Il risparmio dati è una richiesta esplicita, la rete lenta un fatto
+       misurato: in entrambi i casi tre megabyte di drone non si spediscono. */
+    let magra = false;
+    try {
+      const rete = (navigator as any).connection;
+      magra = Boolean(rete && (rete.saveData || /^(slow-2g|2g|3g)$/.test(rete.effectiveType || '')));
+    } catch (e) {}
+
+    const conVideo = clip instanceof HTMLVideoElement && !ridotto && !magra;
+
     let attiva = 0;
     let giro = 0;
+
+    const ferma = () => {
+      if (!giro) return;
+      window.clearTimeout(giro);
+      giro = 0;
+    };
+
+    /* Il video della slide visibile, e nient'altro: il precedente viene
+       staccato prima, così il browser non tiene in memoria filmati che
+       nessuno sta guardando. Se l'autoplay viene negato la foto resta al suo
+       posto e il giro riparte a tempo: nessun riquadro fermo. */
+    const suona = () => {
+      if (!(clip instanceof HTMLVideoElement) || !conVideo) return;
+      const src = slide[attiva].getAttribute('data-hero-video');
+      clip.classList.remove('pronto');
+      if (!src) {
+        clip.removeAttribute('src');
+        clip.load();
+        aTempo();
+        return;
+      }
+      if (clip.getAttribute('src') !== src) clip.setAttribute('src', src);
+      const avvio = clip.play();
+      if (avvio && avvio.catch) avvio.catch(() => aTempo());
+    };
 
     const mostra = (n: number) => {
       attiva = (n + slide.length) % slide.length;
@@ -462,17 +511,34 @@ function assaggio(p: (typeof piani)[number]) {
       punti.forEach((p, i) => p.setAttribute('aria-current', i === attiva ? 'true' : 'false'));
       const etichetta = slide[attiva].getAttribute('data-hero-slide');
       if (nome && etichetta) nome.textContent = etichetta;
+      suona();
+    };
+
+    /* Il ripiego a tempo: un solo passo alla volta, non un intervallo, così
+       basta non riarmarlo per fermare il giro. */
+    const aTempo = () => {
+      if (giro || ridotto || slide.length < 2) return;
+      giro = window.setTimeout(() => {
+        giro = 0;
+        mostra(attiva + 1);
+      }, 5200);
     };
 
     const avvia = () => {
-      if (giro || ridotto || slide.length < 2) return;
-      giro = window.setInterval(() => mostra(attiva + 1), 5200);
+      if (conVideo) suona();
+      else aTempo();
     };
-    const ferma = () => {
-      if (!giro) return;
-      window.clearInterval(giro);
-      giro = 0;
-    };
+
+    if (clip instanceof HTMLVideoElement && conVideo) {
+      clip.addEventListener('canplay', () => clip.classList.add('pronto'));
+      clip.addEventListener('ended', () => mostra(attiva + 1));
+      /* Video mancante o rotto: si torna alle foto a tempo, non si resta
+         appesi su una slide che aspetta un `ended` che non arriverà. */
+      clip.addEventListener('error', () => {
+        clip.classList.remove('pronto');
+        aTempo();
+      });
+    }
 
     punti.forEach((p, i) =>
       p.addEventListener('click', () => {
@@ -481,7 +547,14 @@ function assaggio(p: (typeof piani)[number]) {
       }),
     );
 
-    document.addEventListener('visibilitychange', () => (document.hidden ? ferma() : avvia()));
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        ferma();
+        if (clip instanceof HTMLVideoElement) clip.pause();
+      } else {
+        avvia();
+      }
+    });
     avvia();
   }
 
@@ -515,6 +588,10 @@ function assaggio(p: (typeof piani)[number]) {
       const nomeCentro = corrente ? corrente.getAttribute('data-hero-slide') : '';
       if (nomeCentro) reel.setAttribute('aria-label', `Video drone — ${nomeCentro}`);
       reel.showModal();
+      // Il clip muto dell'hero si mette in pausa: due copie dello stesso
+      // filmato in corsa sarebbero banda buttata, e una si sente.
+      const muto = document.querySelector('[data-hero-clip]');
+      if (muto instanceof HTMLVideoElement) muto.pause();
       const avvio = reelVideo.play();
       if (avvio && typeof avvio.catch === 'function') avvio.catch(() => {});
     });
@@ -526,7 +603,15 @@ function assaggio(p: (typeof piani)[number]) {
     reel.addEventListener('click', (e) => {
       if (e.target === reel) chiudi();
     });
-    reel.addEventListener('close', () => reelVideo.pause());
+    reel.addEventListener('close', () => {
+      reelVideo.pause();
+      // E l'hero riprende da dove l'aveva lasciato.
+      const muto = document.querySelector('[data-hero-clip]');
+      if (muto instanceof HTMLVideoElement && muto.getAttribute('src')) {
+        const ripresa = muto.play();
+        if (ripresa && typeof ripresa.catch === 'function') ripresa.catch(() => {});
+      }
+    });
   }
 </script>
 
