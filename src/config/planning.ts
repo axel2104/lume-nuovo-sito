@@ -56,6 +56,22 @@ export function orario(min: number): string {
   return String(h).padStart(2, '0') + ':' + String(min % 60).padStart(2, '0');
 }
 
+/**
+ * Dal titolo di una sezione ("In acqua") al suo slug per gli URL
+ * ("in-acqua"). Lo usano sia la pagina (per linkare il PDF della sezione) sia
+ * la route che quel PDF lo genera: se fossero due funzioni, il giorno che
+ * una cambia i link diventano 404 silenziosi.
+ */
+export function slugSezione(sezione: string): string {
+  return sezione
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
 /** Scarta le lezioni con orari illeggibili o invertiti, senza far cadere la pagina. */
 export function lezioniValide(lezioni: Lezione[]): Lezione[] {
   return (lezioni || []).filter((l) => {

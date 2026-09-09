@@ -15,6 +15,7 @@ import BandaCta from '../../components/BandaCta.astro';
 import PlanningSettimana from '../../components/planning/PlanningSettimana.astro';
 import { getCollection } from 'astro:content';
 import { SEDI } from '../../config/forms';
+import { slugSezione } from '../../config/planning';
 import { PLANNING_ESEMPIO } from '../../data/planning-esempio';
 
 export async function getStaticPaths() {
@@ -180,6 +181,8 @@ const raccogliLead = Boolean(SEDI[entry.id]);
                 prenotaUrl={c.perfectgymCorsiUrl}
                 esempio={usaEsempio}
                 schede={discipline}
+                pdfUrl={`/planning/${entry.id}/${slugSezione(titolo)}.pdf`}
+                pdfLabel={`Scarica "${titolo}" in PDF`}
               />
             </section>
           ))

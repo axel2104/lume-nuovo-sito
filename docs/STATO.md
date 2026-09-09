@@ -116,11 +116,13 @@ esce dalla griglia principale e finisce in una sezione omonima in fondo (oggi:
 "CrossFit" a Macerata, "In acqua" a Montecassiano). Sopra la griglia c'è il
 blocco "Accesso libero": la card Sala pesi è automatica dal campo `orari` del
 centro, le altre (Nuoto libero a Montecassiano) dal campo `aperture` — le
-fasce con lo stesso `titolo` si raccolgono in una card. Il PDF del planning
-include TUTTE le lezioni, anche quelle in sezione: chi filtra `planning` a
-mano (es. per non pubblicare una sezione) deve ricordarselo. La scuola nuoto
-invece non è più nel `planning` proprio come dato: il suo palinsesto vive in
-`/scuola-nuoto`.
+fasce con lo stesso `titolo` si raccolgono in una card. Ogni sezione ha il
+suo PDF (`/planning/<centro>/<sezione>.pdf`, generato dalla route
+`[centro]/[sezione].pdf.ts` con lo stesso motore del planning intero) e il
+PDF completo include TUTTE le lezioni, anche quelle in sezione: chi filtra
+`planning` a mano (es. per non pubblicare una sezione) deve ricordarselo.
+La scuola nuoto invece non è più nel `planning` proprio come dato: il suo
+palinsesto vive in `/scuola-nuoto`.
 
 **La mappa del footer è un'immagine statica, non si aggiorna da sola.** La
 genera `scripts/genera_mappa_centri.py` (Python + Pillow) leggendo il campo

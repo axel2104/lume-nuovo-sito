@@ -39,10 +39,12 @@ interface Props extends DatiPlanning {
   schede?: CollectionEntry<'discipline'>[];
   /** Indirizzo del PDF del planning. Vuoto = il pulsante non compare. */
   pdfUrl?: string | null;
+  /** Testo del pulsante PDF (es. «Scarica "In acqua" in PDF» per le sezioni). */
+  pdfLabel?: string;
 }
 
 const { centro, lezioni, aggiornatoIl, prenotaUrl, esempio = false, schede = [],
-  pdfUrl = null } = Astro.props;
+  pdfUrl = null, pdfLabel = 'Scarica il planning in PDF' } = Astro.props;
 
 /**
  * Slug della disciplina → id della categoria, per colorare le tessere.
@@ -111,7 +113,7 @@ const livelli = [1, 2, 3, 4, 5];
       <a class="pl-pdf" href={pdfUrl} download>
         {/* `download` fa scaricare invece di aprire nel visualizzatore: chi
             tocca questo pulsante vuole il file, per stamparlo o mandarlo. */}
-        <span aria-hidden="true">↓</span> Scarica il planning in PDF
+        <span aria-hidden="true">↓</span> {pdfLabel}
       </a>
     )
   }
