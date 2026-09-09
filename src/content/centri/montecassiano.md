@@ -54,7 +54,7 @@ perfectgymCorsiUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Classes/
 calcom:
   visita: lumefitness/visita-montecassiano
   richiamata: lumefitness/richiamata
-planningNota: "Orario della stagione 26/27 in vigore dal 7 settembre, piscina compresa. Dal 19 ottobre, con l'apertura del centro di Piediripa, qualche corso e qualche orario possono cambiare."
+planningNota: "Orario della stagione 26/27 in vigore dal 7 settembre, piscina compresa."
 planningAggiornatoIl: 2026-09-07
 planning:
   - giorno: '1'
