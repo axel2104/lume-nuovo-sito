@@ -431,6 +431,30 @@ export default config({
           },
           { label: 'Orari' },
         ),
+        aperture: fields.array(
+          fields.object({
+            titolo: fields.text({ label: 'Attività', validation: { isRequired: true } }),
+            giorni: fields.text({
+              label: 'Giorni',
+              description: 'Es. “Lun, Mer e Ven”. Com’è scritto è come si legge in pagina.',
+              validation: { isRequired: true },
+            }),
+            orario: fields.text({
+              label: 'Orario',
+              description: 'Es. “07:30 – 21:30”.',
+              validation: { isRequired: true },
+            }),
+            nota: fields.text({ label: 'Nota', validation: { isRequired: false } }),
+          }),
+          {
+            label: 'Accesso libero',
+            description:
+              'Fasce senza lezione mostrate nella pagina planning: nuoto libero, open box… La sala pesi NON va qui: i suoi orari sono quelli del centro (campo “Orari”) e la pagina li mostra da sé.',
+            itemLabel: (props) =>
+              [props.fields.titolo.value, props.fields.giorni.value].filter(Boolean).join(' · ') ||
+              'Fascia',
+          },
+        ),
         servizi: fields.array(fields.text({ label: 'Servizio' }), {
           label: 'Servizi del centro',
           description: 'Etichette brevi per le card. Le sale con metratura e dotazione si compilano nel campo sotto.',
@@ -552,6 +576,12 @@ export default config({
               label: 'Sala',
               description:
                 'Alimenta il filtro e la disposizione a colonne parallele: due lezioni alla stessa ora in sale diverse si affiancano invece di sovrapporsi.',
+              validation: { isRequired: false },
+            }),
+            sezione: fields.text({
+              label: 'Sezione separata',
+              description:
+                'Es. “CrossFit”: la lezione esce dal planning principale e finisce in una sezione a parte con quel titolo, in fondo alla pagina. Vuoto = planning principale. Scrivilo sempre uguale, o nascono due sezioni.',
               validation: { isRequired: false },
             }),
             istruttore: fields.text({

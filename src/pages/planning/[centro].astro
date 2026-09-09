@@ -47,6 +47,35 @@ const esempioAmmesso = import.meta.env.DEV || import.meta.env.PUBLIC_PLANNING_ES
 const usaEsempio = esempioAmmesso && c.planning.length === 0;
 const lezioni = usaEsempio ? (PLANNING_ESEMPIO[entry.id] ?? []) : c.planning;
 
+/**
+ * Le lezioni con `sezione` escono dalla griglia principale e finiscono in una
+ * sezione a parte in fondo (es. il CrossFit, che ha box, ritmi e prenotazioni
+ * diversi dai corsi di sala). La chiave è il testo della sezione, così com'è
+ * scritto nei contenuti: per questo gli schemi avvisano di non variarlo.
+ */
+const sezioni = new Map<string, typeof lezioni>();
+const principali = lezioni.filter((l) => {
+  const s = (l.sezione ?? '').trim();
+  if (!s) return true;
+  const gruppo = sezioni.get(s) ?? [];
+  gruppo.push(l);
+  sezioni.set(s, gruppo);
+  return false;
+});
+
+/**
+ * Accesso libero: la sala pesi ha gli orari del centro (`orari`), le altre
+ * fasce (nuoto libero…) arrivano da `aperture`. Le fasce con lo stesso titolo
+ * si raccolgono in una card sola, una riga per combinazione giorni-orario.
+ */
+const aperture = new Map<string, { giorni: string; orario: string; nota?: string | null }[]>();
+for (const a of c.aperture ?? []) {
+  const gruppo = aperture.get(a.titolo) ?? [];
+  gruppo.push({ giorni: a.giorni, orario: a.orario, nota: a.nota });
+  aperture.set(a.titolo, gruppo);
+}
+const chiuso = (v: string) => v.trim().toLowerCase().startsWith('chiuso');
+
 const nome = c.nome.replace('Lume ', '');
 const raccogliLead = Boolean(SEDI[entry.id]);
 ---
@@ -87,15 +116,74 @@ const raccogliLead = Boolean(SEDI[entry.id]);
 
         {c.planningNota && <p class="pl-nota">{c.planningNota}</p>}
 
+        {
+          (c.orari || aperture.size > 0) && (
+            <section class="pl-aperture" aria-label="Accesso libero">
+              <h2 class="pl-aperture-titolo">Accesso libero</h2>
+              <div class="pl-aperture-grid">
+                {c.orari && (
+                  <div class="pl-apertura">
+                    <h3>Sala pesi</h3>
+                    <p>
+                      <span>Lun – Ven</span>
+                      <b>{c.orari.feriali}</b>
+                    </p>
+                    <p>
+                      <span>Sabato</span>
+                      <b>{c.orari.sabato}</b>
+                    </p>
+                    {!chiuso(c.orari.domenica) && (
+                      <p>
+                        <span>Domenica</span>
+                        <b>{c.orari.domenica}</b>
+                      </p>
+                    )}
+                  </div>
+                )}
+                {[...aperture].map(([titolo, fasce]) => (
+                  <div class="pl-apertura">
+                    <h3>{titolo}</h3>
+                    {fasce.map((f) => (
+                      <p>
+                        <span>{f.giorni}</span>
+                        <b>{f.orario}</b>
+                      </p>
+                    ))}
+                    {fasce.map((f) => f.nota).filter(Boolean)[0] && (
+                      <small>{fasce.map((f) => f.nota).filter(Boolean)[0]}</small>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )
+        }
+
         <PlanningSettimana
           centro={entry.id}
-          lezioni={lezioni}
+          lezioni={principali}
           aggiornatoIl={c.planningAggiornatoIl}
           prenotaUrl={c.perfectgymCorsiUrl}
           esempio={usaEsempio}
           schede={discipline}
           pdfUrl={lezioni.length > 0 ? `/planning/${entry.id}.pdf` : null}
         />
+
+        {
+          [...sezioni].map(([titolo, ll]) => (
+            <section class="pl-sezione" aria-label={titolo}>
+              <h2 class="pl-aperture-titolo">{titolo}</h2>
+              <PlanningSettimana
+                centro={entry.id}
+                lezioni={ll}
+                aggiornatoIl={c.planningAggiornatoIl}
+                prenotaUrl={c.perfectgymCorsiUrl}
+                esempio={usaEsempio}
+                schede={discipline}
+              />
+            </section>
+          ))
+        }
 
         {
           raccogliLead && (
@@ -156,5 +244,52 @@ const raccogliLead = Boolean(SEDI[entry.id]);
     border-color: var(--red);
     background: rgba(196, 0, 66, 0.14);
     color: #fff;
+  }
+  .pl-aperture {
+    margin-bottom: 34px;
+  }
+  .pl-aperture-titolo {
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8a8a8a;
+    margin: 40px 0 14px;
+  }
+  .pl-aperture:first-of-type .pl-aperture-titolo {
+    margin-top: 0;
+  }
+  .pl-aperture-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 12px;
+  }
+  .pl-apertura {
+    border: 1px solid var(--line);
+    border-radius: var(--lf-r-s);
+    padding: 16px 18px;
+  }
+  .pl-apertura h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+  .pl-apertura p {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 14px;
+    color: #b9b9b9;
+    padding: 4px 0;
+  }
+  .pl-apertura p b {
+    color: #fff;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .pl-apertura small {
+    display: block;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #8a8a8a;
   }
 </style>

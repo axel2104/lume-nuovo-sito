@@ -32,6 +32,8 @@ export interface Lezione {
   /** Slug della collection `discipline`, per linkare la scheda. */
   disciplina?: string | null;
   sala?: string | null;
+  /** Sezione separata della pagina planning (es. "CrossFit"). Vuoto = griglia principale. */
+  sezione?: string | null;
   istruttore?: string | null;
   /** Falso per le lezioni ad accesso libero, senza prenotazione. */
   prenotabile?: boolean;

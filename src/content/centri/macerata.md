@@ -561,6 +561,195 @@ planning:
     fine: '11:20'
     corso: 'LesMills BodyBalance'
     disciplina: lesmills-bodybalance
+  - giorno: '1'
+    inizio: '07:00'
+    fine: '08:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '1'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '1'
+    inizio: '12:30'
+    fine: '13:30'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '1'
+    inizio: '13:45'
+    fine: '14:45'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '1'
+    inizio: '17:15'
+    fine: '18:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '1'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '1'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '1'
+    inizio: '20:15'
+    fine: '21:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '3'
+    inizio: '07:00'
+    fine: '08:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '3'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '3'
+    inizio: '12:30'
+    fine: '13:30'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '3'
+    inizio: '13:45'
+    fine: '14:45'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '3'
+    inizio: '17:15'
+    fine: '18:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '3'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '3'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '3'
+    inizio: '20:15'
+    fine: '21:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '5'
+    inizio: '07:00'
+    fine: '08:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '5'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '5'
+    inizio: '12:30'
+    fine: '13:30'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '5'
+    inizio: '13:45'
+    fine: '14:45'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '5'
+    inizio: '17:15'
+    fine: '18:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '5'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '5'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '5'
+    inizio: '20:15'
+    fine: '21:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '6'
+    inizio: '09:30'
+    fine: '10:30'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '6'
+    inizio: '12:15'
+    fine: '13:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '7'
+    inizio: '10:30'
+    fine: '11:30'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
 ---
 
 Il club ammiraglia di Lume: oltre 500m² di gym floor con tecnologia Technogym,

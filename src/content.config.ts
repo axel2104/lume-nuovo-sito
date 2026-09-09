@@ -26,6 +26,24 @@ const centri = defineCollection({
     orari: z
       .object({ feriali: z.string(), sabato: z.string(), domenica: z.string() })
       .nullish(),
+    /**
+     * Fasce di accesso libero senza lezione (nuoto libero, open box…): non
+     * sono corsi, quindi non stanno nel `planning`. La sala pesi NON va qui:
+     * i suoi orari sono quelli del centro (`orari`) e la pagina planning li
+     * mostra da sé — duplicarli qui vorrebbe dire mantenerli in due posti.
+     */
+    aperture: z
+      .array(
+        z.object({
+          titolo: z.string(),
+          /** "Lun, Mer e Ven" — testo libero, com'è scritto è come si legge. */
+          giorni: z.string(),
+          /** "07:30 – 21:30". */
+          orario: z.string(),
+          nota: z.string().nullish(),
+        }),
+      )
+      .default([]),
     // Le discipline di un centro NON si elencano qui: ogni disciplina dichiara
     // in quali centri si tiene (campo `centri`), ed è quella l'unica fonte.
     // Una seconda lista qui divergerebbe al primo corso aggiunto.
@@ -128,6 +146,13 @@ const centri = defineCollection({
           /** Slug della collection `discipline`: rende la lezione cliccabile. */
           disciplina: z.string().nullish(),
           sala: z.string().nullish(),
+          /**
+           * Sezione separata in cui mostrare la lezione (es. "CrossFit"): il
+           * testo diventa il titolo della sezione in fondo alla pagina.
+           * Vuoto = planning principale. Va scritto sempre uguale: "Crossfit"
+           * e "CrossFit" sono due sezioni diverse.
+           */
+          sezione: z.string().nullish(),
           istruttore: z.string().nullish(),
           prenotabile: z.boolean().default(true),
         }),

@@ -1,6 +1,6 @@
 # Stato del lavoro
 
-Aggiornato al 3 settembre 2026. Va tenuto aggiornato: è il documento che
+Aggiornato al 9 settembre 2026. Va tenuto aggiornato: è il documento che
 permette a chi riprende il repo di non rifare scelte già fatte né rompere cose
 che funzionano per una ragione.
 
@@ -25,13 +25,16 @@ pacchetti nuoto estivi, non gli abbonamenti.
 ### 2. Orari piscina — pubblicati il 7 settembre 2026
 
 FATTO il 7/9/26: il planning piscina 26/27 è caricato in
-`src/content/centri/montecassiano.md` sotto le lezioni di sala (60 voci:
-acqua fitness + fasce scuola nuoto bambini/ragazzi, tutte con
-`sala: Piscina`; la scuola nuoto ha `prenotabile: false` perché è un corso a
-iscrizione, non una lezione prenotabile). Fonte: il file del cliente
-"PLANNING FITNESS 2026-2027.docx", tabella «dal 07/09». La tabella
-«IPOTETICO DAL 19/10» dello stesso file NON è pubblicata: se l'apertura di
-Piediripa sposta qualche corso, il planning va aggiornato a mano.
+`src/content/centri/montecassiano.md`: i 42 corsi in acqua hanno
+`sezione: 'In acqua'` ed escono in una sezione a parte sotto la griglia; le
+fasce di nuoto libero stanno nel campo `aperture` (blocco "Accesso libero").
+La scuola nuoto (bambini/ragazzi, corso a iscrizione) NON sta più nel
+planning generale: il suo calendario è nella pagina `/scuola-nuoto`.
+Fonte: il file del cliente "PLANNING FITNESS 2026-2027.docx", tabella «dal
+07/09» (verificata voce per voce contro il planning caricato il 9/9/26);
+nuoto libero da "planning nuoto libero.xlsx". La tabella «IPOTETICO DAL
+19/10» dello stesso file NON è pubblicata: se l'apertura di Piediripa sposta
+qualche corso, il planning va aggiornato a mano.
 
 Gli orari 2024/25 restano in [`PLANNING-PISCINA.md`](PLANNING-PISCINA.md)
 come storico, non vanno ripubblicati.
@@ -107,6 +110,17 @@ piscina deve comparire in homepage va abbassato l'`ordine` di una disciplina
 Acqua.
 
 ## Cose fatte che è facile rompere
+
+**La pagina planning ha sezioni (7/9/26).** Una lezione con il campo `sezione`
+esce dalla griglia principale e finisce in una sezione omonima in fondo (oggi:
+"CrossFit" a Macerata, "In acqua" a Montecassiano). Sopra la griglia c'è il
+blocco "Accesso libero": la card Sala pesi è automatica dal campo `orari` del
+centro, le altre (Nuoto libero a Montecassiano) dal campo `aperture` — le
+fasce con lo stesso `titolo` si raccolgono in una card. Il PDF del planning
+include TUTTE le lezioni, anche quelle in sezione: chi filtra `planning` a
+mano (es. per non pubblicare una sezione) deve ricordarselo. La scuola nuoto
+invece non è più nel `planning` proprio come dato: il suo palinsesto vive in
+`/scuola-nuoto`.
 
 **La mappa del footer è un'immagine statica, non si aggiorna da sola.** La
 genera `scripts/genera_mappa_centri.py` (Python + Pillow) leggendo il campo
