@@ -491,6 +491,27 @@ export default config({
                 .join(' · ') || 'Sala',
           },
         ),
+        render: fields.array(
+          fields.object({
+            foto: fields.image({
+              label: 'Render',
+              directory: 'src/assets/centri/urban',
+              publicPath: '../../assets/centri/urban/',
+              validation: { isRequired: true },
+            }),
+            didascalia: fields.text({
+              label: 'Didascalia',
+              description: 'Cosa si vede, in poche parole. Es. “Area pesi liberi — piano −1”.',
+              validation: { isRequired: true },
+            }),
+          }),
+          {
+            label: 'Render del progetto',
+            description:
+              'Per i centri non ancora aperti. La pagina li mostra dichiarandoli render, non foto: chi si iscrive in prevendita sta guardando un progetto.',
+            itemLabel: (props) => props.fields.didascalia.value || 'Render',
+          },
+        ),
         immagine: fields.image({
           label: 'Foto del centro',
           directory: 'src/assets/centri',

@@ -25,7 +25,9 @@ const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.
       <div class="grid4">
         {centri.map((c) => (
           <a class={`centro ${c.data.stato === 'aperto' ? '' : 'soon'}`} href={`/centri/${c.id}`}>
-            {c.data.stato === 'aperto' && c.data.immagine && (
+            {/* Anche i centri in prevendita hanno un'immagine: la loro è un
+                render, ed è quello che c'è da far vedere. */}
+            {c.data.immagine && (
               <Picture
                 src={c.data.immagine}
                 alt={c.data.nome}

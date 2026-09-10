@@ -71,6 +71,21 @@ const centri = defineCollection({
       .default([]),
     immagine: image().nullish(),
     /**
+     * Render del progetto, per i centri che non esistono ancora.
+     *
+     * Separati da `sale` perché non sono lo stesso dato: una sala è una
+     * metratura con una dotazione, un render è un'inquadratura. Un centro in
+     * prevendita ha cinque sale e venti inquadrature, e infilare le seconde
+     * nelle prime falserebbe il contatore "sale e ambienti" in testa pagina.
+     *
+     * La pagina li etichetta come render e non come foto: chi si iscrive in
+     * prevendita deve sapere che sta guardando un progetto, non un posto che
+     * può andare a vedere oggi.
+     */
+    render: z
+      .array(z.object({ foto: image(), didascalia: z.string() }))
+      .default([]),
+    /**
      * Video del centro, in loop muto sopra la foto del titolo.
      *
      * È un URL e non un `image()`: i video non passano dall'ottimizzazione di

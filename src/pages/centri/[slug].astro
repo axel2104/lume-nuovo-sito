@@ -115,8 +115,13 @@ const jsonldCentro = JSON.stringify({
   <section class="sec" style="padding-top:0">
     <div class="wrap">
       <div class={`page-hero ${aperto ? '' : 'soon'}`}>
+        {/*
+          Anche un centro non ancora aperto ha un'immagine di testa: per chi è
+          in prevendita è un render, ed è proprio la cosa che sta valutando.
+          Una pagina nera con il solo nome non aiuta nessuno a decidere.
+        */}
         {
-          aperto && c.immagine && (
+          c.immagine && (
             <Picture
               src={c.immagine}
               alt={c.nome}
@@ -174,7 +179,7 @@ const jsonldCentro = JSON.stringify({
         </div>
       </div>
 
-      {aperto && (mqTotali > 0 || planning.length > 0) && (
+      {(mqTotali > 0 || planning.length > 0) && (
         <div class="stats centro-stats">
           {mqTotali > 0 && (
             <div class="stat">
@@ -235,12 +240,50 @@ const jsonldCentro = JSON.stringify({
               </article>
             ))}
           </div>
-          {c.sale.some((s) => !s.foto) && (
+          {!aperto ? (
             <p class="pg-note" style="margin-top:14px">
-              Le foto vere delle sale stanno arrivando: quelle mancanti sono
-              immagini di repertorio.
+              Le immagini sono render del progetto esecutivo: metrature e
+              finiture sono quelle di progetto e possono cambiare in cantiere.
             </p>
+          ) : (
+            c.sale.some((s) => !s.foto) && (
+              <p class="pg-note" style="margin-top:14px">
+                Le foto vere delle sale stanno arrivando: quelle mancanti sono
+                immagini di repertorio.
+              </p>
+            )
           )}
+        </div>
+      )}
+
+      {/*
+        I render riusano la griglia delle sale: stessa card, stessa foto in
+        16/9, al posto di nome e dotazione c'è la didascalia. Un secondo
+        componente per mostrare un'immagine con una riga sotto non serve.
+      */}
+      {c.render.length > 0 && (
+        <div style="margin-top:44px">
+          <span class="label">Com'è il progetto</span>
+          <div class="sale-vis">
+            {c.render.map((r) => (
+              <article class="sala-vis">
+                <div class="sala-vis-foto">
+                  <Picture
+                    src={r.foto}
+                    alt={r.didascalia}
+                    widths={[400, 800]}
+                    sizes="(max-width: 700px) 100vw, 400px"
+                    formats={['avif', 'webp']}
+                    loading="lazy"
+                  />
+                  <span class="sala-vis-mq">Render</span>
+                </div>
+                <div class="sala-vis-body">
+                  <h3>{r.didascalia}</h3>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       )}
 
