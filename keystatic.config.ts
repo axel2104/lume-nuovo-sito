@@ -491,6 +491,12 @@ export default config({
                 .join(' · ') || 'Sala',
           },
         ),
+        superficie: fields.integer({
+          label: 'Superficie totale (m²)',
+          description:
+            'Solo se il totale del centro non coincide con la somma delle sale qui sopra: la somma lascia fuori scale, corridoi e vani tecnici. Vuoto = il totale lo calcola la pagina.',
+          validation: { isRequired: false },
+        }),
         render: fields.array(
           fields.object({
             foto: fields.image({

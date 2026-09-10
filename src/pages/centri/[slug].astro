@@ -40,7 +40,7 @@ const disc = tutte
  * così restano veri da soli quando una sala o un corso cambia nel CMS.
  */
 const planning = c.planning || [];
-const mqTotali = c.sale.reduce((t, s) => t + (s.mq || 0), 0);
+const mqTotali = c.superficie ?? c.sale.reduce((t, s) => t + (s.mq || 0), 0);
 const GIORNI = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
 const perGiorno = GIORNI.map((_, i) => planning.filter((p) => String(p.giorno) === String(i + 1)).length);
 const maxGiorno = Math.max(1, ...perGiorno);

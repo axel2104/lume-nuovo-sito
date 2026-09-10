@@ -69,6 +69,14 @@ const centri = defineCollection({
         }),
       )
       .default([]),
+    /**
+     * Superficie totale del centro, quando non coincide con la somma delle sale.
+     *
+     * La somma delle sale conta solo gli ambienti elencati: restano fuori
+     * scale, corridoi e vani tecnici, che i metri quadri di progetto invece
+     * comprendono. Vuoto = il totale resta la somma, che è il caso normale.
+     */
+    superficie: z.number().nullish(),
     immagine: image().nullish(),
     /**
      * Render del progetto, per i centri che non esistono ancora.
