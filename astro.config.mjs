@@ -24,6 +24,9 @@ const site =
 
 export default defineConfig({
   site,
+  // Le pagine si precaricano quando l'utente sfiora un link: la navigazione
+  // diventa quasi istantanea senza cambiare una riga di markup.
+  prefetch: true,
   // Le immagini le ridimensiona e converte il CDN di Netlify, su richiesta e
   // in cache. Misurato su 13 foto: con questa opzione la build dura 8 secondi,
   // pre-generando tutto con sharp (`netlify({ imageCDN: false })`) ne dura 25 e
