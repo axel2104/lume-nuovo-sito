@@ -146,28 +146,52 @@ a.logo{display:inline-flex;align-items:center;min-height:44px}
 .about{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;align-items:center}
 .about h2{font-size:clamp(30px,7vw,56px);margin:14px 0 20px}
 .about p{color:#cbcbcb;font-size:16px;margin-bottom:16px}
-.about-imgs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+/* Griglia dichiarata per intero — due colonne, tre righe, e ogni foto messa
+   al suo posto a mano. L'auto-placement qui non va lasciato lavorare: con una
+   tessera che chiede `span 2` e un'altra `grid-column:1/-1` il browser apriva
+   sette righe invece di tre e le foto scendevano a scaletta, alte in tutto
+   978px contro i 330 della colonna di testo accanto.
+
+     alta   corsi
+     alta   piscina
+     larga  larga                                                          */
+.about-imgs{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  grid-template-rows:repeat(2, clamp(104px,12vw,156px)) clamp(92px,10vw,136px);
+  gap:12px;
+}
 .about-imgs img{width:100%;height:100%;object-fit:cover;border-radius:14px;filter:grayscale(.15) contrast(1.05)}
 /* <Picture> avvolge l'<img> in un <picture>: senza `display:contents` le
-   tessere del grid sono i <picture> e `grid-row`/`grid-column` sulle img non
+   tessere del grid sono i <picture> e le regole di posizione sulle img non
    arrivano da nessuna parte. Stessa ragione di .hero-video picture. */
 .about-imgs picture{display:contents}
-.about-imgs .tall{grid-row:span 2;height:100%;min-height:280px}
+/* Con `display:contents` sul <picture> diventano tessere del grid anche i suoi
+   <source>, che qui il browser calcola `display:block`: otto tessere a
+   dimensione zero che si aprivano quattro righe implicite in fondo, cioe' 48px
+   di vuoto sotto l'ultima foto. */
+.about-imgs source{display:none}
+/* Il ritaglio verticale della foto alta: nasce 3:2 e qui sta in una tessera
+   in piedi, quindi il centro cade sulla macchina scura e il corridoio
+   illuminato resta fuori. Spostato il taglio verso sinistra. */
+.about-imgs .tall{grid-area:1/1/3/2;object-position:28% center}
+.about-imgs picture:nth-child(2) img{grid-area:1/2/2/3}
+.about-imgs picture:nth-child(3) img{grid-area:2/2/3/3}
 /* La panoramica del gym floor chiude il collage a tutta larghezza: nasce
    lunga 2600x858, in una tessera quadrata sarebbe tutta tagliata. */
-.about-imgs .larga{grid-column:1/-1;height:clamp(110px,16vw,160px)}
+.about-imgs .larga{grid-area:3/1/4/3}
 
 /* Ingresso delle foto guidato dallo scroll: niente JS e niente observer, la
    timeline la tiene il browser. Dove `view()` non c'e' (Safari) le foto
    stanno semplicemente ferme e visibili, e chi ha chiesto meno movimento non
    entra proprio nel blocco. */
-@keyframes about-entra{from{opacity:0;transform:translateY(20px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes about-entra{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion: no-preference){
   @supports (animation-timeline: view()){
-    .about-imgs img{animation:about-entra linear both;animation-timeline:view();animation-range:entry 5% cover 25%}
-    .about-imgs picture:nth-child(2) img{animation-range:entry 5% cover 31%}
-    .about-imgs picture:nth-child(3) img{animation-range:entry 5% cover 37%}
-    .about-imgs picture:nth-child(4) img{animation-range:entry 5% cover 43%}
+    .about-imgs img{animation:about-entra linear both;animation-timeline:view();animation-range:entry 10% cover 18%}
+    .about-imgs picture:nth-child(2) img{animation-range:entry 10% cover 23%}
+    .about-imgs picture:nth-child(3) img{animation-range:entry 10% cover 28%}
+    .about-imgs picture:nth-child(4) img{animation-range:entry 10% cover 33%}
   }
 }
 
@@ -329,7 +353,6 @@ a.chip{display:inline-flex;align-items:center;min-height:44px}
   .hero-video{min-height:calc(100svh - 76px)}
   .hero-copy p{font-size:19px}
   .about{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:64px}
-  .about-imgs .tall{min-height:440px}
   .grid4{grid-template-columns:repeat(4,1fr);gap:18px}
   .centro{height:440px}
   .card-d{height:300px}
