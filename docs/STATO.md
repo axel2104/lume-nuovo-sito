@@ -121,8 +121,14 @@ suo PDF (`/planning/<centro>/<sezione>.pdf`, generato dalla route
 `[centro]/[sezione].pdf.ts` con lo stesso motore del planning intero) e il
 PDF completo include TUTTE le lezioni, anche quelle in sezione: chi filtra
 `planning` a mano (es. per non pubblicare una sezione) deve ricordarselo.
-La scuola nuoto invece non è più nel `planning` proprio come dato: il suo
-palinsesto vive in `/scuola-nuoto`.
+La scuola nuoto bambini/ragazzi (corso a iscrizione per fasce d'età) NON sta
+nel `planning` proprio come dato: il suo palinsesto vive in `/scuola-nuoto`.
+La **scuola nuoto adulti** invece è nel planning dal 11/9/26: 29 turni con
+`sezione: 'Scuola nuoto adulti'`, fonte PerfectGym (classi «Scuola Nuoto
+Adulti - base/Intermedio/Avanzato/MASTER» del club 2, settimana tipo
+verificata su due settimane consecutive), livelli normalizzati in «Nuoto
+Adulti Base/Intermedio/Avanzato/Master». Se gli orari adulti cambiano in PG,
+vanno aggiornati a mano qui — come il resto del planning.
 
 **La mappa del footer è un'immagine statica, non si aggiorna da sola.** La
 genera `scripts/genera_mappa_centri.py` (Python + Pillow) leggendo il campo

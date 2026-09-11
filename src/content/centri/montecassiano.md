@@ -55,7 +55,7 @@ calcom:
   visita: lumefitness/visita-montecassiano
   richiamata: lumefitness/richiamata
 planningNota: "Orario della stagione 26/27 in vigore dal 7 settembre, piscina compresa."
-planningAggiornatoIl: 2026-09-07
+planningAggiornatoIl: 2026-09-11
 planning:
   - giorno: '1'
     inizio: '09:30'
@@ -604,6 +604,209 @@ planning:
     disciplina: acquagym
     sala: Piscina
     sezione: 'In acqua'
+  - giorno: '1'
+    inizio: '11:00'
+    fine: '11:50'
+    corso: 'Nuoto Adulti Base'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '1'
+    inizio: '11:00'
+    fine: '11:50'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '1'
+    inizio: '11:00'
+    fine: '11:50'
+    corso: 'Nuoto Adulti Avanzato'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '1'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Base'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '1'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '1'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Avanzato'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '1'
+    inizio: '20:50'
+    fine: '21:40'
+    corso: 'Nuoto Adulti Base'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '1'
+    inizio: '20:50'
+    fine: '21:40'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '1'
+    inizio: '20:50'
+    fine: '21:40'
+    corso: 'Nuoto Adulti Avanzato'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '2'
+    inizio: '12:40'
+    fine: '13:30'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '2'
+    inizio: '20:00'
+    fine: '21:00'
+    corso: 'Nuoto Adulti Master'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '3'
+    inizio: '16:20'
+    fine: '17:10'
+    corso: 'Nuoto Adulti Base'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '3'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Base'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '3'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '3'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Avanzato'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '4'
+    inizio: '11:00'
+    fine: '11:50'
+    corso: 'Nuoto Adulti Base'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '4'
+    inizio: '11:00'
+    fine: '11:50'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '4'
+    inizio: '11:00'
+    fine: '11:50'
+    corso: 'Nuoto Adulti Avanzato'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '4'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Base'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '4'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '4'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Avanzato'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '4'
+    inizio: '20:50'
+    fine: '21:40'
+    corso: 'Nuoto Adulti Base'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '4'
+    inizio: '20:50'
+    fine: '21:40'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '4'
+    inizio: '20:50'
+    fine: '21:40'
+    corso: 'Nuoto Adulti Avanzato'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '5'
+    inizio: '12:40'
+    fine: '13:30'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '5'
+    inizio: '18:20'
+    fine: '19:10'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '5'
+    inizio: '20:00'
+    fine: '21:00'
+    corso: 'Nuoto Adulti Master'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '6'
+    inizio: '10:30'
+    fine: '11:20'
+    corso: 'Nuoto Adulti Base'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '6'
+    inizio: '10:30'
+    fine: '11:20'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
 
 ---
 
