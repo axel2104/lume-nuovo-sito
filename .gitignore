@@ -9,6 +9,5 @@ dist/
 .astro/
 _to_delete/
 
-graphify-out/
 Claude outputs/
 prepara-commit.sh

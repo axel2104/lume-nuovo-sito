@@ -1,0 +1,866 @@
+{
+  "astro.config.mjs": {
+    "mtime": 1789122016.1178582,
+    "seen": 1789123351.561812,
+    "ast_hash": "8148ee78f2c505efd76942488e1cb818",
+    "semantic_hash": "8148ee78f2c505efd76942488e1cb818"
+  },
+  "keystatic.config.ts": {
+    "mtime": 1789112521.517072,
+    "seen": 1789123351.561814,
+    "ast_hash": "24e139c93f0188d86a71bb71fb477180",
+    "semantic_hash": "24e139c93f0188d86a71bb71fb477180"
+  },
+  "package.json": {
+    "mtime": 1788764937.7948358,
+    "seen": 1789123351.561816,
+    "ast_hash": "5c3d8d101ab29ff7aae81f0690819b5f",
+    "semantic_hash": "5c3d8d101ab29ff7aae81f0690819b5f"
+  },
+  "scripts/genera_mappa_centri.py": {
+    "mtime": 1788528615.1541235,
+    "seen": 1789123351.5618172,
+    "ast_hash": "990d9b7f483df658b8e14493405e89f5",
+    "semantic_hash": "990d9b7f483df658b8e14493405e89f5"
+  },
+  "src/components/BandaCta.astro": {
+    "mtime": 1788509506.7801301,
+    "seen": 1789123351.5618181,
+    "ast_hash": "f60ce0221fc2729f661e0a782959b97d",
+    "semantic_hash": "f60ce0221fc2729f661e0a782959b97d"
+  },
+  "src/components/Footer.astro": {
+    "mtime": 1788764370.1129794,
+    "seen": 1789123351.5618188,
+    "ast_hash": "746aafab486aa6c4f64ed09cce830098",
+    "semantic_hash": "746aafab486aa6c4f64ed09cce830098"
+  },
+  "src/components/Header.astro": {
+    "mtime": 1788531663.214122,
+    "seen": 1789123351.5618198,
+    "ast_hash": "9bf077a6078873eabca6035a637c4633",
+    "semantic_hash": "9bf077a6078873eabca6035a637c4633"
+  },
+  "src/components/InformativaIubenda.astro": {
+    "mtime": 1788509506.7806394,
+    "seen": 1789123351.5618281,
+    "ast_hash": "b9c48a859f4fcccdf5ac874d18ab046c",
+    "semantic_hash": "b9c48a859f4fcccdf5ac874d18ab046c"
+  },
+  "src/components/editoriale/IconaServizio.astro": {
+    "mtime": 1788509506.7808523,
+    "seen": 1789123351.5618298,
+    "ast_hash": "261d8139744d16556317361a1cbf12f9",
+    "semantic_hash": "261d8139744d16556317361a1cbf12f9"
+  },
+  "src/components/editoriale/SezioneEventi.astro": {
+    "mtime": 1788509506.7810616,
+    "seen": 1789123351.561831,
+    "ast_hash": "c3e64855bb46e826ff486bd33e27ca3a",
+    "semantic_hash": "c3e64855bb46e826ff486bd33e27ca3a"
+  },
+  "src/components/editoriale/SezioneHelpdesk.astro": {
+    "mtime": 1788509506.781281,
+    "seen": 1789123351.561832,
+    "ast_hash": "a3051c4f656689e368eff2e456de1bf2",
+    "semantic_hash": "a3051c4f656689e368eff2e456de1bf2"
+  },
+  "src/components/editoriale/SezioneNews.astro": {
+    "mtime": 1788509506.7814386,
+    "seen": 1789123351.561833,
+    "ast_hash": "8e328059db49cc381dd6a9461ac74fd6",
+    "semantic_hash": "8e328059db49cc381dd6a9461ac74fd6"
+  },
+  "src/components/editoriale/SezioneServizi.astro": {
+    "mtime": 1788509506.7816033,
+    "seen": 1789123351.561833,
+    "ast_hash": "6c4ed0cd7b2f4050edbda2887ffc56e4",
+    "semantic_hash": "6c4ed0cd7b2f4050edbda2887ffc56e4"
+  },
+  "src/components/forms/FormInline.astro": {
+    "mtime": 1788509506.781824,
+    "seen": 1789123351.561834,
+    "ast_hash": "4201df6481cbc624b47b40bcce8c52e7",
+    "semantic_hash": "4201df6481cbc624b47b40bcce8c52e7"
+  },
+  "src/components/forms/LeadFormBody.astro": {
+    "mtime": 1788509506.7820787,
+    "seen": 1789123351.561835,
+    "ast_hash": "483d0324deee6ecb21abc707891d2091",
+    "semantic_hash": "483d0324deee6ecb21abc707891d2091"
+  },
+  "src/components/forms/ModalForm.astro": {
+    "mtime": 1788509506.7822423,
+    "seen": 1789123351.561836,
+    "ast_hash": "a567f5aab5ad3733141432a70f292ba9",
+    "semantic_hash": "a567f5aab5ad3733141432a70f292ba9"
+  },
+  "src/components/forms/Newsletter.astro": {
+    "mtime": 1788509506.7824094,
+    "seen": 1789123351.561836,
+    "ast_hash": "2da5ed8bf8aaf274f4fab6577962df81",
+    "semantic_hash": "2da5ed8bf8aaf274f4fab6577962df81"
+  },
+  "src/components/planning/PlanningSettimana.astro": {
+    "mtime": 1788948160.5362592,
+    "seen": 1789123351.561837,
+    "ast_hash": "bf8b9ced801838fcc4d575bad11d1f68",
+    "semantic_hash": "bf8b9ced801838fcc4d575bad11d1f68"
+  },
+  "src/config/forms.ts": {
+    "mtime": 1788764370.1136558,
+    "seen": 1789123351.5618382,
+    "ast_hash": "56a396985084646315d82f56c1326b66",
+    "semantic_hash": "56a396985084646315d82f56c1326b66"
+  },
+  "src/config/planning-pdf.ts": {
+    "mtime": 1788947680.332376,
+    "seen": 1789123351.561839,
+    "ast_hash": "e15fe2055513bc9433ab2ccfdd20d3bb",
+    "semantic_hash": "e15fe2055513bc9433ab2ccfdd20d3bb"
+  },
+  "src/config/planning.ts": {
+    "mtime": 1788948160.5366755,
+    "seen": 1789123351.561839,
+    "ast_hash": "2bf98fd6e07625f893339ee867678f4a",
+    "semantic_hash": "2bf98fd6e07625f893339ee867678f4a"
+  },
+  "src/config/site.ts": {
+    "mtime": 1788944455.5472565,
+    "seen": 1789123351.56184,
+    "ast_hash": "72b296f59a65ffb056e6e1721e68d847",
+    "semantic_hash": "72b296f59a65ffb056e6e1721e68d847"
+  },
+  "src/content.config.ts": {
+    "mtime": 1789112521.53837,
+    "seen": 1789123351.561841,
+    "ast_hash": "6ae8ebd216a3d9340d798decc2e218bd",
+    "semantic_hash": "6ae8ebd216a3d9340d798decc2e218bd"
+  },
+  "src/content/pagine/home.json": {
+    "mtime": 1789112521.5401368,
+    "seen": 1789123351.561842,
+    "ast_hash": "54408fa667c9344f562ed2cf70e78e03",
+    "semantic_hash": "54408fa667c9344f562ed2cf70e78e03"
+  },
+  "src/content/pagine/scuola-nuoto.json": {
+    "mtime": 1788767474.0041537,
+    "seen": 1789123351.561843,
+    "ast_hash": "e653e27696aa9d643d5cb306bd373243",
+    "semantic_hash": "e653e27696aa9d643d5cb306bd373243"
+  },
+  "src/data/abbonamenti.ts": {
+    "mtime": 1788764370.1183128,
+    "seen": 1789123351.5618439,
+    "ast_hash": "66a2bef9ded0d38f6f5722b522d402bb",
+    "semantic_hash": "66a2bef9ded0d38f6f5722b522d402bb"
+  },
+  "src/data/categorie.ts": {
+    "mtime": 1788509506.7943075,
+    "seen": 1789123351.561845,
+    "ast_hash": "9d69f9037d1a657230c9181ce4ecb75d",
+    "semantic_hash": "9d69f9037d1a657230c9181ce4ecb75d"
+  },
+  "src/data/planning-esempio.ts": {
+    "mtime": 1788509506.7944713,
+    "seen": 1789123351.561845,
+    "ast_hash": "2f96731dd6b853ad884e396fc7b01627",
+    "semantic_hash": "2f96731dd6b853ad884e396fc7b01627"
+  },
+  "src/data/tassonomie.ts": {
+    "mtime": 1788509506.7946532,
+    "seen": 1789123351.561846,
+    "ast_hash": "b7bf33a541f404bb3bf54e1b4c190389",
+    "semantic_hash": "b7bf33a541f404bb3bf54e1b4c190389"
+  },
+  "src/data/testi.ts": {
+    "mtime": 1788527795.6569402,
+    "seen": 1789123351.561847,
+    "ast_hash": "5b8acc994fa6391b1dced5f579e058d8",
+    "semantic_hash": "5b8acc994fa6391b1dced5f579e058d8"
+  },
+  "src/env.d.ts": {
+    "mtime": 1788509506.794791,
+    "seen": 1789123351.5618482,
+    "ast_hash": "b1d9aa71ee848de24e84dbd704442fe6",
+    "semantic_hash": "b1d9aa71ee848de24e84dbd704442fe6"
+  },
+  "src/layouts/Layout.astro": {
+    "mtime": 1788944455.5483913,
+    "seen": 1789123351.561849,
+    "ast_hash": "77fa1cc6cfcedd985ca9373488f5ee89",
+    "semantic_hash": "77fa1cc6cfcedd985ca9373488f5ee89"
+  },
+  "src/lib/anteprimaVideo.client.js": {
+    "mtime": 1788509506.7953176,
+    "seen": 1789123351.561849,
+    "ast_hash": "dac7e6f2fd2c738c0be7cc15bf8f4beb",
+    "semantic_hash": "dac7e6f2fd2c738c0be7cc15bf8f4beb"
+  },
+  "src/lib/calcom.client.js": {
+    "mtime": 1788515265.5857348,
+    "seen": 1789123351.56185,
+    "ast_hash": "63631a6172e007976afdd5ceccf25ffa",
+    "semantic_hash": "63631a6172e007976afdd5ceccf25ffa"
+  },
+  "src/lib/copy.ts": {
+    "mtime": 1788516372.3887634,
+    "seen": 1789123351.5618508,
+    "ast_hash": "f76f54444a74b718e958872e5093e8aa",
+    "semantic_hash": "f76f54444a74b718e958872e5093e8aa"
+  },
+  "src/lib/leadForm.client.js": {
+    "mtime": 1788509506.7959602,
+    "seen": 1789123351.561852,
+    "ast_hash": "e0da17d0000aea46641bb5bb01f7ab24",
+    "semantic_hash": "e0da17d0000aea46641bb5bb01f7ab24"
+  },
+  "src/lib/pannelloEspandibile.client.js": {
+    "mtime": 1788509506.7961628,
+    "seen": 1789123351.561853,
+    "ast_hash": "45813e4c2b0ceab77df17a27c9d80e8f",
+    "semantic_hash": "45813e4c2b0ceab77df17a27c9d80e8f"
+  },
+  "src/lib/planning.client.js": {
+    "mtime": 1788509506.7964313,
+    "seen": 1789123351.561853,
+    "ast_hash": "ce69620c93d7eb64e816fd5efce833b6",
+    "semantic_hash": "ce69620c93d7eb64e816fd5efce833b6"
+  },
+  "src/lib/planningVista.ts": {
+    "mtime": 1788509506.796721,
+    "seen": 1789123351.561854,
+    "ast_hash": "83b56f071b94df0f8125c77e472d5845",
+    "semantic_hash": "83b56f071b94df0f8125c77e472d5845"
+  },
+  "src/lib/richtext.ts": {
+    "mtime": 1788509506.7968774,
+    "seen": 1789123351.561855,
+    "ast_hash": "134240e4f1da50c180476df69758fcff",
+    "semantic_hash": "134240e4f1da50c180476df69758fcff"
+  },
+  "src/lib/videoCentro.client.js": {
+    "mtime": 1788509506.797025,
+    "seen": 1789123351.561856,
+    "ast_hash": "6ac378d6ce93c7f25613fe273e222231",
+    "semantic_hash": "6ac378d6ce93c7f25613fe273e222231"
+  },
+  "src/pages/abbonamenti.astro": {
+    "mtime": 1788764370.118975,
+    "seen": 1789123351.561857,
+    "ast_hash": "21204a23052b748998af58b68be6c1c0",
+    "semantic_hash": "21204a23052b748998af58b68be6c1c0"
+  },
+  "src/pages/centri/[slug].astro": {
+    "mtime": 1789112521.5408587,
+    "seen": 1789123351.561857,
+    "ast_hash": "7d24d022eaa766e7e23ca87c869e4e48",
+    "semantic_hash": "7d24d022eaa766e7e23ca87c869e4e48"
+  },
+  "src/pages/centri/index.astro": {
+    "mtime": 1789112521.5414603,
+    "seen": 1789123351.5618591,
+    "ast_hash": "25cf11dddbc662b915eaa41b9d18fff7",
+    "semantic_hash": "25cf11dddbc662b915eaa41b9d18fff7"
+  },
+  "src/pages/contatti.astro": {
+    "mtime": 1788531663.2190886,
+    "seen": 1789123351.5618591,
+    "ast_hash": "cad109a8058d082125bf0bdd69d9df3a",
+    "semantic_hash": "cad109a8058d082125bf0bdd69d9df3a"
+  },
+  "src/pages/cookie-policy.astro": {
+    "mtime": 1788531663.2198277,
+    "seen": 1789123351.56186,
+    "ast_hash": "d838fab93ef40f3aa964060f841e4f34",
+    "semantic_hash": "d838fab93ef40f3aa964060f841e4f34"
+  },
+  "src/pages/discipline/[slug].astro": {
+    "mtime": 1788531663.2210007,
+    "seen": 1789123351.561861,
+    "ast_hash": "cee7cc7d4610b1aecd3fe0baddffb4ec",
+    "semantic_hash": "cee7cc7d4610b1aecd3fe0baddffb4ec"
+  },
+  "src/pages/discipline/index.astro": {
+    "mtime": 1788531663.2220778,
+    "seen": 1789123351.561862,
+    "ast_hash": "4aa6ed7f27324cc930066dfeed841a7d",
+    "semantic_hash": "4aa6ed7f27324cc930066dfeed841a7d"
+  },
+  "src/pages/index.astro": {
+    "mtime": 1789114629.697696,
+    "seen": 1789123351.561863,
+    "ast_hash": "558855ca0b1adc27c41f2af6b8c37fd5",
+    "semantic_hash": "558855ca0b1adc27c41f2af6b8c37fd5"
+  },
+  "src/pages/invita.astro": {
+    "mtime": 1788764370.1202047,
+    "seen": 1789123351.561863,
+    "ast_hash": "1565278cbe7467d0f1594d0963f1e00b",
+    "semantic_hash": "1565278cbe7467d0f1594d0963f1e00b"
+  },
+  "src/pages/iscriviti.astro": {
+    "mtime": 1788531663.2234135,
+    "seen": 1789123351.561864,
+    "ast_hash": "843e54404972f6d0c8cc3eb36a19f35f",
+    "semantic_hash": "843e54404972f6d0c8cc3eb36a19f35f"
+  },
+  "src/pages/lume-life/help/[slug].astro": {
+    "mtime": 1788531663.2240033,
+    "seen": 1789123351.5618649,
+    "ast_hash": "7fa0e0ed78330a0f8d60b1d4b70e8e6c",
+    "semantic_hash": "7fa0e0ed78330a0f8d60b1d4b70e8e6c"
+  },
+  "src/pages/lume-life/index.astro": {
+    "mtime": 1788531663.2244933,
+    "seen": 1789123351.561866,
+    "ast_hash": "446ec84ed589bc55c199c1791cf9cb31",
+    "semantic_hash": "446ec84ed589bc55c199c1791cf9cb31"
+  },
+  "src/pages/lume-life/news/[slug].astro": {
+    "mtime": 1788531663.2251441,
+    "seen": 1789123351.561866,
+    "ast_hash": "5cda8c71e9f737a91ac40ef5a70007e5",
+    "semantic_hash": "5cda8c71e9f737a91ac40ef5a70007e5"
+  },
+  "src/pages/planning/[centro].astro": {
+    "mtime": 1789116519.9452739,
+    "seen": 1789123351.561867,
+    "ast_hash": "28b14931207cdb76e6c9cf5c640cfcd3",
+    "semantic_hash": "28b14931207cdb76e6c9cf5c640cfcd3"
+  },
+  "src/pages/planning/[centro].pdf.ts": {
+    "mtime": 1788948160.5374064,
+    "seen": 1789123351.561868,
+    "ast_hash": "8e3d1d0d1f90147b9a617470fa8db583",
+    "semantic_hash": "8e3d1d0d1f90147b9a617470fa8db583"
+  },
+  "src/pages/planning/[centro]/[sezione].pdf.ts": {
+    "mtime": 1788947740.2809706,
+    "seen": 1789123351.5618691,
+    "ast_hash": "e1899842c9ffa28f671ec8f7d98e751a",
+    "semantic_hash": "e1899842c9ffa28f671ec8f7d98e751a"
+  },
+  "src/pages/prenota.astro": {
+    "mtime": 1788531663.2267604,
+    "seen": 1789123351.56187,
+    "ast_hash": "4bb9389a0dce24fc6cb08b7c67eb8329",
+    "semantic_hash": "4bb9389a0dce24fc6cb08b7c67eb8329"
+  },
+  "src/pages/privacy.astro": {
+    "mtime": 1788531663.22725,
+    "seen": 1789123351.56187,
+    "ast_hash": "ffe22b044141cb18054bd2a22d47bc0f",
+    "semantic_hash": "ffe22b044141cb18054bd2a22d47bc0f"
+  },
+  "src/pages/prova.astro": {
+    "mtime": 1788944455.5497262,
+    "seen": 1789123351.561871,
+    "ast_hash": "b0c32c14545bfb7edf6b817698b33322",
+    "semantic_hash": "b0c32c14545bfb7edf6b817698b33322"
+  },
+  "src/pages/scuola-nuoto.astro": {
+    "mtime": 1788767524.673152,
+    "seen": 1789123351.5618718,
+    "ast_hash": "11de27a86e23efba9a2ba0723907f9b1",
+    "semantic_hash": "11de27a86e23efba9a2ba0723907f9b1"
+  },
+  "src/scripts/tracking.js": {
+    "mtime": 1788944455.5501428,
+    "seen": 1789123351.561873,
+    "ast_hash": "8afe2d530ad441733d99bb050cb9e601",
+    "semantic_hash": "8afe2d530ad441733d99bb050cb9e601"
+  },
+  "supabase/migrations/20260827_anagrafica_e_richieste.sql": {
+    "mtime": 1788509506.803451,
+    "seen": 1789123351.561873,
+    "ast_hash": "20f7c9fdca999ba23a10525dd75ee658",
+    "semantic_hash": "20f7c9fdca999ba23a10525dd75ee658"
+  },
+  "supabase/test/anagrafica.test.sql": {
+    "mtime": 1788509506.803843,
+    "seen": 1789123351.561874,
+    "ast_hash": "d688d12d491e7a2ddf5e5fabb74b94fd",
+    "semantic_hash": "d688d12d491e7a2ddf5e5fabb74b94fd"
+  },
+  "supabase/test/esegui.sh": {
+    "mtime": 1788509506.804024,
+    "seen": 1789123351.5618749,
+    "ast_hash": "0f5681edac7a359fa8f01b1ba6b1f0b1",
+    "semantic_hash": "0f5681edac7a359fa8f01b1ba6b1f0b1"
+  },
+  "supabase/test/rls.test.sql": {
+    "mtime": 1788509506.8042495,
+    "seen": 1789123351.561876,
+    "ast_hash": "b5599b0d5ae2a59f78dfeb60a81d83e6",
+    "semantic_hash": "b5599b0d5ae2a59f78dfeb60a81d83e6"
+  },
+  "test/abbonamenti.test.mjs": {
+    "mtime": 1788509506.804503,
+    "seen": 1789123351.561877,
+    "ast_hash": "dad86589f4c81cf53904926e4b901308",
+    "semantic_hash": "dad86589f4c81cf53904926e4b901308"
+  },
+  "test/hero-home.test.mjs": {
+    "mtime": 1788944455.5504136,
+    "seen": 1789123351.561877,
+    "ast_hash": "d14d1a6d0e8b571c089ebaaecc549621",
+    "semantic_hash": "d14d1a6d0e8b571c089ebaaecc549621"
+  },
+  "test/pixel.test.mjs": {
+    "mtime": 1788944455.5506883,
+    "seen": 1789123351.561878,
+    "ast_hash": "c31bba5cbfa717b541da88b9d83d1825",
+    "semantic_hash": "c31bba5cbfa717b541da88b9d83d1825"
+  },
+  "test/planning.test.mjs": {
+    "mtime": 1788509506.8047593,
+    "seen": 1789123351.5618792,
+    "ast_hash": "e012d63bda546c1a48e95895618c4e30",
+    "semantic_hash": "e012d63bda546c1a48e95895618c4e30"
+  },
+  "test/referral.test.mjs": {
+    "mtime": 1788944455.5513616,
+    "seen": 1789123351.56188,
+    "ast_hash": "48650d8b2f7302c673d4d1525dc58e86",
+    "semantic_hash": "48650d8b2f7302c673d4d1525dc58e86"
+  },
+  "tsconfig.json": {
+    "mtime": 1788509506.804959,
+    "seen": 1789123351.561881,
+    "ast_hash": "8baf4395e635a01cb9b3f42d22c54c54",
+    "semantic_hash": "8baf4395e635a01cb9b3f42d22c54c54"
+  },
+  "verifica/ambiente.mjs": {
+    "mtime": 1788509506.80524,
+    "seen": 1789123351.561881,
+    "ast_hash": "577807148d582a3dfadea7ee98d52d98",
+    "semantic_hash": "577807148d582a3dfadea7ee98d52d98"
+  },
+  "verifica/contenuti.mjs": {
+    "mtime": 1788527795.6593907,
+    "seen": 1789123351.561882,
+    "ast_hash": "8147f813624230303a84a9410d1c8f6c",
+    "semantic_hash": "8147f813624230303a84a9410d1c8f6c"
+  },
+  "verifica/form-completo.mjs": {
+    "mtime": 1788764370.1239018,
+    "seen": 1789123351.561883,
+    "ast_hash": "5c9adc105f8065afee1ab4995f9d21ce",
+    "semantic_hash": "5c9adc105f8065afee1ab4995f9d21ce"
+  },
+  "verifica/form.mjs": {
+    "mtime": 1788509506.8056614,
+    "seen": 1789123351.561884,
+    "ast_hash": "db96fe8a25457140b58181b1b80b5dc1",
+    "semantic_hash": "db96fe8a25457140b58181b1b80b5dc1"
+  },
+  "verifica/pagine.mjs": {
+    "mtime": 1788944455.5518095,
+    "seen": 1789123351.5618849,
+    "ast_hash": "adb1c6e3a290a6bfcb4822d70ff323fb",
+    "semantic_hash": "adb1c6e3a290a6bfcb4822d70ff323fb"
+  },
+  "verifica/video.mjs": {
+    "mtime": 1788509506.8061547,
+    "seen": 1789123351.5618849,
+    "ast_hash": "d38ec16d8df5cbc58ec1de2be48c81e1",
+    "semantic_hash": "d38ec16d8df5cbc58ec1de2be48c81e1"
+  },
+  ".github/workflows/check.yml": {
+    "mtime": 1788509506.731399,
+    "seen": 1789123351.5618858,
+    "ast_hash": "aa090e85be198ee3e8a4dc29c3eae229",
+    "semantic_hash": "aa090e85be198ee3e8a4dc29c3eae229"
+  },
+  "AGENTS.md": {
+    "mtime": 1788509506.7318065,
+    "seen": 1789123351.5618901,
+    "ast_hash": "6043f9cfffadce2c1a322f2ae946c1b1",
+    "semantic_hash": "6043f9cfffadce2c1a322f2ae946c1b1"
+  },
+  "ARCHITETTURA.md": {
+    "mtime": 1788509506.7320557,
+    "seen": 1789123351.5618901,
+    "ast_hash": "30d45f532170152f616e764413f8f38d",
+    "semantic_hash": "30d45f532170152f616e764413f8f38d"
+  },
+  "CLAUDE.md": {
+    "mtime": 1788509506.7321994,
+    "seen": 1789123351.561891,
+    "ast_hash": "a4698077076ee57237dc918c7d330ac3",
+    "semantic_hash": "a4698077076ee57237dc918c7d330ac3"
+  },
+  "README.md": {
+    "mtime": 1788509506.7323458,
+    "seen": 1789123351.561892,
+    "ast_hash": "469613cb558b358e57cf07826ab948fb",
+    "semantic_hash": "469613cb558b358e57cf07826ab948fb"
+  },
+  "docs/FORM.md": {
+    "mtime": 1788764370.1105635,
+    "seen": 1789123351.5618932,
+    "ast_hash": "a2a186204b5bcc3b8e741e86b360b5ed",
+    "semantic_hash": "a2a186204b5bcc3b8e741e86b360b5ed"
+  },
+  "docs/N8N.md": {
+    "mtime": 1788764370.1112258,
+    "seen": 1789123351.561894,
+    "ast_hash": "b0ab49e69fd621c4e0a83eafd4b8ffde",
+    "semantic_hash": "b0ab49e69fd621c4e0a83eafd4b8ffde"
+  },
+  "docs/PLANNING-PISCINA.md": {
+    "mtime": 1788782259.146482,
+    "seen": 1789123351.561894,
+    "ast_hash": "8c2b1531287c6ba2e701aba4d878f3ae",
+    "semantic_hash": "8c2b1531287c6ba2e701aba4d878f3ae"
+  },
+  "docs/PLANNING.md": {
+    "mtime": 1788509506.7334857,
+    "seen": 1789123351.5618958,
+    "ast_hash": "0d7104f98a7525ac303240d32802f96d",
+    "semantic_hash": "0d7104f98a7525ac303240d32802f96d"
+  },
+  "docs/STATO.md": {
+    "mtime": 1789116519.943595,
+    "seen": 1789123351.561897,
+    "ast_hash": "c551d295dc4b6fe28d77abb74f029f7b",
+    "semantic_hash": "c551d295dc4b6fe28d77abb74f029f7b"
+  },
+  "docs/SUPABASE.md": {
+    "mtime": 1788509506.7339952,
+    "seen": 1789123351.561898,
+    "ast_hash": "320e45fed9e99675390af0e459ed6da4",
+    "semantic_hash": "320e45fed9e99675390af0e459ed6da4"
+  },
+  "public/robots.txt": {
+    "mtime": 1788764933.6802697,
+    "seen": 1789123351.561899,
+    "ast_hash": "1808a99752aa57dc142845b92a8a3892",
+    "semantic_hash": "1808a99752aa57dc142845b92a8a3892"
+  },
+  "src/content/abbonamenti/all-lume.md": {
+    "mtime": 1788509506.7839887,
+    "seen": 1789123351.561899,
+    "ast_hash": "67aac53a33b95492809e2000c3f123a5",
+    "semantic_hash": "67aac53a33b95492809e2000c3f123a5"
+  },
+  "src/content/abbonamenti/gold.md": {
+    "mtime": 1788509506.7841303,
+    "seen": 1789123351.5619001,
+    "ast_hash": "757a065cd2b69bb49fc417dc828b1020",
+    "semantic_hash": "757a065cd2b69bb49fc417dc828b1020"
+  },
+  "src/content/abbonamenti/sala-pesi.md": {
+    "mtime": 1788515265.5834448,
+    "seen": 1789123351.561901,
+    "ast_hash": "209395d49510cb8d4532ca4f2403164c",
+    "semantic_hash": "209395d49510cb8d4532ca4f2403164c"
+  },
+  "src/content/centri/macerata.md": {
+    "mtime": 1789116684.93504,
+    "seen": 1789123351.561902,
+    "ast_hash": "47f9852bc5d9818944517857e34cd729",
+    "semantic_hash": "47f9852bc5d9818944517857e34cd729"
+  },
+  "src/content/centri/montecassiano.md": {
+    "mtime": 1789116684.9353566,
+    "seen": 1789123351.561902,
+    "ast_hash": "9266c3065efb130f18fd8789dc83332f",
+    "semantic_hash": "9266c3065efb130f18fd8789dc83332f"
+  },
+  "src/content/centri/piediripa.md": {
+    "mtime": 1789112521.5389943,
+    "seen": 1789123351.561903,
+    "ast_hash": "e83a22f827d34d1ca98631c20724e581",
+    "semantic_hash": "e83a22f827d34d1ca98631c20724e581"
+  },
+  "src/content/centri/urban.md": {
+    "mtime": 1789116684.9356306,
+    "seen": 1789123351.5619042,
+    "ast_hash": "88a32189e9bcbf259cd050addf7a596e",
+    "semantic_hash": "88a32189e9bcbf259cd050addf7a596e"
+  },
+  "src/content/discipline/acquabike.md": {
+    "mtime": 1788509506.785371,
+    "seen": 1789123351.561905,
+    "ast_hash": "6a7583875abbc4bd5a7d1c12c86eb837",
+    "semantic_hash": "6a7583875abbc4bd5a7d1c12c86eb837"
+  },
+  "src/content/discipline/acquacross.md": {
+    "mtime": 1788509506.7855062,
+    "seen": 1789123351.5619059,
+    "ast_hash": "8e38ad367cf8b35b462b3a6066426e77",
+    "semantic_hash": "8e38ad367cf8b35b462b3a6066426e77"
+  },
+  "src/content/discipline/acquafit.md": {
+    "mtime": 1788509506.7856374,
+    "seen": 1789123351.5619059,
+    "ast_hash": "5767237d45b0c42f3ef051d093c6d41a",
+    "semantic_hash": "5767237d45b0c42f3ef051d093c6d41a"
+  },
+  "src/content/discipline/acquagym.md": {
+    "mtime": 1788509506.7858238,
+    "seen": 1789123351.561907,
+    "ast_hash": "132333c8fccac49157e716c50b22bd05",
+    "semantic_hash": "132333c8fccac49157e716c50b22bd05"
+  },
+  "src/content/discipline/acquawalking.md": {
+    "mtime": 1788509506.7859917,
+    "seen": 1789123351.561908,
+    "ast_hash": "aa395467104dcf08a44171badd70214a",
+    "semantic_hash": "aa395467104dcf08a44171badd70214a"
+  },
+  "src/content/discipline/boxing-hero.md": {
+    "mtime": 1788764370.1140356,
+    "seen": 1789123351.561909,
+    "ast_hash": "4e742e299e5aa2c51b8334cbc5b4aed7",
+    "semantic_hash": "4e742e299e5aa2c51b8334cbc5b4aed7"
+  },
+  "src/content/discipline/calisthenics.md": {
+    "mtime": 1788509506.7863338,
+    "seen": 1789123351.56191,
+    "ast_hash": "9244cfad5f82056c21c8dd8537eb7268",
+    "semantic_hash": "9244cfad5f82056c21c8dd8537eb7268"
+  },
+  "src/content/discipline/corpo-libero.md": {
+    "mtime": 1788509506.7864835,
+    "seen": 1789123351.56191,
+    "ast_hash": "372c13b0745ede438d508179e4a0d9ab",
+    "semantic_hash": "372c13b0745ede438d508179e4a0d9ab"
+  },
+  "src/content/discipline/crossfit.md": {
+    "mtime": 1788764370.1146257,
+    "seen": 1789123351.561911,
+    "ast_hash": "7808992fa6d7dbcc0a88cf4c2bc14edc",
+    "semantic_hash": "7808992fa6d7dbcc0a88cf4c2bc14edc"
+  },
+  "src/content/discipline/gym-floor.md": {
+    "mtime": 1788764370.1149657,
+    "seen": 1789123351.561912,
+    "ast_hash": "fb2e14e08df2d5f1bc32612789e1d194",
+    "semantic_hash": "fb2e14e08df2d5f1bc32612789e1d194"
+  },
+  "src/content/discipline/intensityou.md": {
+    "mtime": 1788764370.1152728,
+    "seen": 1789123351.561913,
+    "ast_hash": "68bd422b325fd908d6c91966bdec38fc",
+    "semantic_hash": "68bd422b325fd908d6c91966bdec38fc"
+  },
+  "src/content/discipline/lesmills-aqua.md": {
+    "mtime": 1788509506.7872481,
+    "seen": 1789123351.5619142,
+    "ast_hash": "79f0e61a4516478a434517ec1fd9a575",
+    "semantic_hash": "79f0e61a4516478a434517ec1fd9a575"
+  },
+  "src/content/discipline/lesmills-bodyattack.md": {
+    "mtime": 1788509506.787411,
+    "seen": 1789123351.5619142,
+    "ast_hash": "690f5303885cc3f81fbb11c616b82c33",
+    "semantic_hash": "690f5303885cc3f81fbb11c616b82c33"
+  },
+  "src/content/discipline/lesmills-bodybalance.md": {
+    "mtime": 1788509506.7875469,
+    "seen": 1789123351.561915,
+    "ast_hash": "edc2589f3d53201e9cd9aad8f2d247cf",
+    "semantic_hash": "edc2589f3d53201e9cd9aad8f2d247cf"
+  },
+  "src/content/discipline/lesmills-bodycombat.md": {
+    "mtime": 1788509506.7876801,
+    "seen": 1789123351.5619159,
+    "ast_hash": "360ba4d55449713a96130458e2e3971b",
+    "semantic_hash": "360ba4d55449713a96130458e2e3971b"
+  },
+  "src/content/discipline/lesmills-bodypump.md": {
+    "mtime": 1788764370.1155646,
+    "seen": 1789123351.5619168,
+    "ast_hash": "bc179e97a3e5de62b65839833743b031",
+    "semantic_hash": "bc179e97a3e5de62b65839833743b031"
+  },
+  "src/content/discipline/lesmills-core.md": {
+    "mtime": 1788509506.7879767,
+    "seen": 1789123351.561918,
+    "ast_hash": "2d9076bd917d88a158e7456c1332b458",
+    "semantic_hash": "2d9076bd917d88a158e7456c1332b458"
+  },
+  "src/content/discipline/lesmills-dance.md": {
+    "mtime": 1788509506.7881129,
+    "seen": 1789123351.561919,
+    "ast_hash": "5edfdf2095371d9dc64cf5f942cd2a61",
+    "semantic_hash": "5edfdf2095371d9dc64cf5f942cd2a61"
+  },
+  "src/content/discipline/lesmills-rpm.md": {
+    "mtime": 1788509506.7882476,
+    "seen": 1789123351.561919,
+    "ast_hash": "8adadbc70bca4790ac6dcd2946b6f69f",
+    "semantic_hash": "8adadbc70bca4790ac6dcd2946b6f69f"
+  },
+  "src/content/discipline/lesmills-shapes.md": {
+    "mtime": 1788509506.788431,
+    "seen": 1789123351.56192,
+    "ast_hash": "5e9717b21e72bc12eadb5bd22df0ce47",
+    "semantic_hash": "5e9717b21e72bc12eadb5bd22df0ce47"
+  },
+  "src/content/discipline/mobility.md": {
+    "mtime": 1788509506.7886474,
+    "seen": 1789123351.5619211,
+    "ast_hash": "a81f844449c0d29627e37308dd6c3206",
+    "semantic_hash": "a81f844449c0d29627e37308dd6c3206"
+  },
+  "src/content/discipline/nuoto-libero.md": {
+    "mtime": 1788509506.7888196,
+    "seen": 1789123351.561922,
+    "ast_hash": "702d8aa842c0862448cf634f430289c0",
+    "semantic_hash": "702d8aa842c0862448cf634f430289c0"
+  },
+  "src/content/discipline/pilates-lesmills.md": {
+    "mtime": 1788509506.7889686,
+    "seen": 1789123351.561923,
+    "ast_hash": "50b5428fae6115425bd6ea1f47b4897d",
+    "semantic_hash": "50b5428fae6115425bd6ea1f47b4897d"
+  },
+  "src/content/discipline/pilates.md": {
+    "mtime": 1788764370.1158643,
+    "seen": 1789123351.561923,
+    "ast_hash": "5b40e9e300a27a4ffb67b05c8702dbc8",
+    "semantic_hash": "5b40e9e300a27a4ffb67b05c8702dbc8"
+  },
+  "src/content/discipline/reformer.md": {
+    "mtime": 1788764370.116392,
+    "seen": 1789123351.561924,
+    "ast_hash": "49d9db587372856372d3746037cb7393",
+    "semantic_hash": "49d9db587372856372d3746037cb7393"
+  },
+  "src/content/discipline/reggaeton.md": {
+    "mtime": 1788509506.7894402,
+    "seen": 1789123351.5619252,
+    "ast_hash": "842e70ffcaff03b0554d9aab2e223420",
+    "semantic_hash": "842e70ffcaff03b0554d9aab2e223420"
+  },
+  "src/content/discipline/scuola-nuoto-adulti.md": {
+    "mtime": 1788509506.7896538,
+    "seen": 1789123351.561926,
+    "ast_hash": "c30c7b2afee25dcd016eebfc23ecbb9d",
+    "semantic_hash": "c30c7b2afee25dcd016eebfc23ecbb9d"
+  },
+  "src/content/discipline/spartan-system.md": {
+    "mtime": 1788509506.7899017,
+    "seen": 1789123351.561926,
+    "ast_hash": "a6e35799706487a7e8444659faf1adb0",
+    "semantic_hash": "a6e35799706487a7e8444659faf1adb0"
+  },
+  "src/content/discipline/walk-and-tone.md": {
+    "mtime": 1788509506.7903736,
+    "seen": 1789123351.5619268,
+    "ast_hash": "44c167f244eedf85a7933bf181ec46a6",
+    "semantic_hash": "44c167f244eedf85a7933bf181ec46a6"
+  },
+  "src/content/discipline/walking.md": {
+    "mtime": 1788764370.1170418,
+    "seen": 1789123351.561928,
+    "ast_hash": "0aa0ecf6ae635c674372e38ed654304e",
+    "semantic_hash": "0aa0ecf6ae635c674372e38ed654304e"
+  },
+  "src/content/discipline/wbs.md": {
+    "mtime": 1788509506.7906537,
+    "seen": 1789123351.561929,
+    "ast_hash": "33ff662cecc5f0975e59209e565e6970",
+    "semantic_hash": "33ff662cecc5f0975e59209e565e6970"
+  },
+  "src/content/discipline/yoga.md": {
+    "mtime": 1788509506.7909224,
+    "seen": 1789123351.561932,
+    "ast_hash": "8452448d2c4fbb93f34cfa5436f8c279",
+    "semantic_hash": "8452448d2c4fbb93f34cfa5436f8c279"
+  },
+  "src/content/eventi/lume-challenge-autunno.md": {
+    "mtime": 1788515265.583832,
+    "seen": 1789123351.561933,
+    "ast_hash": "27a04d60eef42a111f0f74edf65875e2",
+    "semantic_hash": "27a04d60eef42a111f0f74edf65875e2"
+  },
+  "src/content/eventi/masterclass-reformer-ottobre.md": {
+    "mtime": 1788515265.5841956,
+    "seen": 1789123351.561933,
+    "ast_hash": "73eb039646aeac82dcbd3ad4fa430ba1",
+    "semantic_hash": "73eb039646aeac82dcbd3ad4fa430ba1"
+  },
+  "src/content/eventi/open-day-settembre-macerata.md": {
+    "mtime": 1788515265.5845456,
+    "seen": 1789123351.561934,
+    "ast_hash": "cd626aac91b2b6a0fc6a1fd684ba5dbb",
+    "semantic_hash": "cd626aac91b2b6a0fc6a1fd684ba5dbb"
+  },
+  "src/content/helpdesk/accesso-senza-braccialetto.md": {
+    "mtime": 1788509506.7916842,
+    "seen": 1789123351.5619352,
+    "ast_hash": "8604b08317998cdd9f7e1fb96fbe92d1",
+    "semantic_hash": "8604b08317998cdd9f7e1fb96fbe92d1"
+  },
+  "src/content/helpdesk/allenarsi-senza-personale.md": {
+    "mtime": 1788509506.7918365,
+    "seen": 1789123351.561936,
+    "ast_hash": "29333056a4fc02a3572102e5040231e5",
+    "semantic_hash": "29333056a4fc02a3572102e5040231e5"
+  },
+  "src/content/helpdesk/certificato-medico-scuola-nuoto.md": {
+    "mtime": 1788509506.7919796,
+    "seen": 1789123351.5619369,
+    "ast_hash": "9b8b3eecdd83abfd5c22ce9003543bc8",
+    "semantic_hash": "9b8b3eecdd83abfd5c22ce9003543bc8"
+  },
+  "src/content/helpdesk/disdire-prenotazione-corso.md": {
+    "mtime": 1788509506.7921133,
+    "seen": 1789123351.5619369,
+    "ast_hash": "356642ba39e8a75e3df326002847c8a6",
+    "semantic_hash": "356642ba39e8a75e3df326002847c8a6"
+  },
+  "src/content/helpdesk/scaricare-fattura.md": {
+    "mtime": 1788509506.7922463,
+    "seen": 1789123351.5619378,
+    "ast_hash": "519ac7c0bb984e1c8c0222655a68870a",
+    "semantic_hash": "519ac7c0bb984e1c8c0222655a68870a"
+  },
+  "src/content/helpdesk/sospendere-abbonamento.md": {
+    "mtime": 1788509506.792377,
+    "seen": 1789123351.561939,
+    "ast_hash": "0430fc0e55b4c23445da4674538e4648",
+    "semantic_hash": "0430fc0e55b4c23445da4674538e4648"
+  },
+  "src/content/news/come-scegliere-abbonamento.md": {
+    "mtime": 1788509506.7925935,
+    "seen": 1789123351.56194,
+    "ast_hash": "48f3535c8b3da5b8d2afa0ff96494369",
+    "semantic_hash": "48f3535c8b3da5b8d2afa0ff96494369"
+  },
+  "src/content/news/nuova-sala-reformer-montecassiano.md": {
+    "mtime": 1788509506.7927914,
+    "seen": 1789123351.561941,
+    "ast_hash": "afe7acd66caae90f0379293cfa50f7b8",
+    "semantic_hash": "afe7acd66caae90f0379293cfa50f7b8"
+  },
+  "src/content/servizi/convenzioni.md": {
+    "mtime": 1788509506.7934504,
+    "seen": 1789123351.561941,
+    "ast_hash": "9bd748c7414bc6505d4061f325444815",
+    "semantic_hash": "9bd748c7414bc6505d4061f325444815"
+  },
+  "src/content/servizi/fisioterapia.md": {
+    "mtime": 1788509506.7935965,
+    "seen": 1789123351.561942,
+    "ast_hash": "bed6b4ad0a8daf4a712a0baeb082df27",
+    "semantic_hash": "bed6b4ad0a8daf4a712a0baeb082df27"
+  },
+  "src/content/servizi/nutrizione.md": {
+    "mtime": 1788515265.5853417,
+    "seen": 1789123351.561943,
+    "ast_hash": "c4e9c006b447f7fbb3336ef4ee46d307",
+    "semantic_hash": "c4e9c006b447f7fbb3336ef4ee46d307"
+  },
+  "src/content/servizi/personal-training.md": {
+    "mtime": 1788509506.793875,
+    "seen": 1789123351.561944,
+    "ast_hash": "661b53da077e4167a1de82d46b808eb1",
+    "semantic_hash": "661b53da077e4167a1de82d46b808eb1"
+  }
+}
