@@ -11,6 +11,9 @@ import { Picture, getImage } from 'astro:assets';
 import interni from '../assets/centri/macerata-interni.jpg';
 import salaCorsi from '../assets/discipline/sala-corsi.jpg';
 import piscina from '../assets/centri/montecassiano-piscina.jpg';
+// Quarta tessera del collage: il gym floor Technogym, che i paragrafi
+// nominano e che nel collage non si vedeva.
+import gymFloor from '../assets/centri/macerata-gymfloor-pano.jpg';
 // Panoramica 2600x756: nasce lunga, quindi fa da striscia a piena larghezza.
 import gymPano from '../assets/centri/macerata-sala-pesi-pano.jpg';
 import Layout from '../layouts/Layout.astro';
@@ -289,9 +292,11 @@ function assaggio(p: (typeof piani)[number]) {
       <div class="about-imgs">
         <Picture class="tall" src={interni} alt="I corridoi e le sale di Lume Macerata" widths={[500, 1000]} sizes="(min-width:1024px) 40vw, 100vw" formats={['avif', 'webp']}
       />
-        <Picture src={salaCorsi} alt="Sala corsi durante una lezione di gruppo" widths={[300, 600]} sizes="20vw" style="height:180px" formats={['avif', 'webp']}
+        <Picture src={salaCorsi} alt="Sala corsi durante una lezione di gruppo" widths={[300, 600]} sizes="20vw" formats={['avif', 'webp']}
       />
-        <Picture src={piscina} alt="La piscina di Lume Montecassiano" widths={[300, 600]} sizes="20vw" style="height:180px" formats={['avif', 'webp']}
+        <Picture src={piscina} alt="La piscina di Lume Montecassiano" widths={[300, 600]} sizes="20vw" formats={['avif', 'webp']}
+      />
+        <Picture class="larga" src={gymFloor} alt="Il gym floor Technogym di Lume Macerata" widths={[600, 1200]} sizes="(min-width:1024px) 40vw, 100vw" formats={['avif', 'webp']}
       />
       </div>
     </div>

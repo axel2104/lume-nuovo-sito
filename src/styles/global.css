@@ -148,7 +148,28 @@ a.logo{display:inline-flex;align-items:center;min-height:44px}
 .about p{color:#cbcbcb;font-size:16px;margin-bottom:16px}
 .about-imgs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
 .about-imgs img{width:100%;height:100%;object-fit:cover;border-radius:14px;filter:grayscale(.15) contrast(1.05)}
+/* <Picture> avvolge l'<img> in un <picture>: senza `display:contents` le
+   tessere del grid sono i <picture> e `grid-row`/`grid-column` sulle img non
+   arrivano da nessuna parte. Stessa ragione di .hero-video picture. */
+.about-imgs picture{display:contents}
 .about-imgs .tall{grid-row:span 2;height:100%;min-height:280px}
+/* La panoramica del gym floor chiude il collage a tutta larghezza: nasce
+   lunga 2600x858, in una tessera quadrata sarebbe tutta tagliata. */
+.about-imgs .larga{grid-column:1/-1;height:clamp(110px,16vw,160px)}
+
+/* Ingresso delle foto guidato dallo scroll: niente JS e niente observer, la
+   timeline la tiene il browser. Dove `view()` non c'e' (Safari) le foto
+   stanno semplicemente ferme e visibili, e chi ha chiesto meno movimento non
+   entra proprio nel blocco. */
+@keyframes about-entra{from{opacity:0;transform:translateY(20px) scale(.985)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: no-preference){
+  @supports (animation-timeline: view()){
+    .about-imgs img{animation:about-entra linear both;animation-timeline:view();animation-range:entry 5% cover 25%}
+    .about-imgs picture:nth-child(2) img{animation-range:entry 5% cover 31%}
+    .about-imgs picture:nth-child(3) img{animation-range:entry 5% cover 37%}
+    .about-imgs picture:nth-child(4) img{animation-range:entry 5% cover 43%}
+  }
+}
 
 /* STRISCIA — foto a piena larghezza fra due sezioni, senza .wrap attorno. */
 .striscia{display:block;width:100%;height:clamp(180px,26vw,360px);object-fit:cover}
