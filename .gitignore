@@ -11,3 +11,5 @@ _to_delete/
 
 Claude outputs/
 prepara-commit.sh
+graphify-out/.graphify_python
+graphify-out/.graphify_root
