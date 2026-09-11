@@ -111,6 +111,19 @@ Acqua.
 
 ## Cose fatte che è facile rompere
 
+**Urban ha il planning (11/9/26).** Fonte: foglio «Centro» del file del
+cliente "Ipotesi Planning Generale Stagione '26-'27-2.ods" (36 lezioni,
+durata convenzionale 50 min, capienze NON pubblicate). La route
+`/planning/[centro]` ora include i centri non aperti che hanno un planning
+compilato: il filtro è sui contenuti, non sullo stato. Venerdì 13:30 è
+"Yoga / BodyPump" senza link disciplina: nel foglio il corso è ancora
+indeciso. Stesso file = correzioni applicate a Macerata (rinomine, spostamenti
+Reformer, aggiunta LesMills Dance mar 18:30) e Montecassiano (Reformer: via
+lun 9:30, aggiunto ven 10:00). Il palinsesto CrossFit del foglio «Box
+CrossFit - HYROX» NON è allineato col sito (il foglio ha anche le Hybrid
+Class e orari diversi): lasciato com'è, da confermare col cliente prima di
+toccarlo.
+
 **L'hero della home è a piena larghezza, col testo sopra il video (11/9/26).**
 Il video del centro (autoplay muto) o la sua foto riempiono tutto il primo
 schermo (`calc(100svh - altezza nav)`); titolo, sottotitolo e CTA stanno in

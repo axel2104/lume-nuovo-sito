@@ -80,7 +80,188 @@ render:
 superficie: 1000
 immagine: ../../assets/centri/urban/urban-gym-panoramica.jpg
 perfectgymUrl: "#"
-planning: []
+planningNota: "Palinsesto dei corsi previsto per l'apertura: stagione 26/27, ancora provvisorio."
+planningAggiornatoIl: 2026-09-11
+planning:
+  - giorno: '1'
+    inizio: '07:00'
+    fine: '07:50'
+    corso: 'LesMills Shapes'
+    disciplina: lesmills-shapes
+  - giorno: '1'
+    inizio: '08:30'
+    fine: '09:20'
+    corso: 'LesMills BodyBalance'
+    disciplina: lesmills-bodybalance
+  - giorno: '1'
+    inizio: '10:00'
+    fine: '10:50'
+    corso: 'LesMills Shapes'
+    disciplina: lesmills-shapes
+  - giorno: '1'
+    inizio: '13:30'
+    fine: '14:20'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
+  - giorno: '1'
+    inizio: '17:30'
+    fine: '18:20'
+    corso: 'Reformer'
+    disciplina: reformer
+  - giorno: '1'
+    inizio: '18:30'
+    fine: '19:20'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
+  - giorno: '1'
+    inizio: '19:00'
+    fine: '19:50'
+    corso: 'Calisthenics'
+    disciplina: calisthenics
+  - giorno: '1'
+    inizio: '19:30'
+    fine: '20:20'
+    corso: 'LesMills BodyBalance'
+    disciplina: lesmills-bodybalance
+  - giorno: '2'
+    inizio: '08:30'
+    fine: '09:20'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
+  - giorno: '2'
+    inizio: '10:00'
+    fine: '10:50'
+    corso: 'Pilates'
+    disciplina: pilates
+  - giorno: '2'
+    inizio: '13:30'
+    fine: '14:20'
+    corso: 'Pilates'
+    disciplina: pilates
+  - giorno: '2'
+    inizio: '14:30'
+    fine: '15:20'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
+  - giorno: '2'
+    inizio: '18:00'
+    fine: '18:50'
+    corso: 'LesMills Shapes'
+    disciplina: lesmills-shapes
+  - giorno: '2'
+    inizio: '19:30'
+    fine: '20:20'
+    corso: 'Reformer'
+    disciplina: reformer
+  - giorno: '2'
+    inizio: '20:30'
+    fine: '21:20'
+    corso: 'Pilates'
+    disciplina: pilates
+  - giorno: '3'
+    inizio: '07:00'
+    fine: '07:50'
+    corso: 'Pilates'
+    disciplina: pilates
+  - giorno: '3'
+    inizio: '08:30'
+    fine: '09:20'
+    corso: 'Yoga'
+    disciplina: yoga
+  - giorno: '3'
+    inizio: '10:00'
+    fine: '10:50'
+    corso: 'Reformer'
+    disciplina: reformer
+  - giorno: '3'
+    inizio: '13:30'
+    fine: '14:20'
+    corso: 'LesMills Core'
+    disciplina: lesmills-core
+  - giorno: '3'
+    inizio: '17:30'
+    fine: '18:20'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
+  - giorno: '3'
+    inizio: '18:30'
+    fine: '19:20'
+    corso: 'LesMills Pilates'
+    disciplina: pilates-lesmills
+  - giorno: '3'
+    inizio: '19:30'
+    fine: '20:20'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
+  - giorno: '4'
+    inizio: '08:30'
+    fine: '09:20'
+    corso: 'Reformer'
+    disciplina: reformer
+  - giorno: '4'
+    inizio: '10:00'
+    fine: '10:50'
+    corso: 'Yoga'
+    disciplina: yoga
+  - giorno: '4'
+    inizio: '13:30'
+    fine: '14:20'
+    corso: 'Reformer'
+    disciplina: reformer
+  - giorno: '4'
+    inizio: '14:30'
+    fine: '15:20'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
+  - giorno: '4'
+    inizio: '18:30'
+    fine: '19:20'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
+  - giorno: '4'
+    inizio: '19:30'
+    fine: '20:20'
+    corso: 'Calisthenics'
+    disciplina: calisthenics
+  - giorno: '4'
+    inizio: '19:30'
+    fine: '20:20'
+    corso: 'Pilates'
+    disciplina: pilates
+  - giorno: '4'
+    inizio: '20:30'
+    fine: '21:20'
+    corso: 'LesMills Shapes'
+    disciplina: lesmills-shapes
+  - giorno: '5'
+    inizio: '07:00'
+    fine: '07:50'
+    corso: 'Yoga'
+    disciplina: yoga
+  - giorno: '5'
+    inizio: '08:30'
+    fine: '09:20'
+    corso: 'Pilates'
+    disciplina: pilates
+  - giorno: '5'
+    inizio: '10:00'
+    fine: '10:50'
+    corso: 'Pilates'
+    disciplina: pilates
+  - giorno: '5'
+    inizio: '13:30'
+    fine: '14:20'
+    corso: 'Yoga / BodyPump'
+  - giorno: '5'
+    inizio: '17:30'
+    fine: '18:20'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
+  - giorno: '5'
+    inizio: '18:30'
+    fine: '19:20'
+    corso: 'LesMills BodyBalance'
+    disciplina: lesmills-bodybalance
 ---
 
 **Allenati forte. Senza complicazioni.** Urban è lo strength club di Lume in

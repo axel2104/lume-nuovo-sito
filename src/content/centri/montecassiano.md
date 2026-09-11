@@ -63,11 +63,6 @@ planning:
     corso: 'Corpo Libero'
     disciplina: corpo-libero
   - giorno: '1'
-    inizio: '09:30'
-    fine: '10:20'
-    corso: 'Reformer'
-    disciplina: reformer
-  - giorno: '1'
     inizio: '13:00'
     fine: '13:40'
     corso: 'LesMills Core'
@@ -272,6 +267,11 @@ planning:
     fine: '10:50'
     corso: 'Mobility'
     disciplina: mobility
+  - giorno: '5'
+    inizio: '10:00'
+    fine: '10:50'
+    corso: 'Reformer'
+    disciplina: reformer
   - giorno: '5'
     inizio: '13:00'
     fine: '13:40'

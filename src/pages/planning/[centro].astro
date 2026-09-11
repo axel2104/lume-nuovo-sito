@@ -15,18 +15,28 @@ import BandaCta from '../../components/BandaCta.astro';
 import PlanningSettimana from '../../components/planning/PlanningSettimana.astro';
 import { getCollection } from 'astro:content';
 import { SEDI } from '../../config/forms';
-import { slugSezione } from '../../config/planning';
+import { lezioniValide, slugSezione } from '../../config/planning';
 import { PLANNING_ESEMPIO } from '../../data/planning-esempio';
 
 export async function getStaticPaths() {
-  const centri = await getCollection('centri', ({ data }) => data.stato === 'aperto');
+  /* Non solo i centri aperti: un centro in prevendita con il planning già
+     compilato nei contenuti (Urban) ha la sua pagina come gli altri. Chi non
+     ha né apertura né orario (Piediripa) resta fuori: una pagina planning
+     vuota è peggio di nessuna pagina. */
+  const centri = await getCollection(
+    'centri',
+    ({ data }) => data.stato === 'aperto' || lezioniValide(data.planning ?? []).length > 0,
+  );
   return centri.map((entry) => ({ params: { centro: entry.id }, props: { entry } }));
 }
 
 const { entry } = Astro.props;
 const c = entry.data;
 
-const altri = (await getCollection('centri', ({ data }) => data.stato === 'aperto'))
+const altri = (await getCollection(
+  'centri',
+  ({ data }) => data.stato === 'aperto' || lezioniValide(data.planning ?? []).length > 0,
+))
   .sort((a, b) => a.data.ordine - b.data.ordine);
 
 /** Le schede dei corsi: il componente tiene solo quelle che l'orario cita. */

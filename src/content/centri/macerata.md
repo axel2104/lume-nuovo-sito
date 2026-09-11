@@ -53,8 +53,8 @@ perfectgymCorsiUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Classes/
 calcom:
   visita: lumefitness/visita-macerata
   richiamata: lumefitness/richiamata
-planningNota: "Orario della stagione 26/27 ancora provvisorio: qualche corso e qualche orario possono cambiare prima di settembre."
-planningAggiornatoIl: 2026-08-27
+planningNota: "Orario della stagione 26/27, aggiornato a settembre: qualche dettaglio può ancora cambiare."
+planningAggiornatoIl: 2026-09-11
 planning:
   - giorno: '1'
     inizio: '07:00'
@@ -79,13 +79,13 @@ planning:
   - giorno: '1'
     inizio: '10:15'
     fine: '11:05'
-    corso: 'Soft Shapes'
+    corso: 'LesMills Shapes'
     disciplina: lesmills-shapes
   - giorno: '1'
     inizio: '13:30'
     fine: '14:20'
-    corso: 'IntensitYOU'
-    disciplina: intensityou
+    corso: 'Spartan System'
+    disciplina: spartan-system
   - giorno: '1'
     inizio: '13:30'
     fine: '14:20'
@@ -96,11 +96,6 @@ planning:
     fine: '14:20'
     corso: 'Pilates Base'
     disciplina: pilates
-  - giorno: '1'
-    inizio: '13:30'
-    fine: '14:20'
-    corso: 'Reformer'
-    disciplina: reformer
   - giorno: '1'
     inizio: '14:30'
     fine: '15:20'
@@ -182,6 +177,11 @@ planning:
     corso: 'Corpo Libero'
     disciplina: corpo-libero
   - giorno: '2'
+    inizio: '10:00'
+    fine: '10:50'
+    corso: 'Reformer'
+    disciplina: reformer
+  - giorno: '2'
     inizio: '10:15'
     fine: '11:05'
     corso: 'Yoga Hatha – Yin'
@@ -196,11 +196,6 @@ planning:
     fine: '14:20'
     corso: 'LesMills Shapes'
     disciplina: lesmills-shapes
-  - giorno: '2'
-    inizio: '13:30'
-    fine: '14:20'
-    corso: 'Pilates Avanzato'
-    disciplina: pilates
   - giorno: '2'
     inizio: '13:30'
     fine: '14:20'
@@ -236,6 +231,11 @@ planning:
     fine: '19:05'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
+  - giorno: '2'
+    inizio: '18:30'
+    fine: '19:20'
+    corso: 'LesMills Dance'
+    disciplina: lesmills-dance
   - giorno: '2'
     inizio: '19:00'
     fine: '19:50'
@@ -279,17 +279,12 @@ planning:
   - giorno: '3'
     inizio: '09:15'
     fine: '10:05'
-    corso: 'LesMills Shapes'
-    disciplina: lesmills-shapes
-  - giorno: '3'
-    inizio: '10:00'
-    fine: '10:50'
-    corso: 'Reformer'
-    disciplina: reformer
+    corso: 'LesMills Core'
+    disciplina: lesmills-core
   - giorno: '3'
     inizio: '10:15'
     fine: '11:05'
-    corso: 'Pilates Intermedio'
+    corso: 'Pilates Base'
     disciplina: pilates
   - giorno: '3'
     inizio: '13:30'
@@ -316,6 +311,11 @@ planning:
     fine: '18:20'
     corso: 'LesMills Shapes'
     disciplina: lesmills-shapes
+  - giorno: '3'
+    inizio: '18:00'
+    fine: '18:50'
+    corso: 'Reformer'
+    disciplina: reformer
   - giorno: '3'
     inizio: '18:00'
     fine: '18:50'
@@ -377,6 +377,11 @@ planning:
     corso: 'Corpo Libero'
     disciplina: corpo-libero
   - giorno: '4'
+    inizio: '10:00'
+    fine: '10:50'
+    corso: 'Reformer'
+    disciplina: reformer
+  - giorno: '4'
     inizio: '10:15'
     fine: '11:05'
     corso: 'Mobility'
@@ -389,13 +394,18 @@ planning:
   - giorno: '4'
     inizio: '13:30'
     fine: '14:20'
-    corso: 'Walk & Tone'
-    disciplina: walk-and-tone
+    corso: 'Walking'
+    disciplina: walking
   - giorno: '4'
     inizio: '13:30'
     fine: '14:20'
     corso: 'Yoga'
     disciplina: yoga
+  - giorno: '4'
+    inizio: '13:30'
+    fine: '14:20'
+    corso: 'Pilates Avanzato'
+    disciplina: pilates
   - giorno: '4'
     inizio: '17:00'
     fine: '17:50'
@@ -419,8 +429,8 @@ planning:
   - giorno: '4'
     inizio: '18:15'
     fine: '19:05'
-    corso: 'Walking'
-    disciplina: walking
+    corso: 'Walk & Tone'
+    disciplina: walk-and-tone
   - giorno: '4'
     inizio: '19:15'
     fine: '20:05'
@@ -432,8 +442,8 @@ planning:
     corso: 'Spartan System'
     disciplina: spartan-system
   - giorno: '4'
-    inizio: '19:15'
-    fine: '20:05'
+    inizio: '19:30'
+    fine: '20:20'
     corso: 'Yoga'
     disciplina: yoga
   - giorno: '4'
@@ -459,17 +469,12 @@ planning:
   - giorno: '5'
     inizio: '09:15'
     fine: '10:05'
-    corso: 'LesMills Core'
-    disciplina: lesmills-core
-  - giorno: '5'
-    inizio: '10:00'
-    fine: '10:50'
-    corso: 'Reformer'
-    disciplina: reformer
+    corso: 'LesMills Shapes'
+    disciplina: lesmills-shapes
   - giorno: '5'
     inizio: '10:15'
     fine: '11:05'
-    corso: 'Pilates Base'
+    corso: 'Pilates Intermedio'
     disciplina: pilates
   - giorno: '5'
     inizio: '13:30'
@@ -484,8 +489,13 @@ planning:
   - giorno: '5'
     inizio: '13:30'
     fine: '14:20'
-    corso: 'Spartan System'
-    disciplina: spartan-system
+    corso: 'Reformer Intermedi'
+    disciplina: reformer
+  - giorno: '5'
+    inizio: '13:30'
+    fine: '14:20'
+    corso: 'IntensitYOU'
+    disciplina: intensityou
   - giorno: '5'
     inizio: '14:30'
     fine: '15:20'
