@@ -111,6 +111,16 @@ Acqua.
 
 ## Cose fatte che è facile rompere
 
+**L'hero della home è a piena larghezza, col testo sopra il video (11/9/26).**
+Il video del centro (autoplay muto) o la sua foto riempiono tutto il primo
+schermo (`calc(100svh - altezza nav)`); titolo, sottotitolo e CTA stanno in
+basso a sinistra sopra un gradiente, senza più la card affiancata. Pallini e
+pulsante «Video del centro» vivono nella riga `.hero-tools` in basso a
+destra: su mobile salgono a `bottom:84px` perché lì sotto c'è SEMPRE il
+bottone delle preferenze cookie di Iubenda. Sotto i 720px di altezza viewport
+il sopratitolo dell'hero sparisce (toccherebbe la chip del centro). Se un
+giorno l'hero torna un riquadro dentro il wrap, ricontrollare queste tre cose.
+
 **La pagina planning ha sezioni (7/9/26).** Una lezione con il campo `sezione`
 esce dalla griglia principale e finisce in una sezione omonima in fondo (oggi:
 "CrossFit" a Macerata, "In acqua" a Montecassiano). Sopra la griglia c'è il

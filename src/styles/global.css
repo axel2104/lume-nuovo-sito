@@ -85,22 +85,50 @@ a.logo{display:inline-flex;align-items:center;min-height:44px}
 .burger i{width:18px;height:2px;background:#fff;display:block}
 .nav-cta{padding:10px 18px;font-size:12px;min-height:44px;white-space:nowrap}
 
-/* HERO (galleria dei centri) */
-.hero{padding:18px 0 6px}
-.hero-grid{display:grid;grid-template-columns:1fr;gap:14px}
-.hero-video{position:relative;border-radius:20px;overflow:hidden;border:1px solid var(--line);min-height:64dvh;background:#0a0a0a}
-.hero-video::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.12) 45%,rgba(10,10,10,.82) 100%)}
-.hero-chip{position:absolute;z-index:2;top:16px;left:16px;display:flex;align-items:center;gap:9px;background:rgba(10,10,10,.5);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:9px 15px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+/* HERO (galleria dei centri, a piena larghezza) */
+.hero{padding:0 0 6px}
+/* Il video/foto del centro e' lo sfondo del primo schermo: niente cornice,
+   niente bordo — il riquadro sarebbe un secondo "sito" dentro il sito.
+   `svh` e non `vh`: su mobile la barra del browser che compare non deve
+   coprire i pulsanti in basso. */
+.hero-video{position:relative;overflow:hidden;background:#0a0a0a;min-height:calc(100svh - 62px)}
+/* Gradiente piu' deciso in basso, dove sta il testo, e appena accennato
+   in alto per la chip: il video resta protagonista in mezzo. */
+.hero-video::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,10,10,.35) 0%,rgba(10,10,10,0) 30%,rgba(10,10,10,.22) 55%,rgba(10,10,10,.94) 97%)}
+.hero-chip{position:absolute;z-index:2;top:16px;left:var(--pad);display:flex;align-items:center;gap:9px;background:rgba(10,10,10,.5);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:9px 15px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
 .hero-chip b{width:9px;height:9px;border-radius:50%;background:var(--red);display:inline-block}
-.hero-vcap{position:absolute;z-index:2;bottom:18px;left:18px;display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#eee;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:8px 14px;border-radius:999px}
-.hero-copy{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:30px 24px;display:flex;flex-direction:column;justify-content:center}
-/* Il titolo dell'hero: 88px al massimo, non 104. «Un solo mondo,» a 104px
-   non sta su una riga nella colonna del testo e andava a capo da solo in tre
-   righe, spezzando la frase nel punto sbagliato. */
-.hero-copy h1{font-size:clamp(40px,9.4vw,88px);margin:16px 0 18px}
+.hero-vcap{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#eee;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:8px 14px;border-radius:999px}
+/* Pallini e pulsante video in un'unica riga in basso a destra: prima erano
+   due elementi assoluti che sul riquadro piccolo non si disturbavano, sul
+   pieno schermo col testo a sinistra si sarebbero sovrapposti alle CTA. */
+.hero-tools{position:absolute;z-index:2;right:var(--pad);bottom:18px;display:flex;align-items:center;gap:6px}
+/* Su mobile il bottone delle preferenze cookie di Iubenda sta nell'angolo
+   in basso a destra di OGNI pagina: la riga degli strumenti gli sale sopra,
+   e il blocco testo le lascia il doppio dello spazio. */
+@media (max-width: 640px){
+  .hero-tools{bottom:84px}
+  .hero-copy{padding-bottom:150px}
+}
+/* Il testo sta SOPRA il video, ancorato in basso a sinistra. Niente piu'
+   scheda: il fondo scuro lo garantisce il gradiente, una card sopra il
+   video lo nasconderebbe proprio dove il drone vola basso. Il padding
+   inferiore lascia libera la riga di .hero-tools. */
+.hero-copy{position:absolute;z-index:2;left:0;right:0;bottom:0;padding:0 var(--pad) clamp(84px,13vh,128px);max-width:980px;display:flex;flex-direction:column;justify-content:flex-end}
+.hero-copy h1{font-size:clamp(44px,9vw,96px);margin:16px 0 18px;text-shadow:0 2px 26px rgba(0,0,0,.45)}
 .hero-copy h1 em{color:var(--red-txt);font-style:normal}
-.hero-copy p{font-size:16px;color:#cfcfcf;max-width:520px;margin-bottom:24px}
-.hero-cta{display:flex;flex-direction:column;gap:12px}
+.hero-copy p{font-size:16px;color:#e4e4e4;max-width:560px;margin-bottom:24px;text-shadow:0 1px 14px rgba(0,0,0,.5)}
+/* Il bottone "scopri i centri" e' un contorno: sul video un grigio #666
+   sparisce nei fotogrammi scuri, serve un bianco trasparente. */
+.hero-video .btn-out{border-color:rgba(255,255,255,.45)}
+.hero-video .btn-out:hover{border-color:#fff;color:#fff}
+.hero-cta{display:flex;flex-direction:column;gap:12px;max-width:560px}
+/* Schermi bassi (laptop piccoli, telefono in orizzontale): il blocco testo
+   risale fino alla chip del centro e le due etichette si toccano. Il
+   sopratitolo e' il primo a cedere: dice meno di tutto il resto. */
+@media (max-height: 720px){
+  .hero-copy .label{display:none}
+  .hero-copy{padding-bottom:76px}
+}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:14px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden}
 .stat{padding:20px 18px;background:var(--bg)}
 .stat b{font-family:'Anton',sans-serif;font-size:34px;color:#fff;display:block;line-height:1}
@@ -222,7 +250,9 @@ footer.site{background:#060606;border-top:1px solid var(--line);padding:54px 0 2
 .hero-clip{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .5s ease}
 .hero-clip.pronto{opacity:1}
 /* In basso a destra: a sinistra ci sono il badge e il nome del centro. */
-.hero-vcap-dx{left:auto;right:18px;cursor:pointer}
+/* Nella pagina centro il pulsante resta un elemento assoluto sul .page-hero:
+   la versione "in riga" (statica, dentro .hero-tools) e' solo della home. */
+.hero-vcap-dx{position:absolute;z-index:2;left:auto;right:18px;bottom:18px;cursor:pointer}
 .page-hero h1{font-size:clamp(40px,9vw,84px)}
 .info-grid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:28px}
 .info-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
@@ -270,10 +300,7 @@ a.chip{display:inline-flex;align-items:center;min-height:44px}
   .burger{display:none}
   .sec{padding:120px 0}
   .sec-head{margin-bottom:56px}
-  .hero{padding:28px 0 10px}
-  .hero-grid{grid-template-columns:.82fr 1.18fr;gap:18px;align-items:stretch}
-  .hero-video{min-height:600px}
-  .hero-copy{padding:56px 52px}
+  .hero-video{min-height:calc(100svh - 76px)}
   .hero-copy p{font-size:19px}
   .about{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:64px}
   .about-imgs .tall{min-height:440px}
@@ -542,7 +569,7 @@ a.chip{display:inline-flex;align-items:center;min-height:44px}
 }
 .hero-video .hero-slide.is-attiva { opacity: 1; }
 
-.hero-punti { position: absolute; z-index: 2; right: 14px; bottom: 16px; display: flex; gap: 0; }
+.hero-punti { display: flex; gap: 0; }
 .hero-punti button {
   width: 44px;
   height: 44px;

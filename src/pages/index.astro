@@ -115,126 +115,131 @@ function assaggio(p: (typeof piani)[number]) {
   <main id="contenuto">
 
   <header class="hero">
-    <div class="wrap">
-      <div class="hero-grid">
-        <div class="hero-video" data-hero-galleria>
-          {/*
-            Le foto dei centri fanno da fondo e da fermo immagine: chi arriva
-            vede dove metterà piede anche prima che parta il video, e le
-            immagini sono ottimizzate da Astro, impilate nello stesso riquadro
-            e scambiate in dissolvenza, quindi non c'è mai un salto di altezza
-            mentre cambiano.
-          */}
-          {vetrinaCentri.map((c, i) => (
-            <Picture
-              class:list={['hero-slide', { 'is-attiva': i === 0 }]}
-              src={c.foto}
-              alt={c.nome}
-              widths={[640, 960, 1200]}
-              sizes="(min-width: 900px) 46vw, 100vw"
-              formats={['avif', 'webp']}
-              loading={i === 0 ? 'eager' : 'lazy'}
-              data-hero-slide={c.nome}
-              data-hero-video={c.video}
-              data-hero-poster={c.poster}
-            />
+    {/*
+      L'hero occupa tutto il primo schermo: il video del centro (o la sua
+      foto) e' lo sfondo a piena larghezza e il testo gli sta sopra, in basso
+      a sinistra. Il gradiente di .hero-video::after e' tarato per tenere
+      leggibile il titolo anche sui fotogrammi chiari del drone.
+    */}
+    <div class="hero-video" data-hero-galleria>
+      {/*
+        Le foto dei centri fanno da fondo e da fermo immagine: chi arriva
+        vede dove metterà piede anche prima che parta il video, e le
+        immagini sono ottimizzate da Astro, impilate nello stesso riquadro
+        e scambiate in dissolvenza, quindi non c'è mai un salto di altezza
+        mentre cambiano.
+      */}
+      {vetrinaCentri.map((c, i) => (
+        <Picture
+          class:list={['hero-slide', { 'is-attiva': i === 0 }]}
+          src={c.foto}
+          alt={c.nome}
+          widths={[768, 1280, 1920]}
+          sizes="100vw"
+          formats={['avif', 'webp']}
+          loading={i === 0 ? 'eager' : 'lazy'}
+          data-hero-slide={c.nome}
+          data-hero-video={c.video}
+          data-hero-poster={c.poster}
+        />
+      ))}
+      {/*
+        Il video del centro visibile parte da sé, muto, sopra la sua foto.
+        Un solo elemento per tutta la galleria e nessun `src` nel markup:
+        lo mette il JavaScript e lo cambia a ogni centro, quindi scarica
+        un video alla volta e solo quello che si sta guardando. Resta la
+        foto, e nient'altro, per chi ha chiesto meno movimento, per chi
+        naviga col risparmio dati e se l'autoplay viene negato.
+      */}
+      <video class="hero-clip" data-hero-clip muted playsinline preload="none" aria-hidden="true"></video>
+      {/*
+        La chip dice quale centro si sta guardando, e il testo lo cambia
+        il JavaScript insieme alla foto. Senza JavaScript resta il nome
+        del primo: incompleto sì, sbagliato mai.
+      */}
+      <div class="hero-chip">
+        <b />
+        <span data-hero-nome>{vetrinaCentri[0]?.nome ?? 'Lume Fitness Club'}</span>
+      </div>
+      <div class="hero-copy">
+        <span class="label">{testi.hero.label}</span>
+        <h1 class="d">
+          {righe(testi.hero.titolo).map((r, i) => (
+            <>
+              {i > 0 && <br />}
+              {r}
+            </>
           ))}
           {/*
-            Il video del centro visibile parte da sé, muto, sopra la sua foto.
-            Un solo elemento per tutta la galleria e nessun `src` nel markup:
-            lo mette il JavaScript e lo cambia a ogni centro, quindi scarica
-            un video alla volta e solo quello che si sta guardando. Resta la
-            foto, e nient'altro, per chi ha chiesto meno movimento, per chi
-            naviga col risparmio dati e se l'autoplay viene negato.
+            L'evidenza sta sull'ultima riga per conto suo: «Un solo mondo,»
+            e sotto «il tuo» in rosso. L'andata a capo è una scelta grafica,
+            quindi vive qui e non in un campo del CMS.
           */}
-          <video class="hero-clip" data-hero-clip muted playsinline preload="none" aria-hidden="true"></video>
-          {/*
-            La chip dice quale centro si sta guardando, e il testo lo cambia
-            il JavaScript insieme alla foto. Senza JavaScript resta il nome
-            del primo: incompleto sì, sbagliato mai.
-          */}
-          <div class="hero-chip">
-            <b />
-            <span data-hero-nome>{vetrinaCentri[0]?.nome ?? 'Lume Fitness Club'}</span>
-          </div>
-          {vetrinaCentri.length > 1 && (
-            <div class="hero-punti" role="group" aria-label="Foto dei centri">
-              {vetrinaCentri.map((c, i) => (
-                <button
-                  type="button"
-                  data-hero-punto={i}
-                  aria-current={i === 0 ? 'true' : 'false'}
-                  aria-label={`Mostra ${c.nome}`}
-                >
-                  <i />
-                </button>
-              ))}
-            </div>
-          )}
-          {/*
-            Il video parte solo a richiesta (`preload="none"`, `src` messo al
-            click): niente megabyte a chi non lo guarderà mai. Quale video lo
-            decide la foto visibile: il pulsante apre il video drone del
-            centro che si sta guardando, non un montaggio unico per tutti —
-            il vecchio showreel (girato a Urban) non è più in pagina.
-          */}
-          <button type="button" class="hero-vcap" data-hero-showreel aria-haspopup="dialog">
-            <svg class="ico-play" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true" fill="currentColor">
-              <path d="M2 1l9 5-9 5z" />
-            </svg>
-            Video del centro
+          <br />
+          <em>{testi.hero.evidenza}</em>
+        </h1>
+        <p>{testi.hero.testo}</p>
+        {/*
+          La CTA primaria della home è il pass prova, non gli abbonamenti: a
+          chi arriva per la prima volta si chiede di provare, non di firmare.
+          Il listino resta un ancoraggio più in basso, per chi ha già deciso.
+        */}
+        <div class="hero-cta">
+          <button type="button" class="btn btn-red btn-full" data-open-form="prova" data-medium="HeroHome">
+            {testi.hero.ctaProva}
           </button>
-        </div>
-        <div class="hero-copy">
-          <span class="label">{testi.hero.label}</span>
-          <h1 class="d">
-            {righe(testi.hero.titolo).map((r, i) => (
-              <>
-                {i > 0 && <br />}
-                {r}
-              </>
-            ))}
-            {/*
-              L'evidenza sta sull'ultima riga per conto suo: «Un solo mondo,»
-              e sotto «il tuo» in rosso. L'andata a capo è una scelta grafica,
-              quindi vive qui e non in un campo del CMS.
-            */}
-            <br />
-            <em>{testi.hero.evidenza}</em>
-          </h1>
-          <p>{testi.hero.testo}</p>
-          {/*
-            La CTA primaria della home è il pass prova, non gli abbonamenti: a
-            chi arriva per la prima volta si chiede di provare, non di firmare.
-            Il listino resta un ancoraggio più in basso, per chi ha già deciso.
-          */}
-          <div class="hero-cta">
-            <button type="button" class="btn btn-red btn-full" data-open-form="prova" data-medium="HeroHome">
-              {testi.hero.ctaProva}
-            </button>
-            <a href="/centri" class="btn btn-out btn-full">{testi.hero.ctaCentri}</a>
-          </div>
+          <a href="/centri" class="btn btn-out btn-full">{testi.hero.ctaCentri}</a>
         </div>
       </div>
-      {/*
-        Un <dialog> nativo: focus intrappolato, chiusura con Esc, backdrop e
-        `inert` sul resto della pagina in regalo dal browser. Sta fuori dal
-        riquadro della galleria, che ha `overflow:hidden`.
-      */}
-      <dialog class="hero-reel" data-hero-reel aria-label="Video drone del centro">
-        <button type="button" class="hero-reel-x" data-hero-reel-x aria-label="Chiudi il video">
-          &times;
+      <div class="hero-tools">
+        {vetrinaCentri.length > 1 && (
+          <div class="hero-punti" role="group" aria-label="Foto dei centri">
+            {vetrinaCentri.map((c, i) => (
+              <button
+                type="button"
+                data-hero-punto={i}
+                aria-current={i === 0 ? 'true' : 'false'}
+                aria-label={`Mostra ${c.nome}`}
+              >
+                <i />
+              </button>
+            ))}
+          </div>
+        )}
+        {/*
+          Il video con l'audio resta a richiesta, in un riquadro: quello sullo
+          sfondo e' muto. Il pulsante apre il video drone del centro che si
+          sta guardando, non un montaggio unico per tutti — il vecchio
+          showreel (girato a Urban) non è più in pagina.
+        */}
+        <button type="button" class="hero-vcap" data-hero-showreel aria-haspopup="dialog">
+          <svg class="ico-play" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true" fill="currentColor">
+            <path d="M2 1l9 5-9 5z" />
+          </svg>
+          Video del centro
         </button>
-        {/* Nessun `src` qui: lo mette il click sul pulsante, ed è quello del
-            centro la cui foto è visibile in quel momento. */}
-        <video
-          data-hero-reel-video
-          controls
-          playsinline
-          preload="none"
-          poster="/media/hero-poster.jpg"
-        />
-      </dialog>
+      </div>
+    </div>
+    {/*
+      Un <dialog> nativo: focus intrappolato, chiusura con Esc, backdrop e
+      `inert` sul resto della pagina in regalo dal browser. Sta fuori dal
+      riquadro della galleria, che ha `overflow:hidden`.
+    */}
+    <dialog class="hero-reel" data-hero-reel aria-label="Video drone del centro">
+      <button type="button" class="hero-reel-x" data-hero-reel-x aria-label="Chiudi il video">
+        &times;
+      </button>
+      {/* Nessun `src` qui: lo mette il click sul pulsante, ed è quello del
+          centro la cui foto è visibile in quel momento. */}
+      <video
+        data-hero-reel-video
+        controls
+        playsinline
+        preload="none"
+        poster="/media/hero-poster.jpg"
+      />
+    </dialog>
+    <div class="wrap">
       <div class="stats">
         {testi.stats.map((s: any) => (
           <div class="stat">
@@ -287,7 +292,10 @@ function assaggio(p: (typeof piani)[number]) {
       <div class="grid4">
         {centri.map((c) => (
           <a class={`centro ${c.data.stato === 'aperto' ? '' : 'soon'}`} href={`/centri/${c.id}`}>
-            {c.data.stato === 'aperto' && c.data.immagine && (
+            {/* Anche i centri in prevendita mostrano la loro immagine: quella
+                di Urban è il render del progetto, ed è quello che c'è da far
+                vedere finché il cantiere non diventa foto. Come in /centri. */}
+            {c.data.immagine && (
               <Picture src={c.data.immagine} alt={c.data.nome} widths={[400, 800]} sizes="(min-width:1024px) 25vw, 100vw" formats={['avif', 'webp']}
             />
             )}
