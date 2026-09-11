@@ -150,6 +150,9 @@ a.logo{display:inline-flex;align-items:center;min-height:44px}
 .about-imgs img{width:100%;height:100%;object-fit:cover;border-radius:14px;filter:grayscale(.15) contrast(1.05)}
 .about-imgs .tall{grid-row:span 2;height:100%;min-height:280px}
 
+/* STRISCIA — foto a piena larghezza fra due sezioni, senza .wrap attorno. */
+.striscia{display:block;width:100%;height:clamp(180px,26vw,360px);object-fit:cover}
+
 /* CENTRI */
 .grid4{display:grid;grid-template-columns:1fr;gap:14px}
 .centro{position:relative;height:340px;border-radius:16px;overflow:hidden;border:1px solid var(--line);display:block}

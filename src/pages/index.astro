@@ -1,9 +1,18 @@
 ---
 import { Picture, getImage } from 'astro:assets';
-// La foto vera della sala pesi di Macerata, la stessa caricata nei contenuti.
-import salaPesi from '../assets/centri/macerata-sala-pesi.jpg';
-import reformerFoto from '../assets/pagine/reformer.jpg';
-import functional from '../assets/pagine/functional.jpg';
+/*
+ * Il collage di «chi siamo» mostra tre posti che in home non si vedono
+ * altrove: l'hero e la card di Macerata hanno gia' la sala pesi, e le due
+ * foto di prima erano duplicati byte per byte di immagini gia' in pagina
+ * (`pagine/reformer.jpg` = `discipline/reformer.jpg`, `pagine/functional.jpg`
+ * = `centri/macerata.jpg` = `pagine/og-default.jpg`). La piscina, che e' meta'
+ * di Montecassiano, prima non compariva in prima pagina per niente.
+ */
+import interni from '../assets/centri/macerata-interni.jpg';
+import salaCorsi from '../assets/discipline/sala-corsi.jpg';
+import piscina from '../assets/centri/montecassiano-piscina.jpg';
+// Panoramica 2600x756: nasce lunga, quindi fa da striscia a piena larghezza.
+import gymPano from '../assets/centri/macerata-sala-pesi-pano.jpg';
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -62,7 +71,13 @@ const oreCorsi = Math.round(
 // mentre otto lasciavano un'ultima riga spaiata da due tessere.
 const vetrina = Object.values(
   discipline.reduce<Record<string, (typeof discipline)[number]>>((acc, d) => {
-    acc[d.data.categoria] ??= d;
+    /* Dentro la categoria vince chi ha una foto vera: senza immagine la
+       tessera mostra la filigrana del logo, e una fila di filigrane e' il
+       motivo per cui la home sembra spoglia. A parita' resta la prima per
+       ordine, e l'ordine delle categorie non cambia: lo fissa il primo
+       arrivato. */
+    const scelta = acc[d.data.categoria];
+    if (!scelta || (!scelta.data.immagine && d.data.immagine)) acc[d.data.categoria] = d;
     return acc;
   }, {}),
 ).slice(0, 6);
@@ -272,11 +287,11 @@ function assaggio(p: (typeof piani)[number]) {
         <a href="/centri" class="btn btn-out" style="margin-top:12px">{testi.chiSiamo.cta}</a>
       </div>
       <div class="about-imgs">
-        <Picture class="tall" src={salaPesi} alt="Sala pesi Lume" widths={[500, 1000]} sizes="(min-width:1024px) 40vw, 100vw" formats={['avif', 'webp']}
+        <Picture class="tall" src={interni} alt="I corridoi e le sale di Lume Macerata" widths={[500, 1000]} sizes="(min-width:1024px) 40vw, 100vw" formats={['avif', 'webp']}
       />
-        <Picture src={reformerFoto} alt="Reformer Pilates" widths={[300, 600]} sizes="20vw" style="height:180px" formats={['avif', 'webp']}
+        <Picture src={salaCorsi} alt="Sala corsi durante una lezione di gruppo" widths={[300, 600]} sizes="20vw" style="height:180px" formats={['avif', 'webp']}
       />
-        <Picture src={functional} alt="Area functional" widths={[300, 600]} sizes="20vw" style="height:180px" formats={['avif', 'webp']}
+        <Picture src={piscina} alt="La piscina di Lume Montecassiano" widths={[300, 600]} sizes="20vw" style="height:180px" formats={['avif', 'webp']}
       />
       </div>
     </div>
@@ -341,6 +356,20 @@ function assaggio(p: (typeof piani)[number]) {
       </div>
     </div>
   </section>
+
+  {/*
+    Una striscia di respiro fra il catalogo e le CTA: la panoramica del gym
+    floor e' l'unica foto in pagina che si vede intera invece che ritagliata
+    in una tessera, e riempie il tratto piu' lungo di sola tipografia.
+  */}
+  <Picture
+    class="striscia"
+    src={gymPano}
+    alt="Il gym floor di Lume Macerata visto per intero"
+    widths={[900, 1600, 2400]}
+    sizes="100vw"
+    formats={['avif', 'webp']}
+  />
 
   {/*
     Il pass prova ha una sezione sua, prima del listino: è il passo più piccolo
