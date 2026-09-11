@@ -312,14 +312,22 @@ const jsonldCentro = JSON.stringify({
         </div>
       )}
 
-      {aperto && planning.length > 0 && (
+      {/*
+        Anche i centri in prevendita con un palinsesto lo mostrano: Urban ha
+        36 lezioni e una pagina /planning/urban, e la pagina del centro
+        diceva lo stesso «sarà pubblicato all'apertura» di chi non ha ancora
+        niente. Quello che manca non è la data di apertura, è l'orario — e se
+        c'è, si fa vedere, con la nota del centro a dire che è provvisorio.
+      */}
+      {planning.length > 0 && (
         <div class="planning">
           <div class="d">Una settimana qui</div>
           <p>
-            {planning.length} lezioni in programma ogni settimana. Ecco come si
+            {planning.length} lezioni {aperto ? 'in programma ogni settimana' : 'nel palinsesto previsto'}. Ecco come si
             distribuiscono — l'orario completo, con sale e istruttori, è nella
             pagina del planning.
           </p>
+          {!aperto && c.planningNota && <p class="planning-nota">{c.planningNota}</p>}
           <div class="settimana" aria-label="Lezioni per giorno della settimana">
             {GIORNI.map((g, i) => (
               <div class="giorno">
@@ -335,7 +343,7 @@ const jsonldCentro = JSON.stringify({
         </div>
       )}
 
-      {!aperto && (
+      {planning.length === 0 && (
         <div class="planning">
           <div class="d">Planning {c.nome.replace('Lume ', '')}</div>
           <p>L’orario dei corsi sarà pubblicato all’apertura del centro.</p>
