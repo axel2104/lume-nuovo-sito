@@ -30,7 +30,7 @@ servizi:
   - "Sala Reformer Pilates"
   - "Sala Performance Triform"
   - "Corsi di gruppo"
-  - "Bootique gambe e glutei"
+  - "Bootieque gambe e glutei"
   - "Sala Posing"
   - "Spogliatoi moderni"
 sale:
@@ -46,7 +46,7 @@ sale:
   - nome: Sala Reformer
     mq: 70
     dotazione: "4 Reformer Peak Pilates."
-  - nome: Bootique
+  - nome: Bootieque
     dotazione: "Sala dedicata al lavoro su gambe e glutei: hip thrust, abductor/adductor, glute kickback, pedane e manubri."
   - nome: Sala Posing
     dotazione: "Specchi a tutta parete e luci da palco per provare le pose e vedersi lavorare."
