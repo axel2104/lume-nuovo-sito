@@ -1,28 +1,22 @@
 ---
-nome: All Lume GOLD
-per: Tutto il club, i due centri, la piscina e il Box CrossFit senza limiti
+nome: Gold
+per: 'Tutto: sala, corsi, acqua e Box CrossFit'
 attivazione: 50
 preavviso: 10 giorni
 consigliato: true
-ordine: 2
+ordine: 1
 pubblicato: true
 attivita:
   - Accesso senza limiti orari
   - Sala pesi e cardio
-  - Corsi fitness
-  - Box CrossFit senza limiti
-  - Nuoto libero
-  - Acqua fitness
-  - Scuola nuoto adulti
   - Technogym APP
-  - LUME AI TOWER — SHAPE
-  - Accesso sala pesi — Montecassiano
-  - Accesso sala pesi — Macerata
-  - Accesso corsi fitness — Montecassiano
-  - Accesso corsi fitness — Macerata
+  - Corsi fitness
+  - Acqua fitness
+  - Nuoto libero
+  - Box CrossFit senza limiti
 formule:
   - id: annuale
-    prezzo: 990
+    prezzo: 900
     periodo: 12 mesi
     pagamento: Pagamento in soluzione unica
     durataMinima: 12 mesi
@@ -31,7 +25,7 @@ formule:
       - Una sospensione di 30 giorni gratuita
       - Sospensioni aggiuntive 21 € al mese
   - id: rate
-    prezzo: 90
+    prezzo: 80
     periodo: mese
     pagamento: Pagamento in 12 rate con Pagodil® o Pagolight®
     durataMinima: 12 mesi
@@ -39,7 +33,7 @@ formule:
       - Una sospensione di 30 giorni gratuita
       - Sospensioni aggiuntive 21 € al mese
   - id: mensile
-    prezzo: 130
+    prezzo: 105
     periodo: mese
     pagamento: Addebito mensile su carta di credito, debito o conto corrente
     durataMinima: un mese
@@ -47,14 +41,11 @@ formule:
     condizioni: []
 ---
 
-Trascritto dal listino PerfectGym, con tre correzioni concordate.
+Prezzi del listino 2026/27 in vigore dal 7 settembre, nella versione di
+**Lume Macerata**: un abbonamento Macerata dà ingresso a tutti i centri Lume.
 
-Sul portale l'annuale in soluzione unica non elencava **la sospensione di 30
-giorni gratuita**, che l'annuale a rate invece elencava: chi paga tutto subito
-avrebbe avuto meno diritti di chi rateizza. Il mensile non elencava **LUME AI
-TOWER — SHAPE**, che il piano da 40 € in meno elenca: il piano superiore
-avrebbe offerto meno di quello inferiore. Ed è stata aggiunta la riga
-**Accesso corsi fitness — Macerata**: il GOLD è l'unico piano che dà accesso a
-Macerata, dove ci sono le sale in licenza Les Mills, e sul portale la riga
-mancava del tutto — chi leggeva concludeva di poter usare i pesi ma non
-entrare in sala corsi.
+Il Gold è l'unico piano che comprende l'acqua e il Box CrossFit. Sul listino è
+scritto «GOLD (sala+corsi+acqua+box)».
+
+Montecassiano ha un Gold suo, che vale solo lì e costa meno: è sulla pagina
+del centro.

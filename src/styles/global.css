@@ -378,6 +378,10 @@ a.chip{display:inline-flex;align-items:center;min-height:44px}
 .ab-hero h1{font-size:clamp(42px,10vw,92px);margin:18px 0 20px;text-wrap:balance}
 .ab-hero h1 em{color:var(--red-txt);font-style:normal}
 .ab-lede{color:#cfcfcf;font-size:clamp(16px,2vw,19px);max-width:52ch}
+/* Il rimando al listino delle sedi: si deve leggere, non competere col titolo. */
+.ab-sedi{margin:14px 0 0;max-width:62ch;color:var(--mut);font-size:15px}
+.ab-sedi b{color:var(--txt)}
+.ab-sedi a{color:var(--red-txt);text-decoration:underline}
 .ab-punti{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
   border-radius:16px;overflow:hidden;margin-top:clamp(28px,5vw,44px)}
 .ab-punti li{background:var(--bg2);padding:20px 22px}

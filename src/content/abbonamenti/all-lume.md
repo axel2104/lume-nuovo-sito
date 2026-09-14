@@ -1,22 +1,19 @@
 ---
-nome: All Lume Fitness
-per: Sala pesi e corsi fitness a Montecassiano, senza limiti di orario
+nome: All Inclusive
+per: Sala pesi, cardio e tutti i corsi fitness
 attivazione: 50
 preavviso: 10 giorni
 consigliato: false
-ordine: 3
+ordine: 2
 pubblicato: true
 attivita:
   - Accesso senza limiti orari
   - Sala pesi e cardio
-  - Corsi fitness
   - Technogym APP
-  - LUME AI TOWER — SHAPE
-  - Accesso sala pesi — Montecassiano
-  - Accesso corsi fitness — Montecassiano
+  - Corsi fitness
 formule:
   - id: annuale
-    prezzo: 675
+    prezzo: 720
     periodo: 12 mesi
     pagamento: Pagamento in soluzione unica
     durataMinima: 12 mesi
@@ -25,7 +22,7 @@ formule:
       - Una sospensione di 30 giorni gratuita
       - Sospensioni aggiuntive 21 € al mese
   - id: rate
-    prezzo: 61
+    prezzo: 65
     periodo: mese
     pagamento: Pagamento in 12 rate con Pagodil® o Pagolight®
     durataMinima: 12 mesi
@@ -41,6 +38,9 @@ formule:
     condizioni: []
 ---
 
-Trascritto dal listino PerfectGym. Il mensile non ha le righe sulle
-sospensioni perché su un contratto mensile non servono: si disdice con dieci
-giorni di preavviso invece di sospendere.
+Prezzi del listino 2026/27 in vigore dal 7 settembre, nella versione di
+**Lume Macerata**: un abbonamento Macerata dà ingresso a tutti i centri Lume.
+
+L'All Inclusive è sala più corsi fitness. **L'acqua non è compresa**: sta nel
+Gold. Sul listino la riga è scritta «ALL INCLUSIVE (sala+corsi palestra)», e
+questa pagina non deve promettere di più di quella riga.

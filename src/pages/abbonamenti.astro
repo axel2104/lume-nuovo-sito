@@ -80,7 +80,7 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
 
 <Layout
   title="Abbonamenti — Lume Fitness Club"
-  description="I piani Lume: sala, corsi illimitati, acqua e SPA. Stesso prezzo in tutti i centri aperti, mensile o annuale, gestione dal portale PerfectGym."
+  description="I piani Lume nella versione Macerata, che dà ingresso a tutti i centri: sala, corsi, acqua e Box CrossFit. Soluzione unica, dodici rate o mensile. Montecassiano ha un listino suo."
 >
   <Header />
 
@@ -94,6 +94,19 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
           Tre piani e tre modi di pagarli: tutto in una volta, in dodici rate senza interessi, o
           mese per mese senza vincolo. La quota di attivazione è {euro(piani[0].data.attivazione)} €
           una sola volta, uguale per tutti.
+        </p>
+        {/*
+          Questi sono i prezzi di Macerata, che apre tutti i centri. Dal
+          listino 2026/27 non sono piu' uguali dappertutto — a Montecassiano
+          la stessa sala costa 468 € invece di 660 — e una pagina che li
+          presenta come «i prezzi Lume» manda in reception gente convinta di
+          una cifra sbagliata. Il rimando alle sedi non e' una nota a pie' di
+          pagina: e' l'unico posto dove l'altro listino esiste.
+        */}
+        <p class="ab-sedi">
+          Sono i prezzi di <b>Lume Macerata</b>, che con un solo abbonamento apre tutti i centri.
+          Montecassiano ha un listino suo, più basso, valido in quel centro: lo trovi sulla{' '}
+          <a href="/centri">pagina di ogni sede</a>.
         </p>
         <ul class="ab-punti">
           <li><strong>{piani.length} piani</strong><span>dalla sola sala pesi a tutto il club</span></li>
