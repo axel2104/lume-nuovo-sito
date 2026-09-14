@@ -450,6 +450,12 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
           <div class="plans">
             {listino.piani.map((piano, i) => {
               const { base, voci } = sintesiVoci(listino.piani, i);
+              /*
+                Dodici mesi di mensile contro dodici mesi pagati in una volta.
+                L'attivazione si paga in tutte e due, quindi si semplifica e
+                non entra nel conto.
+              */
+              const risparmio = piano.mensile * 12 - piano.annuale;
               return (
                 <article class={piano.evidenza ? 'plan hot' : 'plan'}>
                   {piano.evidenza && <span class="plan-tag">Il più scelto</span>}
@@ -459,20 +465,38 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
                     {piano.per && <p class="plan-per">{piano.per}</p>}
                   </div>
 
+                  {/*
+                    In evidenza il costo al mese, perche' e' la cifra con cui
+                    si ragiona quando si sceglie una palestra. Ma subito sotto,
+                    non in fondo, cosa si paga davvero: 55 €/mese in soluzione
+                    unica vuol dire 660 € in una volta, e chi legge deve
+                    saperlo prima di chiedere, non in reception. Le tre
+                    formule portano tutte la loro coppia mese/totale, cosi' i
+                    55 € della soluzione unica e i 60 € del dilazionato si
+                    confrontano per quello che sono.
+                  */}
                   <div class="plan-prezzo">
                     <div class="pr">
-                      {piano.annuale}&nbsp;€<small>/12 mesi</small>
+                      {alMese(piano.annuale)}&nbsp;€<small>/mese</small>
                     </div>
                     <p class="plan-nota">
-                      {alMese(piano.annuale)} € al mese in soluzione unica. Attivazione{' '}
-                      {listino.attivazione} € una volta sola.
+                      In soluzione unica: <b>{piano.annuale} €</b> pagati in una volta.
+                      {risparmio > 0 && (
+                        <>
+                          {' '}Su dodici mesi risparmi <b>{risparmio} €</b> rispetto al mensile.
+                        </>
+                      )}
                     </p>
                     <ul class="plan-cond">
                       <li>
-                        In 12 rate con Pagodil® o Pagolight®: {piano.rate} €, {alMese(piano.rate)} €
-                        al mese
+                        <b>Dilazionato</b> in 12 rate con Pagodil® o Pagolight®:{' '}
+                        {alMese(piano.rate)} € al mese, {piano.rate} € in tutto
                       </li>
-                      <li>Mensile a rinnovo automatico: {piano.mensile} € al mese</li>
+                      <li>
+                        <b>Mensile</b> a rinnovo automatico: {piano.mensile} € al mese, senza
+                        vincolo di durata
+                      </li>
+                      <li>Attivazione {listino.attivazione} € una volta sola</li>
                     </ul>
                   </div>
 
@@ -510,12 +534,20 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
             })}
           </div>
 
+          {/* Stessa lettura delle schede: prima il mese, poi cosa si paga. */}
           {listino.over65?.annuale && (
             <p class="listino-over">
               <b>{listino.over65.titolo}</b>
-              {listino.over65.per && <> — {listino.over65.per}</>}: {listino.over65.annuale} € l'anno
-              {listino.over65.rate && <>, {alMese(listino.over65.rate)} € al mese a rate</>}
-              {listino.over65.mensile && <>, {listino.over65.mensile} € al mese</>}.
+              {listino.over65.per && <> — {listino.over65.per}</>}:{' '}
+              {alMese(listino.over65.annuale)} € al mese in soluzione unica
+              ({listino.over65.annuale} € in una volta)
+              {listino.over65.rate && (
+                <>
+                  , {alMese(listino.over65.rate)} € al mese dilazionato ({listino.over65.rate} € in
+                  tutto)
+                </>
+              )}
+              {listino.over65.mensile && <>, oppure {listino.over65.mensile} € al mese</>}.
             </p>
           )}
         </div>
