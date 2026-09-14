@@ -35,7 +35,7 @@ formule:
 attivazione: 50
 preavviso: 10 giorni
 consigliato: false
-ordine: 3
+ordine: 1
 pubblicato: true
 ---
 

@@ -97,6 +97,28 @@ export function include(piano: Piano, voce: string): boolean {
 }
 
 /**
+ * Sposta al centro della fila il piano in evidenza, lasciando gli altri
+ * nell'ordine deciso nel CMS.
+ *
+ * La prima scheda è quella che si legge per prima, e aprire dal piano più
+ * caro fa sembrare caro tutto il resto: il piano consigliato lavora meglio
+ * in mezzo, con un prezzo più basso a sinistra a fargli da termine di
+ * paragone. Su /abbonamenti la griglia lo dà già per scontato — la colonna
+ * centrale è più larga delle altre (`1fr 1.14fr 1fr`), e finché il
+ * consigliato stava in testa quella larghezza andava alla scheda sbagliata.
+ *
+ * Sotto le tre schede un centro non c'è, e l'ordine resta com'è.
+ */
+export function alCentro<T>(piani: T[], inEvidenza: (p: T) => boolean): T[] {
+  if (piani.length < 3) return piani;
+  const i = piani.findIndex(inEvidenza);
+  if (i < 0) return piani;
+  const centro = Math.floor(piani.length / 2);
+  const resto = piani.filter((_, j) => j !== i);
+  return [...resto.slice(0, centro), piani[i], ...resto.slice(centro)];
+}
+
+/**
  * Cosa questo piano aggiunge rispetto al piano immediatamente più piccolo che
  * contiene per intero.
  *

@@ -4,7 +4,7 @@ per: 'Tutto: sala, corsi, acqua e Box CrossFit'
 attivazione: 50
 preavviso: 10 giorni
 consigliato: true
-ordine: 1
+ordine: 2
 pubblicato: true
 attivita:
   - Accesso senza limiti orari

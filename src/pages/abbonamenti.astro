@@ -29,6 +29,7 @@ import Footer from '../components/Footer.astro';
 import { getCollection } from 'astro:content';
 import {
   FORMULE,
+  alCentro,
   formulaDi,
   pianoPiuEconomicoCon,
   righeConfronto,
@@ -39,9 +40,12 @@ import {
 } from '../data/abbonamenti';
 import { siteConfig } from '../config/site';
 
-const piani = (await getCollection('abbonamenti'))
-  .filter((p) => p.data.pubblicato)
-  .sort((a, b) => a.data.ordine - b.data.ordine);
+const piani = alCentro(
+  (await getCollection('abbonamenti'))
+    .filter((p) => p.data.pubblicato)
+    .sort((a, b) => a.data.ordine - b.data.ordine),
+  (p) => p.data.consigliato,
+);
 
 /** Le righe della tabella: l'unione delle attività, senza tassonomia da mantenere. */
 const righe = righeConfronto(piani);

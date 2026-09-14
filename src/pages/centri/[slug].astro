@@ -6,6 +6,7 @@ import Footer from '../../components/Footer.astro';
 import BandaCta from '../../components/BandaCta.astro';
 import { getCollection, render } from 'astro:content';
 import { SEDI } from '../../config/forms';
+import { alCentro } from '../../data/abbonamenti';
 import { siteConfig } from '../../config/site';
 
 export async function getStaticPaths() {
@@ -116,6 +117,13 @@ const jsonldCentro = JSON.stringify({
 const listino = c.listino;
 
 /**
+ * Il piano in evidenza al centro della fila, come su /abbonamenti: la prima
+ * scheda e' quella che si legge per prima, e aprire dal piano piu' caro fa
+ * sembrare caro tutto il resto.
+ */
+const piani = listino ? alCentro(listino.piani, (p) => p.evidenza) : [];
+
+/**
  * Un totale annuale diviso in dodici, arrotondato all'euro.
  *
  * Sul listino queste cifre sono stampate accanto a quelle annuali (660 → 55,
@@ -133,15 +141,19 @@ const alMese = (totale: number) => Math.round(totale / 12);
  * sono tre voci di differenza su sette, e tre elenchi interi affiancati
  * costringono a leggerli riga per riga per trovarle.
  *
- * Il riferimento si cerca nei dati e non nella scheda precedente: se un
- * giorno i piani si riordinano dal CMS, una scheda non puo' annunciare
- * «tutto di X, piu'» seguito da un elenco vuoto.
+ * Il riferimento si cerca fra le schede gia' passate, e per contenimento
+ * vero: la piu' grande di quelle a sinistra che questo piano contiene per
+ * intero. Cosi' nessuna scheda rimanda a una che il lettore non ha ancora
+ * visto — col consigliato al centro, il GOLD di Macerata rimandava all'All
+ * Inclusive stampato alla sua destra — e nessuna puo' annunciare «tutto di
+ * X, piu'» seguito da un elenco vuoto. Chi non ha niente a sinistra che lo
+ * contenga mostra semplicemente tutto quello che comprende.
  */
 type PianoSede = NonNullable<typeof listino>['piani'][number];
 const sintesiVoci = (piani: PianoSede[], i: number) => {
   const p = piani[i];
   const contenuti = piani.filter(
-    (q, j) => j !== i && q.attivita.length > 0 && q.attivita.every((v) => p.attivita.includes(v)),
+    (q, j) => j < i && q.attivita.length > 0 && q.attivita.every((v) => p.attivita.includes(v)),
   );
   const base = [...contenuti].sort((a, b) => b.attivita.length - a.attivita.length)[0];
   const voci = base ? p.attivita.filter((v) => !base.attivita.includes(v)) : p.attivita;
@@ -442,7 +454,7 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
         Senza listino il blocco non esiste: nessun riquadro vuoto, nessun
         "prezzi in aggiornamento".
       */}
-      {listino && listino.piani.length > 0 && (
+      {listino && piani.length > 0 && (
         <div class="listino-sede" style="margin-top:44px">
           <span class="label">Abbonamenti {c.nome.replace('Lume ', '')}</span>
           {listino.nota && <p class="listino-nota">{listino.nota}</p>}
@@ -468,8 +480,8 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
           </fieldset>
 
           <div class="plans">
-            {listino.piani.map((piano, i) => {
-              const { base, voci } = sintesiVoci(listino.piani, i);
+            {piani.map((piano, i) => {
+              const { base, voci } = sintesiVoci(piani, i);
               return (
                 <article class={piano.evidenza ? 'plan hot' : 'plan'}>
                   {piano.evidenza && <span class="plan-tag">Il più scelto</span>}

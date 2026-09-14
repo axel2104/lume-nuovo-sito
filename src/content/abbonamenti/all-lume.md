@@ -4,7 +4,7 @@ per: Sala pesi, cardio e tutti i corsi fitness
 attivazione: 50
 preavviso: 10 giorni
 consigliato: false
-ordine: 2
+ordine: 3
 pubblicato: true
 attivita:
   - Accesso senza limiti orari
