@@ -30,9 +30,9 @@ export type Formula = Piano['data']['formule'][number];
  * per primo il prezzo più alto a dodici mesi.
  */
 export const FORMULE = [
-  { id: 'annuale', label: 'Annuale', nota: 'in soluzione unica' },
-  { id: 'rate', label: 'In 12 rate', nota: 'senza interessi' },
-  { id: 'mensile', label: 'Mensile', nota: 'disdici quando vuoi' },
+  { id: 'annuale', label: 'Soluzione unica', nota: 'la più conveniente' },
+  { id: 'rate', label: 'Dilazionato', nota: '12 rate' },
+  { id: 'mensile', label: 'Mensile', nota: 'senza vincolo' },
 ] as const;
 
 export type IdFormula = (typeof FORMULE)[number]['id'];

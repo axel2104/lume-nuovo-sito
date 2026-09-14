@@ -470,12 +470,6 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
           <div class="plans">
             {listino.piani.map((piano, i) => {
               const { base, voci } = sintesiVoci(listino.piani, i);
-              /*
-                Dodici mesi di mensile contro dodici mesi pagati in una volta.
-                L'attivazione si paga in tutte e due, quindi si semplifica e
-                non entra nel conto.
-              */
-              const risparmio = piano.mensile * 12 - piano.annuale;
               return (
                 <article class={piano.evidenza ? 'plan hot' : 'plan'}>
                   {piano.evidenza && <span class="plan-tag">Il più scelto</span>}
@@ -499,11 +493,6 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
                       </div>
                       <p class="plan-nota">
                         <b>{piano.annuale} €</b> pagati in una volta.
-                        {risparmio > 0 && (
-                          <>
-                            {' '}Su dodici mesi risparmi <b>{risparmio} €</b> rispetto al mensile.
-                          </>
-                        )}
                       </p>
                       <ul class="plan-cond">
                         <li>Durata 12 mesi</li>

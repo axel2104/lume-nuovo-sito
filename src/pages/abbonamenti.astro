@@ -138,9 +138,7 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
                   <input type="radio" name="formula" id={`f-${f.id}`} checked={i === 0} />
                   <label for={`f-${f.id}`}>
                     {f.label}
-                    {f.id === 'annuale' && risparmioMax > 0 && (
-                      <span>fino a −{euro(risparmioMax)} €</span>
-                    )}
+                    <span>{f.nota}</span>
                   </label>
                 </>
               ))
@@ -151,7 +149,6 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
             {
               piani.map((p, i) => {
                 const { base, voci: nuove } = sintesiVoci(piani, i);
-                const risparmio = risparmioAnnuale(p);
                 return (
                   <article class={`plan ${p.data.consigliato ? 'hot' : ''}`}>
                     {p.data.consigliato && <span class="plan-tag">Il più scelto</span>}
@@ -238,12 +235,7 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
                               )}
                               {formula.pagamento}. Attivazione {euro(p.data.attivazione)} € una
                               volta sola.
-                              {f.id === 'annuale' && risparmio > 0 && (
-                                <>
-                                  {' '}
-                                  <b>Risparmi {euro(risparmio)} €</b> rispetto al mensile.
-                                </>
-                              )}
+
                             </p>
                             <ul class="plan-cond">
                               <li>Durata minima: {formula.durataMinima}</li>
