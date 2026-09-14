@@ -15,6 +15,7 @@ formule:
   - id: annuale
     prezzo: 720
     periodo: 12 mesi
+    pgmUrl: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=174
     pagamento: Pagamento in soluzione unica
     durataMinima: 12 mesi
     badge: Best choice
@@ -24,6 +25,7 @@ formule:
   - id: rate
     prezzo: 65
     periodo: mese
+    pgmUrl: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=172
     pagamento: Pagamento in 12 rate con Pagodil® o Pagolight®
     durataMinima: 12 mesi
     condizioni:

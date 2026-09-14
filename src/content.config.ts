@@ -126,6 +126,26 @@ const centri = defineCollection({
               mensile: z.number(),
               /** Il piano da mettere in evidenza. Uno solo, o nessuno. */
               evidenza: z.boolean().default(false),
+              /**
+               * I link diretti al checkout PerfectGym, uno per formula.
+               *
+               * URL interi e non i soli `PaymentPlanId`: club e piano stanno
+               * insieme nella stessa riga dell'export del portale, e comporre
+               * l'indirizzo a pezzi vuol dire indovinare il `clubID` — con
+               * l'id sbagliato il pulsante funziona e manda a comprare
+               * l'abbonamento di un'altra sede.
+               *
+               * Ogni formula puo' non averlo: sul portale i piani mensili
+               * esistono solo per il GOLD. Dove manca resta il form, che e'
+               * meglio di un pulsante che promette un checkout inesistente.
+               */
+              pgm: z
+                .object({
+                  annuale: z.string().startsWith('https://', 'Serve l’URL intero copiato dal portale, non il numero del piano').nullish(),
+                  rate: z.string().startsWith('https://', 'Serve l’URL intero copiato dal portale, non il numero del piano').nullish(),
+                  mensile: z.string().startsWith('https://', 'Serve l’URL intero copiato dal portale, non il numero del piano').nullish(),
+                })
+                .nullish(),
             }),
           )
           .default([]),
@@ -458,6 +478,20 @@ const abbonamenti = defineCollection({
            * il finanziamento. Le attività NON vanno qui: vedi `attivita`.
            */
           condizioni: z.array(z.string()).default([]),
+          /**
+           * Link diretto al checkout PerfectGym di QUESTA formula.
+           *
+           * URL intero e non il solo `PaymentPlanId`: il club e il piano
+           * stanno insieme nella stessa riga dell'export del portale, e
+           * comporre l'indirizzo a pezzi vuol dire indovinare il `clubID` —
+           * con l'id sbagliato il pulsante funziona e manda a comprare
+           * l'abbonamento di un'altra sede.
+           *
+           * Vuoto: nessun link, resta solo il form. Un piano senza id sul
+           * portale non deve avere un pulsante che promette un checkout che
+           * non esiste.
+           */
+          pgmUrl: z.string().startsWith('https://', 'Serve l’URL intero copiato dal portale, non il numero del piano').nullish(),
           /** Etichetta sopra la scheda quando la formula è selezionata. */
           badge: z.string().nullish(),
         }),

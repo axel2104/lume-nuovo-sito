@@ -67,6 +67,9 @@ listino:
       rate: 516
       mensile: 90
       evidenza: false
+      pgm:
+        annuale: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=2&PaymentPlanId=168
+        rate: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=2&PaymentPlanId=180
     - nome: All Inclusive
       per: Sala e corsi palestra
       attivita:
@@ -78,6 +81,9 @@ listino:
       rate: 624
       mensile: 90
       evidenza: false
+      pgm:
+        annuale: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=2&PaymentPlanId=179
+        rate: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=2&PaymentPlanId=178
     - nome: All Piscina
       per: Scuola nuoto, fitacqua e nuoto libero
       attivita:
@@ -88,6 +94,9 @@ listino:
       rate: 696
       mensile: 90
       evidenza: false
+      pgm:
+        annuale: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=2&PaymentPlanId=181
+        rate: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=2&PaymentPlanId=182
     - nome: Gold Montecassiano
       per: Sala + corsi + acqua, Montecassiano
       attivita:
@@ -102,6 +111,10 @@ listino:
       rate: 756
       mensile: 90
       evidenza: true
+      pgm:
+        annuale: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=2&PaymentPlanId=183
+        rate: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=2&PaymentPlanId=175
+        mensile: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=2&PaymentPlanId=185
   over65:
     titolo: Over 65
     per: tutto il Gold al prezzo dell'All Inclusive

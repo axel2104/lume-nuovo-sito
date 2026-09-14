@@ -260,6 +260,12 @@ export default config({
               description: 'Es. “Best choice”, “Disdici quando vuoi”. Vuoto = nessuna etichetta.',
               validation: { isRequired: false },
             }),
+            pgmUrl: fields.url({
+              label: 'Link diretto al portale',
+              description:
+                'Checkout PerfectGym di questa formula. Incolla l’indirizzo INTERO copiato dall’export dei Payment Plan (colonna ClientPortalDirectURL), non solo il numero del piano: nell’URL c’è anche il club, e ricostruirlo a mano vuol dire mandare qualcuno a comprare l’abbonamento di un’altra sede. Vuoto = niente pulsante di attivazione, resta il form.',
+              validation: { isRequired: false },
+            }),
           }),
           {
             label: 'Formule di pagamento',
@@ -571,6 +577,17 @@ export default config({
                   description: 'Uno solo per centro, o nessuno.',
                   defaultValue: false,
                 }),
+                pgm: fields.object(
+                  {
+                    annuale: fields.url({ label: 'Soluzione unica', validation: { isRequired: false } }),
+                    rate: fields.url({ label: 'Dilazionato, 12 rate', validation: { isRequired: false } }),
+                    mensile: fields.url({ label: 'Mensile', validation: { isRequired: false } }),
+                  },
+                  {
+                    label: 'Link diretti al portale',
+                    description: 'Link diretto al checkout PerfectGym per questa formula. Incolla l’indirizzo INTERO copiato dall’export dei Payment Plan (colonna ClientPortalDirectURL), non solo il numero del piano: nell’URL c’è anche il club, e ricostruirlo a mano vuol dire mandare qualcuno a comprare l’abbonamento di un’altra sede. Vuoto = niente pulsante di attivazione, resta il form.' ,
+                  },
+                ),
               }),
               {
                 label: 'I piani',

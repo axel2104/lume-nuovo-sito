@@ -197,13 +197,45 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
                           );
                         }
 
+                        /*
+                          In evidenza sempre il costo al mese, anche per
+                          l'annuale: e' la cifra con cui si sceglie una
+                          palestra, e un totale a tre cifre accanto a un
+                          concorrente che ne scrive due sembra caro anche
+                          quando non lo e'. Il totale sta nella riga subito
+                          sotto, perche' 75 €/mese in soluzione unica non e'
+                          una rata e chi legge deve saperlo qui, non in
+                          reception.
+
+                          Per le rate il totale non e' nei dati: il listino
+                          dichiara la rata, e dodici rate sono il totale.
+                        */
+                        const alMese =
+                          formula.periodo === 'mese'
+                            ? formula.prezzo
+                            : Math.round(formula.prezzo / 12);
+                        const totale =
+                          f.id === 'annuale'
+                            ? formula.prezzo
+                            : f.id === 'rate'
+                              ? formula.prezzo * 12
+                              : null;
                         return (
                           <div data-formula={f.id}>
                             <div class="pr">
-                              {euro(formula.prezzo)}&nbsp;€
-                              <small>/{formula.periodo === 'mese' ? 'mese' : '12 mesi'}</small>
+                              {euro(alMese)}&nbsp;€<small>/mese</small>
                             </div>
                             <p class="plan-nota">
+                              {f.id === 'annuale' && (
+                                <>
+                                  <b>{euro(totale!)} €</b> pagati in una volta.{' '}
+                                </>
+                              )}
+                              {f.id === 'rate' && (
+                                <>
+                                  <b>{euro(totale!)} €</b> in tutto.{' '}
+                                </>
+                              )}
                               {formula.pagamento}. Attivazione {euro(p.data.attivazione)} € una
                               volta sola.
                               {f.id === 'annuale' && risparmio > 0 && (
@@ -239,19 +271,45 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
                       telefono è una domanda che l'utente ha già risposto.
                     */}
                     <div class="plan-azioni">
-                      {FORMULE.filter((f) => formulaDi(p, f.id)).map((f) => (
-                        <div data-formula={f.id}>
-                          <button
-                            type="button"
-                            class={`btn ${p.data.consigliato ? 'btn-red' : 'btn-out'} btn-full`}
-                            data-open-form="iscrizione"
-                            data-medium={`Abbonamenti:${p.data.nome}:${f.label}`}
-                            data-abbonamento={p.data.nome}
-                          >
-                            Richiedi {p.data.nome}
-                          </button>
-                        </div>
-                      ))}
+                      {FORMULE.filter((f) => formulaDi(p, f.id)).map((f) => {
+                        const portale = formulaDi(p, f.id)?.pgmUrl;
+                        return (
+                          <div data-formula={f.id}>
+                            <div class="plan-coppia">
+                            {/*
+                              Col link del portale si va dritti al checkout di
+                              quella formula. Dove il piano sul portale non
+                              c'e' — il mensile esiste solo per il GOLD —
+                              resta il form: un «Attiva ora» che apre un
+                              carrello vuoto e' peggio di nessun pulsante.
+                            */}
+                            {portale && (
+                              <a
+                                href={portale}
+                                class={`btn ${p.data.consigliato ? 'btn-red' : 'btn-out'} btn-full`}
+                                rel="noopener"
+                              >
+                                Attiva ora ↗
+                              </a>
+                            )}
+                            {/*
+                              La richiamata resta sempre, sotto al checkout:
+                              chi ha una domanda lascia un contatto invece di
+                              uscire dal sito.
+                            */}
+                            <button
+                              type="button"
+                              class={portale ? 'btn-lieve' : `btn ${p.data.consigliato ? 'btn-red' : 'btn-out'} btn-full`}
+                              data-open-form="iscrizione"
+                              data-medium={`Abbonamenti:${p.data.nome}:${f.label}`}
+                              data-abbonamento={p.data.nome}
+                            >
+                              {portale ? 'Fatti richiamare' : `Richiedi ${p.data.nome}`}
+                            </button>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </article>
                 );

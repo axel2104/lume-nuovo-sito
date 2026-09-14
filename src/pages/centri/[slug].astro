@@ -560,20 +560,48 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
                   */}
                   {raccogliLead && (
                     <div class="plan-azioni">
-                      {['annuale', 'rate', 'mensile'].map((f) => (
-                        <div data-formula={f}>
-                          <button
-                            type="button"
-                            class={`btn ${piano.evidenza ? 'btn-red' : 'btn-out'} btn-full`}
-                            data-open-form="iscrizione"
-                            data-medium={`CentroPiano:${entry.id}:${piano.nome}:${f}`}
-                            data-centro={entry.id}
-                            data-abbonamento={piano.nome}
-                          >
-                            Richiedi {piano.nome}
-                          </button>
-                        </div>
-                      ))}
+                      {(['annuale', 'rate', 'mensile'] as const).map((f) => {
+                        const portale = piano.pgm?.[f];
+                        return (
+                          <div data-formula={f}>
+                            <div class="plan-coppia">
+                            {/*
+                              Dove il piano esiste sul portale si va dritti al
+                              checkout. Dove non esiste — sul portale il mensile
+                              c'e' solo per il GOLD — resta il form: un pulsante
+                              «Attiva ora» che apre un carrello vuoto e' peggio
+                              di nessun pulsante.
+                            */}
+                            {portale && (
+                              <a
+                                href={portale}
+                                class={`btn ${piano.evidenza ? 'btn-red' : 'btn-out'} btn-full`}
+                                rel="noopener"
+                              >
+                                Attiva ora ↗
+                              </a>
+                            )}
+                            {/*
+                              La richiamata resta sempre, e sotto al checkout.
+                              Chi e' deciso clicca sopra; chi ha una domanda
+                              lascia un contatto invece di uscire dal sito — e
+                              senza questo pulsante il lead di chi si ferma
+                              davanti al portale non lo vedrebbe nessuno.
+                            */}
+                            <button
+                              type="button"
+                              class={portale ? 'btn-lieve' : `btn ${piano.evidenza ? 'btn-red' : 'btn-out'} btn-full`}
+                              data-open-form="iscrizione"
+                              data-medium={`CentroPiano:${entry.id}:${piano.nome}:${f}`}
+                              data-centro={entry.id}
+                              data-abbonamento={piano.nome}
+                            >
+                              {portale ? 'Fatti richiamare' : `Richiedi ${piano.nome}`}
+                            </button>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </article>
@@ -869,6 +897,33 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
     margin-bottom: 0;
     align-items: start;
   }
+  /* La seconda azione non e' un secondo pulsante: e' un rimando. Due
+     pulsanti pieni affiancati si contendono il click e non vince nessuno. */
+  .btn-lieve {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    width: 100%;
+    padding: 0 12px;
+    background: none;
+    border: 0;
+    border-radius: 999px;
+    font: inherit;
+    font-size: 13.5px;
+    color: var(--mut);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  .btn-lieve:hover {
+    color: var(--txt);
+  }
+  .btn-lieve:focus-visible {
+    outline: 2px solid var(--red-txt);
+    outline-offset: 2px;
+  }
+
   .listino-over {
     margin: 18px 0 0;
     font-size: 14px;

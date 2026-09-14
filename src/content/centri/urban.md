@@ -277,6 +277,9 @@ listino:
       rate: 456
       mensile: 55
       evidenza: true
+      pgm:
+        annuale: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=3&PaymentPlanId=167
+        rate: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=3&PaymentPlanId=170
     - nome: Over 30
       per: Dai 30 anni in su
       annuale: 540

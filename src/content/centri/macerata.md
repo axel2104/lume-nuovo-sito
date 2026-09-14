@@ -59,6 +59,9 @@ listino:
       rate: 720
       mensile: 90
       evidenza: false
+      pgm:
+        annuale: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=169
+        rate: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=173
     - nome: All Inclusive
       per: Sala e corsi palestra
       attivita:
@@ -70,6 +73,9 @@ listino:
       rate: 780
       mensile: 90
       evidenza: false
+      pgm:
+        annuale: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=174
+        rate: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=172
     - nome: Gold
       per: Sala + corsi + acqua + box
       attivita:
@@ -84,6 +90,10 @@ listino:
       rate: 960
       mensile: 105
       evidenza: true
+      pgm:
+        annuale: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=176
+        rate: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=184
+        mensile: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=177
   over65:
     titolo: Over 65
     per: All Inclusive al prezzo del Sala
