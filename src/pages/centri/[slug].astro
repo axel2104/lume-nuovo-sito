@@ -447,6 +447,26 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
           <span class="label">Abbonamenti {c.nome.replace('Lume ', '')}</span>
           {listino.nota && <p class="listino-nota">{listino.nota}</p>}
 
+          {/*
+            Le radio stanno prima delle schede nel DOM perche' `:has()` sul
+            contenitore deve poterle vedere. Nessun JavaScript: e' lo stesso
+            meccanismo di /abbonamenti, e senza `:has()` resta visibile la
+            soluzione unica, che e' la formula che conviene.
+
+            Una formula alla volta perche' tre prezzi per piano, ognuno con la
+            sua rata e il suo totale, sono dodici numeri in una scheda: chi
+            legge non confronta piu' niente, guarda un tabellone.
+          */}
+          <fieldset class="pf">
+            <legend class="sr-only">Come vuoi pagare</legend>
+            <input type="radio" name="formula-sede" id="f-annuale" checked />
+            <label for="f-annuale">Soluzione unica<span>la più conveniente</span></label>
+            <input type="radio" name="formula-sede" id="f-rate" />
+            <label for="f-rate">Dilazionato<span>12 rate</span></label>
+            <input type="radio" name="formula-sede" id="f-mensile" />
+            <label for="f-mensile">Mensile<span>senza vincolo</span></label>
+          </fieldset>
+
           <div class="plans">
             {listino.piani.map((piano, i) => {
               const { base, voci } = sintesiVoci(listino.piani, i);
@@ -470,34 +490,50 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
                     si ragiona quando si sceglie una palestra. Ma subito sotto,
                     non in fondo, cosa si paga davvero: 55 €/mese in soluzione
                     unica vuol dire 660 € in una volta, e chi legge deve
-                    saperlo prima di chiedere, non in reception. Le tre
-                    formule portano tutte la loro coppia mese/totale, cosi' i
-                    55 € della soluzione unica e i 60 € del dilazionato si
-                    confrontano per quello che sono.
+                    saperlo prima di chiedere, non in reception.
                   */}
                   <div class="plan-prezzo">
-                    <div class="pr">
-                      {alMese(piano.annuale)}&nbsp;€<small>/mese</small>
+                    <div data-formula="annuale">
+                      <div class="pr">
+                        {alMese(piano.annuale)}&nbsp;€<small>/mese</small>
+                      </div>
+                      <p class="plan-nota">
+                        <b>{piano.annuale} €</b> pagati in una volta.
+                        {risparmio > 0 && (
+                          <>
+                            {' '}Su dodici mesi risparmi <b>{risparmio} €</b> rispetto al mensile.
+                          </>
+                        )}
+                      </p>
+                      <ul class="plan-cond">
+                        <li>Durata 12 mesi</li>
+                        <li>Attivazione {listino.attivazione} € una volta sola</li>
+                      </ul>
                     </div>
-                    <p class="plan-nota">
-                      In soluzione unica: <b>{piano.annuale} €</b> pagati in una volta.
-                      {risparmio > 0 && (
-                        <>
-                          {' '}Su dodici mesi risparmi <b>{risparmio} €</b> rispetto al mensile.
-                        </>
-                      )}
-                    </p>
-                    <ul class="plan-cond">
-                      <li>
-                        <b>Dilazionato</b> in 12 rate con Pagodil® o Pagolight®:{' '}
-                        {alMese(piano.rate)} € al mese, {piano.rate} € in tutto
-                      </li>
-                      <li>
-                        <b>Mensile</b> a rinnovo automatico: {piano.mensile} € al mese, senza
-                        vincolo di durata
-                      </li>
-                      <li>Attivazione {listino.attivazione} € una volta sola</li>
-                    </ul>
+
+                    <div data-formula="rate">
+                      <div class="pr">
+                        {alMese(piano.rate)}&nbsp;€<small>/mese</small>
+                      </div>
+                      <p class="plan-nota">
+                        <b>{piano.rate} €</b> in tutto, in 12 rate con Pagodil® o Pagolight®.
+                      </p>
+                      <ul class="plan-cond">
+                        <li>Durata 12 mesi, nessun interesse</li>
+                        <li>Attivazione {listino.attivazione} € una volta sola</li>
+                      </ul>
+                    </div>
+
+                    <div data-formula="mensile">
+                      <div class="pr">
+                        {piano.mensile}&nbsp;€<small>/mese</small>
+                      </div>
+                      <p class="plan-nota">Rinnovo automatico, nessun vincolo di durata.</p>
+                      <ul class="plan-cond">
+                        <li>Disdici quando vuoi</li>
+                        <li>Attivazione {listino.attivazione} € una volta sola</li>
+                      </ul>
+                    </div>
                   </div>
 
                   {voci.length > 0 && (
@@ -515,18 +551,29 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
                     possibile e' la prevendita, ed e' gia' in fondo alla
                     pagina.
                   */}
+                  {/*
+                    Un pulsante per formula, dentro il suo `data-formula`:
+                    senza JavaScript la pagina non sa quale radio e' spuntata,
+                    e il lead deve portarsi dietro anche COME si vuole pagare.
+                    Richiederlo al telefono e' una domanda a cui l'utente ha
+                    gia' risposto.
+                  */}
                   {raccogliLead && (
                     <div class="plan-azioni">
-                      <button
-                        type="button"
-                        class={`btn ${piano.evidenza ? 'btn-red' : 'btn-out'} btn-full`}
-                        data-open-form="iscrizione"
-                        data-medium={`CentroPiano:${entry.id}:${piano.nome}`}
-                        data-centro={entry.id}
-                        data-abbonamento={piano.nome}
-                      >
-                        Richiedi {piano.nome}
-                      </button>
+                      {['annuale', 'rate', 'mensile'].map((f) => (
+                        <div data-formula={f}>
+                          <button
+                            type="button"
+                            class={`btn ${piano.evidenza ? 'btn-red' : 'btn-out'} btn-full`}
+                            data-open-form="iscrizione"
+                            data-medium={`CentroPiano:${entry.id}:${piano.nome}:${f}`}
+                            data-centro={entry.id}
+                            data-abbonamento={piano.nome}
+                          >
+                            Richiedi {piano.nome}
+                          </button>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </article>
@@ -534,20 +581,25 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
             })}
           </div>
 
-          {/* Stessa lettura delle schede: prima il mese, poi cosa si paga. */}
+          {/* Anche la riga Over 65 segue il selettore: una formula alla volta. */}
           {listino.over65?.annuale && (
             <p class="listino-over">
               <b>{listino.over65.titolo}</b>
               {listino.over65.per && <> — {listino.over65.per}</>}:{' '}
-              {alMese(listino.over65.annuale)} € al mese in soluzione unica
-              ({listino.over65.annuale} € in una volta)
+              <span data-formula="annuale">
+                {alMese(listino.over65.annuale)} € al mese, {listino.over65.annuale} € in una volta.
+              </span>
               {listino.over65.rate && (
-                <>
-                  , {alMese(listino.over65.rate)} € al mese dilazionato ({listino.over65.rate} € in
-                  tutto)
-                </>
+                <span data-formula="rate">
+                  {alMese(listino.over65.rate)} € al mese, {listino.over65.rate} € in tutto in 12
+                  rate.
+                </span>
               )}
-              {listino.over65.mensile && <>, oppure {listino.over65.mensile} € al mese</>}.
+              {listino.over65.mensile && (
+                <span data-formula="mensile">
+                  {listino.over65.mensile} € al mese, senza vincolo di durata.
+                </span>
+              )}
             </p>
           )}
         </div>

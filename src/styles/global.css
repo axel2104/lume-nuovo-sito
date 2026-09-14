@@ -420,10 +420,23 @@ a.chip{display:inline-flex;align-items:center;min-height:44px}
    pagina vuota. */
 [data-formula]{display:none}
 [data-formula='annuale']{display:block}
+/* `.listino` e' /abbonamenti, `.listino-sede` il blocco prezzi delle pagine
+   centro: stesso meccanismo, una definizione sola. Duplicare queste quattro
+   regole in uno stile di pagina vorrebbe dire tenerle allineate a mano. */
 .listino:has(#f-rate:checked) [data-formula='annuale'],
-.listino:has(#f-mensile:checked) [data-formula='annuale']{display:none}
-.listino:has(#f-rate:checked) [data-formula='rate']{display:block}
-.listino:has(#f-mensile:checked) [data-formula='mensile']{display:block}
+.listino:has(#f-mensile:checked) [data-formula='annuale'],
+.listino-sede:has(#f-rate:checked) [data-formula='annuale'],
+.listino-sede:has(#f-mensile:checked) [data-formula='annuale']{display:none}
+.listino:has(#f-rate:checked) [data-formula='rate'],
+.listino-sede:has(#f-rate:checked) [data-formula='rate']{display:block}
+.listino:has(#f-mensile:checked) [data-formula='mensile'],
+.listino-sede:has(#f-mensile:checked) [data-formula='mensile']{display:block}
+/* Nella riga Over 65 le tre varianti stanno dentro un paragrafo: `block`
+   spezzerebbe la frase. Stessa regola, `inline`. */
+.listino-over [data-formula]{display:none}
+.listino-sede:has(#f-annuale:checked) .listino-over [data-formula='annuale'],
+.listino-sede:has(#f-rate:checked) .listino-over [data-formula='rate'],
+.listino-sede:has(#f-mensile:checked) .listino-over [data-formula='mensile']{display:inline}
 
 /* Le condizioni della formula: durata, preavviso, sospensioni. Piccole
    e in grigio perche' si leggono solo quando si e' quasi deciso, ma in
