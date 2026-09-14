@@ -63,39 +63,50 @@ listino:
         - Accesso senza limiti orari
         - Sala pesi e cardio
         - Technogym APP
-      annuale: 465
+      annuale: 468
       rate: 516
       mensile: 90
       evidenza: false
     - nome: All Inclusive
-      per: Sala e corsi
+      per: Sala e corsi palestra
       attivita:
         - Accesso senza limiti orari
         - Sala pesi e cardio
         - Technogym APP
         - Corsi fitness
-      annuale: 540
-      rate: 600
+      annuale: 576
+      rate: 624
       mensile: 90
       evidenza: false
-    - nome: Gold
+    - nome: All Piscina
+      per: Scuola nuoto, fitacqua e nuoto libero
+      attivita:
+        - Nuoto libero
+        - Acqua fitness
+        - Scuola nuoto adulti
+      annuale: 640
+      rate: 696
+      mensile: 90
+      evidenza: false
+    - nome: Gold Montecassiano
       per: Sala + corsi + acqua, Montecassiano
       attivita:
         - Accesso senza limiti orari
         - Sala pesi e cardio
         - Technogym APP
         - Corsi fitness
-        - Acqua fitness
         - Nuoto libero
-      annuale: 640
-      rate: 696
+        - Acqua fitness
+        - Scuola nuoto adulti
+      annuale: 690
+      rate: 756
       mensile: 90
       evidenza: true
   over65:
     titolo: Over 65
-    per: All Inclusive al prezzo del Sala
-    annuale: 465
-    rate: 516
+    per: tutto il Gold al prezzo dell'All Inclusive
+    annuale: 576
+    rate: 624
     mensile: 90
 immagine: ../../assets/centri/montecassiano.jpg
 video: https://pub-90d4a80741cd4aadb6d995599fefc986.r2.dev/site/montecassiano-drone.mp4

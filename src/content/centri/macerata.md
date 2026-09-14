@@ -60,14 +60,12 @@ listino:
       mensile: 90
       evidenza: false
     - nome: All Inclusive
-      per: Sala, corsi e acqua
+      per: Sala e corsi palestra
       attivita:
         - Accesso senza limiti orari
         - Sala pesi e cardio
         - Technogym APP
         - Corsi fitness
-        - Acqua fitness
-        - Nuoto libero
       annuale: 720
       rate: 780
       mensile: 90
