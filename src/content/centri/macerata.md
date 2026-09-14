@@ -45,6 +45,53 @@ sale:
   - nome: Box CrossFit
     mq: 450
     dotazione: "Vogatori, air bike, bikeerg, skierg, bilancieri e bumper."
+listino:
+  nota: Con un abbonamento Macerata entri in tutti i centri Lume.
+  attivazione: 50
+  piani:
+    - nome: Sala
+      per: Sala pesi e cardio
+      attivita:
+        - Accesso senza limiti orari
+        - Sala pesi e cardio
+        - Technogym APP
+      annuale: 660
+      rate: 720
+      mensile: 90
+      evidenza: false
+    - nome: All Inclusive
+      per: Sala, corsi e acqua
+      attivita:
+        - Accesso senza limiti orari
+        - Sala pesi e cardio
+        - Technogym APP
+        - Corsi fitness
+        - Acqua fitness
+        - Nuoto libero
+      annuale: 720
+      rate: 780
+      mensile: 90
+      evidenza: false
+    - nome: Gold
+      per: Sala + corsi + acqua + box
+      attivita:
+        - Accesso senza limiti orari
+        - Sala pesi e cardio
+        - Technogym APP
+        - Corsi fitness
+        - Acqua fitness
+        - Nuoto libero
+        - Box CrossFit senza limiti
+      annuale: 900
+      rate: 960
+      mensile: 105
+      evidenza: true
+  over65:
+    titolo: Over 65
+    per: All Inclusive al prezzo del Sala
+    annuale: 660
+    rate: 720
+    mensile: 90
 immagine: ../../assets/centri/macerata-sala-pesi.jpg
 video: https://pub-90d4a80741cd4aadb6d995599fefc986.r2.dev/site/macerata-drone.mp4
 videoPoster: ../../assets/centri/macerata-sala-pesi.jpg

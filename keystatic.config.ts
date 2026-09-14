@@ -518,6 +518,97 @@ export default config({
             itemLabel: (props) => props.fields.didascalia.value || 'Render',
           },
         ),
+        // Il listino della sede. Deve restare allineato a `listino` nello
+        // schema di `centri` in src/content.config.ts: se un campo esiste la'
+        // e non qui, il primo salvataggio da Keystatic lo cancella.
+        listino: fields.object(
+          {
+            nota: fields.text({
+              label: 'Riga sopra i prezzi',
+              description:
+                'Quello che dai numeri non si capisce. Es. “Con un abbonamento Macerata entri in tutti i centri Lume.” Vuota = nessuna riga.',
+              multiline: true,
+              validation: { isRequired: false },
+            }),
+            attivazione: fields.integer({
+              label: 'Quota di attivazione (€)',
+              description: 'Una volta sola, uguale per tutti i piani.',
+              defaultValue: 50,
+            }),
+            piani: fields.array(
+              fields.object({
+                nome: fields.text({ label: 'Nome del piano', validation: { isRequired: true } }),
+                per: fields.text({
+                  label: 'Cosa comprende',
+                  description: 'Una riga sotto il nome. Es. “Sala + corsi + acqua + box”.',
+                  validation: { isRequired: false },
+                }),
+                attivita: fields.array(
+                  fields.text({ label: 'Voce', validation: { isRequired: true } }),
+                  {
+                    label: 'Cosa puoi fare',
+                    description:
+                      'Una voce per riga, con le stesse parole usate sugli abbonamenti (“Sala pesi e cardio”, “Corsi fitness”, “Acqua fitness”, “Nuoto libero”, “Box CrossFit senza limiti”, “Technogym APP”). Scritte uguali, le schede restano coerenti fra centri e listino. Vuoto = la scheda mostra solo prezzo e condizioni.',
+                    itemLabel: (props) => props.value || 'Voce',
+                  },
+                ),
+                annuale: fields.integer({
+                  label: 'Soluzione unica (€)',
+                  description: 'Il prezzo dei 12 mesi pagati in una volta. Il “al mese” accanto lo calcola il sito dividendo per 12: non va scritto.',
+                  validation: { isRequired: true },
+                }),
+                rate: fields.integer({
+                  label: 'Totale in 12 rate (€)',
+                  description: 'Il totale con Pagodil o Pagolight, non la rata. Anche qui la rata la calcola il sito.',
+                  validation: { isRequired: true },
+                }),
+                mensile: fields.integer({
+                  label: 'Mensile a rinnovo automatico (€)',
+                  validation: { isRequired: true },
+                }),
+                evidenza: fields.checkbox({
+                  label: 'Mettilo in evidenza',
+                  description: 'Uno solo per centro, o nessuno.',
+                  defaultValue: false,
+                }),
+              }),
+              {
+                label: 'I piani',
+                itemLabel: (props) =>
+                  [props.fields.nome.value, props.fields.annuale.value && props.fields.annuale.value + ' €']
+                    .filter(Boolean)
+                    .join(' · ') || 'Piano',
+              },
+            ),
+            // Oggetto semplice e campi tutti opzionali, non un `conditional`:
+            // il conditional scrive `{ discriminant, value }`, una forma che lo
+            // schema Zod non conosce, e il primo salvataggio romperebbe la
+            // build. Vuoto il prezzo annuale, la riga non compare.
+            over65: fields.object(
+              {
+                titolo: fields.text({ label: 'Etichetta', defaultValue: 'Over 65' }),
+                per: fields.text({
+                  label: 'Cosa comprende',
+                  defaultValue: 'All Inclusive al prezzo del Sala',
+                  validation: { isRequired: false },
+                }),
+                annuale: fields.integer({
+                  label: 'Soluzione unica (€)',
+                  description: 'Vuoto = niente riga Over 65 su questa pagina.',
+                  validation: { isRequired: false },
+                }),
+                rate: fields.integer({ label: 'Totale in 12 rate (€)', validation: { isRequired: false } }),
+                mensile: fields.integer({ label: 'Mensile (€)', validation: { isRequired: false } }),
+              },
+              { label: 'Prezzo Over 65' },
+            ),
+          },
+          {
+            label: 'Listino del centro',
+            description:
+              'I prezzi di questa sede. Dal 2026/27 ogni centro ha i suoi: lasciarlo vuoto toglie il blocco prezzi dalla pagina.',
+          },
+        ),
         immagine: fields.image({
           label: 'Foto del centro',
           directory: 'src/assets/centri',

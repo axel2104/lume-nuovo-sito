@@ -77,6 +77,78 @@ const centri = defineCollection({
      * comprendono. Vuoto = il totale resta la somma, che è il caso normale.
      */
     superficie: z.number().nullish(),
+    /**
+     * Il listino di QUESTO centro.
+     *
+     * Sta sulla sede e non nella collection `abbonamenti` per una ragione
+     * semplice: dal listino 2026/27 i prezzi non sono piu' uguali dappertutto.
+     * La stessa Sala costa 660 € a Macerata e 465 € a Montecassiano, e Urban
+     * non ha ne' Sala ne' Gold ma due fasce d'eta'. Un listino unico con una
+     * colonna per centro sarebbe una tabella che nessuno riesce a correggere
+     * senza sbagliare riga.
+     *
+     * Nullish: un centro senza listino non mostra il blocco, punto. E' il caso
+     * di Piediripa finche' non si decide come si chiama.
+     */
+    listino: z
+      .object({
+        /**
+         * La frase sopra le schede. Serve a dire cosa NON si capisce dai
+         * numeri: a Macerata l'abbonamento apre tutti i centri, a
+         * Montecassiano il Gold vale solo li'. Due cifre vicine che valgono
+         * cose diverse, senza quella riga, sembrano solo due cifre.
+         */
+        nota: z.string().nullish(),
+        /** Quota di attivazione, una volta sola, uguale per tutti i piani. */
+        attivazione: z.number().default(50),
+        piani: z
+          .array(
+            z.object({
+              nome: z.string(),
+              /** Cosa comprende, in una riga. */
+              per: z.string().nullish(),
+              /**
+               * Cosa puoi fare, una voce per riga — le stesse etichette della
+               * collection `abbonamenti` ("Sala pesi e cardio", "Acqua
+               * fitness"): scriverle uguali tiene coerenti le schede dei
+               * centri e quelle di /abbonamenti, scriverle diverse crea due
+               * vocabolari per le stesse cose.
+               *
+               * Vuoto: la scheda mostra prezzo e condizioni senza l'elenco.
+               * Meglio di un elenco inventato su una pagina che vende.
+               */
+              attivita: z.array(z.string()).default([]),
+              /** Prezzo in soluzione unica, dodici mesi. */
+              annuale: z.number(),
+              /** Totale pagato in 12 rate con Pagodil/Pagolight. */
+              rate: z.number(),
+              /** Mensile con rinnovo automatico. */
+              mensile: z.number(),
+              /** Il piano da mettere in evidenza. Uno solo, o nessuno. */
+              evidenza: z.boolean().default(false),
+            }),
+          )
+          .default([]),
+        /**
+         * La riga Over 65, quando c'e'.
+         *
+         * Non e' una quarta scheda: e' lo stesso All Inclusive a un prezzo
+         * diverso, e mostrarlo come piano a se' raddoppierebbe una colonna per
+         * cambiare solo la cifra. I numeri sono scritti e non calcolati dal
+         * piano Sala perche' sul listino sono dichiarati a parte: se un anno
+         * l'offerta cambia, cambia qui e basta.
+         */
+        over65: z
+          .object({
+            titolo: z.string().default('Over 65'),
+            per: z.string().nullish(),
+            annuale: z.number().nullish(),
+            rate: z.number().nullish(),
+            mensile: z.number().nullish(),
+          })
+          .nullish(),
+      })
+      .nullish(),
     immagine: image().nullish(),
     /**
      * Render del progetto, per i centri che non esistono ancora.

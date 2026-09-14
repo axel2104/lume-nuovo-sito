@@ -53,6 +53,50 @@ sale:
   - nome: Piscina
     dotazione: "Scuola nuoto bambini e adulti, corsi di acqua fitness, nuoto libero."
     foto: ../../assets/centri/montecassiano-piscina.jpg
+listino:
+  nota: 'Il Gold di Montecassiano vale a Montecassiano: sala, corsi e acqua di questo centro.'
+  attivazione: 50
+  piani:
+    - nome: Sala
+      per: Sala pesi e cardio
+      attivita:
+        - Accesso senza limiti orari
+        - Sala pesi e cardio
+        - Technogym APP
+      annuale: 465
+      rate: 516
+      mensile: 90
+      evidenza: false
+    - nome: All Inclusive
+      per: Sala e corsi
+      attivita:
+        - Accesso senza limiti orari
+        - Sala pesi e cardio
+        - Technogym APP
+        - Corsi fitness
+      annuale: 540
+      rate: 600
+      mensile: 90
+      evidenza: false
+    - nome: Gold
+      per: Sala + corsi + acqua, Montecassiano
+      attivita:
+        - Accesso senza limiti orari
+        - Sala pesi e cardio
+        - Technogym APP
+        - Corsi fitness
+        - Acqua fitness
+        - Nuoto libero
+      annuale: 640
+      rate: 696
+      mensile: 90
+      evidenza: true
+  over65:
+    titolo: Over 65
+    per: All Inclusive al prezzo del Sala
+    annuale: 465
+    rate: 516
+    mensile: 90
 immagine: ../../assets/centri/montecassiano.jpg
 video: https://pub-90d4a80741cd4aadb6d995599fefc986.r2.dev/site/montecassiano-drone.mp4
 perfectgymUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Registration"

@@ -106,6 +106,47 @@ const jsonldCentro = JSON.stringify({
   }),
   parentOrganization: { '@id': new URL('/#org', base).toString() },
 });
+
+/**
+ * Il listino della sede, se ce l'ha.
+ *
+ * Piediripa non ce l'ha ancora, e finche' non ce l'ha la sua pagina non
+ * mostra nessun blocco prezzi.
+ */
+const listino = c.listino;
+
+/**
+ * Un totale annuale diviso in dodici, arrotondato all'euro.
+ *
+ * Sul listino queste cifre sono stampate accanto a quelle annuali (660 → 55,
+ * 465 → 39, 850 → 71): sono la stessa cosa detta due volte. Scriverle nei
+ * contenuti vorrebbe dire tenere allineati due numeri che non possono
+ * divergere per definizione — e che infatti, prima o poi, divergono.
+ */
+const alMese = (totale: number) => Math.round(totale / 12);
+
+/**
+ * Cosa questo piano aggiunge rispetto al piano piu' grande che contiene per
+ * intero — la stessa regola delle schede di /abbonamenti.
+ *
+ * Le schede mostrano il delta e non l'elenco completo: fra Sala e Gold ci
+ * sono tre voci di differenza su sette, e tre elenchi interi affiancati
+ * costringono a leggerli riga per riga per trovarle.
+ *
+ * Il riferimento si cerca nei dati e non nella scheda precedente: se un
+ * giorno i piani si riordinano dal CMS, una scheda non puo' annunciare
+ * «tutto di X, piu'» seguito da un elenco vuoto.
+ */
+type PianoSede = NonNullable<typeof listino>['piani'][number];
+const sintesiVoci = (piani: PianoSede[], i: number) => {
+  const p = piani[i];
+  const contenuti = piani.filter(
+    (q, j) => j !== i && q.attivita.length > 0 && q.attivita.every((v) => p.attivita.includes(v)),
+  );
+  const base = [...contenuti].sort((a, b) => b.attivita.length - a.attivita.length)[0];
+  const voci = base ? p.attivita.filter((v) => !base.attivita.includes(v)) : p.attivita;
+  return { base, voci };
+};
 ---
 
 <Layout title={`${c.nome} — Lume Fitness Club`} description={description}>
@@ -393,6 +434,94 @@ const jsonldCentro = JSON.stringify({
       </div>
 
       {/*
+        Il listino della sede, subito prima delle CTA: chi e' arrivato fin qui
+        ha gia' visto sale, orari e servizi, e la domanda che resta e' quanto
+        costa. Metterlo dopo il pulsante "Richiedi un abbonamento" vorrebbe
+        dire chiedere di agire prima di aver dato il prezzo.
+
+        Senza listino il blocco non esiste: nessun riquadro vuoto, nessun
+        "prezzi in aggiornamento".
+      */}
+      {listino && listino.piani.length > 0 && (
+        <div class="listino-sede" style="margin-top:44px">
+          <span class="label">Abbonamenti {c.nome.replace('Lume ', '')}</span>
+          {listino.nota && <p class="listino-nota">{listino.nota}</p>}
+
+          <div class="plans">
+            {listino.piani.map((piano, i) => {
+              const { base, voci } = sintesiVoci(listino.piani, i);
+              return (
+                <article class={piano.evidenza ? 'plan hot' : 'plan'}>
+                  {piano.evidenza && <span class="plan-tag">Il più scelto</span>}
+
+                  <div class="plan-testa">
+                    <h3 class="pn">{piano.nome}</h3>
+                    {piano.per && <p class="plan-per">{piano.per}</p>}
+                  </div>
+
+                  <div class="plan-prezzo">
+                    <div class="pr">
+                      {piano.annuale}&nbsp;€<small>/12 mesi</small>
+                    </div>
+                    <p class="plan-nota">
+                      {alMese(piano.annuale)} € al mese in soluzione unica. Attivazione{' '}
+                      {listino.attivazione} € una volta sola.
+                    </p>
+                    <ul class="plan-cond">
+                      <li>
+                        In 12 rate con Pagodil® o Pagolight®: {piano.rate} €, {alMese(piano.rate)} €
+                        al mese
+                      </li>
+                      <li>Mensile a rinnovo automatico: {piano.mensile} € al mese</li>
+                    </ul>
+                  </div>
+
+                  {voci.length > 0 && (
+                    <div class="plan-voci">
+                      <p class="plan-delta">{base ? `Tutto di ${base.nome}, più` : 'Comprende'}</p>
+                      <ul>{voci.map((v) => <li>{v}</li>)}</ul>
+                    </div>
+                  )}
+
+                  {/*
+                    Il pulsante porta centro e piano gia' scelti: chi e' su
+                    questa scheda ha risposto a entrambe le domande, e
+                    richiederle nel form sarebbe attrito gratuito. Sui centri
+                    in prevendita non c'e', perche' li' l'unica azione
+                    possibile e' la prevendita, ed e' gia' in fondo alla
+                    pagina.
+                  */}
+                  {raccogliLead && (
+                    <div class="plan-azioni">
+                      <button
+                        type="button"
+                        class={`btn ${piano.evidenza ? 'btn-red' : 'btn-out'} btn-full`}
+                        data-open-form="iscrizione"
+                        data-medium={`CentroPiano:${entry.id}:${piano.nome}`}
+                        data-centro={entry.id}
+                        data-abbonamento={piano.nome}
+                      >
+                        Richiedi {piano.nome}
+                      </button>
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+
+          {listino.over65?.annuale && (
+            <p class="listino-over">
+              <b>{listino.over65.titolo}</b>
+              {listino.over65.per && <> — {listino.over65.per}</>}: {listino.over65.annuale} € l'anno
+              {listino.over65.rate && <>, {alMese(listino.over65.rate)} € al mese a rate</>}
+              {listino.over65.mensile && <>, {listino.over65.mensile} € al mese</>}.
+            </p>
+          )}
+        </div>
+      )}
+
+      {/*
         Le CTA della sede portano il centro già selezionato: chi è su questa
         pagina ha già risposto alla domanda "quale centro", e richiederla nel
         form sarebbe attrito gratuito. `data-medium` porta lo slug, così su
@@ -636,6 +765,34 @@ const jsonldCentro = JSON.stringify({
   }
   .faq-in a {
     color: var(--red-txt);
+  }
+
+  /* ── Listino della sede ───────────────────────────────────────────────
+     Le schede riusano `.plan` di global.css, le stesse di /abbonamenti:
+     badge, nome, prezzo e spunte sono gia' quelli, e riscriverli qui
+     avrebbe creato due stili per la stessa cosa destinati a divergere.
+     Qui resta solo quello che cambia. */
+  .listino-nota {
+    margin: 10px 0 20px;
+    max-width: 64ch;
+    color: var(--txt);
+  }
+  /* `.plans` su /abbonamenti e' tarata su tre piani, con quello consigliato
+     piu' largo (1fr 1.14fr 1fr). I centri non ne hanno sempre tre — Urban ne
+     ha due — e su due colonne quella griglia lascia un buco a destra. */
+  .listino-sede .plans {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    margin-bottom: 0;
+    align-items: start;
+  }
+  .listino-over {
+    margin: 18px 0 0;
+    font-size: 14px;
+    color: var(--mut);
+    font-variant-numeric: tabular-nums;
+  }
+  .listino-over b {
+    color: var(--txt);
   }
 </style>
 
