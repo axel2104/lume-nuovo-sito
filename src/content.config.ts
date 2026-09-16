@@ -509,4 +509,43 @@ const abbonamenti = defineCollection({
   }),
 });
 
-export const collections = { abbonamenti, centri, discipline, news, eventi, helpdesk, servizi };
+// ─── Legale ──────────────────────────────────────────────────────────────
+//
+// Le condizioni generali di contratto. Una sola voce, ma è una collection e
+// non una pagina scritta a mano per due motivi: questo testo è l'unica copia
+// che esiste (il docx per il legale e quello per la firma si generano da qui,
+// non viceversa), e /regolamento.json lo serve spezzato per punto a un
+// eventuale assistente — che ha bisogno del testo, non dell'HTML della pagina.
+//
+// L'URL è /regolamento e non /termini-e-condizioni perché è quello già scritto
+// in 281 descrizioni di piano sul portale PerfectGym: cambiarlo qui vorrebbe
+// dire riscrivere quelle. /termini-e-condizioni ci arriva con un 301.
+const legale = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/legale' }),
+  schema: z.object({
+    titolo: z.string(),
+    sottotitolo: z.string(),
+    societa: z.string(),
+    sede: z.string(),
+    piva: z.string(),
+    pec: z.string(),
+    /** Versione del documento: va citata quando si contesta una clausola. */
+    revisione: z.string(),
+    /** Stagione sportiva a cui si riferiscono listino e calendari, es. "2026/2027". */
+    stagione: z.string(),
+    aggiornato: z.coerce.date(),
+    /** Quale edizione sostituisce, per datare i contratti già firmati. */
+    sostituisce: z.string(),
+  }),
+});
+
+export const collections = {
+  abbonamenti,
+  centri,
+  discipline,
+  news,
+  eventi,
+  helpdesk,
+  legale,
+  servizi,
+};

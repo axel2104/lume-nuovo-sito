@@ -262,3 +262,35 @@
   to = "/"
   status = 301
   force = true
+
+# ─────────────────────────────────────────────────────────────────────────
+# TERMINI E CONDIZIONI
+#
+# Il documento sta su /regolamento perche' e' l'URL gia' scritto in 281
+# descrizioni di piano sul portale PerfectGym ("Termini e Condizioni su
+# www.lumefitness.it/regolamento"). Finora quell'indirizzo rispondeva 404:
+# chi si iscriveva accettava condizioni che non poteva leggere.
+#
+# /termini-e-condizioni e' l'URL usato dalle landing di prevendita e da
+# qualche campagna: arriva qui con un 301 invece di moltiplicare le copie.
+# ─────────────────────────────────────────────────────────────────────────
+[[redirects]]
+  from = "/termini-e-condizioni"
+  to = "/regolamento"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/termini-e-condizioni/"
+  to = "/regolamento"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/termini"
+  to = "/regolamento"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/condizioni-generali"
+  to = "/regolamento"
+  status = 301
+  force = true

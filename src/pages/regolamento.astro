@@ -1,0 +1,155 @@
+---
+import { getEntry, render } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { dataEstesa } from '../lib/richtext';
+
+// Un solo documento nella collection: se un giorno ce ne sarà un secondo
+// (un regolamento interno a parte, per dire) diventerà /regolamento/[slug].
+const entry = await getEntry('legale', 'regolamento');
+if (!entry) throw new Error('src/content/legale/regolamento.md non trovato');
+
+const d = entry.data;
+// `headings` arriva già slugificato da Astro: l'indice e gli ancoraggi nel
+// testo usano gli stessi id, quindi non possono divergere.
+const { Content, headings } = await render(entry);
+const sezioni = headings.filter((h) => h.depth === 2);
+---
+
+<Layout
+  title="Termini e Condizioni — Lume Fitness Club"
+  description="Le condizioni generali di contratto di Lume Fitness Club: iscrizione, pagamenti, recesso, sospensioni, accesso automatizzato e trattamento dei dati."
+>
+  <Header />
+
+  <main id="contenuto">
+    <article class="sec">
+      <div class="wrap wrap-stretto">
+        <header class="art-head">
+          <span class="ed-meta">
+            Stagione {d.stagione} · revisione {d.revisione} · aggiornato il {
+              dataEstesa(d.aggiornato)
+            }
+          </span>
+          <h1 class="d">{d.titolo}</h1>
+          <p class="art-sub">{d.sottotitolo}</p>
+        </header>
+
+        <div class="reg-intestazione">
+          <p><strong>{d.societa}</strong></p>
+          <p>{d.sede} · P.IVA {d.piva}</p>
+          <p>PEC <a href={`mailto:${d.pec}`}>{d.pec}</a></p>
+          <p class="reg-storico">Sostituisce: {d.sostituisce}</p>
+        </div>
+
+        <nav class="reg-indice" aria-labelledby="reg-indice-tit">
+          <h2 id="reg-indice-tit">Indice</h2>
+          <ol>
+            {
+              sezioni.map((s) => (
+                <li>
+                  <a href={`#${s.slug}`}>{s.text}</a>
+                </li>
+              ))
+            }
+          </ol>
+        </nav>
+
+        <div class="art-body reg-testo">
+          <Content />
+        </div>
+
+        <p class="leg-altro">
+          Il trattamento dei dati personali è descritto per esteso nell'<a href="/privacy"
+            >informativa privacy</a
+          >; per i soli cookie c'è la <a href="/cookie-policy">cookie policy</a>. Per una copia
+          firmabile del contratto rivolgiti alla reception del tuo centro.
+        </p>
+      </div>
+    </article>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  /* Blocco identificativo della società: è la prima cosa che un legale cerca,
+     quindi sta sopra l'indice e non nel footer. */
+  .reg-intestazione {
+    border-left: 3px solid var(--red);
+    padding: 2px 0 2px 16px;
+    margin: 26px 0 30px;
+    color: var(--mut);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .reg-intestazione p {
+    margin: 0;
+  }
+  .reg-intestazione strong {
+    color: var(--txt);
+  }
+  .reg-storico {
+    margin-top: 6px !important;
+    font-size: 13px;
+    opacity: 0.75;
+  }
+
+  .reg-indice {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 20px 0 22px;
+    margin-bottom: 34px;
+  }
+  .reg-indice h2 {
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mut);
+    margin: 0 0 14px;
+  }
+  /* Numerazione dal documento, non dal browser: i punti sono "1.", "2." e
+     devono restare quelli anche se un giorno l'indice mostrasse un estratto. */
+  .reg-indice ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    columns: 2;
+    column-gap: 34px;
+  }
+  .reg-indice li {
+    break-inside: avoid;
+    margin-bottom: 8px;
+  }
+  .reg-indice a {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  @media (max-width: 600px) {
+    .reg-indice ol {
+      columns: 1;
+    }
+  }
+
+  /* Il testo è lungo e si consulta per punti: i titoli di sezione hanno un
+     filo sopra per farsi trovare scorrendo, e scroll-margin perché l'ancora
+     non finisca sotto l'header fisso. */
+  .reg-testo :global(h2) {
+    border-top: 2px solid var(--line);
+    padding-top: 22px;
+    margin-top: 44px;
+    scroll-margin-top: 90px;
+  }
+  .reg-testo :global(h3) {
+    margin-top: 28px;
+    scroll-margin-top: 90px;
+    font-size: 17px;
+  }
+  .reg-testo :global(table) {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+    font-size: 14.5px;
+  }
+</style>
