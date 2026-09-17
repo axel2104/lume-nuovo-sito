@@ -19,7 +19,7 @@ formule:
     prezzo: 900
     periodo: 12 mesi
     pgmUrl: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=176
-    pagamento: Pagamento in soluzione unica
+    pagamento: Pagamento in unica soluzione o in 3 rate
     durataMinima: 12 mesi
     badge: Best choice
     condizioni:

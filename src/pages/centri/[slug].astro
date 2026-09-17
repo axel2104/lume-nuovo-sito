@@ -470,7 +470,7 @@ const pianiBox = box ? alCentro(box.piani, (p) => p.evidenza) : [];
               <b>{listino.over65.titolo}</b>
               {listino.over65.per && <> — {listino.over65.per}</>}:{' '}
               <span data-formula="annuale">
-                {alMese(listino.over65.annuale)} € al mese, {listino.over65.annuale} € in una volta.
+                {alMese(listino.over65.annuale)} € al mese, {listino.over65.annuale} € in una volta, oppure in 3 rate.
               </span>
               {listino.over65.rate && (
                 <span data-formula="rate">

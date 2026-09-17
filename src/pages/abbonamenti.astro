@@ -319,7 +319,7 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
                             <p class="plan-nota">
                               {f.id === 'annuale' && (
                                 <>
-                                  <b>{euro(totale!)} €</b> in unica soluzione.{' '}
+                                  <b>{euro(totale!)} €</b> in unica soluzione, oppure in 3 rate.{' '}
                                 </>
                               )}
                               {f.id === 'rate' && (
@@ -424,7 +424,7 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
                     <b>{l.over65.titolo}</b>
                     {l.over65.per && <> — {l.over65.per}</>}:{' '}
                     <span data-formula="annuale">
-                      {alMese(l.over65.annuale)} € al mese, {l.over65.annuale} € in unica soluzione.
+                      {alMese(l.over65.annuale)} € al mese, {l.over65.annuale} € in unica soluzione, oppure in 3 rate.
                     </span>
                     {l.over65.rate && (
                       <span data-formula="rate">
