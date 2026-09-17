@@ -285,13 +285,19 @@ const campiAnagrafica: Campo[] = [
   { tipo: 'consensi', nome: 'consensi' },
 ];
 
-/** Le 11 attività di interesse, opzionali: qualificano senza allungare il funnel. */
-const campoInteressi = (nota = '(opzionale)'): Campo => ({
+/**
+ * Le 11 attività di interesse, obbligatorie: un lead senza interessi e' un
+ * contatto che la segreteria deve rincorrere a mano, e la mail automatica non
+ * avrebbe niente da dire. La scelta e' a chip, costa un tocco.
+ */
+const campoInteressi = (nota = ''): Campo => ({
   tipo: 'chipsCheck',
   nome: 'attivita',
   label: 'Cosa ti interessa',
   nota,
   opzioni: 'interessi',
+  obbligatorio: true,
+  errore: 'Scegli almeno un’attività, così ti risponde chi se ne occupa.',
 });
 
 /** Nota libera che finisce nelle `notes` della prenotazione Cal.com. */
@@ -299,9 +305,11 @@ const campoNota = (label: string, placeholder: string): Campo => ({
   tipo: 'textarea',
   nome: 'messaggio',
   label,
-  nota: '(opzionale)',
   placeholder,
   righe: 3,
+  obbligatorio: true,
+  minLunghezza: 3,
+  errore: 'Scrivi due parole, così possiamo risponderti nel merito.',
 });
 
 /** Vicolo cieco per chi è già iscritto: non è un lead, è assistenza. */
@@ -724,9 +732,10 @@ export const FLUSSI: Record<string, Flusso> = {
             tipo: 'chipsRadio',
             nome: 'abbonamento',
             label: 'Piano di interesse',
-            nota: '(opzionale)',
             // I piani arrivano dai contenuti: vedi la nota su `opzioni`.
             opzioni: 'abbonamenti',
+            obbligatorio: true,
+            errore: 'Scegli il piano che ti incuriosisce, anche solo a spanne.',
           },
           campoNota('Obiettivi o domande', 'Es. mi alleno tre volte a settimana, mi interessa il nuoto'),
         ],
