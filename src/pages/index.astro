@@ -22,7 +22,7 @@ import Footer from '../components/Footer.astro';
 import BandaCta from '../components/BandaCta.astro';
 import { getCollection } from 'astro:content';
 import { formulaDi, euro } from '../data/abbonamenti';
-import { conValori, righe } from '../lib/copy';
+import { campo, conValori, righe } from '../lib/copy';
 import { siteConfig } from '../config/site';
 import { testiHome as testi } from '../data/testi';
 
@@ -306,7 +306,22 @@ function assaggio(p: (typeof piani)[number]) {
     <div class="wrap">
       <div class="sec-head">
         <span class="label">{testi.centri.label}</span>
-        <h2 class="d">{testi.centri.titolo}</h2>
+        <h2 class="d">
+          {righe(testi.centri.titolo).map((r, i) => (
+            <>
+              {i > 0 && <br />}
+              {r}
+            </>
+          ))}
+          {/* Come nell'hero: la parola in rosso sta in un campo a parte,
+              cosi' il CMS non maneggia markup. */}
+          {campo(testi.centri, 'evidenza') && (
+            <>
+              <br />
+              <em>{campo(testi.centri, 'evidenza')}</em>
+            </>
+          )}
+        </h2>
         <p>{testi.centri.testo}</p>
       </div>
       <div class="grid4">

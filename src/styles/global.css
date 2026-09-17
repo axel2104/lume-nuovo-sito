@@ -140,6 +140,7 @@ a.logo{display:inline-flex;align-items:center;min-height:44px}
 .sec-head{max-width:720px;margin-bottom:36px}
 .sec-head h1,.sec-head h2{font-size:clamp(34px,8vw,64px);margin:14px 0 16px}
 .sec-head p{color:var(--mut);font-size:16px}
+.sec-head h1 em,.sec-head h2 em{color:var(--red-txt);font-style:normal}
 .band{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 
 /* ABOUT */

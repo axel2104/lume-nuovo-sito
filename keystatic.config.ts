@@ -994,7 +994,31 @@ export default config({
           },
           { label: 'Chi siamo' },
         ),
-        centri: intestazione('Sezione centri'),
+        // Non usa intestazione(): e' l'unica sezione con la parola in rosso,
+        // come l'apertura — un campo a parte perche' il CMS non maneggi markup.
+        centri: fields.object(
+          {
+            label: fields.text({
+              label: 'Sopratitolo',
+              description: 'La righetta rossa in maiuscolo sopra al titolo.',
+            }),
+            titolo: fields.text({
+              label: 'Titolo',
+              description: 'Vai a capo con Invio dove vuoi che la riga si spezzi.',
+              multiline: true,
+              validation: { isRequired: true },
+            }),
+            evidenza: fields.text({
+              label: 'Parola in evidenza',
+              description: 'Aggiunta in coda al titolo, in rosso. Lascia vuoto per non mostrarla.',
+            }),
+            testo: fields.text({
+              label: 'Testo',
+              multiline: true,
+            }),
+          },
+          { label: 'Sezione centri' },
+        ),
         discipline: fields.object(
           {
             label: fields.text({ label: 'Sopratitolo' }),
