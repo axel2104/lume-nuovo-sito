@@ -25,12 +25,25 @@ const FORMULE = ['annuale', 'rate', 'mensile'];
  * di quattro listini diversi, e un test che dice "tre piani" passerebbe o
  * fallirebbe per l'apertura di una sede.
  */
-const inCima = html.slice(html.indexOf('class="listino pf-scope"'), html.indexOf('id="confronto"'));
+const blocco = html.slice(html.indexOf('id="listini"'), html.indexOf('id="confronto"'));
+
+/**
+ * La scheda Macerata: dal suo pannello a quello del centro successivo.
+ *
+ * Contare su tutta la pagina, o anche sul solo blocco, non misura piu'
+ * niente: i listini stanno tutti nel DOM e `class="plan "` ne trova le
+ * schede di tre. Un test che dice "tre piani" passerebbe o fallirebbe per
+ * l'apertura di una sede.
+ */
+const inCima = blocco.slice(
+  blocco.indexOf('<div data-listino="macerata"'),
+  blocco.indexOf('<div data-listino="montecassiano"'),
+);
 const quante = (s) => inCima.split(s).length - 1;
 const piani = quante('class="plan ');
 
 test('il selettore di formula sta dentro .listino', () => {
-  const listino = inCima;
+  const listino = blocco;
   for (const f of FORMULE) {
     assert.ok(
       listino.includes(`id="f-${f}"`),
@@ -38,7 +51,7 @@ test('il selettore di formula sta dentro .listino', () => {
     );
     assert.ok(
       listino.includes(`data-formula="${f}"`),
-      `i blocchi della formula ${f} sono fuori da .listino`,
+      `i blocchi della formula ${f} sono fuori dallo scope del selettore`,
     );
   }
 });
@@ -48,17 +61,19 @@ test('una sola formula è preselezionata, ed è l\'annuale', () => {
   // essere l'annuale: è quella che conviene, ed è il prezzo pieno del piano.
   // Una per listino: la pagina ne ha piu' d'uno, e ognuno si apre sulla sua
   // annuale.
-  const selettori = html.split('<fieldset class="pf"').length - 1;
+  // Il prefisso, non la classe intera: lo switch dei listini è `pf sw`, e ha
+  // anche lui una radio preselezionata.
+  const gruppi = html.split('<fieldset class="pf').slice(1);
   assert.equal(
     html.split(' checked').length - 1,
-    selettori,
-    'le radio preselezionate non sono una per listino',
+    gruppi.length,
+    'le radio preselezionate non sono una per selettore',
   );
-  for (const blocco of html.split('<fieldset class="pf"').slice(1)) {
-    const primaRadio = blocco.indexOf('id="');
+  for (const gruppo of gruppi) {
+    const primaRadio = gruppo.indexOf('id="');
     assert.ok(
-      blocco.slice(primaRadio, primaRadio + 200).includes('checked'),
-      'in un listino la radio preselezionata non è la prima (annuale)',
+      gruppo.slice(primaRadio, primaRadio + 200).includes('checked'),
+      'in un selettore la radio preselezionata non è la prima',
     );
   }
 });
@@ -274,14 +289,28 @@ test('/abbonamenti stampa il listino di ogni centro che ne ha uno', () => {
   assert.ok(sezione.includes('Box CrossFit'), 'manca il Box di Macerata');
 });
 
-test('Macerata non compare due volte con due nomi', () => {
-  // Il listino in cima È quello di Macerata. Ristamparlo sotto darebbe gli
-  // stessi prezzi con nomi diversi per gli stessi piani.
-  const sezione = html.slice(html.indexOf('id="listini"'), html.indexOf('Prima di decidere'));
-  assert.ok(
-    !sezione.includes('>Lume Macerata<'),
-    'il listino palestra di Macerata è ristampato nella sezione dei centri',
-  );
+test('Macerata ha una scheda sola nello switch', () => {
+  // La prima scheda È il listino di Macerata. Una seconda voce con lo stesso
+  // centro darebbe gli stessi prezzi con nomi diversi per gli stessi piani.
+  // Solo i tag: gli stessi slug compaiono anche nelle regole generate.
+  const schede = [...blocco.matchAll(/<input[^>]*data-sw="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(schede, [...new Set(schede)], `schede ripetute: ${schede}`);
+  assert.equal(schede[0], 'macerata', 'lo switch non si apre su Macerata');
+  assert.ok(!schede.includes('urban'), 'Urban è tornato fra i listini');
+});
+
+test('ogni scheda dello switch ha il suo pannello, e viceversa', () => {
+  // Una voce senza pannello è un pulsante che svuota la pagina; un pannello
+  // senza voce è un listino che nessuno può raggiungere.
+  const schede = [...blocco.matchAll(/<input[^>]*data-sw="([^"]+)"/g)].map((m) => m[1]);
+  const pannelli = [...blocco.matchAll(/<div data-listino="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(schede, pannelli);
+  for (const id of schede) {
+    assert.ok(
+      blocco.includes(`[data-sw="${id}"]:checked) [data-listino="${id}"]`),
+      `manca la regola che accende la scheda ${id}`,
+    );
+  }
 });
 
 test('ogni listino ha il suo gruppo di radio', () => {
@@ -307,5 +336,5 @@ test('ogni selettore ha le sue schede dentro lo stesso scope', () => {
   // mostra tutte e tre le formule insieme senza segnalare nulla.
   const scope = [...html.matchAll(/class="[^"]*pf-scope[^"]*"/g)];
   const fieldset = [...html.matchAll(/<fieldset class="pf"/g)];
-  assert.equal(scope.length, fieldset.length, 'scope e selettori non si corrispondono');
+  assert.equal(scope.length, fieldset.length, 'scope e selettori di formula non si corrispondono');
 });

@@ -59,21 +59,49 @@ const aperti = centri.filter((c) => c.data.stato === 'aperto');
 const inArrivo = centri.filter((c) => c.data.stato !== 'aperto');
 
 /**
- * Il listino di ogni centro che ne ha uno, per la sezione in fondo.
+ * I listini che lo switch mette uno accanto all'altro.
  *
- * Macerata resta fuori: e' il listino stampato in cima alla pagina, e
- * ristamparlo qui vorrebbe dire due volte gli stessi prezzi con due nomi
- * diversi per gli stessi piani ("Sala pesi" sopra, "Sala" sotto). Il suo Box
- * CrossFit invece entra, perche' in cima non c'e' e altrimenti sarebbe
- * l'unico abbonamento Lume che questa pagina non mostra.
+ * Macerata non e' qui: e' il listino gia' stampato, la scheda aperta per
+ * prima. Ristamparlo come voce dello switch vorrebbe dire gli stessi prezzi
+ * due volte con due nomi diversi per gli stessi piani ("Sala pesi" nella
+ * collection, "Sala" nel listino di sede).
  *
- * Niente filtro sullo stato: Urban non ha ancora aperto e il suo listino
- * esiste gia', con la nota che dice da quando vale. Nasconderlo vorrebbe
- * dire che chi valuta la prevendita non trova il prezzo.
+ * Solo i centri aperti: Urban e Piediripa sono in prevendita, i loro prezzi
+ * valgono dall'apertura e la fascia della prevendita, piu' sotto, e' il posto
+ * dove si dicono. Metterli qui accanto ai prezzi in vigore li farebbe leggere
+ * come listini attivi oggi.
  */
-const altriListini = centri.filter((c) => c.id !== 'macerata' && c.data.listino);
+const altriCentri = centri.filter(
+  (c) => c.id !== 'macerata' && c.data.stato === 'aperto' && c.data.listino,
+);
 
 const boxMacerata = centri.find((c) => c.id === 'macerata')?.data.listino?.box;
+
+/**
+ * Le voci dello switch, Macerata compresa: la prima e' la scheda aperta.
+ *
+ * Una voce sola non e' uno switch — sarebbe un pulsante che non fa niente —
+ * quindi se non c'e' altro da mostrare lo switch non si stampa affatto.
+ */
+const schede = [
+  { id: 'macerata', label: 'Macerata' },
+  ...altriCentri.map((c) => ({ id: c.id, label: c.data.nome.replace('Lume ', '') })),
+  ...(boxMacerata && boxMacerata.piani.length > 0
+    ? [{ id: 'box', label: boxMacerata.titolo }]
+    : []),
+];
+
+/**
+ * Le regole che accendono una scheda alla volta.
+ *
+ * Sono generate qui e non scritte in `global.css` perche' dipendono dagli
+ * slug dei centri: una regola per `#montecassiano` nel foglio globale
+ * resterebbe li' il giorno che quel centro cambia nome, e il giorno che ne
+ * apre un altro mancherebbe senza che niente lo segnali.
+ */
+const regoleSchede = schede
+  .map((v) => `.sw-scope:has([data-sw="${v.id}"]:checked) [data-listino="${v.id}"]{display:block}`)
+  .join(' ');
 
 const faq = (await getCollection('helpdesk'))
   .filter((v) => v.data.pubblicato && ['abbonamenti', 'pagamenti'].includes(v.data.categoria))
@@ -129,9 +157,9 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
           pagina: e' l'unico posto dove l'altro listino esiste.
         */}
         <p class="ab-sedi">
-          Sono i prezzi di <b>Lume Macerata</b>, che con un solo abbonamento apre tutti i centri.
-          Gli altri centri hanno un listino loro, valido lì: li trovi{' '}
-          <a href="#listini">più sotto in questa pagina</a>.
+          Le schede qui sotto aprono su <b>Lume Macerata</b>, che con un solo abbonamento apre
+          tutti i centri. Montecassiano ha un listino suo, più basso e valido lì, e il Box CrossFit
+          ha il suo: si cambia con lo <a href="#listini">switch sopra i prezzi</a>.
         </p>
         <ul class="ab-punti">
           <li><strong>{piani.length} piani</strong><span>dalla sola sala pesi a tutto il club</span></li>
@@ -149,7 +177,37 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
       <div class="wrap">
         <h2 id="tit-piani" class="sr-only">I piani</h2>
 
-        <div class="listino pf-scope">
+        <div class="listino pf-scope sw-scope" id="listini">
+          {/*
+            Due selettori, uno sopra l'altro: quale listino e come si paga.
+            Sono domande diverse — il centro lo si sceglie una volta, la
+            formula si confronta — e un solo gruppo di pillole con dentro
+            Macerata, Montecassiano e il Box costringerebbe a rileggerlo ogni
+            volta per capire quale delle due cose sta cambiando.
+
+            Le schede stanno tutte nel DOM e ne resta visibile una: e' lo
+            stesso meccanismo delle formule, `:has()` e nessun JavaScript.
+            Senza `:has()` si vede la prima, che e' Macerata.
+          */}
+          {schede.length > 1 && (
+            <fieldset class="pf sw">
+              <legend class="sr-only">Quale listino</legend>
+              {schede.map((v, i) => (
+                <>
+                  <input
+                    type="radio"
+                    name="listino"
+                    id={`sw-${v.id}`}
+                    data-sw={v.id}
+                    checked={i === 0}
+                  />
+                  <label for={`sw-${v.id}`}>{v.label}</label>
+                </>
+              ))}
+            </fieldset>
+          )}
+          <style is:inline set:html={regoleSchede} />
+
           {/*
             Le radio precedono le schede nel DOM perché `:has()` sul contenitore
             deve poterle vedere. `annuale` è la predefinita: è la formula che
@@ -157,6 +215,10 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
           */}
           <SelettoreFormula />
 
+          <div data-listino="macerata">
+          <p class="listino-nota">
+            I prezzi di <b>Lume Macerata</b>: un solo abbonamento apre tutti i centri.
+          </p>
           <div class="plans">
             {
               piani.map((p, i) => {
@@ -320,6 +382,76 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
               })
             }
           </div>
+          </div>
+
+          {altriCentri.map((c) => {
+            const l = c.data.listino!;
+            const pianiCentro = alCentro(l.piani, (p) => p.evidenza);
+            if (pianiCentro.length === 0) return null;
+            return (
+              <div data-listino={c.id}>
+                {l.nota && <p class="listino-nota">{l.nota}</p>}
+
+                <SchedePiani
+                  piani={pianiCentro}
+                  attivazione={l.attivazione}
+                  centro={c.id}
+                  raccogliLead={Boolean(SEDI[c.id])}
+                />
+
+                {l.over65?.annuale && (
+                  <p class="listino-over">
+                    <b>{l.over65.titolo}</b>
+                    {l.over65.per && <> — {l.over65.per}</>}:{' '}
+                    <span data-formula="annuale">
+                      {alMese(l.over65.annuale)} € al mese, {l.over65.annuale} € in unica soluzione.
+                    </span>
+                    {l.over65.rate && (
+                      <span data-formula="rate">
+                        {alMese(l.over65.rate)} € al mese, {l.over65.rate} € in tutto in 12 rate.
+                      </span>
+                    )}
+                    {l.over65.mensile && (
+                      <span data-formula="mensile">
+                        {l.over65.mensile} € al mese, senza vincolo di durata.
+                      </span>
+                    )}
+                  </p>
+                )}
+              </div>
+            );
+          })}
+
+          {boxMacerata && boxMacerata.piani.length > 0 && (
+            <div data-listino="box">
+              {boxMacerata.nota && <p class="listino-avviso">{boxMacerata.nota}</p>}
+
+              <SchedePiani
+                piani={alCentro(boxMacerata.piani, (p) => p.evidenza)}
+                attivazione={boxMacerata.attivazione}
+                centro="macerata"
+                raccogliLead={Boolean(SEDI.macerata)}
+              />
+
+              {boxMacerata.pacchetti && boxMacerata.pacchetti.voci.length > 0 && (
+                <p class="listino-over">
+                  {boxMacerata.pacchetti.voci.map((v, i) => (
+                    <>
+                      {i > 0 && ' '}
+                      <b>{v.nome}</b>
+                      {v.per && <> — {v.per}</>}: {v.mensile} € al mese.{' '}
+                    </>
+                  ))}
+                  {boxMacerata.pacchetti.nota && (
+                    <>
+                      <br />
+                      {boxMacerata.pacchetti.nota}
+                    </>
+                  )}
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         <p class="pg-note">
@@ -425,108 +557,6 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
         </div>
       </div>
     </section>
-
-    <!-- ─── Il listino di ogni centro ─────────────────────────────── -->
-    {
-      (altriListini.length > 0 || boxMacerata) && (
-        <section class="sec" id="listini" aria-labelledby="tit-listini">
-          <div class="wrap">
-            <span class="label">Gli altri listini</span>
-            <h2 id="tit-listini" class="d">Centro per centro</h2>
-            <p class="listino-nota" style="max-width:64ch">
-              Dal listino 2026/27 i prezzi non sono piu' uguali dappertutto: la stessa sala costa
-              660 € a Macerata e 468 € a Montecassiano, e Urban ha due fasce d'eta' invece dei
-              piani. Ogni centro ha qui il suo listino, con il suo selettore.
-            </p>
-
-            {/*
-              Un centro per blocco, uno sotto l'altro, ognuno nel suo
-              `.pf-scope`: il selettore di Montecassiano non deve muovere i
-              prezzi di Urban.
-            */}
-            {altriListini.map((c) => {
-              const l = c.data.listino!;
-              const pianiCentro = alCentro(l.piani, (p) => p.evidenza);
-              if (pianiCentro.length === 0) return null;
-              return (
-                <div class="listino-sede pf-scope" style="margin-top:52px">
-                  <span class="label">{c.data.nome}</span>
-                  {l.nota && <p class="listino-nota">{l.nota}</p>}
-
-                  <SelettoreFormula prefisso={`f-${c.id}`} />
-
-                  <SchedePiani
-                    piani={pianiCentro}
-                    attivazione={l.attivazione}
-                    centro={c.id}
-                    raccogliLead={Boolean(SEDI[c.id])}
-                  />
-
-                  {l.over65?.annuale && (
-                    <p class="listino-over">
-                      <b>{l.over65.titolo}</b>
-                      {l.over65.per && <> — {l.over65.per}</>}:{' '}
-                      <span data-formula="annuale">
-                        {alMese(l.over65.annuale)} € al mese, {l.over65.annuale} € in unica
-                        soluzione.
-                      </span>
-                      {l.over65.rate && (
-                        <span data-formula="rate">
-                          {alMese(l.over65.rate)} € al mese, {l.over65.rate} € in tutto in 12 rate.
-                        </span>
-                      )}
-                      {l.over65.mensile && (
-                        <span data-formula="mensile">
-                          {l.over65.mensile} € al mese, senza vincolo di durata.
-                        </span>
-                      )}
-                    </p>
-                  )}
-                </div>
-              );
-            })}
-
-            {/*
-              Il Box di Macerata chiude la sezione: e' un listino a se', con
-              la sua quota di attivazione e la sua scadenza.
-            */}
-            {boxMacerata && boxMacerata.piani.length > 0 && (
-              <div class="listino-sede pf-scope" style="margin-top:52px">
-                <span class="label">Lume Macerata — {boxMacerata.titolo}</span>
-                {boxMacerata.nota && <p class="listino-avviso">{boxMacerata.nota}</p>}
-
-                <SelettoreFormula prefisso="f-box" />
-
-                <SchedePiani
-                  piani={alCentro(boxMacerata.piani, (p) => p.evidenza)}
-                  attivazione={boxMacerata.attivazione}
-                  centro="macerata"
-                  raccogliLead={Boolean(SEDI.macerata)}
-                />
-
-                {boxMacerata.pacchetti && boxMacerata.pacchetti.voci.length > 0 && (
-                  <p class="listino-over">
-                    {boxMacerata.pacchetti.voci.map((v, i) => (
-                      <>
-                        {i > 0 && ' '}
-                        <b>{v.nome}</b>
-                        {v.per && <> — {v.per}</>}: {v.mensile} € al mese.{' '}
-                      </>
-                    ))}
-                    {boxMacerata.pacchetti.nota && (
-                      <>
-                        <br />
-                        {boxMacerata.pacchetti.nota}
-                      </>
-                    )}
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
-        </section>
-      )
-    }
 
     <!-- ─── Guest Pass ────────────────────────────────────────────── -->
     <section class="sec" style="padding-top:56px;padding-bottom:56px">

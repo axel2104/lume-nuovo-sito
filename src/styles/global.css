@@ -436,6 +436,25 @@ a.chip{display:inline-flex;align-items:center;min-height:44px}
    pagina vuota. */
 [data-formula]{display:none}
 [data-formula='annuale']{display:block}
+/* Un listino alla volta. Le regole che accendono la scheda scelta sono
+   generate dalla pagina, perche' dipendono dagli slug dei centri; qui sta
+   solo il default, che spegne tutto.
+
+   Il default vive dentro `@supports` perche' senza `:has()` nessuna regola
+   riaccenderebbe niente: la pagina resterebbe senza prezzi, che e' peggio di
+   una pagina lunga. La' dove `:has()` manca si vedono tutti i listini uno
+   sotto l'altro — com'erano prima dello switch. */
+@supports selector(:has(*)){
+  [data-listino]{display:none}
+}
+
+/* Lo switch dei listini e' lo stesso oggetto delle formule, meno marcato:
+   sceglie il centro, non il prezzo, e due file di pillole rosse una sopra
+   l'altra competerebbero per lo stesso sguardo. */
+.pf.sw{margin-bottom:14px}
+.pf.sw label{font-size:13px;padding:9px 18px}
+.pf.sw input:checked + label{background:var(--bg2);color:var(--txt);box-shadow:inset 0 0 0 1px var(--red-txt)}
+
 /* Un `.pf-scope` e' un listino: il suo selettore piu' le sue schede. La
    regola guarda la radio spuntata dentro quello scope e mostra solo i prezzi
    di quella formula.
