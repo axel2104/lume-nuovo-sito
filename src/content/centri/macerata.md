@@ -104,8 +104,9 @@ listino:
     titolo: Box CrossFit
     fino: "2026-10-31"
     nota: >-
-      Il Box si allena a Macerata fino al 31 ottobre 2026. Dal 1° novembre le
-      classi si spostano a Lume Val di Chienti, e l'abbonamento Box vale lì.
+      Le attività di Hyrox, Hybrid e CrossFit si allenano a Macerata fino al
+      31 ottobre 2026. Dal 1° novembre si spostano a Lume Val di Chienti, e
+      l'abbonamento vale lì.
     attivazione: 50
     piani:
       - nome: 2 volte a settimana

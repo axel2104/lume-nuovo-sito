@@ -216,3 +216,21 @@ test('la data di scadenza del Box è scritta, non sottintesa', () => {
   assert.match(box.slice(0, 1200), /fino al 31 ottobre 2026/);
   assert.match(box.slice(0, 1200), /Val di Chienti/);
 });
+
+test('il Box ha il suo selettore di formula, separato da quello della palestra', () => {
+  // Due gruppi di radio con gli stessi `id` non sono due selettori: sono un
+  // selettore rotto, perche' e' l'`id` che `:has()` cerca in global.css.
+  const box = macerata.slice(macerata.indexOf('class="listino-box"'));
+  for (const f of FORMULE) {
+    assert.ok(box.includes(`id="f-box-${f}"`), `il Box non ha la formula ${f}`);
+    assert.ok(
+      !box.includes(`id="f-${f}"`),
+      `il Box ripete l'id del selettore della palestra: f-${f}`,
+    );
+  }
+  assert.equal(
+    (macerata.match(/id="f-annuale"/g) || []).length,
+    1,
+    "l'id f-annuale compare piu' di una volta nella pagina",
+  );
+});

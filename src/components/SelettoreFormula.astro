@@ -1,0 +1,37 @@
+---
+/**
+ * Le tre formule di pagamento, come tre pillole da spuntare.
+ *
+ * Nessun JavaScript: sono radio, e a nascondere i prezzi delle altre due
+ * formule ci pensa `:has()` in `global.css`. Per questo gli `id` contano —
+ * sono loro che il CSS cerca — e per questo ogni selettore sulla stessa
+ * pagina deve avere il suo prefisso: due gruppi con gli stessi `id` non
+ * sarebbero due selettori, sarebbero un selettore rotto.
+ *
+ * L'ordine non e' neutro: si parte dalla soluzione unica perche' e' quella
+ * che conviene, e si chiude col mensile, che e' la via d'uscita per chi non
+ * vuole impegnarsi. Invertirlo vorrebbe dire aprire dal prezzo piu' alto.
+ */
+type Props = {
+  /** Prefisso degli `id` e nome del gruppo. Un valore diverso per selettore. */
+  prefisso?: string;
+};
+
+const { prefisso = 'f' } = Astro.props;
+
+const FORMULE = [
+  { id: 'annuale', label: 'Soluzione unica', nota: 'la più conveniente' },
+  { id: 'rate', label: 'Dilazionato', nota: '12 rate' },
+  { id: 'mensile', label: 'Mensile', nota: 'senza vincolo' },
+] as const;
+---
+
+<fieldset class="pf">
+  <legend class="sr-only">Come vuoi pagare</legend>
+  {FORMULE.map((f, i) => (
+    <>
+      <input type="radio" name={`formula-${prefisso}`} id={`${prefisso}-${f.id}`} checked={i === 0} />
+      <label for={`${prefisso}-${f.id}`}>{f.label}<span>{f.nota}</span></label>
+    </>
+  ))}
+</fieldset>

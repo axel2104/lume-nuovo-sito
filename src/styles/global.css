@@ -447,6 +447,25 @@ a.chip{display:inline-flex;align-items:center;min-height:44px}
 .listino-sede:has(#f-rate:checked) [data-formula='rate']{display:block}
 .listino:has(#f-mensile:checked) [data-formula='mensile'],
 .listino-sede:has(#f-mensile:checked) [data-formula='mensile']{display:block}
+/* Il Box CrossFit sta dentro `.listino-sede` ma ha un selettore suo, e le
+   regole qui sopra lo raggiungono lo stesso: senza queste, spuntare
+   "Dilazionato" in cima cambierebbe anche le schede del Box.
+
+   Le tre combinazioni sono scritte tutte e tre, e non solo quelle che
+   "servono": una radio spuntata c'e' sempre, quindi esattamente una di
+   queste regole vince sempre, quale che sia lo stato del selettore della
+   palestra. La specificita' pareggia quella delle regole sopra e queste
+   vengono dopo — che e' il solo motivo per cui passano. Spostarle piu' in
+   alto nel file le disattiva senza che niente segnali l'errore. */
+.listino-box:has(#f-box-annuale:checked) [data-formula='rate'],
+.listino-box:has(#f-box-annuale:checked) [data-formula='mensile'],
+.listino-box:has(#f-box-rate:checked) [data-formula='annuale'],
+.listino-box:has(#f-box-rate:checked) [data-formula='mensile'],
+.listino-box:has(#f-box-mensile:checked) [data-formula='annuale'],
+.listino-box:has(#f-box-mensile:checked) [data-formula='rate']{display:none}
+.listino-box:has(#f-box-annuale:checked) [data-formula='annuale'],
+.listino-box:has(#f-box-rate:checked) [data-formula='rate'],
+.listino-box:has(#f-box-mensile:checked) [data-formula='mensile']{display:block}
 /* Nella riga Over 65 le tre varianti stanno dentro un paragrafo: `block`
    spezzerebbe la frase. Stessa regola, `inline`. */
 .listino-over [data-formula]{display:none}

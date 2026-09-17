@@ -5,6 +5,7 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import BandaCta from '../../components/BandaCta.astro';
 import SchedePiani from '../../components/SchedePiani.astro';
+import SelettoreFormula from '../../components/SelettoreFormula.astro';
 import { getCollection, render } from 'astro:content';
 import { SEDI } from '../../config/forms';
 import { alCentro, alMese } from '../../data/abbonamenti';
@@ -446,15 +447,7 @@ const pianiBox = box ? alCentro(box.piani, (p) => p.evidenza) : [];
             sua rata e il suo totale, sono dodici numeri in una scheda: chi
             legge non confronta piu' niente, guarda un tabellone.
           */}
-          <fieldset class="pf">
-            <legend class="sr-only">Come vuoi pagare</legend>
-            <input type="radio" name="formula-sede" id="f-annuale" checked />
-            <label for="f-annuale">Soluzione unica<span>la più conveniente</span></label>
-            <input type="radio" name="formula-sede" id="f-rate" />
-            <label for="f-rate">Dilazionato<span>12 rate</span></label>
-            <input type="radio" name="formula-sede" id="f-mensile" />
-            <label for="f-mensile">Mensile<span>senza vincolo</span></label>
-          </fieldset>
+          <SelettoreFormula />
 
           <SchedePiani
             piani={piani}
@@ -499,6 +492,15 @@ const pianiBox = box ? alCentro(box.piani, (p) => p.evidenza) : [];
             <div class="listino-box">
               <span class="label">{box.titolo}</span>
               {box.nota && <p class="listino-avviso">{box.nota}</p>}
+
+              {/*
+                Il Box ha il suo selettore e non segue quello della palestra:
+                sono due decisioni diverse. Chi prende il Gold annuale puo'
+                volere il Box al mese, e con un selettore solo per cambiare
+                formula al Box gli cambierebbe sotto anche il prezzo della
+                palestra, a meta' pagina, fuori dallo schermo.
+              */}
+              <SelettoreFormula prefisso="f-box" />
 
               <SchedePiani
                 piani={pianiBox}
