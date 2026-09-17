@@ -793,18 +793,11 @@ const pianiBox = box ? alCentro(box.piani, (p) => p.evidenza) : [];
      badge, nome, prezzo e spunte sono gia' quelli, e riscriverli qui
      avrebbe creato due stili per la stessa cosa destinati a divergere.
      Qui resta solo quello che cambia. */
-  .listino-nota {
-    margin: 10px 0 20px;
-    max-width: 64ch;
-    color: var(--txt);
-  }
-  /* `.plans` su /abbonamenti e' tarata su tre piani, con quello consigliato
-     piu' largo (1fr 1.14fr 1fr). I centri non ne hanno sempre tre — Urban ne
-     ha due — e su due colonne quella griglia lascia un buco a destra. */
+  /* Le colonne le decide `global.css` contando le schede, uguale su
+     /abbonamenti e qui. Resta il solo margine: nel blocco della sede sotto
+     le schede c'e' la riga Over 65, non il fondo della sezione. */
   .listino-sede .plans {
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     margin-bottom: 0;
-    align-items: start;
   }
   /* La seconda azione non e' un secondo pulsante: e' un rimando. Due
      pulsanti pieni affiancati si contendono il click e non vince nessuno. */
@@ -842,18 +835,6 @@ const pianiBox = box ? alCentro(box.piani, (p) => p.evidenza) : [];
     margin-top: 40px;
     padding-top: 32px;
     border-top: 1px solid var(--line);
-  }
-  /*
-    L'avviso della scadenza non urla: ha il colore del testo normale e una
-    barra rossa a sinistra. Una fascia piena qui competerebbe con il tag
-    "Il piu' scelto" della scheda in evidenza, che sta due centimetri sotto.
-  */
-  .listino-avviso {
-    margin: 12px 0 22px;
-    max-width: 64ch;
-    padding-left: 14px;
-    border-left: 2px solid var(--red-txt);
-    color: var(--txt);
   }
   .listino-box .listino-over a {
     color: var(--red-txt);

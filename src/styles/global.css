@@ -506,6 +506,17 @@ a.chip{display:inline-flex;align-items:center;min-height:44px}
 .tab-prezzi th[scope='row']{color:#fff}
 .tab-prezzi td{font-family:'Anton',sans-serif;font-size:17px;font-variant-numeric:tabular-nums}
 
+/* Le righe di testo sopra un listino: cosa comprende, dove vale, fino a
+   quando. Lo spazio sotto non e' estetica: la scheda consigliata ha il
+   bollino «Il piu' scelto» appeso a `top:-11px`, fuori dal suo bordo, e con
+   un margine piccolo finisce addosso al testo. */
+.listino-nota{margin:10px 0 34px;max-width:64ch;color:var(--txt)}
+/* L'avviso non urla: colore del testo normale e una barra rossa a sinistra.
+   Una fascia piena competerebbe con il bollino della scheda consigliata, che
+   sta due centimetri sotto. */
+.listino-avviso{margin:12px 0 34px;max-width:64ch;padding-left:14px;
+  border-left:2px solid var(--red-txt);color:var(--txt)}
+
 /* ─── Card dei piani ────────────────────────────────────────
    `subgrid` allinea testa, prezzo e bottone fra card di altezza
    diversa. Prima lo facevano due `min-height` in em, che tenevano
@@ -591,6 +602,20 @@ a.chip{display:inline-flex;align-items:center;min-height:44px}
   /* La colonna consigliata e' piu' larga, non solo bordata. */
   .plans{grid-template-columns:1fr 1.14fr 1fr;gap:18px;align-items:start}
   .plan.hot{padding:38px 30px}
+  /* Quella griglia vale per tre schede. I listini non ne hanno sempre tre:
+     Montecassiano ne ha quattro, Urban due, e con le colonne fisse la quarta
+     andava a capo da sola su una riga tutta sua. Si contano le schede e si
+     danno colonne uguali — la consigliata resta riconoscibile dal bordo e
+     dal bollino, che e' come si riconosce anche su mobile. */
+  .plans:not(:has(> :nth-child(3))){grid-template-columns:repeat(2,1fr)}
+  .plans:has(> :nth-child(4)){grid-template-columns:repeat(2,1fr)}
+  .plans:has(> :nth-child(4)) .plan.hot{padding:30px 26px}
+}
+@media(min-width:1180px){
+  /* Quattro su una riga sola solo quando ci stanno davvero: sotto questa
+     larghezza ogni scheda scenderebbe intorno ai 210px, e il prezzo e'
+     stampato a 56px. */
+  .plans:has(> :nth-child(4)){grid-template-columns:repeat(4,1fr)}
 }
 
 /* ============================================================
