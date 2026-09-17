@@ -27,6 +27,8 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getCollection } from 'astro:content';
+import SelettoreFormula from '../components/SelettoreFormula.astro';
+import SchedePiani from '../components/SchedePiani.astro';
 import {
   FORMULE,
   alCentro,
@@ -36,9 +38,11 @@ import {
   include,
   sintesiVoci,
   euro,
+  alMese,
   PASS,
 } from '../data/abbonamenti';
 import { siteConfig } from '../config/site';
+import { SEDI } from '../config/forms';
 
 const piani = alCentro(
   (await getCollection('abbonamenti'))
@@ -53,6 +57,23 @@ const righe = righeConfronto(piani);
 const centri = (await getCollection('centri')).sort((a, b) => a.data.ordine - b.data.ordine);
 const aperti = centri.filter((c) => c.data.stato === 'aperto');
 const inArrivo = centri.filter((c) => c.data.stato !== 'aperto');
+
+/**
+ * Il listino di ogni centro che ne ha uno, per la sezione in fondo.
+ *
+ * Macerata resta fuori: e' il listino stampato in cima alla pagina, e
+ * ristamparlo qui vorrebbe dire due volte gli stessi prezzi con due nomi
+ * diversi per gli stessi piani ("Sala pesi" sopra, "Sala" sotto). Il suo Box
+ * CrossFit invece entra, perche' in cima non c'e' e altrimenti sarebbe
+ * l'unico abbonamento Lume che questa pagina non mostra.
+ *
+ * Niente filtro sullo stato: Urban non ha ancora aperto e il suo listino
+ * esiste gia', con la nota che dice da quando vale. Nasconderlo vorrebbe
+ * dire che chi valuta la prevendita non trova il prezzo.
+ */
+const altriListini = centri.filter((c) => c.id !== 'macerata' && c.data.listino);
+
+const boxMacerata = centri.find((c) => c.id === 'macerata')?.data.listino?.box;
 
 const faq = (await getCollection('helpdesk'))
   .filter((v) => v.data.pubblicato && ['abbonamenti', 'pagamenti'].includes(v.data.categoria))
@@ -109,8 +130,8 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
         */}
         <p class="ab-sedi">
           Sono i prezzi di <b>Lume Macerata</b>, che con un solo abbonamento apre tutti i centri.
-          Montecassiano ha un listino suo, più basso, valido in quel centro: lo trovi sulla{' '}
-          <a href="/centri">pagina di ogni sede</a>.
+          Gli altri centri hanno un listino loro, valido lì: li trovi{' '}
+          <a href="#listini">più sotto in questa pagina</a>.
         </p>
         <ul class="ab-punti">
           <li><strong>{piani.length} piani</strong><span>dalla sola sala pesi a tutto il club</span></li>
@@ -128,26 +149,13 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
       <div class="wrap">
         <h2 id="tit-piani" class="sr-only">I piani</h2>
 
-        <div class="listino">
+        <div class="listino pf-scope">
           {/*
             Le radio precedono le schede nel DOM perché `:has()` sul contenitore
             deve poterle vedere. `annuale` è la predefinita: è la formula che
             conviene, ed è quella che resta se `:has()` non è supportato.
           */}
-          <fieldset class="pf">
-            <legend class="sr-only">Come vuoi pagare</legend>
-            {
-              FORMULE.map((f, i) => (
-                <>
-                  <input type="radio" name="formula" id={`f-${f.id}`} checked={i === 0} />
-                  <label for={`f-${f.id}`}>
-                    {f.label}
-                    <span>{f.nota}</span>
-                  </label>
-                </>
-              ))
-            }
-          </fieldset>
+          <SelettoreFormula />
 
           <div class="plans">
             {
@@ -417,6 +425,108 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
         </div>
       </div>
     </section>
+
+    <!-- ─── Il listino di ogni centro ─────────────────────────────── -->
+    {
+      (altriListini.length > 0 || boxMacerata) && (
+        <section class="sec" id="listini" aria-labelledby="tit-listini">
+          <div class="wrap">
+            <span class="label">Gli altri listini</span>
+            <h2 id="tit-listini" class="d">Centro per centro</h2>
+            <p class="listino-nota" style="max-width:64ch">
+              Dal listino 2026/27 i prezzi non sono piu' uguali dappertutto: la stessa sala costa
+              660 € a Macerata e 468 € a Montecassiano, e Urban ha due fasce d'eta' invece dei
+              piani. Ogni centro ha qui il suo listino, con il suo selettore.
+            </p>
+
+            {/*
+              Un centro per blocco, uno sotto l'altro, ognuno nel suo
+              `.pf-scope`: il selettore di Montecassiano non deve muovere i
+              prezzi di Urban.
+            */}
+            {altriListini.map((c) => {
+              const l = c.data.listino!;
+              const pianiCentro = alCentro(l.piani, (p) => p.evidenza);
+              if (pianiCentro.length === 0) return null;
+              return (
+                <div class="listino-sede pf-scope" style="margin-top:52px">
+                  <span class="label">{c.data.nome}</span>
+                  {l.nota && <p class="listino-nota">{l.nota}</p>}
+
+                  <SelettoreFormula prefisso={`f-${c.id}`} />
+
+                  <SchedePiani
+                    piani={pianiCentro}
+                    attivazione={l.attivazione}
+                    centro={c.id}
+                    raccogliLead={Boolean(SEDI[c.id])}
+                  />
+
+                  {l.over65?.annuale && (
+                    <p class="listino-over">
+                      <b>{l.over65.titolo}</b>
+                      {l.over65.per && <> — {l.over65.per}</>}:{' '}
+                      <span data-formula="annuale">
+                        {alMese(l.over65.annuale)} € al mese, {l.over65.annuale} € in unica
+                        soluzione.
+                      </span>
+                      {l.over65.rate && (
+                        <span data-formula="rate">
+                          {alMese(l.over65.rate)} € al mese, {l.over65.rate} € in tutto in 12 rate.
+                        </span>
+                      )}
+                      {l.over65.mensile && (
+                        <span data-formula="mensile">
+                          {l.over65.mensile} € al mese, senza vincolo di durata.
+                        </span>
+                      )}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+
+            {/*
+              Il Box di Macerata chiude la sezione: e' un listino a se', con
+              la sua quota di attivazione e la sua scadenza.
+            */}
+            {boxMacerata && boxMacerata.piani.length > 0 && (
+              <div class="listino-sede pf-scope" style="margin-top:52px">
+                <span class="label">Lume Macerata — {boxMacerata.titolo}</span>
+                {boxMacerata.nota && <p class="listino-avviso">{boxMacerata.nota}</p>}
+
+                <SelettoreFormula prefisso="f-box" />
+
+                <SchedePiani
+                  piani={alCentro(boxMacerata.piani, (p) => p.evidenza)}
+                  attivazione={boxMacerata.attivazione}
+                  centro="macerata"
+                  raccogliLead={Boolean(SEDI.macerata)}
+                />
+
+                {boxMacerata.pacchetti && boxMacerata.pacchetti.voci.length > 0 && (
+                  <p class="listino-over">
+                    {boxMacerata.pacchetti.voci.map((v, i) => (
+                      <>
+                        {i > 0 && ' '}
+                        <b>{v.nome}</b>
+                        {v.per && <> — {v.per}</>}: {v.mensile} € al mese.{' '}
+                      </>
+                    ))}
+                    {boxMacerata.pacchetti.nota && (
+                      <>
+                        <br />
+                        {boxMacerata.pacchetti.nota}
+                      </>
+                    )}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        </section>
+      )
+    }
 
     <!-- ─── Guest Pass ────────────────────────────────────────────── -->
     <section class="sec" style="padding-top:56px;padding-bottom:56px">

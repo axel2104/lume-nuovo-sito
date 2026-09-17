@@ -7,13 +7,29 @@
  * stesse condizioni e lo stesso pulsante, e tenerne due copie nella pagina
  * significherebbe correggerne una sola la prossima volta.
  *
- * NON stampa il selettore mensile/annuale: quello e' uno solo per pagina e
- * vive su `.listino-sede`, perche' e' il `:has()` di quel contenitore a
- * decidere quale `[data-formula]` si vede. Due fieldset vorrebbero dire due
- * gruppi di radio con gli stessi `id`.
+ * NON stampa il selettore delle formule: quello e' `SelettoreFormula`, e chi
+ * usa questo componente lo mette nello stesso `.pf-scope` — e' quel
+ * contenitore che il `:has()` guarda per decidere quale `[data-formula]` si
+ * vede.
  */
-import type { CollectionEntry } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { alMese } from '../data/abbonamenti';
+
+/**
+ * I nomi che il form conosce come chip del campo «Piano di interesse».
+ *
+ * `data-abbonamento` preseleziona quella chip confrontando il valore alla
+ * lettera. I listini delle sedi hanno pero' piani che quel campo non ha —
+ * "All Piscina", "Under 30", "2 volte a settimana" — e passare un nome che
+ * nessuna chip porta non preseleziona niente e non segnala niente: il lead
+ * arriva senza il piano da cui e' partito, e nessuno se ne accorge.
+ *
+ * Meglio non passarlo affatto: il form si apre pulito e chi compila sceglie.
+ * Il piano resta comunque in `data-medium`, che e' un altro campo.
+ */
+const chip = new Set(
+  (await getCollection('abbonamenti')).filter((p) => p.data.pubblicato).map((p) => p.data.nome),
+);
 
 type Listino = NonNullable<CollectionEntry<'centri'>['data']['listino']>;
 export type PianoSede = Listino['piani'][number];
@@ -174,7 +190,7 @@ const { piani, attivazione, centro, raccogliLead } = Astro.props;
                   data-open-form="iscrizione"
                   data-medium={`CentroPiano:${centro}:${piano.nome}:${f}`}
                   data-centro={centro}
-                  data-abbonamento={piano.nome}
+                  data-abbonamento={chip.has(piano.nome) ? piano.nome : undefined}
                 >
                   {portale ? 'Fatti richiamare' : `Richiedi ${piano.nome}`}
                 </button>

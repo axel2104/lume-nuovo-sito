@@ -436,42 +436,36 @@ a.chip{display:inline-flex;align-items:center;min-height:44px}
    pagina vuota. */
 [data-formula]{display:none}
 [data-formula='annuale']{display:block}
-/* `.listino` e' /abbonamenti, `.listino-sede` il blocco prezzi delle pagine
-   centro: stesso meccanismo, una definizione sola. Duplicare queste quattro
-   regole in uno stile di pagina vorrebbe dire tenerle allineate a mano. */
-.listino:has(#f-rate:checked) [data-formula='annuale'],
-.listino:has(#f-mensile:checked) [data-formula='annuale'],
-.listino-sede:has(#f-rate:checked) [data-formula='annuale'],
-.listino-sede:has(#f-mensile:checked) [data-formula='annuale']{display:none}
-.listino:has(#f-rate:checked) [data-formula='rate'],
-.listino-sede:has(#f-rate:checked) [data-formula='rate']{display:block}
-.listino:has(#f-mensile:checked) [data-formula='mensile'],
-.listino-sede:has(#f-mensile:checked) [data-formula='mensile']{display:block}
-/* Il Box CrossFit sta dentro `.listino-sede` ma ha un selettore suo, e le
-   regole qui sopra lo raggiungono lo stesso: senza queste, spuntare
-   "Dilazionato" in cima cambierebbe anche le schede del Box.
+/* Un `.pf-scope` e' un listino: il suo selettore piu' le sue schede. La
+   regola guarda la radio spuntata dentro quello scope e mostra solo i prezzi
+   di quella formula.
 
-   Le tre combinazioni sono scritte tutte e tre, e non solo quelle che
-   "servono": una radio spuntata c'e' sempre, quindi esattamente una di
-   queste regole vince sempre, quale che sia lo stato del selettore della
-   palestra. La specificita' pareggia quella delle regole sopra e queste
-   vengono dopo — che e' il solo motivo per cui passano. Spostarle piu' in
-   alto nel file le disattiva senza che niente segnali l'errore. */
-.listino-box:has(#f-box-annuale:checked) [data-formula='rate'],
-.listino-box:has(#f-box-annuale:checked) [data-formula='mensile'],
-.listino-box:has(#f-box-rate:checked) [data-formula='annuale'],
-.listino-box:has(#f-box-rate:checked) [data-formula='mensile'],
-.listino-box:has(#f-box-mensile:checked) [data-formula='annuale'],
-.listino-box:has(#f-box-mensile:checked) [data-formula='rate']{display:none}
-.listino-box:has(#f-box-annuale:checked) [data-formula='annuale'],
-.listino-box:has(#f-box-rate:checked) [data-formula='rate'],
-.listino-box:has(#f-box-mensile:checked) [data-formula='mensile']{display:block}
+   Su `data-pf` e non sugli `id`: /abbonamenti stampa il listino di ogni
+   centro, e regole scritte su `#f-rate` avrebbero mosso il primo listino
+   lasciando gli altri fermi sulla soluzione unica — tre prezzi giusti e
+   nove sbagliati, senza nessun errore a segnalarlo.
+
+   Gli scope non si annidano mai: il Box e' fratello del listino palestra,
+   non figlio. Dentro uno scope annidato queste regole matcherebbero due
+   volte con la stessa specificita', e a decidere sarebbe l'ordine nel file.
+
+   Tutte e sei le combinazioni sono scritte, anche quelle che sembrano
+   ridondanti: una radio spuntata c'e' sempre, quindi esattamente una regola
+   vince sempre, e non serve sperare che il default regga. */
+.pf-scope:has([data-pf='annuale']:checked) [data-formula='rate'],
+.pf-scope:has([data-pf='annuale']:checked) [data-formula='mensile'],
+.pf-scope:has([data-pf='rate']:checked) [data-formula='annuale'],
+.pf-scope:has([data-pf='rate']:checked) [data-formula='mensile'],
+.pf-scope:has([data-pf='mensile']:checked) [data-formula='annuale'],
+.pf-scope:has([data-pf='mensile']:checked) [data-formula='rate']{display:none}
+.pf-scope:has([data-pf='rate']:checked) [data-formula='rate'],
+.pf-scope:has([data-pf='mensile']:checked) [data-formula='mensile']{display:block}
 /* Nella riga Over 65 le tre varianti stanno dentro un paragrafo: `block`
    spezzerebbe la frase. Stessa regola, `inline`. */
 .listino-over [data-formula]{display:none}
-.listino-sede:has(#f-annuale:checked) .listino-over [data-formula='annuale'],
-.listino-sede:has(#f-rate:checked) .listino-over [data-formula='rate'],
-.listino-sede:has(#f-mensile:checked) .listino-over [data-formula='mensile']{display:inline}
+.pf-scope:has([data-pf='annuale']:checked) .listino-over [data-formula='annuale'],
+.pf-scope:has([data-pf='rate']:checked) .listino-over [data-formula='rate'],
+.pf-scope:has([data-pf='mensile']:checked) .listino-over [data-formula='mensile']{display:inline}
 
 /* Le condizioni della formula: durata, preavviso, sospensioni. Piccole
    e in grigio perche' si leggono solo quando si e' quasi deciso, ma in

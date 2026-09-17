@@ -15,11 +15,22 @@ import { readFileSync } from 'node:fs';
 
 const html = readFileSync(new URL('../dist/abbonamenti/index.html', import.meta.url), 'utf8');
 const FORMULE = ['annuale', 'rate', 'mensile'];
-const quante = (s) => html.split(s).length - 1;
+
+/**
+ * Il listino in cima alla pagina, dal suo contenitore alla tabella di
+ * confronto.
+ *
+ * Da quando /abbonamenti stampa anche i listini degli altri centri, contare
+ * su tutta la pagina non misura piu' niente: `class="plan "` trova le schede
+ * di quattro listini diversi, e un test che dice "tre piani" passerebbe o
+ * fallirebbe per l'apertura di una sede.
+ */
+const inCima = html.slice(html.indexOf('class="listino pf-scope"'), html.indexOf('id="confronto"'));
+const quante = (s) => inCima.split(s).length - 1;
 const piani = quante('class="plan ');
 
 test('il selettore di formula sta dentro .listino', () => {
-  const listino = html.slice(html.indexOf('class="listino"'), html.indexOf('</main>'));
+  const listino = inCima;
   for (const f of FORMULE) {
     assert.ok(
       listino.includes(`id="f-${f}"`),
@@ -35,12 +46,21 @@ test('il selettore di formula sta dentro .listino', () => {
 test('una sola formula è preselezionata, ed è l\'annuale', () => {
   // Se `:has()` non è supportato resta visibile la formula predefinita. Deve
   // essere l'annuale: è quella che conviene, ed è il prezzo pieno del piano.
-  assert.equal(quante(' checked'), 1, 'più di una radio preselezionata');
-  const primaRadio = html.indexOf('id="f-');
-  assert.ok(
-    html.slice(primaRadio - 120, primaRadio + 40).includes('checked'),
-    'la radio preselezionata non è la prima (annuale)',
+  // Una per listino: la pagina ne ha piu' d'uno, e ognuno si apre sulla sua
+  // annuale.
+  const selettori = html.split('<fieldset class="pf"').length - 1;
+  assert.equal(
+    html.split(' checked').length - 1,
+    selettori,
+    'le radio preselezionate non sono una per listino',
   );
+  for (const blocco of html.split('<fieldset class="pf"').slice(1)) {
+    const primaRadio = blocco.indexOf('id="');
+    assert.ok(
+      blocco.slice(primaRadio, primaRadio + 200).includes('checked'),
+      'in un listino la radio preselezionata non è la prima (annuale)',
+    );
+  }
 });
 
 test('ogni piano ha almeno una formula, e nessuna in più del previsto', () => {
@@ -82,7 +102,9 @@ test('ogni formula mostra le sue condizioni contrattuali', () => {
 test('la pagina ha un solo h1', () => {
   // Ci era già sfuggito: la pagina nasceva partendo da <h2>, senza h1, su una
   // pagina che deve posizionarsi per "abbonamenti palestra".
-  assert.equal(quante('<h1'), 1);
+  // Sull'intera pagina, non nel solo listino in cima: `quante` misura quel
+  // blocco, e l'h1 sta nell'hero, sopra.
+  assert.equal(html.split('<h1').length - 1, 1);
 });
 
 test('la tabella confronta ogni piano su ogni riga', () => {
@@ -107,6 +129,9 @@ test('data-abbonamento corrisponde a una chip del form, alla lettera', () => {
   // Ci sono già inciampato: i pulsanti passavano "All Lume Fitness — Annuale"
   // per portarsi dietro anche la formula, e nessuna chip si chiama così. La
   // formula viaggia in `data-medium`, che è un altro campo di Airtable.
+  // Su tutta la pagina: i listini delle sedi hanno piani che il form non
+  // conosce ("All Piscina", "Under 30"), e per quelli l'attributo non viene
+  // scritto affatto. Se ricomparisse, questo test lo prenderebbe.
   const valori = new Set(
     [...html.matchAll(/data-abbonamento="([^"]+)"/g)].map((m) => m[1]),
   );
@@ -184,7 +209,7 @@ test('il Box sta dentro .listino-sede, dove il selettore lo raggiunge', () => {
     macerata.indexOf('class="listino-sede"'),
     macerata.indexOf('</main>'),
   );
-  const box = sede.indexOf('class="listino-box"');
+  const box = sede.indexOf('class="listino-box pf-scope"');
   assert.ok(box > 0, 'il blocco Box è uscito da .listino-sede');
   assert.ok(sede.indexOf('id="f-annuale"') < box, 'le radio non precedono più il Box');
 });
@@ -192,7 +217,7 @@ test('il Box sta dentro .listino-sede, dove il selettore lo raggiunge', () => {
 test('solo la sede che ha il Box mostra il Box', () => {
   assert.ok(macerata.includes('Box CrossFit'), 'Macerata ha perso il Box');
   assert.ok(
-    !montecassiano.includes('class="listino-box"'),
+    !montecassiano.includes('listino-box'),
     'il Box compare su una sede che non ce l\'ha',
   );
 });
@@ -201,7 +226,7 @@ test('i checkout del Box puntano al club giusto', () => {
   // Gli id dei piani CrossFit (52-60, 129-130) sono gli stessi su tutti i
   // club: cambia solo `clubID`. Con il numero sbagliato il pulsante funziona
   // e vende l'abbonamento di un'altra sede.
-  const box = macerata.slice(macerata.indexOf('class="listino-box"'));
+  const box = macerata.slice(macerata.indexOf('class="listino-box pf-scope"'));
   const link = [...box.matchAll(/Registration\/Start\?clubID=(\d+)&(?:amp;)?PaymentPlanId=(\d+)/g)];
   assert.ok(link.length >= 7, `troppi pochi checkout nel Box: ${link.length}`);
   for (const [, club, piano] of link) {
@@ -212,7 +237,7 @@ test('i checkout del Box puntano al club giusto', () => {
 test('la data di scadenza del Box è scritta, non sottintesa', () => {
   // Il sito è statico: il blocco non sparisce da solo il 1° novembre. Finché
   // c'è, deve dire fino a quando vale — chi firma un annuale lo legge prima.
-  const box = macerata.slice(macerata.indexOf('class="listino-box"'));
+  const box = macerata.slice(macerata.indexOf('class="listino-box pf-scope"'));
   assert.match(box.slice(0, 1200), /fino al 31 ottobre 2026/);
   assert.match(box.slice(0, 1200), /Val di Chienti/);
 });
@@ -220,7 +245,7 @@ test('la data di scadenza del Box è scritta, non sottintesa', () => {
 test('il Box ha il suo selettore di formula, separato da quello della palestra', () => {
   // Due gruppi di radio con gli stessi `id` non sono due selettori: sono un
   // selettore rotto, perche' e' l'`id` che `:has()` cerca in global.css.
-  const box = macerata.slice(macerata.indexOf('class="listino-box"'));
+  const box = macerata.slice(macerata.indexOf('class="listino-box pf-scope"'));
   for (const f of FORMULE) {
     assert.ok(box.includes(`id="f-box-${f}"`), `il Box non ha la formula ${f}`);
     assert.ok(
@@ -233,4 +258,54 @@ test('il Box ha il suo selettore di formula, separato da quello della palestra',
     1,
     "l'id f-annuale compare piu' di una volta nella pagina",
   );
+});
+
+/* ─── Tutti i listini su /abbonamenti ───────────────────────────────────── */
+
+test('/abbonamenti stampa il listino di ogni centro che ne ha uno', () => {
+  // Prima i prezzi degli altri centri esistevano solo sulla pagina della
+  // sede: chi confrontava Macerata e Montecassiano doveva tenere due schede
+  // aperte.
+  const sezione = html.slice(html.indexOf('id="listini"'));
+  assert.ok(sezione.length > 0, 'la sezione dei listini per centro è sparita');
+  for (const nome of ['Montecassiano', 'Urban']) {
+    assert.ok(sezione.includes(nome), `manca il listino di ${nome}`);
+  }
+  assert.ok(sezione.includes('Box CrossFit'), 'manca il Box di Macerata');
+});
+
+test('Macerata non compare due volte con due nomi', () => {
+  // Il listino in cima È quello di Macerata. Ristamparlo sotto darebbe gli
+  // stessi prezzi con nomi diversi per gli stessi piani.
+  const sezione = html.slice(html.indexOf('id="listini"'), html.indexOf('Prima di decidere'));
+  assert.ok(
+    !sezione.includes('>Lume Macerata<'),
+    'il listino palestra di Macerata è ristampato nella sezione dei centri',
+  );
+});
+
+test('ogni listino ha il suo gruppo di radio', () => {
+  // Radio con lo stesso `name` sono un gruppo solo: spuntare "Mensile" su
+  // Montecassiano spegnerebbe la scelta su Urban, e con lo stesso `id` il
+  // `:has()` non saprebbe quale scope guardare.
+  const nomi = [...html.matchAll(/name="(formula-[^"]+)"/g)].map((m) => m[1]);
+  assert.equal(new Set(nomi).size, nomi.length / FORMULE.length, 'due listini condividono le radio');
+  const ids = [...html.matchAll(/<input[^>]+id="(f[^"]*)"/g)].map((m) => m[1]);
+  assert.equal(new Set(ids).size, ids.length, `id di radio ripetuti: ${ids.join(', ')}`);
+});
+
+test('le regole del selettore non cercano più un id fisso', () => {
+  // Con `#f-rate` nel CSS il primo listino si muoveva e gli altri restavano
+  // sulla soluzione unica: prezzi sbagliati senza nessun errore.
+  const css = readFileSync(new URL('../src/styles/global.css', import.meta.url), 'utf8');
+  assert.ok(css.includes(".pf-scope:has([data-pf='rate']:checked)"), 'regole .pf-scope assenti');
+  assert.ok(!/:has\(#f-\w+:checked\)/.test(css), 'il CSS cerca ancora un id fisso');
+});
+
+test('ogni selettore ha le sue schede dentro lo stesso scope', () => {
+  // Un selettore fuori dal suo `.pf-scope` non muove niente, e la pagina
+  // mostra tutte e tre le formule insieme senza segnalare nulla.
+  const scope = [...html.matchAll(/class="[^"]*pf-scope[^"]*"/g)];
+  const fieldset = [...html.matchAll(/<fieldset class="pf"/g)];
+  assert.equal(scope.length, fieldset.length, 'scope e selettori non si corrispondono');
 });

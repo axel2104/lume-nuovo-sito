@@ -447,14 +447,21 @@ const pianiBox = box ? alCentro(box.piani, (p) => p.evidenza) : [];
             sua rata e il suo totale, sono dodici numeri in una scheda: chi
             legge non confronta piu' niente, guarda un tabellone.
           */}
-          <SelettoreFormula />
+          {/*
+            Selettore, schede e riga Over 65 dentro lo stesso `.pf-scope`: e'
+            quel contenitore che il `:has()` guarda. Il Box ne ha uno suo, ed
+            e' fratello di questo e non figlio — annidarli farebbe decidere
+            all'ordine del CSS quale dei due selettori comanda.
+          */}
+          <div class="pf-scope">
+            <SelettoreFormula />
 
-          <SchedePiani
-            piani={piani}
-            attivazione={listino.attivazione}
-            centro={entry.id}
-            raccogliLead={raccogliLead}
-          />
+            <SchedePiani
+              piani={piani}
+              attivazione={listino.attivazione}
+              centro={entry.id}
+              raccogliLead={raccogliLead}
+            />
 
           {/* Anche la riga Over 65 segue il selettore: una formula alla volta. */}
           {listino.over65?.annuale && (
@@ -477,6 +484,7 @@ const pianiBox = box ? alCentro(box.piani, (p) => p.evidenza) : [];
               )}
             </p>
           )}
+          </div>
 
           {/*
             Il Box CrossFit, sotto la palestra e dentro lo stesso contenitore:
@@ -489,7 +497,7 @@ const pianiBox = box ? alCentro(box.piani, (p) => p.evidenza) : [];
             di firmare, non a novembre.
           */}
           {box && pianiBox.length > 0 && (
-            <div class="listino-box">
+            <div class="listino-box pf-scope">
               <span class="label">{box.titolo}</span>
               {box.nota && <p class="listino-avviso">{box.nota}</p>}
 
