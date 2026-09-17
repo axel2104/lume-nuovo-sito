@@ -164,3 +164,55 @@ test('la prevendita apre un contatto, non un piano', () => {
     'il CTA prevendita ha perso la sua attribuzione',
   );
 });
+
+/* ─── Il Box CrossFit sulla pagina della sede ───────────────────────────── */
+
+const macerata = readFileSync(
+  new URL('../dist/centri/macerata/index.html', import.meta.url),
+  'utf8',
+);
+const montecassiano = readFileSync(
+  new URL('../dist/centri/montecassiano/index.html', import.meta.url),
+  'utf8',
+);
+
+test('il Box sta dentro .listino-sede, dove il selettore lo raggiunge', () => {
+  // Stessa trappola del test in cima al file: le schede del Box hanno tre
+  // prezzi ciascuna e nessun JavaScript che ne nasconda due. Fuori da
+  // `.listino-sede` il `:has()` non le vede e si stampano tutti e tre.
+  const sede = macerata.slice(
+    macerata.indexOf('class="listino-sede"'),
+    macerata.indexOf('</main>'),
+  );
+  const box = sede.indexOf('class="listino-box"');
+  assert.ok(box > 0, 'il blocco Box è uscito da .listino-sede');
+  assert.ok(sede.indexOf('id="f-annuale"') < box, 'le radio non precedono più il Box');
+});
+
+test('solo la sede che ha il Box mostra il Box', () => {
+  assert.ok(macerata.includes('Box CrossFit'), 'Macerata ha perso il Box');
+  assert.ok(
+    !montecassiano.includes('class="listino-box"'),
+    'il Box compare su una sede che non ce l\'ha',
+  );
+});
+
+test('i checkout del Box puntano al club giusto', () => {
+  // Gli id dei piani CrossFit (52-60, 129-130) sono gli stessi su tutti i
+  // club: cambia solo `clubID`. Con il numero sbagliato il pulsante funziona
+  // e vende l'abbonamento di un'altra sede.
+  const box = macerata.slice(macerata.indexOf('class="listino-box"'));
+  const link = [...box.matchAll(/Registration\/Start\?clubID=(\d+)&(?:amp;)?PaymentPlanId=(\d+)/g)];
+  assert.ok(link.length >= 7, `troppi pochi checkout nel Box: ${link.length}`);
+  for (const [, club, piano] of link) {
+    assert.equal(club, '1', `il piano ${piano} manda al club ${club}, non a Macerata`);
+  }
+});
+
+test('la data di scadenza del Box è scritta, non sottintesa', () => {
+  // Il sito è statico: il blocco non sparisce da solo il 1° novembre. Finché
+  // c'è, deve dire fino a quando vale — chi firma un annuale lo legge prima.
+  const box = macerata.slice(macerata.indexOf('class="listino-box"'));
+  assert.match(box.slice(0, 1200), /fino al 31 ottobre 2026/);
+  assert.match(box.slice(0, 1200), /Val di Chienti/);
+});

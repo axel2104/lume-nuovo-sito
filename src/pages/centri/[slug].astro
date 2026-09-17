@@ -4,9 +4,10 @@ import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import BandaCta from '../../components/BandaCta.astro';
+import SchedePiani from '../../components/SchedePiani.astro';
 import { getCollection, render } from 'astro:content';
 import { SEDI } from '../../config/forms';
-import { alCentro } from '../../data/abbonamenti';
+import { alCentro, alMese } from '../../data/abbonamenti';
 import { siteConfig } from '../../config/site';
 
 export async function getStaticPaths() {
@@ -124,41 +125,17 @@ const listino = c.listino;
 const piani = listino ? alCentro(listino.piani, (p) => p.evidenza) : [];
 
 /**
- * Un totale annuale diviso in dodici, arrotondato all'euro.
+ * Le schede del Box CrossFit, se questa sede ha un Box.
  *
- * Sul listino queste cifre sono stampate accanto a quelle annuali (660 → 55,
- * 465 → 39, 850 → 71): sono la stessa cosa detta due volte. Scriverle nei
- * contenuti vorrebbe dire tenere allineati due numeri che non possono
- * divergere per definizione — e che infatti, prima o poi, divergono.
+ * Stesso trattamento dei piani palestra: il consigliato al centro. Sono un
+ * elenco a parte e non tre schede in piu' perche' il Box e' un'altra
+ * domanda — chi sceglie fra Sala e Gold non sta scegliendo quante classi
+ * CrossFit fare a settimana.
  */
-const alMese = (totale: number) => Math.round(totale / 12);
+const box = listino?.box;
+const pianiBox = box ? alCentro(box.piani, (p) => p.evidenza) : [];
 
-/**
- * Cosa questo piano aggiunge rispetto al piano piu' grande che contiene per
- * intero — la stessa regola delle schede di /abbonamenti.
- *
- * Le schede mostrano il delta e non l'elenco completo: fra Sala e Gold ci
- * sono tre voci di differenza su sette, e tre elenchi interi affiancati
- * costringono a leggerli riga per riga per trovarle.
- *
- * Il riferimento si cerca fra le schede gia' passate, e per contenimento
- * vero: la piu' grande di quelle a sinistra che questo piano contiene per
- * intero. Cosi' nessuna scheda rimanda a una che il lettore non ha ancora
- * visto — col consigliato al centro, il GOLD di Macerata rimandava all'All
- * Inclusive stampato alla sua destra — e nessuna puo' annunciare «tutto di
- * X, piu'» seguito da un elenco vuoto. Chi non ha niente a sinistra che lo
- * contenga mostra semplicemente tutto quello che comprende.
- */
-type PianoSede = NonNullable<typeof listino>['piani'][number];
-const sintesiVoci = (piani: PianoSede[], i: number) => {
-  const p = piani[i];
-  const contenuti = piani.filter(
-    (q, j) => j < i && q.attivita.length > 0 && q.attivita.every((v) => p.attivita.includes(v)),
-  );
-  const base = [...contenuti].sort((a, b) => b.attivita.length - a.attivita.length)[0];
-  const voci = base ? p.attivita.filter((v) => !base.attivita.includes(v)) : p.attivita;
-  return { base, voci };
-};
+
 ---
 
 <Layout title={`${c.nome} — Lume Fitness Club`} description={description}>
@@ -183,7 +160,7 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
               loading="eager"
               fetchpriority="high"
               formats={['avif', 'webp']}
-            />
+          />
           )
         }
         {/*
@@ -205,7 +182,7 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
               playsinline
               preload="none"
               aria-hidden="true"
-            />
+          />
             <button
               type="button"
               class="hero-vcap hero-vcap-dx"
@@ -479,136 +456,12 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
             <label for="f-mensile">Mensile<span>senza vincolo</span></label>
           </fieldset>
 
-          <div class="plans">
-            {piani.map((piano, i) => {
-              const { base, voci } = sintesiVoci(piani, i);
-              return (
-                <article class={piano.evidenza ? 'plan hot' : 'plan'}>
-                  {piano.evidenza && <span class="plan-tag">Il più scelto</span>}
-
-                  <div class="plan-testa">
-                    <h3 class="pn">{piano.nome}</h3>
-                    {piano.per && <p class="plan-per">{piano.per}</p>}
-                  </div>
-
-                  {/*
-                    In evidenza il costo al mese, perche' e' la cifra con cui
-                    si ragiona quando si sceglie una palestra. Ma subito sotto,
-                    non in fondo, cosa si paga davvero: 55 €/mese in soluzione
-                    unica vuol dire 660 € in una volta, e chi legge deve
-                    saperlo prima di chiedere, non in reception.
-                  */}
-                  <div class="plan-prezzo">
-                    <div data-formula="annuale">
-                      <div class="pr">
-                        {alMese(piano.annuale)}&nbsp;€<small>/mese</small>
-                      </div>
-                      <p class="plan-nota">
-                        <b>{piano.annuale} €</b> in unica soluzione.
-                      </p>
-                      <ul class="plan-cond">
-                        <li>Durata 12 mesi</li>
-                        <li>Attivazione {listino.attivazione} € una volta sola</li>
-                      </ul>
-                    </div>
-
-                    <div data-formula="rate">
-                      <div class="pr">
-                        {alMese(piano.rate)}&nbsp;€<small>/mese</small>
-                      </div>
-                      <p class="plan-nota">
-                        <b>{piano.rate} €</b> in tutto, in 12 rate con Pagodil® o Pagolight®.
-                      </p>
-                      <ul class="plan-cond">
-                        <li>Durata 12 mesi, nessun interesse</li>
-                        <li>Attivazione {listino.attivazione} € una volta sola</li>
-                      </ul>
-                    </div>
-
-                    <div data-formula="mensile">
-                      <div class="pr">
-                        {piano.mensile}&nbsp;€<small>/mese</small>
-                      </div>
-                      <p class="plan-nota">Rinnovo automatico, nessun vincolo di durata.</p>
-                      <ul class="plan-cond">
-                        <li>Disdici quando vuoi</li>
-                        <li>Attivazione {listino.attivazione} € una volta sola</li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  {voci.length > 0 && (
-                    <div class="plan-voci">
-                      <p class="plan-delta">{base ? `Tutto di ${base.nome}, più` : 'Comprende'}</p>
-                      <ul>{voci.map((v) => <li>{v}</li>)}</ul>
-                    </div>
-                  )}
-
-                  {/*
-                    Il pulsante porta centro e piano gia' scelti: chi e' su
-                    questa scheda ha risposto a entrambe le domande, e
-                    richiederle nel form sarebbe attrito gratuito. Sui centri
-                    in prevendita non c'e', perche' li' l'unica azione
-                    possibile e' la prevendita, ed e' gia' in fondo alla
-                    pagina.
-                  */}
-                  {/*
-                    Un pulsante per formula, dentro il suo `data-formula`:
-                    senza JavaScript la pagina non sa quale radio e' spuntata,
-                    e il lead deve portarsi dietro anche COME si vuole pagare.
-                    Richiederlo al telefono e' una domanda a cui l'utente ha
-                    gia' risposto.
-                  */}
-                  {raccogliLead && (
-                    <div class="plan-azioni">
-                      {(['annuale', 'rate', 'mensile'] as const).map((f) => {
-                        const portale = piano.pgm?.[f];
-                        return (
-                          <div data-formula={f}>
-                            <div class="plan-coppia">
-                            {/*
-                              Dove il piano esiste sul portale si va dritti al
-                              checkout. Dove non esiste — sul portale il mensile
-                              c'e' solo per il GOLD — resta il form: un pulsante
-                              «Attiva ora» che apre un carrello vuoto e' peggio
-                              di nessun pulsante.
-                            */}
-                            {portale && (
-                              <a
-                                href={portale}
-                                class={`btn ${piano.evidenza ? 'btn-red' : 'btn-out'} btn-full`}
-                                rel="noopener"
-                              >
-                                Attiva ora ↗
-                              </a>
-                            )}
-                            {/*
-                              La richiamata resta sempre, e sotto al checkout.
-                              Chi e' deciso clicca sopra; chi ha una domanda
-                              lascia un contatto invece di uscire dal sito — e
-                              senza questo pulsante il lead di chi si ferma
-                              davanti al portale non lo vedrebbe nessuno.
-                            */}
-                            <button
-                              type="button"
-                              class={portale ? 'btn-lieve' : `btn ${piano.evidenza ? 'btn-red' : 'btn-out'} btn-full`}
-                              data-open-form="iscrizione"
-                              data-medium={`CentroPiano:${entry.id}:${piano.nome}:${f}`}
-                              data-centro={entry.id}
-                              data-abbonamento={piano.nome}
-                            >
-                              {portale ? 'Fatti richiamare' : `Richiedi ${piano.nome}`}
-                            </button>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </article>
-              );
-            })}
-          </div>
+          <SchedePiani
+            piani={piani}
+            attivazione={listino.attivazione}
+            centro={entry.id}
+            raccogliLead={raccogliLead}
+          />
 
           {/* Anche la riga Over 65 segue il selettore: una formula alla volta. */}
           {listino.over65?.annuale && (
@@ -630,6 +483,51 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
                 </span>
               )}
             </p>
+          )}
+
+          {/*
+            Il Box CrossFit, sotto la palestra e dentro lo stesso contenitore:
+            e' il `:has()` di `.listino-sede` a decidere quale formula si
+            vede, e portare queste schede fuori di qui vorrebbe dire
+            mostrarne tre prezzi insieme.
+
+            Sopra le schede, la data: il Box si allena qui fino a una certa
+            data e poi si sposta, e chi firma un annuale deve saperlo prima
+            di firmare, non a novembre.
+          */}
+          {box && pianiBox.length > 0 && (
+            <div class="listino-box">
+              <span class="label">{box.titolo}</span>
+              {box.nota && <p class="listino-avviso">{box.nota}</p>}
+
+              <SchedePiani
+                piani={pianiBox}
+                attivazione={box.attivazione}
+                centro={entry.id}
+                raccogliLead={raccogliLead}
+              />
+
+              {/*
+                I pacchetti restano visibili con qualunque formula spuntata:
+                sono mensili e basta, e nasconderli a chi guarda l'annuale
+                toglierebbe l'unica voce pensata per chi viene ogni tanto.
+              */}
+              {box.pacchetti && box.pacchetti.voci.length > 0 && (
+                <p class="listino-over">
+                  {box.pacchetti.voci.map((v, i) => (
+                    <>
+                      {i > 0 && ' '}
+                      <b>{v.nome}</b>
+                      {v.per && <> — {v.per}</>}: {v.mensile} € al mese.{' '}
+                      {v.pgm && raccogliLead && (
+                        <a href={v.pgm} rel="noopener">Attiva ↗</a>
+                      )}
+                    </>
+                  ))}
+                  {box.pacchetti.nota && <><br />{box.pacchetti.nota}</>}
+                </p>
+              )}
+            </div>
           )}
         </div>
       )}
@@ -925,6 +823,33 @@ const sintesiVoci = (piani: PianoSede[], i: number) => {
     outline-offset: 2px;
   }
 
+  /*
+    Il Box e' separato dalla palestra da una riga e da un respiro, non da un
+    riquadro: e' lo stesso listino della stessa sede, e incorniciarlo lo
+    farebbe sembrare un'altra offerta di un altro posto.
+  */
+  .listino-box {
+    margin-top: 40px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  /*
+    L'avviso della scadenza non urla: ha il colore del testo normale e una
+    barra rossa a sinistra. Una fascia piena qui competerebbe con il tag
+    "Il piu' scelto" della scheda in evidenza, che sta due centimetri sotto.
+  */
+  .listino-avviso {
+    margin: 12px 0 22px;
+    max-width: 64ch;
+    padding-left: 14px;
+    border-left: 2px solid var(--red-txt);
+    color: var(--txt);
+  }
+  .listino-box .listino-over a {
+    color: var(--red-txt);
+    font-weight: 700;
+    white-space: nowrap;
+  }
   .listino-over {
     margin: 18px 0 0;
     font-size: 14px;

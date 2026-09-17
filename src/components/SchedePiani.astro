@@ -1,0 +1,190 @@
+---
+/**
+ * La griglia delle schede prezzo di una sede.
+ *
+ * Sta in un componente perche' la pagina del centro la stampa due volte: una
+ * per la palestra, una per il Box CrossFit. Sono le stesse tre formule, le
+ * stesse condizioni e lo stesso pulsante, e tenerne due copie nella pagina
+ * significherebbe correggerne una sola la prossima volta.
+ *
+ * NON stampa il selettore mensile/annuale: quello e' uno solo per pagina e
+ * vive su `.listino-sede`, perche' e' il `:has()` di quel contenitore a
+ * decidere quale `[data-formula]` si vede. Due fieldset vorrebbero dire due
+ * gruppi di radio con gli stessi `id`.
+ */
+import type { CollectionEntry } from 'astro:content';
+import { alMese } from '../data/abbonamenti';
+
+type Listino = NonNullable<CollectionEntry<'centri'>['data']['listino']>;
+export type PianoSede = Listino['piani'][number];
+
+/**
+ * Cosa questo piano aggiunge rispetto al piano piu' grande che contiene per
+ * intero — la stessa regola delle schede di /abbonamenti.
+ *
+ * Le schede mostrano il delta e non l'elenco completo: fra Sala e Gold ci
+ * sono tre voci di differenza su sette, e tre elenchi interi affiancati
+ * costringono a leggerli riga per riga per trovarle.
+ *
+ * Il riferimento si cerca fra le schede gia' passate, e per contenimento
+ * vero: la piu' grande di quelle a sinistra che questo piano contiene per
+ * intero. Cosi' nessuna scheda rimanda a una che il lettore non ha ancora
+ * visto — col consigliato al centro, il GOLD di Macerata rimandava all'All
+ * Inclusive stampato alla sua destra — e nessuna puo' annunciare «tutto di
+ * X, piu'» seguito da un elenco vuoto. Chi non ha niente a sinistra che lo
+ * contenga mostra semplicemente tutto quello che comprende.
+ */
+const sintesiVoci = (piani: PianoSede[], i: number) => {
+  const p = piani[i];
+  const contenuti = piani.filter(
+    (q, j) => j < i && q.attivita.length > 0 && q.attivita.every((v) => p.attivita.includes(v)),
+  );
+  const base = [...contenuti].sort((a, b) => b.attivita.length - a.attivita.length)[0];
+  const voci = base ? p.attivita.filter((v) => !base.attivita.includes(v)) : p.attivita;
+  return { base, voci };
+};
+
+type Props = {
+  /** Le schede, gia' nell'ordine in cui vanno stampate. */
+  piani: PianoSede[];
+  /** La quota di attivazione di QUESTO elenco: il Box ne ha una sua. */
+  attivazione: number;
+  /** Lo slug del centro, che finisce nel lead come sede e come `data-medium`. */
+  centro: string;
+  /** Senza raccolta lead niente pulsanti: restano le sole cifre. */
+  raccogliLead: boolean;
+};
+
+const { piani, attivazione, centro, raccogliLead } = Astro.props;
+---
+
+<div class="plans">
+{piani.map((piano, i) => {
+  const { base, voci } = sintesiVoci(piani, i);
+  return (
+    <article class={piano.evidenza ? 'plan hot' : 'plan'}>
+      {piano.evidenza && <span class="plan-tag">Il più scelto</span>}
+
+      <div class="plan-testa">
+        <h3 class="pn">{piano.nome}</h3>
+        {piano.per && <p class="plan-per">{piano.per}</p>}
+      </div>
+
+      {/*
+        In evidenza il costo al mese, perche' e' la cifra con cui
+        si ragiona quando si sceglie una palestra. Ma subito sotto,
+        non in fondo, cosa si paga davvero: 55 €/mese in soluzione
+        unica vuol dire 660 € in una volta, e chi legge deve
+        saperlo prima di chiedere, non in reception.
+      */}
+      <div class="plan-prezzo">
+        <div data-formula="annuale">
+          <div class="pr">
+            {alMese(piano.annuale)}&nbsp;€<small>/mese</small>
+          </div>
+          <p class="plan-nota">
+            <b>{piano.annuale} €</b> in unica soluzione.
+          </p>
+          <ul class="plan-cond">
+            <li>Durata 12 mesi</li>
+            <li>Attivazione {attivazione} € una volta sola</li>
+          </ul>
+        </div>
+
+        <div data-formula="rate">
+          <div class="pr">
+            {alMese(piano.rate)}&nbsp;€<small>/mese</small>
+          </div>
+          <p class="plan-nota">
+            <b>{piano.rate} €</b> in tutto, in 12 rate con Pagodil® o Pagolight®.
+          </p>
+          <ul class="plan-cond">
+            <li>Durata 12 mesi, nessun interesse</li>
+            <li>Attivazione {attivazione} € una volta sola</li>
+          </ul>
+        </div>
+
+        <div data-formula="mensile">
+          <div class="pr">
+            {piano.mensile}&nbsp;€<small>/mese</small>
+          </div>
+          <p class="plan-nota">Rinnovo automatico, nessun vincolo di durata.</p>
+          <ul class="plan-cond">
+            <li>Disdici quando vuoi</li>
+            <li>Attivazione {attivazione} € una volta sola</li>
+          </ul>
+        </div>
+      </div>
+
+      {voci.length > 0 && (
+        <div class="plan-voci">
+          <p class="plan-delta">{base ? `Tutto di ${base.nome}, più` : 'Comprende'}</p>
+          <ul>{voci.map((v) => <li>{v}</li>)}</ul>
+        </div>
+      )}
+
+      {/*
+        Il pulsante porta centro e piano gia' scelti: chi e' su
+        questa scheda ha risposto a entrambe le domande, e
+        richiederle nel form sarebbe attrito gratuito. Sui centri
+        in prevendita non c'e', perche' li' l'unica azione
+        possibile e' la prevendita, ed e' gia' in fondo alla
+        pagina.
+      */}
+      {/*
+        Un pulsante per formula, dentro il suo `data-formula`:
+        senza JavaScript la pagina non sa quale radio e' spuntata,
+        e il lead deve portarsi dietro anche COME si vuole pagare.
+        Richiederlo al telefono e' una domanda a cui l'utente ha
+        gia' risposto.
+      */}
+      {raccogliLead && (
+        <div class="plan-azioni">
+          {(['annuale', 'rate', 'mensile'] as const).map((f) => {
+            const portale = piano.pgm?.[f];
+            return (
+              <div data-formula={f}>
+                <div class="plan-coppia">
+                {/*
+                  Dove il piano esiste sul portale si va dritti al
+                  checkout. Dove non esiste — sul portale il mensile
+                  c'e' solo per il GOLD — resta il form: un pulsante
+                  «Attiva ora» che apre un carrello vuoto e' peggio
+                  di nessun pulsante.
+                */}
+                {portale && (
+                  <a
+                    href={portale}
+                    class={`btn ${piano.evidenza ? 'btn-red' : 'btn-out'} btn-full`}
+                    rel="noopener"
+                  >
+                    Attiva ora ↗
+                  </a>
+                )}
+                {/*
+                  La richiamata resta sempre, e sotto al checkout.
+                  Chi e' deciso clicca sopra; chi ha una domanda
+                  lascia un contatto invece di uscire dal sito — e
+                  senza questo pulsante il lead di chi si ferma
+                  davanti al portale non lo vedrebbe nessuno.
+                */}
+                <button
+                  type="button"
+                  class={portale ? 'btn-lieve' : `btn ${piano.evidenza ? 'btn-red' : 'btn-out'} btn-full`}
+                  data-open-form="iscrizione"
+                  data-medium={`CentroPiano:${centro}:${piano.nome}:${f}`}
+                  data-centro={centro}
+                  data-abbonamento={piano.nome}
+                >
+                  {portale ? 'Fatti richiamare' : `Richiedi ${piano.nome}`}
+                </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </article>
+  );
+})}
+</div>

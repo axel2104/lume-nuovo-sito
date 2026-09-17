@@ -100,6 +100,61 @@ listino:
     annuale: 660
     rate: 720
     mensile: 90
+  box:
+    titolo: Box CrossFit
+    fino: "2026-10-31"
+    nota: >-
+      Il Box si allena a Macerata fino al 31 ottobre 2026. Dal 1° novembre le
+      classi si spostano a Lume Val di Chienti, e l'abbonamento Box vale lì.
+    attivazione: 50
+    piani:
+      - nome: 2 volte a settimana
+        per: Due classi a settimana nel Box
+        attivita:
+          - Due classi CrossFit a settimana
+          - Coach in sala a ogni classe
+        annuale: 600
+        rate: 660
+        mensile: 80
+        pgm:
+          annuale: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=52
+          rate: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=53
+      - nome: 3 volte a settimana
+        per: Tre classi a settimana nel Box
+        attivita:
+          - Tre classi CrossFit a settimana
+          - Coach in sala a ogni classe
+        annuale: 700
+        rate: 780
+        mensile: 90
+        evidenza: true
+        pgm:
+          annuale: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=55
+          rate: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=56
+      - nome: Open
+        per: Box senza limiti e sala pesi
+        attivita:
+          - Classi CrossFit senza limiti
+          - Coach in sala a ogni classe
+          - Sala pesi e cardio
+        annuale: 850
+        rate: 960
+        mensile: 105
+        pgm:
+          annuale: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=58
+          rate: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=59
+          mensile: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=60
+    pacchetti:
+      nota: A consumo, senza vincolo di durata. Attivazione 25 € invece di 50 €.
+      voci:
+        - nome: Special 2
+          per: 2 accessi al mese
+          mensile: 30
+          pgm: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=129
+        - nome: Special 4
+          per: 4 accessi al mese
+          mensile: 60
+          pgm: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=1&PaymentPlanId=130
 immagine: ../../assets/centri/macerata-sala-pesi.jpg
 video: https://pub-90d4a80741cd4aadb6d995599fefc986.r2.dev/site/macerata-drone.mp4
 videoPoster: ../../assets/centri/macerata-sala-pesi.jpg

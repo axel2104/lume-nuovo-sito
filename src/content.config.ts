@@ -8,6 +8,59 @@ import {
   idDi,
 } from './data/tassonomie';
 
+/**
+ * Una scheda prezzo del listino di una sede.
+ *
+ * Sta fuori dalla collection perche' la usano due elenchi: i piani della
+ * palestra e quelli del Box CrossFit, che hanno le stesse tre formule e le
+ * stesse condizioni. Scriverla due volte vorrebbe dire che fra un anno una
+ * delle due ha un campo che l'altra non ha.
+ */
+const pianoListino = z.object({
+  nome: z.string(),
+  /** Cosa comprende, in una riga. */
+  per: z.string().nullish(),
+  /**
+   * Cosa puoi fare, una voce per riga — le stesse etichette della
+   * collection `abbonamenti` ("Sala pesi e cardio", "Acqua
+   * fitness"): scriverle uguali tiene coerenti le schede dei
+   * centri e quelle di /abbonamenti, scriverle diverse crea due
+   * vocabolari per le stesse cose.
+   *
+   * Vuoto: la scheda mostra prezzo e condizioni senza l'elenco.
+   * Meglio di un elenco inventato su una pagina che vende.
+   */
+  attivita: z.array(z.string()).default([]),
+  /** Prezzo in soluzione unica, dodici mesi. */
+  annuale: z.number(),
+  /** Totale pagato in 12 rate con Pagodil/Pagolight. */
+  rate: z.number(),
+  /** Mensile con rinnovo automatico. */
+  mensile: z.number(),
+  /** Il piano da mettere in evidenza. Uno solo, o nessuno. */
+  evidenza: z.boolean().default(false),
+  /**
+   * I link diretti al checkout PerfectGym, uno per formula.
+   *
+   * URL interi e non i soli `PaymentPlanId`: club e piano stanno
+   * insieme nella stessa riga dell'export del portale, e comporre
+   * l'indirizzo a pezzi vuol dire indovinare il `clubID` — con
+   * l'id sbagliato il pulsante funziona e manda a comprare
+   * l'abbonamento di un'altra sede.
+   *
+   * Ogni formula puo' non averlo: sul portale i piani mensili
+   * esistono solo per il GOLD. Dove manca resta il form, che e'
+   * meglio di un pulsante che promette un checkout inesistente.
+   */
+  pgm: z
+    .object({
+      annuale: z.string().startsWith('https://', 'Serve l’URL intero copiato dal portale, non il numero del piano').nullish(),
+      rate: z.string().startsWith('https://', 'Serve l’URL intero copiato dal portale, non il numero del piano').nullish(),
+      mensile: z.string().startsWith('https://', 'Serve l’URL intero copiato dal portale, non il numero del piano').nullish(),
+    })
+    .nullish(),
+});
+
 // ─── Centri ──────────────────────────────────────────────────────────────
 const centri = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/centri' }),
@@ -101,54 +154,7 @@ const centri = defineCollection({
         nota: z.string().nullish(),
         /** Quota di attivazione, una volta sola, uguale per tutti i piani. */
         attivazione: z.number().default(50),
-        piani: z
-          .array(
-            z.object({
-              nome: z.string(),
-              /** Cosa comprende, in una riga. */
-              per: z.string().nullish(),
-              /**
-               * Cosa puoi fare, una voce per riga — le stesse etichette della
-               * collection `abbonamenti` ("Sala pesi e cardio", "Acqua
-               * fitness"): scriverle uguali tiene coerenti le schede dei
-               * centri e quelle di /abbonamenti, scriverle diverse crea due
-               * vocabolari per le stesse cose.
-               *
-               * Vuoto: la scheda mostra prezzo e condizioni senza l'elenco.
-               * Meglio di un elenco inventato su una pagina che vende.
-               */
-              attivita: z.array(z.string()).default([]),
-              /** Prezzo in soluzione unica, dodici mesi. */
-              annuale: z.number(),
-              /** Totale pagato in 12 rate con Pagodil/Pagolight. */
-              rate: z.number(),
-              /** Mensile con rinnovo automatico. */
-              mensile: z.number(),
-              /** Il piano da mettere in evidenza. Uno solo, o nessuno. */
-              evidenza: z.boolean().default(false),
-              /**
-               * I link diretti al checkout PerfectGym, uno per formula.
-               *
-               * URL interi e non i soli `PaymentPlanId`: club e piano stanno
-               * insieme nella stessa riga dell'export del portale, e comporre
-               * l'indirizzo a pezzi vuol dire indovinare il `clubID` — con
-               * l'id sbagliato il pulsante funziona e manda a comprare
-               * l'abbonamento di un'altra sede.
-               *
-               * Ogni formula puo' non averlo: sul portale i piani mensili
-               * esistono solo per il GOLD. Dove manca resta il form, che e'
-               * meglio di un pulsante che promette un checkout inesistente.
-               */
-              pgm: z
-                .object({
-                  annuale: z.string().startsWith('https://', 'Serve l’URL intero copiato dal portale, non il numero del piano').nullish(),
-                  rate: z.string().startsWith('https://', 'Serve l’URL intero copiato dal portale, non il numero del piano').nullish(),
-                  mensile: z.string().startsWith('https://', 'Serve l’URL intero copiato dal portale, non il numero del piano').nullish(),
-                })
-                .nullish(),
-            }),
-          )
-          .default([]),
+        piani: z.array(pianoListino).default([]),
         /**
          * La riga Over 65, quando c'e'.
          *
@@ -165,6 +171,64 @@ const centri = defineCollection({
             annuale: z.number().nullish(),
             rate: z.number().nullish(),
             mensile: z.number().nullish(),
+          })
+          .nullish(),
+        /**
+         * Il Box CrossFit, quando la sede ce l'ha.
+         *
+         * Non e' una quarta scheda accanto a Sala, All Inclusive e Gold: quei
+         * tre sono la palestra, e chi cerca il Box cerca un'altra cosa. La
+         * griglia `.plans` e' poi tarata su tre schede col consigliato al
+         * centro — la quarta la sfonda.
+         *
+         * Vive dentro `listino` e non a fianco perche' deve stare dentro
+         * `.listino-sede`: e' quel contenitore che il `:has()` guarda per
+         * sapere quale formula e' spuntata. Fuori di li' il selettore
+         * mensile/annuale non lo raggiungerebbe, e si vedrebbero tutti e tre
+         * i prezzi insieme.
+         */
+        box: z
+          .object({
+            titolo: z.string().default('Box CrossFit'),
+            /**
+             * La data in cui il Box smette di allenarsi in QUESTA sede.
+             *
+             * E' un promemoria, non un interruttore: il sito e' statico, e
+             * senza un deploy dopo quella data il blocco resterebbe a video
+             * comunque. Quel giorno il blocco si sposta a mano sulla sede che
+             * eredita il Box, cambiando `clubID` negli URL del portale.
+             */
+            fino: z.string().nullish(),
+            /** La frase sopra le schede: dove va il Box, e da quando. */
+            nota: z.string().nullish(),
+            attivazione: z.number().default(50),
+            piani: z.array(pianoListino).default([]),
+            /**
+             * Gli accessi a pacchetto (2 o 4 al mese).
+             *
+             * Riga sola e non schede, come l'Over 65: sono due cifre mensili
+             * e basta, senza annuale ne' dilazionato, e due colonne per due
+             * numeri farebbero sembrare un piano intero quello che e' un
+             * ripiego per chi viene ogni tanto.
+             */
+            pacchetti: z
+              .object({
+                nota: z.string().nullish(),
+                voci: z
+                  .array(
+                    z.object({
+                      nome: z.string(),
+                      per: z.string().nullish(),
+                      mensile: z.number(),
+                      pgm: z
+                        .string()
+                        .startsWith('https://', 'Serve l’URL intero copiato dal portale, non il numero del piano')
+                        .nullish(),
+                    }),
+                  )
+                  .default([]),
+              })
+              .nullish(),
           })
           .nullish(),
       })

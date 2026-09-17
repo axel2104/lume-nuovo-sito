@@ -189,6 +189,16 @@ export function eUnaCatena(piani: Piano[]): boolean {
   });
 }
 
+/**
+ * Un totale annuale diviso in dodici, arrotondato all'euro.
+ *
+ * Sul listino queste cifre sono stampate accanto a quelle annuali (660 → 55,
+ * 465 → 39, 850 → 71): sono la stessa cosa detta due volte. Scriverle nei
+ * contenuti vorrebbe dire tenere allineati due numeri che non possono
+ * divergere per definizione — e che infatti, prima o poi, divergono.
+ */
+export const alMese = (totale: number) => Math.round(totale / 12);
+
 /** Formattazione italiana degli importi: mai `toFixed`, che scrive il punto. */
 export const euro = (n: number) =>
   new Intl.NumberFormat('it-IT', { minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(n);
