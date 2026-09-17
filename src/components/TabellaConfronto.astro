@@ -1,0 +1,82 @@
+---
+/**
+ * Cosa cambia fra i piani di un listino, riga per riga.
+ *
+ * Una per listino: la pagina ne stampa una per ogni scheda dello switch e ne
+ * tiene visibile una sola. Le righe sono derivate dalle attività dei piani e
+ * non elencate a mano — un elenco separato vorrebbe dire due posti da tenere
+ * allineati, e una tabella che mostra righe che nessuna scheda mostra.
+ */
+import { righeConfronto, alMese, euro, type ColonnaConfronto } from '../data/abbonamenti';
+
+type Props = {
+  /** Le colonne, nell'ordine del listino. */
+  colonne: ColonnaConfronto[];
+  /** Cosa si sta confrontando: finisce nella didascalia per chi usa lo screen reader. */
+  titolo?: string;
+};
+
+const { colonne, titolo } = Astro.props;
+const righe = righeConfronto(colonne);
+const hot = (c: ColonnaConfronto) => (c.consigliato ? 'hot' : '');
+---
+
+<div class="tab-scroll">
+  <table class="tab-conf">
+    <caption class="sr-only">
+      Cosa include ogni piano{titolo ? ` di ${titolo}` : ''}. Scorri in orizzontale per vedere
+      tutte le colonne.
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Cosa include</th>
+        {colonne.map((c) => <th scope="col" class={hot(c)}>{c.nome}</th>)}
+      </tr>
+    </thead>
+    <tbody>
+      {righe.map((voce) => (
+        <tr>
+          <th scope="row">{voce}</th>
+          {colonne.map((c) => (
+            <td class={hot(c)}>
+              {c.attivita.includes(voce) ? (
+                <span class="si" aria-label="Incluso">✓</span>
+              ) : (
+                <span class="no" aria-label="Non incluso">—</span>
+              )}
+            </td>
+          ))}
+        </tr>
+      ))}
+      {/*
+        I prezzi chiudono la tabella invece di aprirla: si scorre per capire
+        cosa cambia, e il prezzo è la risposta, non la domanda.
+
+        La riga delle rate mostra la rata, non il totale: è la cifra con cui
+        si ragiona, e il totale è già due righe sopra.
+      */}
+      <tr class="tab-prezzi">
+        <th scope="row">Annuale, in una volta</th>
+        {colonne.map((c) => (
+          <td class={hot(c)}>{c.annuale ? `${euro(c.annuale)} €` : <span class="no">—</span>}</td>
+        ))}
+      </tr>
+      <tr class="tab-prezzi">
+        <th scope="row">In 12 rate</th>
+        {colonne.map((c) => (
+          <td class={hot(c)}>
+            {c.rate ? `${euro(alMese(c.rate))} €/mese` : <span class="no">—</span>}
+          </td>
+        ))}
+      </tr>
+      <tr class="tab-prezzi">
+        <th scope="row">Mensile, senza vincolo</th>
+        {colonne.map((c) => (
+          <td class={hot(c)}>
+            {c.mensile ? `${euro(c.mensile)} €/mese` : <span class="no">—</span>}
+          </td>
+        ))}
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -338,3 +338,34 @@ test('ogni selettore ha le sue schede dentro lo stesso scope', () => {
   const fieldset = [...html.matchAll(/<fieldset class="pf"/g)];
   assert.equal(scope.length, fieldset.length, 'scope e selettori di formula non si corrispondono');
 });
+
+test('la tabella di confronto segue lo switch', () => {
+  // Confrontare i piani di Macerata mentre a video ci sono i prezzi di
+  // Montecassiano è peggio che non avere la tabella: due listini diversi
+  // che sembrano lo stesso.
+  const conf = html.slice(html.indexOf('id="confronto"'), html.indexOf('Prima di decidere'));
+  const schede = [...blocco.matchAll(/<input[^>]*data-sw="([^"]+)"/g)].map((m) => m[1]);
+  const tabelle = [...conf.matchAll(/<div data-listino="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(tabelle, schede, 'una scheda dello switch non ha la sua tabella');
+  assert.equal(
+    conf.split('class="tab-conf"').length - 1,
+    schede.length,
+    'tabelle e schede non si corrispondono',
+  );
+  // Lo scope deve contenere anche questa sezione, o le regole non la vedono.
+  assert.ok(/<main[^>]*class="[^"]*sw-scope/.test(html), 'lo scope non copre più la tabella');
+});
+
+test('la tabella di ogni listino porta i prezzi di quel listino', () => {
+  // La collection tiene la rata (80) e i listini di sede il totale (960):
+  // mescolarli farebbe entrare un piano a 80 € accanto a uno da 900 €.
+  const conf = html.slice(html.indexOf('id="confronto"'), html.indexOf('Prima di decidere'));
+  const tabella = (id) => {
+    const i = conf.indexOf(`<div data-listino="${id}"`);
+    return conf.slice(i, conf.indexOf('</table>', i));
+  };
+  assert.match(tabella('macerata'), /900 €/, 'il GOLD di Macerata non è in tabella');
+  assert.match(tabella('macerata'), /80 €\/mese/, 'la rata del GOLD non è la rata');
+  assert.match(tabella('montecassiano'), /468 €/, 'la Sala di Montecassiano non è in tabella');
+  assert.ok(!tabella('montecassiano').includes('900 €'), 'prezzi di Macerata su Montecassiano');
+});

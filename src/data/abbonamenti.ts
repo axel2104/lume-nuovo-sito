@@ -77,12 +77,12 @@ export function pianoPiuEconomicoCon(piani: Piano[], id: IdFormula): Piano | und
  * mostrare una riga che nessuna scheda mostrava. Derivandola non c'è niente da
  * allineare: se una voce non è in nessun piano, la riga non esiste.
  */
-export function righeConfronto(piani: Piano[]): string[] {
-  const ordinate = [...piani].sort((a, b) => b.data.attivita.length - a.data.attivita.length);
+export function righeConfronto(colonne: ColonnaConfronto[]): string[] {
+  const ordinate = [...colonne].sort((a, b) => b.attivita.length - a.attivita.length);
   const viste = new Set<string>();
   const righe: string[] = [];
-  for (const p of ordinate) {
-    for (const voce of p.data.attivita) {
+  for (const c of ordinate) {
+    for (const voce of c.attivita) {
       if (viste.has(voce)) continue;
       viste.add(voce);
       righe.push(voce);
@@ -91,9 +91,48 @@ export function righeConfronto(piani: Piano[]): string[] {
   return righe;
 }
 
-/** Il piano include questa attività? */
-export function include(piano: Piano, voce: string): boolean {
-  return piano.data.attivita.includes(voce);
+/**
+ * Una colonna della tabella di confronto.
+ *
+ * E' la forma minima che i due modelli hanno in comune: la collection
+ * `abbonamenti`, dove ogni formula e' un oggetto con le sue condizioni, e il
+ * `listino` delle sedi, dove le formule sono tre numeri. La tabella non ha
+ * bisogno del resto, e chiederglielo vorrebbe dire scriverne due versioni
+ * destinate a divergere.
+ *
+ * I prezzi sono **totali** per la durata, non rate: `rate` e' quanto si paga
+ * in tutto in dodici mesi. La rata si ricava con `alMese`, il contrario no —
+ * 80 euro al mese si leggono uguali su dodici mesi e su ventiquattro.
+ */
+export type ColonnaConfronto = {
+  nome: string;
+  attivita: string[];
+  consigliato?: boolean;
+  /** Totale in soluzione unica. */
+  annuale?: number | null;
+  /** Totale pagato in 12 rate. */
+  rate?: number | null;
+  /** Canone mensile, senza vincolo. */
+  mensile?: number | null;
+};
+
+/**
+ * La colonna di un piano della collection `abbonamenti`.
+ *
+ * `rate` moltiplica per dodici perche' li' quel numero e' la rata e non il
+ * totale: senza, il GOLD entrerebbe in tabella a 80 euro contro i 900 della
+ * soluzione unica, come se fosse il piano piu' economico della fila.
+ */
+export function colonnaDaPiano(p: Piano): ColonnaConfronto {
+  const rata = formulaDi(p, 'rate');
+  return {
+    nome: p.data.nome,
+    attivita: p.data.attivita,
+    consigliato: p.data.consigliato,
+    annuale: formulaDi(p, 'annuale')?.prezzo ?? null,
+    rate: rata ? (rata.periodo === 'mese' ? rata.prezzo * 12 : rata.prezzo) : null,
+    mensile: formulaDi(p, 'mensile')?.prezzo ?? null,
+  };
 }
 
 /**
