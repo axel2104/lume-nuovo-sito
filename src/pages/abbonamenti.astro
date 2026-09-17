@@ -327,7 +327,9 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
                                   <b>{euro(totale!)} €</b> in tutto.{' '}
                                 </>
                               )}
-                              {formula.pagamento}. Attivazione {euro(p.data.attivazione)} € una
+                              {/* Per l'annuale il pagamento non si ripete: lo dice
+                                  gia' la riga in grassetto qui sopra. */}
+                              {f.id !== 'annuale' && <>{formula.pagamento}. </>}Attivazione {euro(p.data.attivazione)} € una
                               volta sola.
 
                             </p>
