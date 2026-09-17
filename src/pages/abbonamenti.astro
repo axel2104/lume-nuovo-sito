@@ -329,11 +329,10 @@ const mensilePiuEconomico = pianoPiuEconomicoCon(piani, 'mensile');
                               )}
                               {/* Per l'annuale il pagamento non si ripete: lo dice
                                   gia' la riga in grassetto qui sopra. */}
-                              {f.id !== 'annuale' && <>{formula.pagamento}. </>}Attivazione {euro(p.data.attivazione)} € una
-                              volta sola.
-
+                              {f.id !== 'annuale' && <>{formula.pagamento}.</>}
                             </p>
                             <ul class="plan-cond">
+                              <li>Attivazione {euro(p.data.attivazione)} € una volta sola</li>
                               <li>Durata minima: {formula.durataMinima}</li>
                               <li>Preavviso di disdetta: {p.data.preavviso}</li>
                               {formula.condizioni.map((c) => (
