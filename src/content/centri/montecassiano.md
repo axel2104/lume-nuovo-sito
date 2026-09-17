@@ -25,7 +25,7 @@ aperture:
     orario: "08:30 – 18:00"
     nota: "Il posto si prenota dal portale o dall'app; durante i corsi alcune corsie restano occupate."
 servizi:
-  - "Sala pesi 800m²"
+  - "Sala pesi"
   - "Piscina & Scuola nuoto"
   - "Sala Reformer Pilates"
   - "Sala Performance Triform"

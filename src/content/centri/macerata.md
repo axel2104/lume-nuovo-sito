@@ -14,8 +14,8 @@ orari:
   sabato: "08:00 – 19:00"
   domenica: "08:00 – 19:00"
 servizi:
-  - "Gym floor 500m² Technogym"
-  - "Box CrossFit 450m²"
+  - "Gym floor Technogym"
+  - "Box CrossFit"
   - "Sala Reformer e Wellback System"
   - "Sale Les Mills"
   - "Sala olistica"
@@ -895,6 +895,6 @@ planning:
     sezione: CrossFit
 ---
 
-Il club ammiraglia di Lume: oltre 500m² di gym floor con tecnologia Technogym,
-un Box CrossFit da 450m², sala Reformer Pilates, piscina e sale corsi in licenza
+Il club ammiraglia di Lume: gym floor con tecnologia Technogym,
+Box CrossFit, sala Reformer Pilates, piscina e sale corsi in licenza
 Les Mills. Il posto giusto qualunque sia il tuo obiettivo.

@@ -262,7 +262,8 @@ const pianiBox = box ? alCentro(box.piani, (p) => p.evidenza) : [];
                   ) : (
                     <img src={fotoSala(s.nome)} alt={s.nome} loading="lazy" />
                   )}
-                  {s.mq != null && <span class="sala-vis-mq">{s.mq} m²</span>}
+                  {/* La metratura per sala non si mostra piu': in pagina resta
+                      solo il totale nell'hero. Il dato resta nel CMS. */}
                 </div>
                 <div class="sala-vis-body">
                   <h3>{s.nome}</h3>
@@ -273,8 +274,8 @@ const pianiBox = box ? alCentro(box.piani, (p) => p.evidenza) : [];
           </div>
           {!aperto ? (
             <p class="pg-note" style="margin-top:14px">
-              Le immagini sono render del progetto esecutivo: metrature e
-              finiture sono quelle di progetto e possono cambiare in cantiere.
+              Le immagini sono render del progetto esecutivo: finiture e
+              dotazioni sono quelle di progetto e possono cambiare in cantiere.
             </p>
           ) : (
             c.sale.some((s) => !s.foto) && (

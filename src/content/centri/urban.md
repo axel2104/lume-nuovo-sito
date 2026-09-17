@@ -287,8 +287,8 @@ listino:
 centro a Macerata: più ghisa e meno tecnologia, per scelta. Sala pesi Panatta,
 corsi live e on demand, nessuna sovrastruttura.
 
-Mille metri quadri complessivi su due piani. Al piano terra reception, lounge, sala
-corsi e spogliatoi; al piano −1 l'area allenamento in open space da 521 m², con
+Un centro su due piani. Al piano terra reception, lounge, sala
+corsi e spogliatoi; al piano −1 l'area allenamento in open space, con
 la sala
 pesi Panatta, la linea isotonica Monolith, rack e pedane, la corsia funzionale
 e la zona cardio. Finiture in grès Boston White, pavimento in PVC nero nelle aree
