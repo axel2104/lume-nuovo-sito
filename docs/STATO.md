@@ -138,7 +138,8 @@ giorno l'hero torna un riquadro dentro il wrap, ricontrollare queste tre cose.
 esce dalla griglia principale e finisce in una sezione omonima in fondo (oggi:
 "In acqua" e "Scuola nuoto adulti" a Montecassiano; a Macerata non restano
 sezioni dal 21/9/26, quando il Reformer è tornato in griglia principale su
-richiesta del cliente, e il CrossFit era già in griglia). Sopra la griglia c'è
+richiesta del cliente, e il CrossFit era già in griglia; lo stesso giorno il
+Reformer è entrato in griglia anche a Montecassiano). Sopra la griglia c'è
 il blocco "Accesso libero": la card Sala pesi è automatica dal campo `orari`
 del centro, le altre (Nuoto libero a Montecassiano) dal campo `aperture` — le
 fasce con lo stesso `titolo` si raccolgono in una card. Ogni sezione ha il
