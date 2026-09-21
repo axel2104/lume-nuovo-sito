@@ -187,7 +187,6 @@ planning:
     fine: '10:50'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '1'
     inizio: '10:15'
     fine: '11:05'
@@ -218,7 +217,6 @@ planning:
     fine: '15:20'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '1'
     inizio: '17:30'
     fine: '18:20'
@@ -229,7 +227,6 @@ planning:
     fine: '18:50'
     corso: 'Reformer Intermedi'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '1'
     inizio: '18:00'
     fine: '18:50'
@@ -255,7 +252,6 @@ planning:
     fine: '19:50'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '1'
     inizio: '19:15'
     fine: '20:05'
@@ -286,7 +282,6 @@ planning:
     fine: '09:20'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '2'
     inizio: '09:15'
     fine: '10:05'
@@ -297,7 +292,6 @@ planning:
     fine: '10:50'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '2'
     inizio: '10:15'
     fine: '11:05'
@@ -318,7 +312,6 @@ planning:
     fine: '14:20'
     corso: 'Reformer Intermedi'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '2'
     inizio: '13:30'
     fine: '14:20'
@@ -329,7 +322,6 @@ planning:
     fine: '17:50'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '2'
     inizio: '17:15'
     fine: '18:05'
@@ -345,7 +337,6 @@ planning:
     fine: '18:50'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '2'
     inizio: '18:15'
     fine: '19:05'
@@ -391,13 +382,11 @@ planning:
     fine: '08:20'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '3'
     inizio: '08:30'
     fine: '09:20'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '3'
     inizio: '09:15'
     fine: '10:05'
@@ -428,7 +417,6 @@ planning:
     fine: '15:20'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '3'
     inizio: '17:30'
     fine: '18:20'
@@ -439,7 +427,6 @@ planning:
     fine: '18:50'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '3'
     inizio: '18:00'
     fine: '18:50'
@@ -460,7 +447,6 @@ planning:
     fine: '19:50'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '3'
     inizio: '19:15'
     fine: '20:05'
@@ -506,7 +492,6 @@ planning:
     fine: '10:50'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '4'
     inizio: '10:15'
     fine: '11:05'
@@ -537,7 +522,6 @@ planning:
     fine: '17:50'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '4'
     inizio: '18:00'
     fine: '18:50'
@@ -548,7 +532,6 @@ planning:
     fine: '18:50'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '4'
     inizio: '18:15'
     fine: '19:05'
@@ -589,13 +572,11 @@ planning:
     fine: '08:20'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '5'
     inizio: '08:30'
     fine: '09:20'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '5'
     inizio: '09:15'
     fine: '10:05'
@@ -621,7 +602,6 @@ planning:
     fine: '14:20'
     corso: 'Reformer Intermedi'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '5'
     inizio: '13:30'
     fine: '14:20'
@@ -672,7 +652,6 @@ planning:
     fine: '19:50'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '5'
     inizio: '19:30'
     fine: '20:20'
@@ -693,7 +672,6 @@ planning:
     fine: '09:50'
     corso: 'Reformer'
     disciplina: reformer
-    sezione: 'Reformer'
   - giorno: '6'
     inizio: '09:30'
     fine: '10:20'

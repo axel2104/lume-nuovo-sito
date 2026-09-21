@@ -136,14 +136,20 @@ giorno l'hero torna un riquadro dentro il wrap, ricontrollare queste tre cose.
 
 **La pagina planning ha sezioni (7/9/26).** Una lezione con il campo `sezione`
 esce dalla griglia principale e finisce in una sezione omonima in fondo (oggi:
-"CrossFit" a Macerata, "In acqua" a Montecassiano). Sopra la griglia c'è il
-blocco "Accesso libero": la card Sala pesi è automatica dal campo `orari` del
-centro, le altre (Nuoto libero a Montecassiano) dal campo `aperture` — le
+"In acqua" e "Scuola nuoto adulti" a Montecassiano; a Macerata non restano
+sezioni dal 21/9/26, quando il Reformer è tornato in griglia principale su
+richiesta del cliente, e il CrossFit era già in griglia). Sopra la griglia c'è
+il blocco "Accesso libero": la card Sala pesi è automatica dal campo `orari`
+del centro, le altre (Nuoto libero a Montecassiano) dal campo `aperture` — le
 fasce con lo stesso `titolo` si raccolgono in una card. Ogni sezione ha il
-suo PDF (`/planning/<centro>/<sezione>.pdf`, generato dalla route
-`[centro]/[sezione].pdf.ts` con lo stesso motore del planning intero) e il
-PDF completo include TUTTE le lezioni, anche quelle in sezione: chi filtra
-`planning` a mano (es. per non pubblicare una sezione) deve ricordarselo.
+suo PDF (`/planning/<centro>/<sezione>.pdf`, stesso motore del planning
+intero) e il PDF completo include TUTTE le lezioni, anche quelle in sezione:
+chi filtra `planning` a mano (es. per non pubblicare una sezione) deve
+ricordarselo. Dal 21/9/26 le route PDF sono **dinamiche** (`prerender =
+false`) e accettano `?corso=` e `?sala=`: è il "Scarica la vista filtrata"
+che il client accende quando un filtro è attivo — il criterio di filtro della
+route deve restare identico a quello di `planning.client.js`, altrimenti il
+PDF non è ciò che l'utente vede.
 La scuola nuoto bambini/ragazzi (corso a iscrizione per fasce d'età) NON sta
 nel `planning` proprio come dato: il suo palinsesto vive in `/scuola-nuoto`.
 La **scuola nuoto adulti** invece è nel planning dal 11/9/26: 29 turni con

@@ -284,6 +284,12 @@ a.pl-lez:focus-visible {
 /* ─── Scarica il PDF ─────────────────────────────────────────
    Accanto alla legenda: chi arriva in fondo alla griglia e' chi
    la vuole portare via. */
+.pl-pdf-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+
 .pl-pdf {
   display: inline-flex;
   align-items: center;
@@ -302,6 +308,13 @@ a.pl-lez:focus-visible {
 .pl-pdf:hover {
   border-color: var(--red);
   color: #fff;
+}
+
+/* `hidden` perde contro `display:inline-flex` della classe (stessa trappola
+   di `.pl-lez b`): il bottone del PDF filtrato va spento con una regola
+   altrettanto specifica, non fidandosi dell'attributo. */
+.pl-pdf[hidden] {
+  display: none;
 }
 
 /* Avviso redazionale sopra il planning: "orario provvisorio", "chiusura

@@ -207,6 +207,13 @@ una di default sul desktop.
 vista mobile diventa tutti i giorni in fila. Si perdono i filtri e il cambio
 giorno, non i contenuti.
 
+**Il PDF segue i filtri (21/9/26).** Le route `/planning/<centro>.pdf` e
+`/planning/<centro>/<sezione>.pdf` sono dinamiche (`prerender = false`) e
+leggono `?corso=` e `?sala=` con uguaglianza stretta, la stessa del filtro
+client: la pagina mostra "Scarica la vista filtrata" solo quando un filtro è
+attivo, accanto al bottone del planning completo. Un filtro a vuoto risponde
+404, non un PDF vuoto che sembra valido.
+
 ---
 
 ## 6. Checklist

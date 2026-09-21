@@ -44,7 +44,7 @@ interface Props extends DatiPlanning {
 }
 
 const { centro, lezioni, aggiornatoIl, prenotaUrl, esempio = false, schede = [],
-  pdfUrl = null, pdfLabel = 'Scarica il planning in PDF' } = Astro.props;
+  pdfUrl = null, pdfLabel = 'Scarica il planning completo in PDF' } = Astro.props;
 
 /**
  * Slug della disciplina → id della categoria, per colorare le tessere.
@@ -109,12 +109,26 @@ const livelli = [1, 2, 3, 4, 5];
   }
 
   {
+    /*
+      Due bottoni, non uno. Quando l'utente filtra la griglia vuole il PDF di
+      QUELLA vista (es. solo il Reformer da appendere fuori dalla sala), non
+      il palinsesto intero — e il planning completo deve restare a portata di
+      click per chi invece vuole tutto. Il bottone filtrato nasce `hidden`:
+      lo accende il client quando un filtro è attivo, costruendo l'URL con i
+      parametri che le route .pdf.ts leggono. Senza JavaScript resta il
+      planning completo, che è comunque un'uscita onesta.
+    */
     pdfUrl && (
-      <a class="pl-pdf" href={pdfUrl} download>
-        {/* `download` fa scaricare invece di aprire nel visualizzatore: chi
-            tocca questo pulsante vuole il file, per stamparlo o mandarlo. */}
-        <span aria-hidden="true">↓</span> {pdfLabel}
-      </a>
+      <div class="pl-pdf-row">
+        <a class="pl-pdf" data-pdf-filtrato data-base={pdfUrl} href={pdfUrl} download hidden>
+          <span aria-hidden="true">↓</span> <span data-pdf-label></span>
+        </a>
+        <a class="pl-pdf" href={pdfUrl} download>
+          {/* `download` fa scaricare invece di aprire nel visualizzatore: chi
+              tocca questo pulsante vuole il file, per stamparlo o mandarlo. */}
+          <span aria-hidden="true">↓</span> {pdfLabel}
+        </a>
+      </div>
     )
   }
 

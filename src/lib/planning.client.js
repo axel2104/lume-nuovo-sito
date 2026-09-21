@@ -111,6 +111,30 @@ export function initPlanning(root) {
       b.hidden = !(stato.corso || stato.sala);
     });
 
+    /*
+     * Il bottone del PDF filtrato segue i filtri: con un filtro attivo punta
+     * alla route .pdf con gli stessi criteri, senza filtri sparisce e resta
+     * solo il planning completo. Il filtro deve combaciare con quello della
+     * route (`?corso=`/`?sala=`, uguaglianza stretta): se i due criteri
+     * divergono il PDF scaricato non è quello che l'utente vede a schermo.
+     */
+    const pdfFiltrato = root.querySelector('[data-pdf-filtrato]');
+    if (pdfFiltrato) {
+      const filtroAttivo = stato.corso || stato.sala;
+      pdfFiltrato.hidden = !filtroAttivo;
+      if (filtroAttivo) {
+        const q = new URLSearchParams();
+        if (stato.corso) q.set('corso', stato.corso);
+        if (stato.sala) q.set('sala', stato.sala);
+        pdfFiltrato.setAttribute('href', pdfFiltrato.dataset.base + '?' + q.toString());
+        const etichetta = pdfFiltrato.querySelector('[data-pdf-label]');
+        if (etichetta) {
+          etichetta.textContent =
+            'Scarica "' + [stato.corso, stato.sala].filter(Boolean).join(' · ') + '" in PDF';
+        }
+      }
+    }
+
   }
 
   // ─── Scheda del corso ───────────────────────────────────────────────────
