@@ -80,8 +80,8 @@ render:
 superficie: 1000
 immagine: ../../assets/centri/urban/urban-gym-panoramica.jpg
 perfectgymUrl: "#"
-planningNota: "Palinsesto dei corsi previsto per l'apertura: stagione 26/27, ancora provvisorio."
-planningAggiornatoIl: 2026-09-11
+planningNota: "Orario della stagione 26/27, aggiornato a ottobre."
+planningAggiornatoIl: 2026-09-22
 planning:
   - giorno: '1'
     inizio: '07:00'
@@ -90,7 +90,7 @@ planning:
     disciplina: lesmills-shapes
   - giorno: '1'
     inizio: '08:30'
-    fine: '09:20'
+    fine: '09:30'
     corso: 'LesMills BodyBalance'
     disciplina: lesmills-bodybalance
   - giorno: '1'
@@ -100,168 +100,149 @@ planning:
     disciplina: lesmills-shapes
   - giorno: '1'
     inizio: '13:30'
-    fine: '14:20'
+    fine: '14:30'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
   - giorno: '1'
     inizio: '17:30'
     fine: '18:20'
+    corso: 'Functional Training Hyrox'
+  - giorno: '1'
+    inizio: '17:30'
+    fine: '18:30'
     corso: 'Reformer'
     disciplina: reformer
   - giorno: '1'
     inizio: '18:30'
-    fine: '19:20'
+    fine: '19:30'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
   - giorno: '1'
-    inizio: '19:00'
-    fine: '19:50'
-    corso: 'Calisthenics'
-    disciplina: calisthenics
-  - giorno: '1'
     inizio: '19:30'
     fine: '20:20'
-    corso: 'LesMills BodyBalance'
-    disciplina: lesmills-bodybalance
+    corso: 'LesMills Core'
+    disciplina: lesmills-core
   - giorno: '2'
-    inizio: '08:30'
-    fine: '09:20'
+    inizio: '07:00'
+    fine: '08:00'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
   - giorno: '2'
     inizio: '10:00'
-    fine: '10:50'
+    fine: '11:00'
     corso: 'Pilates'
     disciplina: pilates
   - giorno: '2'
     inizio: '13:30'
-    fine: '14:20'
+    fine: '14:30'
     corso: 'Pilates'
     disciplina: pilates
   - giorno: '2'
     inizio: '14:30'
-    fine: '15:20'
+    fine: '15:30'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
   - giorno: '2'
-    inizio: '18:00'
-    fine: '18:50'
-    corso: 'LesMills Shapes'
-    disciplina: lesmills-shapes
+    inizio: '18:30'
+    fine: '19:30'
+    corso: 'Functional Training Hyrox'
   - giorno: '2'
     inizio: '19:30'
     fine: '20:20'
-    corso: 'Reformer'
-    disciplina: reformer
+    corso: 'LesMills Shapes'
+    disciplina: lesmills-shapes
   - giorno: '2'
     inizio: '20:30'
-    fine: '21:20'
+    fine: '21:30'
     corso: 'Pilates'
     disciplina: pilates
   - giorno: '3'
     inizio: '07:00'
-    fine: '07:50'
+    fine: '08:00'
     corso: 'Pilates'
     disciplina: pilates
   - giorno: '3'
     inizio: '08:30'
-    fine: '09:20'
+    fine: '09:30'
     corso: 'Yoga'
     disciplina: yoga
   - giorno: '3'
-    inizio: '10:00'
-    fine: '10:50'
-    corso: 'Reformer'
-    disciplina: reformer
+    inizio: '13:30'
+    fine: '14:20'
+    corso: 'Functional Training Hyrox'
   - giorno: '3'
     inizio: '13:30'
     fine: '14:20'
     corso: 'LesMills Core'
     disciplina: lesmills-core
   - giorno: '3'
-    inizio: '17:30'
-    fine: '18:20'
-    corso: 'LesMills BodyPump'
-    disciplina: lesmills-bodypump
-  - giorno: '3'
-    inizio: '18:30'
-    fine: '19:20'
-    corso: 'LesMills Pilates'
-    disciplina: pilates-lesmills
-  - giorno: '3'
     inizio: '19:30'
-    fine: '20:20'
+    fine: '20:30'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
   - giorno: '4'
+    inizio: '07:00'
+    fine: '08:00'
+    corso: 'Pilates'
+    disciplina: pilates
+  - giorno: '4'
     inizio: '08:30'
-    fine: '09:20'
+    fine: '09:30'
     corso: 'Reformer'
     disciplina: reformer
   - giorno: '4'
     inizio: '10:00'
-    fine: '10:50'
-    corso: 'Yoga'
-    disciplina: yoga
-  - giorno: '4'
-    inizio: '13:30'
-    fine: '14:20'
-    corso: 'Reformer'
-    disciplina: reformer
+    fine: '11:00'
+    corso: 'Pilates'
+    disciplina: pilates
   - giorno: '4'
     inizio: '14:30'
-    fine: '15:20'
+    fine: '15:30'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
   - giorno: '4'
     inizio: '18:30'
-    fine: '19:20'
+    fine: '19:30'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
   - giorno: '4'
     inizio: '19:30'
-    fine: '20:20'
-    corso: 'Calisthenics'
-    disciplina: calisthenics
+    fine: '20:30'
+    corso: 'Functional Training Hyrox'
   - giorno: '4'
     inizio: '19:30'
-    fine: '20:20'
+    fine: '20:30'
     corso: 'Pilates'
     disciplina: pilates
-  - giorno: '4'
-    inizio: '20:30'
-    fine: '21:20'
-    corso: 'LesMills Shapes'
-    disciplina: lesmills-shapes
   - giorno: '5'
     inizio: '07:00'
-    fine: '07:50'
+    fine: '08:00'
     corso: 'Yoga'
     disciplina: yoga
   - giorno: '5'
     inizio: '08:30'
-    fine: '09:20'
+    fine: '09:30'
     corso: 'Pilates'
     disciplina: pilates
   - giorno: '5'
     inizio: '10:00'
-    fine: '10:50'
+    fine: '11:00'
     corso: 'Pilates'
     disciplina: pilates
   - giorno: '5'
     inizio: '13:30'
-    fine: '14:20'
-    corso: 'Yoga / BodyPump'
-  - giorno: '5'
-    inizio: '17:30'
-    fine: '18:20'
+    fine: '14:30'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
   - giorno: '5'
-    inizio: '18:30'
-    fine: '19:20'
-    corso: 'LesMills BodyBalance'
-    disciplina: lesmills-bodybalance
+    inizio: '16:00'
+    fine: '17:00'
+    corso: 'Functional Training Hyrox'
+  - giorno: '5'
+    inizio: '17:30'
+    fine: '18:30'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
 listino:
   nota: Un listino a fasce d'età. I prezzi valgono dall'apertura del centro.
   attivazione: 50

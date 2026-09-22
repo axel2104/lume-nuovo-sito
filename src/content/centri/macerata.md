@@ -164,399 +164,589 @@ perfectgymCorsiUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Classes/
 calcom:
   visita: lumefitness/visita-macerata
   richiamata: lumefitness/richiamata
-planningNota: "Orario della stagione 26/27, aggiornato a settembre: qualche dettaglio può ancora cambiare."
-planningAggiornatoIl: 2026-09-11
+planningNota: "Orario della stagione 26/27, aggiornato a ottobre: qualche dettaglio può ancora cambiare."
+planningAggiornatoIl: 2026-09-22
 planning:
   - giorno: '1'
     inizio: '07:00'
-    fine: '07:50'
-    corso: 'IntensitYOU'
-    disciplina: intensityou
+    fine: '08:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
   - giorno: '1'
-    inizio: '08:30'
-    fine: '09:20'
-    corso: 'Pilates Base'
-    disciplina: pilates
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
   - giorno: '1'
     inizio: '09:15'
-    fine: '10:05'
+    fine: '10:15'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
   - giorno: '1'
     inizio: '10:00'
-    fine: '10:50'
+    fine: '11:00'
     corso: 'Reformer'
     disciplina: reformer
   - giorno: '1'
     inizio: '10:15'
-    fine: '11:05'
+    fine: '11:15'
     corso: 'LesMills Shapes'
     disciplina: lesmills-shapes
   - giorno: '1'
-    inizio: '13:30'
-    fine: '14:20'
-    corso: 'Spartan System'
-    disciplina: spartan-system
+    inizio: '12:30'
+    fine: '13:30'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
   - giorno: '1'
     inizio: '13:30'
-    fine: '14:20'
+    fine: '14:30'
     corso: 'LesMills RPM'
     disciplina: lesmills-rpm
   - giorno: '1'
     inizio: '13:30'
-    fine: '14:20'
+    fine: '14:30'
     corso: 'Pilates Base'
     disciplina: pilates
   - giorno: '1'
+    inizio: '13:30'
+    fine: '14:30'
+    corso: 'Spartan System'
+    disciplina: spartan-system
+  - giorno: '1'
+    inizio: '13:45'
+    fine: '14:45'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '1'
     inizio: '14:30'
-    fine: '15:20'
+    fine: '15:30'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
   - giorno: '1'
     inizio: '14:30'
-    fine: '15:20'
-    corso: 'Reformer'
+    fine: '15:30'
+    corso: 'Reformer Intermedi'
     disciplina: reformer
   - giorno: '1'
+    inizio: '17:15'
+    fine: '18:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '1'
     inizio: '17:30'
-    fine: '18:20'
+    fine: '18:30'
     corso: 'Corpo Libero'
     disciplina: corpo-libero
   - giorno: '1'
     inizio: '18:00'
-    fine: '18:50'
-    corso: 'Reformer Intermedi'
+    fine: '19:00'
+    corso: 'Reformer'
     disciplina: reformer
   - giorno: '1'
     inizio: '18:00'
-    fine: '18:50'
+    fine: '19:00'
     corso: 'Yoga'
     disciplina: yoga
   - giorno: '1'
     inizio: '18:15'
-    fine: '19:05'
+    fine: '19:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '1'
+    inizio: '18:15'
+    fine: '19:15'
     corso: 'LesMills Core'
     disciplina: lesmills-core
   - giorno: '1'
     inizio: '18:45'
-    fine: '19:35'
+    fine: '19:45'
     corso: 'Corpo Libero'
     disciplina: corpo-libero
   - giorno: '1'
     inizio: '19:00'
-    fine: '19:50'
+    fine: '20:00'
     corso: 'Pilates Base'
     disciplina: pilates
   - giorno: '1'
     inizio: '19:00'
-    fine: '19:50'
+    fine: '20:00'
     corso: 'Reformer'
     disciplina: reformer
   - giorno: '1'
     inizio: '19:15'
-    fine: '20:05'
+    fine: '20:15'
     corso: 'Bodycombat'
     disciplina: lesmills-bodycombat
   - giorno: '1'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '1'
     inizio: '19:30'
-    fine: '20:20'
+    fine: '20:30'
     corso: 'Calisthenics'
     disciplina: calisthenics
   - giorno: '1'
+    inizio: '20:15'
+    fine: '21:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '1'
     inizio: '20:30'
-    fine: '21:20'
+    fine: '21:30'
     corso: 'Corpo Libero'
     disciplina: corpo-libero
   - giorno: '1'
     inizio: '20:30'
-    fine: '21:20'
+    fine: '21:30'
     corso: 'IntensitYOU'
     disciplina: intensityou
   - giorno: '2'
     inizio: '07:00'
-    fine: '07:50'
+    fine: '08:00'
     corso: 'Yoga'
     disciplina: yoga
   - giorno: '2'
     inizio: '08:30'
-    fine: '09:20'
+    fine: '09:30'
     corso: 'Reformer'
     disciplina: reformer
   - giorno: '2'
-    inizio: '09:15'
-    fine: '10:05'
+    inizio: '09:00'
+    fine: '10:00'
     corso: 'Corpo Libero'
     disciplina: corpo-libero
   - giorno: '2'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'Strength and Conditioning'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '2'
     inizio: '10:00'
-    fine: '10:50'
+    fine: '11:00'
     corso: 'Reformer'
     disciplina: reformer
   - giorno: '2'
     inizio: '10:15'
-    fine: '11:05'
-    corso: 'Yoga Hatha – Yin'
+    fine: '11:15'
+    corso: 'Yoga'
     disciplina: yoga
   - giorno: '2'
+    inizio: '12:30'
+    fine: '13:30'
+    corso: 'Strength and Conditioning'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '2'
     inizio: '13:15'
-    fine: '14:05'
+    fine: '14:15'
     corso: 'Calisthenics'
     disciplina: calisthenics
   - giorno: '2'
     inizio: '13:30'
-    fine: '14:20'
+    fine: '14:30'
     corso: 'LesMills Shapes'
     disciplina: lesmills-shapes
   - giorno: '2'
     inizio: '13:30'
-    fine: '14:20'
-    corso: 'Reformer Intermedi'
-    disciplina: reformer
-  - giorno: '2'
-    inizio: '13:30'
-    fine: '14:20'
-    corso: 'Yoga'
-    disciplina: yoga
-  - giorno: '2'
-    inizio: '17:00'
-    fine: '17:50'
+    fine: '14:30'
     corso: 'Reformer'
     disciplina: reformer
   - giorno: '2'
+    inizio: '13:30'
+    fine: '14:30'
+    corso: 'Yoga'
+    disciplina: yoga
+  - giorno: '2'
+    inizio: '13:45'
+    fine: '14:45'
+    corso: 'Strength and Conditioning'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '2'
+    inizio: '17:00'
+    fine: '18:00'
+    corso: 'WBS'
+    disciplina: wbs
+  - giorno: '2'
     inizio: '17:15'
-    fine: '18:05'
-    corso: 'IntensitYOU'
-    disciplina: intensityou
+    fine: '18:15'
+    corso: 'Strength and Conditioning'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
   - giorno: '2'
     inizio: '18:00'
-    fine: '18:50'
+    fine: '19:00'
     corso: 'Mobility'
     disciplina: mobility
   - giorno: '2'
     inizio: '18:00'
-    fine: '18:50'
+    fine: '19:00'
     corso: 'Reformer'
     disciplina: reformer
   - giorno: '2'
     inizio: '18:15'
-    fine: '19:05'
+    fine: '19:15'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
   - giorno: '2'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'Strength and Conditioning'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '2'
     inizio: '18:30'
-    fine: '19:20'
+    fine: '19:30'
     corso: 'LesMills Dance'
     disciplina: lesmills-dance
   - giorno: '2'
     inizio: '19:00'
-    fine: '19:50'
+    fine: '20:00'
     corso: 'TRX Pilates'
     disciplina: trx-pilates
   - giorno: '2'
     inizio: '19:15'
-    fine: '20:05'
+    fine: '20:15'
     corso: 'IntensitYOU'
     disciplina: intensityou
   - giorno: '2'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'Strength and Conditioning'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '2'
     inizio: '19:30'
-    fine: '20:20'
+    fine: '20:30'
     corso: 'LesMills Shapes'
     disciplina: lesmills-shapes
   - giorno: '2'
     inizio: '20:00'
-    fine: '20:50'
+    fine: '21:00'
     corso: 'Pilates Base'
     disciplina: pilates
   - giorno: '2'
+    inizio: '20:15'
+    fine: '21:15'
+    corso: 'Strength and Conditioning'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '2'
     inizio: '20:30'
-    fine: '21:20'
+    fine: '21:30'
     corso: 'Walking'
     disciplina: walking
   - giorno: '3'
     inizio: '07:00'
-    fine: '07:50'
-    corso: 'IntensitYOU'
-    disciplina: intensityou
+    fine: '08:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
   - giorno: '3'
     inizio: '07:30'
-    fine: '08:20'
+    fine: '08:30'
     corso: 'Reformer'
     disciplina: reformer
   - giorno: '3'
     inizio: '08:30'
-    fine: '09:20'
-    corso: 'Reformer'
+    fine: '09:30'
+    corso: 'Reformer Intermedi'
     disciplina: reformer
   - giorno: '3'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '3'
     inizio: '09:15'
-    fine: '10:05'
+    fine: '10:15'
     corso: 'LesMills Core'
     disciplina: lesmills-core
   - giorno: '3'
     inizio: '10:15'
-    fine: '11:05'
+    fine: '11:15'
     corso: 'Pilates Base'
     disciplina: pilates
   - giorno: '3'
+    inizio: '12:30'
+    fine: '13:30'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '3'
     inizio: '13:30'
-    fine: '14:20'
+    fine: '14:30'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
   - giorno: '3'
     inizio: '13:30'
-    fine: '14:20'
+    fine: '14:15'
+    corso: 'LesMills RPM Virtual'
+    disciplina: lesmills-rpm
+  - giorno: '3'
+    inizio: '13:30'
+    fine: '14:30'
     corso: 'Pilates Barre'
     disciplina: pilates
   - giorno: '3'
+    inizio: '13:45'
+    fine: '14:45'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '3'
     inizio: '14:30'
-    fine: '15:20'
+    fine: '15:30'
     corso: 'LesMills Core'
     disciplina: lesmills-core
   - giorno: '3'
     inizio: '14:30'
-    fine: '15:20'
+    fine: '15:30'
     corso: 'Reformer'
     disciplina: reformer
   - giorno: '3'
+    inizio: '17:15'
+    fine: '18:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '3'
     inizio: '17:30'
-    fine: '18:20'
+    fine: '18:30'
     corso: 'LesMills Shapes'
     disciplina: lesmills-shapes
   - giorno: '3'
     inizio: '18:00'
-    fine: '18:50'
+    fine: '19:00'
     corso: 'Reformer'
     disciplina: reformer
   - giorno: '3'
     inizio: '18:00'
-    fine: '18:50'
+    fine: '19:00'
     corso: 'Spartan System'
     disciplina: spartan-system
   - giorno: '3'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '3'
     inizio: '18:30'
-    fine: '19:20'
+    fine: '19:30'
     corso: 'Bodycombat'
     disciplina: lesmills-bodycombat
   - giorno: '3'
-    inizio: '18:30'
-    fine: '19:20'
-    corso: 'Yoga'
-    disciplina: yoga
-  - giorno: '3'
     inizio: '19:00'
-    fine: '19:50'
-    corso: 'Reformer'
-    disciplina: reformer
-  - giorno: '3'
-    inizio: '19:15'
-    fine: '20:05'
+    fine: '20:00'
     corso: 'Calisthenics'
     disciplina: calisthenics
   - giorno: '3'
-    inizio: '19:30'
-    fine: '20:20'
-    corso: 'Bodypump'
-    disciplina: lesmills-bodypump
+    inizio: '19:00'
+    fine: '20:00'
+    corso: 'Reformer Intermedi'
+    disciplina: reformer
+  - giorno: '3'
+    inizio: '19:00'
+    fine: '20:00'
+    corso: 'Yoga Hatha'
+    disciplina: yoga
+  - giorno: '3'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
   - giorno: '3'
     inizio: '19:30'
-    fine: '20:20'
+    fine: '20:30'
     corso: 'Corpo Libero'
     disciplina: corpo-libero
   - giorno: '3'
+    inizio: '19:30'
+    fine: '20:30'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
+  - giorno: '3'
     inizio: '20:15'
-    fine: '21:05'
+    fine: '21:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '3'
+    inizio: '20:15'
+    fine: '21:15'
     corso: 'LesMills BodyBalance'
     disciplina: lesmills-bodybalance
   - giorno: '3'
     inizio: '20:30'
-    fine: '21:20'
+    fine: '21:30'
     corso: 'Corpo Libero'
     disciplina: corpo-libero
   - giorno: '4'
     inizio: '07:00'
-    fine: '07:50'
-    corso: 'Pilates'
+    fine: '08:00'
+    corso: 'Pilates Base'
     disciplina: pilates
   - giorno: '4'
-    inizio: '08:30'
-    fine: '09:20'
-    corso: 'Pilates'
-    disciplina: pilates
-  - giorno: '4'
-    inizio: '09:15'
-    fine: '10:05'
+    inizio: '09:00'
+    fine: '10:00'
     corso: 'Corpo Libero'
     disciplina: corpo-libero
   - giorno: '4'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'Hybrid Class'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '4'
     inizio: '10:00'
-    fine: '10:50'
+    fine: '11:00'
     corso: 'Reformer'
     disciplina: reformer
   - giorno: '4'
     inizio: '10:15'
-    fine: '11:05'
+    fine: '11:15'
     corso: 'Mobility'
     disciplina: mobility
   - giorno: '4'
+    inizio: '12:30'
+    fine: '13:30'
+    corso: 'Hybrid Class'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '4'
     inizio: '13:15'
-    fine: '14:05'
+    fine: '14:15'
     corso: 'Calisthenics'
     disciplina: calisthenics
   - giorno: '4'
     inizio: '13:30'
-    fine: '14:20'
+    fine: '14:30'
+    corso: 'Pilates Avanzato'
+    disciplina: pilates
+  - giorno: '4'
+    inizio: '13:30'
+    fine: '14:30'
     corso: 'Walking'
     disciplina: walking
   - giorno: '4'
     inizio: '13:30'
-    fine: '14:20'
+    fine: '14:30'
     corso: 'Yoga'
     disciplina: yoga
   - giorno: '4'
-    inizio: '13:30'
-    fine: '14:20'
-    corso: 'Pilates Avanzato'
-    disciplina: pilates
+    inizio: '13:45'
+    fine: '14:45'
+    corso: 'Hybrid Class'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
   - giorno: '4'
     inizio: '17:00'
-    fine: '17:50'
-    corso: 'Reformer'
-    disciplina: reformer
+    fine: '18:00'
+    corso: 'WBS'
+    disciplina: wbs
+  - giorno: '4'
+    inizio: '17:15'
+    fine: '18:15'
+    corso: 'Hybrid Class'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
   - giorno: '4'
     inizio: '18:00'
-    fine: '18:50'
+    fine: '19:00'
     corso: 'Pilates Barre'
     disciplina: pilates
   - giorno: '4'
     inizio: '18:00'
-    fine: '18:50'
+    fine: '19:00'
     corso: 'Reformer'
     disciplina: reformer
   - giorno: '4'
     inizio: '18:15'
-    fine: '19:05'
+    fine: '19:15'
+    corso: 'Hybrid Class'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '4'
+    inizio: '18:15'
+    fine: '19:15'
     corso: 'IntensitYOU'
     disciplina: intensityou
   - giorno: '4'
     inizio: '18:15'
-    fine: '19:05'
-    corso: 'Walk & Tone'
-    disciplina: walk-and-tone
+    fine: '19:15'
+    corso: 'Walking'
+    disciplina: walking
   - giorno: '4'
     inizio: '19:15'
-    fine: '20:05'
+    fine: '20:15'
+    corso: 'Hybrid Class'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '4'
+    inizio: '19:15'
+    fine: '20:15'
     corso: 'LesMills Core'
     disciplina: lesmills-core
   - giorno: '4'
     inizio: '19:15'
-    fine: '20:05'
+    fine: '20:15'
     corso: 'Spartan System'
     disciplina: spartan-system
   - giorno: '4'
     inizio: '19:30'
-    fine: '20:20'
+    fine: '20:30'
     corso: 'Yoga'
     disciplina: yoga
+  - giorno: '4'
+    inizio: '20:15'
+    fine: '21:15'
+    corso: 'Hybrid Class'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
   - giorno: '4'
     inizio: '20:30'
     fine: '21:20'
@@ -564,19 +754,33 @@ planning:
     disciplina: pilates-lesmills
   - giorno: '4'
     inizio: '20:30'
-    fine: '21:20'
+    fine: '21:30'
     corso: 'LesMills RPM'
     disciplina: lesmills-rpm
   - giorno: '5'
+    inizio: '07:00'
+    fine: '08:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '5'
     inizio: '07:30'
-    fine: '08:20'
+    fine: '08:30'
     corso: 'Reformer'
     disciplina: reformer
   - giorno: '5'
     inizio: '08:30'
-    fine: '09:20'
+    fine: '09:30'
     corso: 'Reformer'
     disciplina: reformer
+  - giorno: '5'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
   - giorno: '5'
     inizio: '09:15'
     fine: '10:05'
@@ -584,272 +788,131 @@ planning:
     disciplina: lesmills-shapes
   - giorno: '5'
     inizio: '10:15'
-    fine: '11:05'
+    fine: '11:15'
     corso: 'Pilates Intermedio'
     disciplina: pilates
   - giorno: '5'
+    inizio: '12:30'
+    fine: '13:30'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '5'
     inizio: '13:30'
-    fine: '14:20'
+    fine: '14:30'
+    corso: 'IntensitYOU'
+    disciplina: intensityou
+  - giorno: '5'
+    inizio: '13:30'
+    fine: '14:30'
     corso: 'LesMills Core'
     disciplina: lesmills-core
   - giorno: '5'
     inizio: '13:30'
-    fine: '14:20'
+    fine: '14:30'
     corso: 'LesMills RPM'
     disciplina: lesmills-rpm
   - giorno: '5'
     inizio: '13:30'
-    fine: '14:20'
+    fine: '14:30'
     corso: 'Reformer Intermedi'
     disciplina: reformer
   - giorno: '5'
-    inizio: '13:30'
-    fine: '14:20'
-    corso: 'IntensitYOU'
-    disciplina: intensityou
+    inizio: '13:45'
+    fine: '14:45'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
   - giorno: '5'
     inizio: '14:30'
-    fine: '15:20'
+    fine: '15:30'
     corso: 'LesMills BodyBalance'
     disciplina: lesmills-bodybalance
   - giorno: '5'
     inizio: '16:30'
-    fine: '17:20'
+    fine: '17:30'
     corso: 'Walking'
     disciplina: walking
   - giorno: '5'
+    inizio: '17:15'
+    fine: '18:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '5'
     inizio: '17:30'
-    fine: '18:20'
+    fine: '18:30'
     corso: 'Corpo Libero'
     disciplina: corpo-libero
   - giorno: '5'
     inizio: '18:00'
-    fine: '18:50'
-    corso: 'LesMills BodyPump'
-    disciplina: lesmills-bodypump
+    fine: '19:00'
+    corso: 'IntensitYOU'
+    disciplina: intensityou
   - giorno: '5'
     inizio: '18:00'
-    fine: '18:50'
+    fine: '19:00'
     corso: 'Pilates Intermedio'
     disciplina: pilates
   - giorno: '5'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '5'
     inizio: '18:30'
-    fine: '19:20'
+    fine: '19:30'
     corso: 'Corpo Libero'
     disciplina: corpo-libero
   - giorno: '5'
     inizio: '19:00'
-    fine: '19:50'
-    corso: 'Calisthenics'
-    disciplina: calisthenics
-  - giorno: '5'
-    inizio: '19:00'
-    fine: '19:50'
+    fine: '20:00'
     corso: 'LesMills BodyBalance'
     disciplina: lesmills-bodybalance
   - giorno: '5'
     inizio: '19:00'
-    fine: '19:50'
+    fine: '20:00'
     corso: 'Reformer'
     disciplina: reformer
   - giorno: '5'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '5'
     inizio: '19:30'
-    fine: '20:20'
+    fine: '20:30'
     corso: 'Corpo Libero'
     disciplina: corpo-libero
   - giorno: '5'
     inizio: '20:00'
-    fine: '20:50'
+    fine: '21:00'
     corso: 'Mobility'
     disciplina: mobility
   - giorno: '5'
+    inizio: '20:15'
+    fine: '21:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box CrossFit
+    sezione: CrossFit
+  - giorno: '5'
     inizio: '20:30'
-    fine: '21:20'
+    fine: '21:30'
     corso: 'LesMills Core'
     disciplina: lesmills-core
   - giorno: '6'
     inizio: '09:00'
-    fine: '09:50'
+    fine: '10:00'
     corso: 'Reformer'
     disciplina: reformer
-  - giorno: '6'
-    inizio: '09:30'
-    fine: '10:20'
-    corso: 'LesMills BodyPump'
-    disciplina: lesmills-bodypump
-  - giorno: '6'
-    inizio: '10:30'
-    fine: '11:20'
-    corso: 'LesMills BodyBalance'
-    disciplina: lesmills-bodybalance
-  - giorno: '1'
-    inizio: '07:00'
-    fine: '08:00'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '1'
-    inizio: '09:00'
-    fine: '10:00'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '1'
-    inizio: '12:30'
-    fine: '13:30'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '1'
-    inizio: '13:45'
-    fine: '14:45'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '1'
-    inizio: '17:15'
-    fine: '18:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '1'
-    inizio: '18:15'
-    fine: '19:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '1'
-    inizio: '19:15'
-    fine: '20:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '1'
-    inizio: '20:15'
-    fine: '21:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '3'
-    inizio: '07:00'
-    fine: '08:00'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '3'
-    inizio: '09:00'
-    fine: '10:00'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '3'
-    inizio: '12:30'
-    fine: '13:30'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '3'
-    inizio: '13:45'
-    fine: '14:45'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '3'
-    inizio: '17:15'
-    fine: '18:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '3'
-    inizio: '18:15'
-    fine: '19:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '3'
-    inizio: '19:15'
-    fine: '20:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '3'
-    inizio: '20:15'
-    fine: '21:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '5'
-    inizio: '07:00'
-    fine: '08:00'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '5'
-    inizio: '09:00'
-    fine: '10:00'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '5'
-    inizio: '12:30'
-    fine: '13:30'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '5'
-    inizio: '13:45'
-    fine: '14:45'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '5'
-    inizio: '17:15'
-    fine: '18:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '5'
-    inizio: '18:15'
-    fine: '19:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '5'
-    inizio: '19:15'
-    fine: '20:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '5'
-    inizio: '20:15'
-    fine: '21:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
   - giorno: '6'
     inizio: '09:30'
     fine: '10:30'
@@ -857,6 +920,16 @@ planning:
     disciplina: crossfit
     sala: Box CrossFit
     sezione: CrossFit
+  - giorno: '6'
+    inizio: '09:30'
+    fine: '10:30'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
+  - giorno: '6'
+    inizio: '10:30'
+    fine: '11:30'
+    corso: 'LesMills BodyBalance'
+    disciplina: lesmills-bodybalance
   - giorno: '6'
     inizio: '12:15'
     fine: '13:15'

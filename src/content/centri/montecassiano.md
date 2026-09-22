@@ -128,267 +128,12 @@ perfectgymCorsiUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Classes/
 calcom:
   visita: lumefitness/visita-montecassiano
   richiamata: lumefitness/richiamata
-planningNota: "Orario della stagione 26/27 in vigore dal 7 settembre, piscina compresa."
-planningAggiornatoIl: 2026-09-11
+planningNota: "Orario della stagione 26/27, aggiornato a ottobre, piscina compresa."
+planningAggiornatoIl: 2026-09-22
 planning:
   - giorno: '1'
-    inizio: '09:30'
-    fine: '10:20'
-    corso: 'Corpo Libero'
-    disciplina: corpo-libero
-  - giorno: '1'
-    inizio: '13:00'
-    fine: '13:40'
-    corso: 'LesMills Core'
-    disciplina: lesmills-core
-  - giorno: '1'
-    inizio: '13:30'
-    fine: '14:20'
-    corso: 'Pilates'
-    disciplina: pilates
-  - giorno: '1'
-    inizio: '17:30'
-    fine: '18:20'
-    corso: 'LesMills Core'
-    disciplina: lesmills-core
-  - giorno: '1'
-    inizio: '18:15'
-    fine: '19:05'
-    corso: 'Calisthenics'
-    disciplina: calisthenics
-  - giorno: '1'
-    inizio: '18:30'
-    fine: '19:20'
-    corso: 'IntensitYOU'
-    disciplina: intensityou
-  - giorno: '1'
-    inizio: '18:30'
-    fine: '19:20'
-    corso: 'Pilates'
-    disciplina: pilates
-  - giorno: '1'
-    inizio: '19:30'
-    fine: '20:20'
-    corso: 'LesMills BodyPump'
-    disciplina: lesmills-bodypump
-  - giorno: '1'
-    inizio: '19:30'
-    fine: '20:20'
-    corso: 'Reformer'
-    disciplina: reformer
-  - giorno: '2'
-    inizio: '07:00'
-    fine: '07:50'
-    corso: 'Yoga'
-    disciplina: yoga
-  - giorno: '2'
-    inizio: '09:00'
-    fine: '09:50'
-    corso: 'Reformer'
-    disciplina: reformer
-  - giorno: '2'
-    inizio: '10:00'
-    fine: '10:50'
-    corso: 'Pilates'
-    disciplina: pilates
-  - giorno: '2'
-    inizio: '13:00'
-    fine: '13:40'
-    corso: 'IntensitYOU'
-    disciplina: intensityou
-  - giorno: '2'
-    inizio: '17:30'
-    fine: '18:20'
-    corso: 'Walking'
-    disciplina: walking
-  - giorno: '2'
-    inizio: '18:30'
-    fine: '19:20'
-    corso: 'LesMills RPM'
-    disciplina: lesmills-rpm
-  - giorno: '2'
-    inizio: '18:30'
-    fine: '19:20'
-    corso: 'Shapes'
-    disciplina: lesmills-shapes
-  - giorno: '2'
-    inizio: '19:30'
-    fine: '20:20'
-    corso: 'Corpo Libero'
-    disciplina: corpo-libero
-  - giorno: '2'
-    inizio: '19:30'
-    fine: '20:20'
-    corso: 'Yoga'
-    disciplina: yoga
-  - giorno: '3'
-    inizio: '09:30'
-    fine: '10:20'
-    corso: 'Corpo Libero'
-    disciplina: corpo-libero
-  - giorno: '3'
-    inizio: '09:30'
-    fine: '10:20'
-    corso: 'Reformer'
-    disciplina: reformer
-  - giorno: '3'
-    inizio: '13:00'
-    fine: '13:40'
-    corso: 'Walking'
-    disciplina: walking
-  - giorno: '3'
-    inizio: '13:30'
-    fine: '14:20'
-    corso: 'Reformer'
-    disciplina: reformer
-  - giorno: '3'
-    inizio: '18:30'
-    fine: '19:20'
-    corso: 'LesMills Core'
-    disciplina: lesmills-core
-  - giorno: '3'
-    inizio: '18:30'
-    fine: '19:20'
-    corso: 'Pilates'
-    disciplina: pilates
-  - giorno: '3'
-    inizio: '18:30'
-    fine: '19:20'
-    corso: 'Reformer'
-    disciplina: reformer
-  - giorno: '3'
-    inizio: '19:00'
-    fine: '19:50'
-    corso: 'Calisthenics'
-    disciplina: calisthenics
-  - giorno: '3'
-    inizio: '19:30'
-    fine: '20:20'
-    corso: 'IntensitYOU'
-    disciplina: intensityou
-  - giorno: '3'
-    inizio: '19:30'
-    fine: '20:20'
-    corso: 'Reformer'
-    disciplina: reformer
-  - giorno: '3'
-    inizio: '19:30'
-    fine: '20:20'
-    corso: 'Reggaeton'
-    disciplina: reggaeton
-  - giorno: '4'
-    inizio: '07:00'
-    fine: '07:50'
-    corso: 'Yoga'
-    disciplina: yoga
-  - giorno: '4'
-    inizio: '09:00'
-    fine: '09:50'
-    corso: 'Reformer'
-    disciplina: reformer
-  - giorno: '4'
-    inizio: '10:00'
-    fine: '10:50'
-    corso: 'Pilates'
-    disciplina: pilates
-  - giorno: '4'
-    inizio: '13:00'
-    fine: '13:40'
-    corso: 'LesMills BodyPump'
-    disciplina: lesmills-bodypump
-  - giorno: '4'
-    inizio: '13:00'
-    fine: '13:40'
-    corso: 'Pilates'
-    disciplina: pilates
-  - giorno: '4'
-    inizio: '13:45'
-    fine: '14:30'
-    corso: 'IntensitYOU'
-    disciplina: intensityou
-  - giorno: '4'
-    inizio: '17:30'
-    fine: '18:20'
-    corso: 'Corpo Libero'
-    disciplina: corpo-libero
-  - giorno: '4'
-    inizio: '18:30'
-    fine: '19:20'
-    corso: 'Balance'
-    disciplina: lesmills-bodybalance
-  - giorno: '4'
-    inizio: '18:30'
-    fine: '19:20'
-    corso: 'LesMills BodyPump'
-    disciplina: lesmills-bodypump
-  - giorno: '4'
-    inizio: '18:30'
-    fine: '19:20'
-    corso: 'Reformer'
-    disciplina: reformer
-  - giorno: '4'
-    inizio: '19:30'
-    fine: '20:20'
-    corso: 'Core'
-    disciplina: lesmills-core
-  - giorno: '4'
-    inizio: '19:30'
-    fine: '20:20'
-    corso: 'Pilates'
-    disciplina: pilates
-  - giorno: '5'
-    inizio: '10:00'
-    fine: '10:50'
-    corso: 'Mobility'
-    disciplina: mobility
-  - giorno: '5'
-    inizio: '10:00'
-    fine: '10:50'
-    corso: 'Reformer'
-    disciplina: reformer
-  - giorno: '5'
-    inizio: '13:00'
-    fine: '13:40'
-    corso: 'Balance'
-    disciplina: lesmills-bodybalance
-  - giorno: '5'
-    inizio: '17:30'
-    fine: '18:20'
-    corso: 'Pilates'
-    disciplina: pilates
-  - giorno: '5'
-    inizio: '18:15'
-    fine: '19:05'
-    corso: 'IntensitYOU'
-    disciplina: intensityou
-  - giorno: '5'
-    inizio: '18:30'
-    fine: '19:20'
-    corso: 'Reformer'
-    disciplina: reformer
-  - giorno: '5'
-    inizio: '18:30'
-    fine: '19:20'
-    corso: 'Reggaeton'
-    disciplina: reggaeton
-  - giorno: '5'
-    inizio: '19:30'
-    fine: '20:20'
-    corso: 'LesMills Shapes'
-    disciplina: lesmills-shapes
-  - giorno: '6'
-    inizio: '10:30'
-    fine: '11:20'
-    corso: 'Reformer'
-    disciplina: reformer
-  - giorno: '6'
-    inizio: '10:45'
-    fine: '11:35'
-    corso: 'LesMills BodyPump'
-    disciplina: lesmills-bodypump
-  - giorno: '1'
     inizio: '07:30'
-    fine: '08:20'
+    fine: '08:15'
     corso: 'AcquaGYM'
     disciplina: acquagym
     sala: Piscina
@@ -408,12 +153,52 @@ planning:
     sala: Piscina
     sezione: 'In acqua'
   - giorno: '1'
+    inizio: '09:30'
+    fine: '10:30'
+    corso: 'Corpo Libero'
+    disciplina: corpo-libero
+  - giorno: '1'
+    inizio: '11:00'
+    fine: '11:50'
+    corso: 'Nuoto Adulti Avanzato'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '1'
+    inizio: '11:00'
+    fine: '11:50'
+    corso: 'Nuoto Adulti Base'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '1'
+    inizio: '11:00'
+    fine: '11:50'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '1'
     inizio: '12:45'
     fine: '13:30'
     corso: 'AcquaCROSS'
     disciplina: acquacross
     sala: Piscina
     sezione: 'In acqua'
+  - giorno: '1'
+    inizio: '13:00'
+    fine: '14:00'
+    corso: 'Hyrox Class'
+  - giorno: '1'
+    inizio: '13:00'
+    fine: '13:45'
+    corso: 'LesMills Core'
+    disciplina: lesmills-core
+  - giorno: '1'
+    inizio: '13:30'
+    fine: '14:30'
+    corso: 'Pilates'
+    disciplina: pilates
   - giorno: '1'
     inizio: '13:45'
     fine: '14:30'
@@ -429,12 +214,32 @@ planning:
     sala: Piscina
     sezione: 'In acqua'
   - giorno: '1'
+    inizio: '17:30'
+    fine: '18:20'
+    corso: 'LesMills Core'
+    disciplina: lesmills-core
+  - giorno: '1'
     inizio: '18:15'
     fine: '19:00'
     corso: 'AcquaGYM'
     disciplina: acquagym
     sala: Piscina
     sezione: 'In acqua'
+  - giorno: '1'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'Calisthenics'
+    disciplina: calisthenics
+  - giorno: '1'
+    inizio: '18:30'
+    fine: '19:15'
+    corso: 'IntensitYOU'
+    disciplina: intensityou
+  - giorno: '1'
+    inizio: '18:30'
+    fine: '19:30'
+    corso: 'Pilates'
+    disciplina: pilates
   - giorno: '1'
     inizio: '19:15'
     fine: '20:00'
@@ -443,19 +248,76 @@ planning:
     sala: Piscina
     sezione: 'In acqua'
   - giorno: '1'
+    inizio: '19:30'
+    fine: '20:30'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
+  - giorno: '1'
+    inizio: '19:30'
+    fine: '20:30'
+    corso: 'Reformer'
+    disciplina: reformer
+  - giorno: '1'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Avanzato'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '1'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Base'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '1'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '1'
     inizio: '20:10'
-    fine: '21:00'
+    fine: '20:55'
     corso: 'LesMills AquaWork'
     disciplina: lesmills-aqua
+    sala: Piscina
+    sezione: 'In acqua'
+  - giorno: '1'
+    inizio: '20:50'
+    fine: '21:40'
+    corso: 'Nuoto Adulti Avanzato'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '1'
+    inizio: '20:50'
+    fine: '21:40'
+    corso: 'Nuoto Adulti Base'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '1'
+    inizio: '20:50'
+    fine: '21:40'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '2'
+    inizio: '09:00'
+    fine: '09:50'
+    corso: 'AcquaWALKING'
+    disciplina: acquawalking
     sala: Piscina
     sezione: 'In acqua'
   - giorno: '2'
     inizio: '09:00'
     fine: '10:00'
-    corso: 'AcquaWALKING'
-    disciplina: acquawalking
-    sala: Piscina
-    sezione: 'In acqua'
+    corso: 'Reformer'
+    disciplina: reformer
   - giorno: '2'
     inizio: '10:00'
     fine: '10:45'
@@ -464,12 +326,29 @@ planning:
     sala: Piscina
     sezione: 'In acqua'
   - giorno: '2'
+    inizio: '10:00'
+    fine: '11:00'
+    corso: 'Pilates'
+    disciplina: pilates
+  - giorno: '2'
+    inizio: '12:40'
+    fine: '13:30'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '2'
     inizio: '12:45'
     fine: '13:30'
     corso: 'AcquaWALKING'
     disciplina: acquawalking
     sala: Piscina
     sezione: 'In acqua'
+  - giorno: '2'
+    inizio: '13:00'
+    fine: '13:45'
+    corso: 'IntensitYOU'
+    disciplina: intensityou
   - giorno: '2'
     inizio: '13:40'
     fine: '14:25'
@@ -485,6 +364,11 @@ planning:
     sala: Piscina
     sezione: 'In acqua'
   - giorno: '2'
+    inizio: '17:30'
+    fine: '18:30'
+    corso: 'Walking'
+    disciplina: walking
+  - giorno: '2'
     inizio: '18:30'
     fine: '19:15'
     corso: 'AcquaBIKE'
@@ -492,12 +376,39 @@ planning:
     sala: Piscina
     sezione: 'In acqua'
   - giorno: '2'
+    inizio: '18:30'
+    fine: '19:20'
+    corso: 'LesMills RPM'
+    disciplina: lesmills-rpm
+  - giorno: '2'
+    inizio: '18:30'
+    fine: '19:20'
+    corso: 'LesMills Shapes'
+    disciplina: lesmills-shapes
+  - giorno: '2'
+    inizio: '19:30'
+    fine: '20:30'
+    corso: 'Corpo Libero'
+    disciplina: corpo-libero
+  - giorno: '2'
     inizio: '19:30'
     fine: '20:15'
     corso: 'LesMills Acquatonus'
     disciplina: lesmills-aqua
     sala: Piscina
     sezione: 'In acqua'
+  - giorno: '2'
+    inizio: '19:30'
+    fine: '20:30'
+    corso: 'Yoga'
+    disciplina: yoga
+  - giorno: '2'
+    inizio: '20:00'
+    fine: '21:00'
+    corso: 'Nuoto Adulti Master'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
   - giorno: '3'
     inizio: '07:45'
     fine: '08:30'
@@ -512,6 +423,11 @@ planning:
     disciplina: acquagym
     sala: Piscina
     sezione: 'In acqua'
+  - giorno: '3'
+    inizio: '09:30'
+    fine: '10:30'
+    corso: 'Corpo Libero'
+    disciplina: corpo-libero
   - giorno: '3'
     inizio: '09:45'
     fine: '10:30'
@@ -533,12 +449,24 @@ planning:
     sala: Piscina
     sezione: 'In acqua'
   - giorno: '3'
+    inizio: '13:00'
+    fine: '13:45'
+    corso: 'Walking'
+    disciplina: walking
+  - giorno: '3'
     inizio: '14:00'
     fine: '14:45'
     corso: 'AcquaBIKE'
     disciplina: acquabike
     sala: Piscina
     sezione: 'In acqua'
+  - giorno: '3'
+    inizio: '16:20'
+    fine: '17:10'
+    corso: 'Nuoto Adulti Base'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
   - giorno: '3'
     inizio: '17:15'
     fine: '18:00'
@@ -547,6 +475,10 @@ planning:
     sala: Piscina
     sezione: 'In acqua'
   - giorno: '3'
+    inizio: '17:30'
+    fine: '18:30'
+    corso: 'Hyrox Class'
+  - giorno: '3'
     inizio: '18:20'
     fine: '19:05'
     corso: 'AcquaWALKING'
@@ -554,12 +486,63 @@ planning:
     sala: Piscina
     sezione: 'In acqua'
   - giorno: '3'
+    inizio: '18:30'
+    fine: '19:30'
+    corso: 'LesMills Core'
+    disciplina: lesmills-core
+  - giorno: '3'
+    inizio: '18:30'
+    fine: '19:30'
+    corso: 'Pilates'
+    disciplina: pilates
+  - giorno: '3'
+    inizio: '18:30'
+    fine: '19:30'
+    corso: 'Reformer'
+    disciplina: reformer
+  - giorno: '3'
+    inizio: '19:00'
+    fine: '20:00'
+    corso: 'Calisthenics'
+    disciplina: calisthenics
+  - giorno: '3'
     inizio: '19:20'
     fine: '20:05'
     corso: 'AcquaBIKE'
     disciplina: acquabike
     sala: Piscina
     sezione: 'In acqua'
+  - giorno: '3'
+    inizio: '19:30'
+    fine: '20:30'
+    corso: 'IntensitYOU'
+    disciplina: intensityou
+  - giorno: '3'
+    inizio: '19:30'
+    fine: '20:20'
+    corso: 'Reggaeton'
+    disciplina: reggaeton
+  - giorno: '3'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Avanzato'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '3'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Base'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '3'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
   - giorno: '4'
     inizio: '09:00'
     fine: '09:45'
@@ -568,12 +551,43 @@ planning:
     sala: Piscina
     sezione: 'In acqua'
   - giorno: '4'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'Reformer'
+    disciplina: reformer
+  - giorno: '4'
     inizio: '10:00'
     fine: '10:45'
     corso: 'AcquaGYM'
     disciplina: acquagym
     sala: Piscina
     sezione: 'In acqua'
+  - giorno: '4'
+    inizio: '10:00'
+    fine: '11:00'
+    corso: 'Pilates'
+    disciplina: pilates
+  - giorno: '4'
+    inizio: '11:00'
+    fine: '11:50'
+    corso: 'Nuoto Adulti Avanzato'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '4'
+    inizio: '11:00'
+    fine: '11:50'
+    corso: 'Nuoto Adulti Base'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '4'
+    inizio: '11:00'
+    fine: '11:50'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
   - giorno: '4'
     inizio: '12:45'
     fine: '13:30'
@@ -582,12 +596,32 @@ planning:
     sala: Piscina
     sezione: 'In acqua'
   - giorno: '4'
+    inizio: '13:00'
+    fine: '13:45'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
+  - giorno: '4'
+    inizio: '13:00'
+    fine: '13:45'
+    corso: 'Pilates'
+    disciplina: pilates
+  - giorno: '4'
     inizio: '13:45'
     fine: '14:30'
     corso: 'AcquaWALKING'
     disciplina: acquawalking
     sala: Piscina
     sezione: 'In acqua'
+  - giorno: '4'
+    inizio: '13:45'
+    fine: '14:30'
+    corso: 'IntensitYOU'
+    disciplina: intensityou
+  - giorno: '4'
+    inizio: '17:30'
+    fine: '18:30'
+    corso: 'Corpo Libero'
+    disciplina: corpo-libero
   - giorno: '4'
     inizio: '18:15'
     fine: '19:00'
@@ -596,6 +630,21 @@ planning:
     sala: Piscina
     sezione: 'In acqua'
   - giorno: '4'
+    inizio: '18:30'
+    fine: '19:30'
+    corso: 'Balance'
+    disciplina: lesmills-bodybalance
+  - giorno: '4'
+    inizio: '18:30'
+    fine: '19:30'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
+  - giorno: '4'
+    inizio: '18:30'
+    fine: '19:30'
+    corso: 'Reformer'
+    disciplina: reformer
+  - giorno: '4'
     inizio: '19:15'
     fine: '20:00'
     corso: 'LesMills AquaDynamic'
@@ -603,12 +652,64 @@ planning:
     sala: Piscina
     sezione: 'In acqua'
   - giorno: '4'
+    inizio: '19:30'
+    fine: '20:30'
+    corso: 'LesMills Core'
+    disciplina: lesmills-core
+  - giorno: '4'
+    inizio: '19:30'
+    fine: '20:30'
+    corso: 'Pilates'
+    disciplina: pilates
+  - giorno: '4'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Avanzato'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '4'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Base'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '4'
+    inizio: '20:00'
+    fine: '20:50'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '4'
     inizio: '20:10'
-    fine: '21:00'
+    fine: '20:55'
     corso: 'LesMills AquaWork'
     disciplina: lesmills-aqua
     sala: Piscina
     sezione: 'In acqua'
+  - giorno: '4'
+    inizio: '20:50'
+    fine: '21:40'
+    corso: 'Nuoto Adulti Avanzato'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '4'
+    inizio: '20:50'
+    fine: '21:40'
+    corso: 'Nuoto Adulti Base'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '4'
+    inizio: '20:50'
+    fine: '21:40'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
   - giorno: '5'
     inizio: '07:30'
     fine: '08:15'
@@ -624,12 +725,15 @@ planning:
     sala: Piscina
     sezione: 'In acqua'
   - giorno: '5'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'Reformer'
+    disciplina: reformer
+  - giorno: '5'
     inizio: '10:00'
-    fine: '10:45'
-    corso: 'AcquaWALKING'
-    disciplina: acquawalking
-    sala: Piscina
-    sezione: 'In acqua'
+    fine: '11:00'
+    corso: 'Mobility'
+    disciplina: mobility
   - giorno: '5'
     inizio: '12:30'
     fine: '13:15'
@@ -638,6 +742,18 @@ planning:
     sala: Piscina
     sezione: 'In acqua'
   - giorno: '5'
+    inizio: '12:40'
+    fine: '13:30'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '5'
+    inizio: '13:00'
+    fine: '13:45'
+    corso: 'Balance'
+    disciplina: lesmills-bodybalance
+  - giorno: '5'
     inizio: '13:30'
     fine: '14:15'
     corso: 'AcquaGYM'
@@ -645,11 +761,51 @@ planning:
     sala: Piscina
     sezione: 'In acqua'
   - giorno: '5'
+    inizio: '13:30'
+    fine: '14:30'
+    corso: 'Hyrox Class'
+  - giorno: '5'
+    inizio: '17:30'
+    fine: '18:30'
+    corso: 'Hyrox Class'
+  - giorno: '5'
+    inizio: '17:30'
+    fine: '18:30'
+    corso: 'Pilates'
+    disciplina: pilates
+  - giorno: '5'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'IntensitYOU'
+    disciplina: intensityou
+  - giorno: '5'
     inizio: '18:20'
     fine: '19:10'
     corso: 'AcquaMAMMA'
     sala: Piscina
     sezione: 'In acqua'
+  - giorno: '5'
+    inizio: '18:20'
+    fine: '19:10'
+    corso: 'Nuoto Adulti Intermedio'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
+  - giorno: '5'
+    inizio: '18:30'
+    fine: '19:30'
+    corso: 'Reformer'
+    disciplina: reformer
+  - giorno: '5'
+    inizio: '18:30'
+    fine: '19:30'
+    corso: 'Reggaeton'
+    disciplina: reggaeton
+  - giorno: '5'
+    inizio: '19:00'
+    fine: '20:00'
+    corso: 'Calisthenics'
+    disciplina: calisthenics
   - giorno: '5'
     inizio: '19:15'
     fine: '20:00'
@@ -657,6 +813,18 @@ planning:
     disciplina: acquawalking
     sala: Piscina
     sezione: 'In acqua'
+  - giorno: '5'
+    inizio: '19:30'
+    fine: '20:20'
+    corso: 'LesMills Shapes'
+    disciplina: lesmills-shapes
+  - giorno: '5'
+    inizio: '20:00'
+    fine: '21:00'
+    corso: 'Nuoto Adulti Master'
+    disciplina: scuola-nuoto-adulti
+    sala: Piscina
+    sezione: 'Scuola nuoto adulti'
   - giorno: '5'
     inizio: '20:15'
     fine: '21:00'
@@ -673,200 +841,11 @@ planning:
     sezione: 'In acqua'
   - giorno: '6'
     inizio: '09:40'
-    fine: '10:30'
+    fine: '10:25'
     corso: 'AcquaGYM'
     disciplina: acquagym
     sala: Piscina
     sezione: 'In acqua'
-  - giorno: '1'
-    inizio: '11:00'
-    fine: '11:50'
-    corso: 'Nuoto Adulti Base'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '1'
-    inizio: '11:00'
-    fine: '11:50'
-    corso: 'Nuoto Adulti Intermedio'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '1'
-    inizio: '11:00'
-    fine: '11:50'
-    corso: 'Nuoto Adulti Avanzato'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '1'
-    inizio: '20:00'
-    fine: '20:50'
-    corso: 'Nuoto Adulti Base'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '1'
-    inizio: '20:00'
-    fine: '20:50'
-    corso: 'Nuoto Adulti Intermedio'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '1'
-    inizio: '20:00'
-    fine: '20:50'
-    corso: 'Nuoto Adulti Avanzato'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '1'
-    inizio: '20:50'
-    fine: '21:40'
-    corso: 'Nuoto Adulti Base'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '1'
-    inizio: '20:50'
-    fine: '21:40'
-    corso: 'Nuoto Adulti Intermedio'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '1'
-    inizio: '20:50'
-    fine: '21:40'
-    corso: 'Nuoto Adulti Avanzato'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '2'
-    inizio: '12:40'
-    fine: '13:30'
-    corso: 'Nuoto Adulti Intermedio'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '2'
-    inizio: '20:00'
-    fine: '21:00'
-    corso: 'Nuoto Adulti Master'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '3'
-    inizio: '16:20'
-    fine: '17:10'
-    corso: 'Nuoto Adulti Base'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '3'
-    inizio: '20:00'
-    fine: '20:50'
-    corso: 'Nuoto Adulti Base'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '3'
-    inizio: '20:00'
-    fine: '20:50'
-    corso: 'Nuoto Adulti Intermedio'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '3'
-    inizio: '20:00'
-    fine: '20:50'
-    corso: 'Nuoto Adulti Avanzato'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '4'
-    inizio: '11:00'
-    fine: '11:50'
-    corso: 'Nuoto Adulti Base'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '4'
-    inizio: '11:00'
-    fine: '11:50'
-    corso: 'Nuoto Adulti Intermedio'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '4'
-    inizio: '11:00'
-    fine: '11:50'
-    corso: 'Nuoto Adulti Avanzato'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '4'
-    inizio: '20:00'
-    fine: '20:50'
-    corso: 'Nuoto Adulti Base'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '4'
-    inizio: '20:00'
-    fine: '20:50'
-    corso: 'Nuoto Adulti Intermedio'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '4'
-    inizio: '20:00'
-    fine: '20:50'
-    corso: 'Nuoto Adulti Avanzato'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '4'
-    inizio: '20:50'
-    fine: '21:40'
-    corso: 'Nuoto Adulti Base'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '4'
-    inizio: '20:50'
-    fine: '21:40'
-    corso: 'Nuoto Adulti Intermedio'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '4'
-    inizio: '20:50'
-    fine: '21:40'
-    corso: 'Nuoto Adulti Avanzato'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '5'
-    inizio: '12:40'
-    fine: '13:30'
-    corso: 'Nuoto Adulti Intermedio'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '5'
-    inizio: '18:20'
-    fine: '19:10'
-    corso: 'Nuoto Adulti Intermedio'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
-  - giorno: '5'
-    inizio: '20:00'
-    fine: '21:00'
-    corso: 'Nuoto Adulti Master'
-    disciplina: scuola-nuoto-adulti
-    sala: Piscina
-    sezione: 'Scuola nuoto adulti'
   - giorno: '6'
     inizio: '10:30'
     fine: '11:20'
@@ -881,6 +860,16 @@ planning:
     disciplina: scuola-nuoto-adulti
     sala: Piscina
     sezione: 'Scuola nuoto adulti'
+  - giorno: '6'
+    inizio: '10:30'
+    fine: '11:30'
+    corso: 'Reformer'
+    disciplina: reformer
+  - giorno: '6'
+    inizio: '10:45'
+    fine: '11:45'
+    corso: 'LesMills BodyPump Virtual'
+    disciplina: lesmills-bodypump
 
 ---
 

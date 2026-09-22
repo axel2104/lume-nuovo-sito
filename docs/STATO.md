@@ -160,6 +160,20 @@ verificata su due settimane consecutive), livelli normalizzati in «Nuoto
 Adulti Base/Intermedio/Avanzato/Master». Se gli orari adulti cambiano in PG,
 vanno aggiornati a mano qui — come il resto del planning.
 
+**Planning risincronizzato da PerfectGym il 22/9/26** (settimana tipo 5–11
+ottobre 2026, dichiarata dallo staff la più attendibile). Tutte e tre le sedi
+ora rispecchiano PG slot per slot. Le differenze assorbite: durate reali PG
+(quasi tutto 60 min, non più il 50 convenzionale; alcune classi da 45/50 min),
+a Macerata entrano Hybrid Class e Strength and Conditioning del Box (sezione
+CrossFit, disciplina `crossfit`), WBS (mar 17:00 e gio 17:00), RPM Virtual
+(mer 13:30) e Yoga Hatha (mer 19:00); a Montecassiano entrano 4 Hyrox Class
+(senza disciplina: la scheda non esiste) e il Calisthenics del ven 19:00, via
+3 Reformer del mer, 2 Yoga delle 7:00 e l'AcquaWALKING del ven 10:00, Reformer
+ven 10:00→09:00, BodyPump del sab 10:45 diventa Virtual; a Urban il palinsesto
+«ipotesi» è sostituito da quello reale PG (entrano 5 Functional Training
+Hyrox, senza disciplina; il ven 13:30 indeciso è BodyPump). Nuoto libero NON
+confrontato: resta a fasce in `aperture`.
+
 **La mappa del footer è un'immagine statica, non si aggiorna da sola.** La
 genera `scripts/genera_mappa_centri.py` (Python + Pillow) leggendo il campo
 `coordinate` dei centri: se cambia un indirizzo, una coordinata o apre un
