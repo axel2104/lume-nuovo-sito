@@ -55,6 +55,8 @@ Il recesso può essere esercitato con qualsiasi dichiarazione esplicita, a scelt
 
 Super Gym 2.0 rimborsa quanto ricevuto entro 14 giorni dalla ricezione del recesso, con lo stesso mezzo di pagamento usato per l'acquisto. Se l'Abbonato ha chiesto espressamente che le attività iniziassero durante il periodo di recesso, è tenuto a corrispondere l'importo proporzionale al servizio effettivamente fruito fino alla comunicazione del recesso, ai sensi dell'art. 57, comma 3, D.Lgs. 206/2005.
 
+In caso di esercizio del diritto di recesso, è previsto un contributo fisso pari a € 15,00 (quindici/00), a titolo di spese amministrative e di gestione della pratica di recesso, connesse alle attività necessarie per la registrazione, elaborazione e chiusura del rapporto contrattuale.
+
 Per i contratti conclusi presso il Club alla presenza dell'Abbonato non si applica il diritto di ripensamento previsto dal Codice del Consumo; restano ferme le facoltà di disdetta e sospensione disciplinate ai punti 6.7, 6.8 e 6.10.
 
 ### 1.6 Badge di accesso
