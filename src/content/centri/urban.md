@@ -81,7 +81,7 @@ superficie: 1000
 immagine: ../../assets/centri/urban/urban-gym-panoramica.jpg
 perfectgymUrl: "#"
 planningNota: "Orario della stagione 26/27, aggiornato a ottobre."
-planningAggiornatoIl: 2026-09-22
+planningAggiornatoIl: 2026-09-30
 planning:
   - giorno: '1'
     inizio: '07:00'
@@ -167,6 +167,11 @@ planning:
     corso: 'Yoga'
     disciplina: yoga
   - giorno: '3'
+    inizio: '10:00'
+    fine: '11:00'
+    corso: 'Reformer'
+    disciplina: reformer
+  - giorno: '3'
     inizio: '13:30'
     fine: '14:20'
     corso: 'Functional Training Hyrox'
@@ -176,15 +181,15 @@ planning:
     corso: 'LesMills Core'
     disciplina: lesmills-core
   - giorno: '3'
+    inizio: '17:30'
+    fine: '18:30'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
+  - giorno: '3'
     inizio: '19:30'
     fine: '20:30'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
-  - giorno: '4'
-    inizio: '07:00'
-    fine: '08:00'
-    corso: 'Pilates'
-    disciplina: pilates
   - giorno: '4'
     inizio: '08:30'
     fine: '09:30'
@@ -195,6 +200,11 @@ planning:
     fine: '11:00'
     corso: 'Pilates'
     disciplina: pilates
+  - giorno: '4'
+    inizio: '13:30'
+    fine: '14:30'
+    corso: 'Reformer'
+    disciplina: reformer
   - giorno: '4'
     inizio: '14:30'
     fine: '15:30'
@@ -215,11 +225,6 @@ planning:
     corso: 'Pilates'
     disciplina: pilates
   - giorno: '5'
-    inizio: '07:00'
-    fine: '08:00'
-    corso: 'Yoga'
-    disciplina: yoga
-  - giorno: '5'
     inizio: '08:30'
     fine: '09:30'
     corso: 'Pilates'
@@ -234,10 +239,6 @@ planning:
     fine: '14:30'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
-  - giorno: '5'
-    inizio: '16:00'
-    fine: '17:00'
-    corso: 'Functional Training Hyrox'
   - giorno: '5'
     inizio: '17:30'
     fine: '18:30'

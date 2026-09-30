@@ -165,7 +165,7 @@ calcom:
   visita: lumefitness/visita-macerata
   richiamata: lumefitness/richiamata
 planningNota: "Orario della stagione 26/27, aggiornato a ottobre: qualche dettaglio può ancora cambiare."
-planningAggiornatoIl: 2026-09-22
+planningAggiornatoIl: 2026-09-30
 planning:
   - giorno: '1'
     inizio: '07:00'
@@ -174,6 +174,11 @@ planning:
     disciplina: crossfit
     sala: Box CrossFit
     sezione: CrossFit
+  - giorno: '1'
+    inizio: '08:30'
+    fine: '09:30'
+    corso: 'Pilates Base'
+    disciplina: pilates
   - giorno: '1'
     inizio: '09:00'
     fine: '10:00'
@@ -313,11 +318,6 @@ planning:
     fine: '21:30'
     corso: 'Corpo Libero'
     disciplina: corpo-libero
-  - giorno: '1'
-    inizio: '20:30'
-    fine: '21:30'
-    corso: 'IntensitYOU'
-    disciplina: intensityou
   - giorno: '2'
     inizio: '07:00'
     fine: '08:00'
@@ -550,11 +550,6 @@ planning:
   - giorno: '3'
     inizio: '18:00'
     fine: '19:00'
-    corso: 'Reformer'
-    disciplina: reformer
-  - giorno: '3'
-    inizio: '18:00'
-    fine: '19:00'
     corso: 'Spartan System'
     disciplina: spartan-system
   - giorno: '3'
@@ -731,8 +726,8 @@ planning:
     corso: 'LesMills Core'
     disciplina: lesmills-core
   - giorno: '4'
-    inizio: '19:15'
-    fine: '20:15'
+    inizio: '19:00'
+    fine: '20:00'
     corso: 'Spartan System'
     disciplina: spartan-system
   - giorno: '4'

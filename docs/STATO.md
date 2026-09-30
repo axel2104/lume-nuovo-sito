@@ -174,6 +174,16 @@ ven 10:00→09:00, BodyPump del sab 10:45 diventa Virtual; a Urban il palinsesto
 Hyrox, senza disciplina; il ven 13:30 indeciso è BodyPump). Nuoto libero NON
 confrontato: resta a fasce in `aperture`.
 
+**Ricontrollo planning il 30/9/26** (stessa settimana tipo 5–11 ottobre):
+a Macerata entra Pilates Base del lun 08:30, via l'IntensitYOU del lun 20:30
+e il Reformer del mer 18:00, Spartan System del gio passa da 19:15 a 19:00;
+a Montecassiano tornano i due Yoga delle 7:00 (mar e gio), via il LesMills
+Core del mer 18:30; a Urban entrano Reformer mer 10:00 e gio 13:30 e BodyPump
+del mer 17:30, via Pilates gio 07:00, Yoga ven 07:00 e Functional Training
+Hyrox ven 16:00. Diff finale sito↔PG a zero su tutte e tre le sedi. Lo stesso
+giorno il listino Urban è tornato online (revert del blocco «nascosto fino
+al 30/9»): il club apre oggi.
+
 **La mappa del footer è un'immagine statica, non si aggiorna da sola.** La
 genera `scripts/genera_mappa_centri.py` (Python + Pillow) leggendo il campo
 `coordinate` dei centri: se cambia un indirizzo, una coordinata o apre un

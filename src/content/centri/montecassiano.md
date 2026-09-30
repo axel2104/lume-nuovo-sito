@@ -129,7 +129,7 @@ calcom:
   visita: lumefitness/visita-montecassiano
   richiamata: lumefitness/richiamata
 planningNota: "Orario della stagione 26/27, aggiornato a ottobre, piscina compresa."
-planningAggiornatoIl: 2026-09-22
+planningAggiornatoIl: 2026-09-30
 planning:
   - giorno: '1'
     inizio: '07:30'
@@ -306,6 +306,11 @@ planning:
     disciplina: scuola-nuoto-adulti
     sala: Piscina
     sezione: 'Scuola nuoto adulti'
+  - giorno: '2'
+    inizio: '07:00'
+    fine: '08:00'
+    corso: 'Yoga'
+    disciplina: yoga
   - giorno: '2'
     inizio: '09:00'
     fine: '09:50'
@@ -488,11 +493,6 @@ planning:
   - giorno: '3'
     inizio: '18:30'
     fine: '19:30'
-    corso: 'LesMills Core'
-    disciplina: lesmills-core
-  - giorno: '3'
-    inizio: '18:30'
-    fine: '19:30'
     corso: 'Pilates'
     disciplina: pilates
   - giorno: '3'
@@ -543,6 +543,11 @@ planning:
     disciplina: scuola-nuoto-adulti
     sala: Piscina
     sezione: 'Scuola nuoto adulti'
+  - giorno: '4'
+    inizio: '07:00'
+    fine: '08:00'
+    corso: 'Yoga'
+    disciplina: yoga
   - giorno: '4'
     inizio: '09:00'
     fine: '09:45'
