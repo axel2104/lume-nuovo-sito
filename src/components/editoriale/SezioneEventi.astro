@@ -51,19 +51,20 @@ const elenco = limite > 0 ? tutti.slice(0, limite) : tutti;
                   {e.data.ora && ` · ore ${e.data.ora}`}
                   {e.data.luogo && ` · ${e.data.luogo}`}
                 </span>
-                <h3>{e.data.titolo}</h3>
+                <h3>
+                  <a href={`/lume-life/eventi/${e.id}`}>{e.data.titolo}</a>
+                </h3>
                 <p>{e.data.descrizione}</p>
                 {e.data.postiLimitati && <span class="ev-tag">Posti limitati</span>}
               </div>
               <div class="ev-cta">
-                {e.data.iscrizioniHref ? (
+                <a class="btn btn-out" href={`/lume-life/eventi/${e.id}`}>
+                  Info evento
+                </a>
+                {e.data.iscrizioniHref && (
                   <a class="btn btn-red" href={e.data.iscrizioniHref}>
                     Iscriviti
                   </a>
-                ) : (
-                  <button type="button" class="btn btn-out" data-open-form="info" data-medium="SezioneEventi">
-                    Info evento
-                  </button>
                 )}
               </div>
               <span class="sr-only">{dataEstesa(e.data.data)}</span>

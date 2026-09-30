@@ -1,0 +1,143 @@
+---
+import { Picture } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import Header from '../../../components/Header.astro';
+import Footer from '../../../components/Footer.astro';
+import { categorieEventi, etichetta } from '../../../data/tassonomie';
+import { dataEstesa } from '../../../lib/richtext';
+
+export async function getStaticPaths() {
+  const eventi = await getCollection('eventi', ({ data }) => data.pubblicato);
+  return eventi.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+// Sempre `d.campo`, mai `entry.campo`: i dati stanno sotto `.data`.
+const d = entry.data;
+const { Content } = await render(entry);
+
+const adesso = new Date();
+const oggi = new Date(adesso.getFullYear(), adesso.getMonth(), adesso.getDate());
+const altri = (await getCollection('eventi', ({ data }) => data.pubblicato))
+  .filter((e) => e.id !== entry.id && e.data.data >= oggi)
+  .sort((a, b) => a.data.data.getTime() - b.data.data.getTime())
+  .slice(0, 3);
+---
+
+<Layout title={`${d.titolo} — Lume Fitness Club`} description={d.descrizione}>
+  <Header />
+
+  <main id="contenuto">
+    <article class="sec">
+      <div class="wrap wrap-stretto">
+        <a class="ed-back" href="/lume-life#eventi">← Tutti gli eventi</a>
+
+        <header class="art-head">
+          <span class="ed-meta">
+            {etichetta(categorieEventi, d.categoria)} · {dataEstesa(d.data)}
+            {d.ora && ` · ore ${d.ora}`}
+          </span>
+          <h1 class="d">{d.titolo}</h1>
+          <p class="art-sub">{d.descrizione}</p>
+        </header>
+
+        <ul class="ev-fatti">
+          {d.luogo && <li><b>Dove</b> {d.centro ? <a href={`/centri/${d.centro}`}>{d.luogo}</a> : d.luogo}</li>}
+          <li><b>Quando</b> {dataEstesa(d.data)}{d.ora && `, ore ${d.ora}`}</li>
+          {d.postiLimitati && <li><b>Posti</b> limitati, serve la prenotazione</li>}
+        </ul>
+
+        {
+          d.immagine && (
+            <Picture
+              class="art-img"
+              src={d.immagine}
+              alt={d.titolo}
+              widths={[800, 1200, 1800]}
+              sizes="(min-width:1024px) 1000px, 100vw"
+              loading="eager"
+              formats={['avif', 'webp']}
+            />
+          )
+        }
+
+        <div class="art-body">
+          <Content />
+        </div>
+
+        <div class="ev-cta-pagina">
+          {
+            d.iscrizioniHref ? (
+              <a class="btn btn-red" href={d.iscrizioniHref}>
+                Iscriviti
+              </a>
+            ) : (
+              <button type="button" class="btn btn-red" data-open-form="info" data-medium={`Evento:${entry.id}`}>
+                Richiedi informazioni
+              </button>
+            )
+          }
+        </div>
+      </div>
+    </article>
+
+    {
+      altri.length > 0 && (
+        <section class="sec band">
+          <div class="wrap">
+            <div class="sec-head">
+              <span class="label">Continua</span>
+              <h2 class="d">Altri appuntamenti</h2>
+            </div>
+            <ul class="ev-altri">
+              {altri.map((e) => (
+                <li>
+                  <a href={`/lume-life/eventi/${e.id}`}>
+                    <b>{dataEstesa(e.data.data)}</b> — {e.data.titolo}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )
+    }
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .ev-fatti {
+    list-style: none;
+    margin: 0 0 28px;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .ev-fatti b {
+    display: inline-block;
+    min-width: 72px;
+    text-transform: uppercase;
+    font-size: 0.78em;
+    letter-spacing: 0.08em;
+    opacity: 0.65;
+  }
+  .ev-cta-pagina {
+    margin-top: 32px;
+  }
+  .ev-altri {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+  }
+  .ev-altri a {
+    text-decoration: none;
+  }
+  .ev-altri a:hover {
+    text-decoration: underline;
+  }
+</style>
