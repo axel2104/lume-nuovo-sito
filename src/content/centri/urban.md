@@ -224,6 +224,16 @@ planning:
     fine: '20:30'
     corso: 'Pilates'
     disciplina: pilates
+  - giorno: '4'
+    inizio: '20:30'
+    fine: '21:20'
+    corso: 'LesMills Shapes'
+    disciplina: lesmills-shapes
+  - giorno: '5'
+    inizio: '07:00'
+    fine: '08:00'
+    corso: 'Yoga'
+    disciplina: yoga
   - giorno: '5'
     inizio: '08:30'
     fine: '09:30'
@@ -244,6 +254,11 @@ planning:
     fine: '18:30'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
+  - giorno: '5'
+    inizio: '18:30'
+    fine: '19:30'
+    corso: 'LesMills BodyBalance'
+    disciplina: lesmills-bodybalance
 listino:
   nota: Un listino a fasce d'età. I prezzi valgono dall'apertura del centro.
   attivazione: 50

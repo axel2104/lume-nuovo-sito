@@ -184,6 +184,15 @@ Hyrox ven 16:00. Diff finale sito↔PG a zero su tutte e tre le sedi. Lo stesso
 giorno il listino Urban è tornato online (revert del blocco «nascosto fino
 al 30/9»): il club apre oggi.
 
+**Urban: ritocco da foglio cliente (30/9/26 sera).** Fonte: foglio «Centro»
+di "Ipotesi Sett Ott.ods" (mail dello staff): aggiunti Shapes gio 20:30
+(50 min come gli altri Shapes), Yoga ven 07:00 e BodyBalance ven 18:30.
+ESCLUSE per indicazione esplicita le celle evidenziate in giallo (non si
+possono ancora fare): Calisthenics lun 19:00 e gio 19:30, Reformer mar
+18:00, Pilates mer 18:30. Attenzione: PG non ha ancora questi 3 slot nuovi
+(li deve caricare lo staff) — al prossimo sync da PG ricontrollare che non
+spariscano.
+
 **La mappa del footer è un'immagine statica, non si aggiorna da sola.** La
 genera `scripts/genera_mappa_centri.py` (Python + Pillow) leggendo il campo
 `coordinate` dei centri: se cambia un indirizzo, una coordinata o apre un
