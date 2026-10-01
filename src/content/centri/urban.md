@@ -1,7 +1,7 @@
 ---
 nome: Lume Urban
 citta: Macerata (centro)
-stato: prevendita
+stato: aperto
 ordine: 4
 indirizzo: Viale Giacomo Leopardi 91, 62100 Macerata
 coordinate:
@@ -16,7 +16,6 @@ servizi:
   - "Spogliatoi premium"
   - "Nel centro storico"
   - "Parcheggio più libero dopo le 19"
-  - "Prevendita in corso"
 sale:
   - nome: Reception e connettivo
     mq: 113
@@ -79,7 +78,9 @@ render:
     didascalia: "Spogliatoi — lavabi e phon"
 superficie: 1000
 immagine: ../../assets/centri/urban/urban-gym-panoramica.jpg
-perfectgymUrl: "#"
+video: https://pub-90d4a80741cd4aadb6d995599fefc986.r2.dev/site/urban-sala.mp4
+videoPoster: ../../assets/centri/urban/urban-gym-panoramica.jpg
+perfectgymUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Registration"
 planningNota: "Orario della stagione 26/27, aggiornato a ottobre."
 planningAggiornatoIl: 2026-09-30
 planning:
@@ -292,4 +293,4 @@ e la zona cardio. Finiture in grès Boston White, pavimento in PVC nero nelle ar
 gym e rosso sulle scale.
 
 Siamo su viale Leopardi 91, nel centro storico, dove dopo le 19 il parcheggio si
-libera. La prevendita è aperta: assicurati il tuo posto alla tariffa lancio.
+libera.
