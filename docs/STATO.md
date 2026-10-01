@@ -78,6 +78,21 @@ Indirizzi e date di apertura previste. I due centri restano nel sito come
 un funnel suo. Non hanno video, non hanno portale, e non devono averli finché
 non aprono.
 
+Orari Piediripa pubblicati il 1/10/26: `orari` di `centri/piediripa.md` =
+06:00–23:00 tutti i giorni, come da funnel prevendita (`val-di-chienti.html`:
+«entri dalle 6:00 alle 23:00, tutti i giorni, con accesso automatizzato»).
+
+Planning Piediripa pubblicato il 1/10/26: 70 lezioni dalla settimana tipo del
+foglio staff «Ipotesi Sett Ott.ods» (foglio «Piediripa», nessuna cella gialla).
+In PG (clubId 4) non ci sono ancora classi: al primo sync da PG questi slot
+risulteranno «di troppo» e NON vanno cancellati finché PG non pubblica il
+palinsesto. Durate: esplicite da foglio (BodyPump 45/30, Balance 45, Core 30 a
+pranzo), LesMills Pilates 50 come sul sito, il resto 60. `sala: Box Hyrox` su
+Hybrid Class e Calisthenics è un'inferenza dai doppi slot in parallelo.
+Incertezze del foglio pubblicate così: MER 19:30 «Shapes /Reformer» → Shapes;
+SAB 09:30 BodyBalance senza istruttore; «Istruttore CrossFit» = placeholder
+dello staff. `planningNota` dichiara il palinsesto provvisorio.
+
 ### 7. Discipline — difficoltà, intensità, durata
 
 Le 33 discipline sono state mandate al cliente come xlsx da compilare. Finché
