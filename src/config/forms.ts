@@ -68,6 +68,7 @@ export const INTERESSI_JUNIOR: readonly Interesse[] = [
 export const SEDI: Record<string, string> = {
   macerata: 'MACERATA',
   montecassiano: 'MONTECASSIANO',
+  urban: 'URBAN',
 };
 
 /** Slug dei centri selezionabili nei form. */

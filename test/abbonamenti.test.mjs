@@ -296,7 +296,8 @@ test('Macerata ha una scheda sola nello switch', () => {
   const schede = [...blocco.matchAll(/<input[^>]*data-sw="([^"]+)"/g)].map((m) => m[1]);
   assert.deepEqual(schede, [...new Set(schede)], `schede ripetute: ${schede}`);
   assert.equal(schede[0], 'macerata', 'lo switch non si apre su Macerata');
-  assert.ok(!schede.includes('urban'), 'Urban è tornato fra i listini');
+  // Urban e' aperto dal 21/9/26 e il suo listino sta fra le schede come gli
+  // altri centri (fino alla prevendita restava fuori).
 });
 
 test('ogni scheda dello switch ha il suo pannello, e viceversa', () => {

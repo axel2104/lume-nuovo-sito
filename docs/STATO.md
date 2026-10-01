@@ -93,6 +93,16 @@ Incertezze del foglio pubblicate così: MER 19:30 «Shapes /Reformer» → Shape
 SAB 09:30 BodyBalance senza istruttore; «Istruttore CrossFit» = placeholder
 dello staff. `planningNota` dichiara il palinsesto provvisorio.
 
+Urban «aperto» il 1/10/26: `stato: aperto` in `centri/urban.md`, video hero
+(`urban-sala.mp4` su R2, 114 MB), `perfectgymUrl` al portale PG, via la chip
+«Prevendita in corso» e la frase prevendita nel testo. Perché i form lead
+funzionino serve URBAN in `SEDI` (src/config/forms.ts) E l'opzione URBAN nel
+campo select SEDE della tabella Airtable RICHIESTE (typecast:false: senza
+l'opzione il lead si perde). Il token Airtable in n8n non ha scope meta →
+opzione aggiunta a mano dalla UI Airtable. n8n già allineato (1/10/26):
+lume-lead mappa URBAN→urban + mail Urban da macerata@ fromName «Lume Urban» +
+notifica sede a urban@; lume-prova clubId 3 per sede urban.
+
 ### 7. Discipline — difficoltà, intensità, durata
 
 Le 33 discipline sono state mandate al cliente come xlsx da compilare. Finché
