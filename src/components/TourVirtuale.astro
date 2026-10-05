@@ -1,0 +1,98 @@
+---
+import { TOUR } from '../data/tour';
+
+const { centro } = Astro.props as { centro: string };
+const tour = TOUR[centro];
+const base = `/tour/${centro}`;
+---
+
+{
+  tour && (
+    <div class="tour" data-tour data-base={base} data-scene={JSON.stringify(tour.scene)}>
+      <span class="label">Tour virtuale 360°</span>
+      <div class="tour-box">
+        <button type="button" class="tour-start" data-tour-start style={`background-image:url(${base}/poster.jpg)`}>
+          <span class="tour-play">{tour.titolo}</span>
+          <small>Trascina per guardarti intorno · {tour.scene.length} punti di vista</small>
+        </button>
+        <div class="tour-view" data-tour-view hidden />
+      </div>
+      <div class="tour-nav" data-tour-nav role="group" aria-label="Punti di vista del tour" hidden>
+        {tour.scene.map((s, i) => (
+          <button type="button" class="chip" data-i={i}>{s.nome}</button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .tour { margin-top: 44px; }
+  .tour-box {
+    position: relative; aspect-ratio: 16 / 9; margin-top: 16px;
+    border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #000;
+  }
+  .tour-start, .tour-view { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .tour-start {
+    border: 0; cursor: pointer; color: #fff; background-size: cover; background-position: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    box-shadow: inset 0 0 0 100vmax rgba(0, 0, 0, 0.45);
+  }
+  .tour-play { font-family: 'Anton', sans-serif; text-transform: uppercase; font-size: 26px; }
+  .tour-start small { color: #ddd; font-size: 13px; }
+  .tour-start:focus-visible { outline: 2px solid var(--red-txt); outline-offset: -4px; }
+  .tour-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .tour-nav .chip { cursor: pointer; min-height: 44px; font: inherit; }
+  .tour-nav .chip[aria-pressed='true'] { background: var(--red); color: #fff; }
+</style>
+
+<script>
+  // Pannellum (self-hosted, /tour/) si carica solo al click: ~56 kB + 2 MB di panorama
+  // non devono pesare sull'LCP di chi non apre il tour.
+  const carica = (tag: 'script' | 'link', url: string) =>
+    new Promise<void>((ok, ko) => {
+      const el = document.createElement(tag) as HTMLScriptElement & HTMLLinkElement;
+      if (tag === 'script') el.src = url;
+      else { el.rel = 'stylesheet'; el.href = url; }
+      el.onload = () => ok();
+      el.onerror = () => ko();
+      document.head.append(el);
+    });
+
+  document.querySelectorAll<HTMLElement>('[data-tour]').forEach((root) => {
+    const start = root.querySelector<HTMLButtonElement>('[data-tour-start]')!;
+    const view = root.querySelector<HTMLElement>('[data-tour-view]')!;
+    const nav = root.querySelector<HTMLElement>('[data-tour-nav]')!;
+    const base = root.dataset.base!;
+    const scene: { file: string; nome: string }[] = JSON.parse(root.dataset.scene!);
+    const chips = [...nav.querySelectorAll<HTMLButtonElement>('.chip')];
+
+    start.addEventListener('click', async () => {
+      start.disabled = true;
+      try {
+        await Promise.all([carica('link', '/tour/pannellum.css'), carica('script', '/tour/pannellum.js')]);
+      } catch {
+        start.disabled = false;
+        return;
+      }
+      const scenes = Object.fromEntries(
+        scene.map((s, i) => [`s${i}`, { type: 'equirectangular', panorama: `${base}/${s.file}.jpg`, title: s.nome }]),
+      );
+      // @ts-expect-error pannellum arriva dallo script caricato sopra
+      const v = window.pannellum.viewer(view, {
+        default: { firstScene: 's0', autoLoad: true, showControls: true, hfov: 100, compass: false },
+        scenes,
+      });
+      const evidenzia = () => {
+        const cur = v.getScene();
+        chips.forEach((c) => c.setAttribute('aria-pressed', String(`s${c.dataset.i}` === cur)));
+      };
+      v.on('scenechange', evidenzia);
+      chips.forEach((c) => c.addEventListener('click', () => v.loadScene(`s${c.dataset.i}`)));
+      start.hidden = true;
+      view.hidden = false;
+      nav.hidden = false;
+      evidenzia();
+    });
+  });
+</script>
