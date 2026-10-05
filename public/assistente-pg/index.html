@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Assistente PerfectGym — Lume Staff</title>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@500;600&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet">
+<style>
+  :root {
+    --chat--color-primary: #c40042;
+    --chat--color-primary-shade-50: #a80038;
+    --chat--color-primary-shade-100: #8f002f;
+    --chat--color-secondary: #c40042;
+    --chat--color-dark: #1d1d1d;
+    --chat--color-light: #f5f3ef;
+    --chat--color-light-shade-50: #eae6df;
+    --chat--color-white: #ffffff;
+    --chat--message--bot--background: #f5f3ef;
+    --chat--message--bot--color: #1d1d1d;
+    --chat--message--user--background: #c40042;
+    --chat--message--user--color: #ffffff;
+    --chat--border-radius: 10px;
+    --chat--font-family: 'Roboto Condensed', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #1d1d1d; font-family: 'Roboto Condensed', system-ui, sans-serif; }
+  .wrap { display: flex; flex-direction: column; height: 100%; max-width: 860px; margin: 0 auto; }
+  header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid #3a3a3a; }
+  header img { width: 34px; height: 34px; border-radius: 50%; }
+  header h1 { font-family: 'Teko', sans-serif; font-weight: 600; font-size: 26px; letter-spacing: .04em; text-transform: uppercase; color: #fff; margin: 0; }
+  header span { color: #b9b9b9; font-size: 13px; margin-left: auto; text-align: right; }
+  #n8n-chat { flex: 1; min-height: 0; background: #fff; }
+  @media (min-width: 900px) { #n8n-chat { border-radius: 14px; margin: 18px 0; } header { padding-top: 20px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="/logo-lume.png" alt="Lume">
+    <h1>Assistente PerfectGym</h1>
+    <span>Uso interno segreteria<br>Risponde dalla guida ufficiale PG</span>
+  </header>
+  <div id="n8n-chat"></div>
+</div>
+<script type="module">
+  import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+  createChat({
+    target: '#n8n-chat',
+    mode: 'fullscreen',
+    webhookUrl: 'https://n8n.lumeflow.it/webhook/fdce0622-9926-4f20-b65c-2e0349301103/chat',
+    showWelcomeScreen: false,
+    loadPreviousSession: true,
+    initialMessages: [
+      'Ciao! Sono l\u2019assistente PerfectGym della segreteria.',
+      'Fammi una domanda sul gestionale \u2014 es. \u00abCome si sospende un contratto?\u00bb \u2014 e ti rispondo con la procedura ufficiale e i link alla guida.'
+    ],
+    i18n: {
+      en: {
+        title: 'Assistente PerfectGym',
+        subtitle: 'Segreteria Lume',
+        footer: '',
+        getStarted: 'Nuova conversazione',
+        inputPlaceholder: 'Scrivi la domanda...',
+        closeButtonTooltip: 'Chiudi'
+      }
+    }
+  });
+</script>
+</body>
+</html>
