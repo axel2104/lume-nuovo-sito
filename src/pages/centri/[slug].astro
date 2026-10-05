@@ -296,7 +296,7 @@ const pianiBox = box ? alCentro(box.piani, (p) => p.evidenza) : [];
       */}
       {c.render.length > 0 && (
         <div style="margin-top:44px">
-          <span class="label">Com'è il progetto</span>
+          <span class="label">{aperto ? 'Il centro' : "Com'è il progetto"}</span>
           <div class="sale-vis">
             {c.render.map((r) => (
               <article class="sala-vis">
@@ -309,7 +309,7 @@ const pianiBox = box ? alCentro(box.piani, (p) => p.evidenza) : [];
                     formats={['avif', 'webp']}
                     loading="lazy"
                   />
-                  <span class="sala-vis-mq">Render</span>
+                  <span class="sala-vis-mq">{aperto ? 'Foto' : 'Render'}</span>
                 </div>
                 <div class="sala-vis-body">
                   <h3>{r.didascalia}</h3>

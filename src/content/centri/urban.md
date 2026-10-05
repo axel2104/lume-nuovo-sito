@@ -20,66 +20,48 @@ sale:
   - nome: Reception e connettivo
     mq: 113
     dotazione: "Ingresso su viale Leopardi con parete verde, tornelli e lounge: divano, sgabelli e wall art. Piano terra alto 3,26 m."
-    foto: ../../assets/centri/urban/urban-ingresso.jpg
+    foto: ../../assets/centri/urban/foto-9.jpg
   - nome: Sala corsi
     mq: 56
     dotazione: "Parquet, archi in mattoni a vista e neon. Corsi live e programmazione on demand quando la sala è libera."
-    foto: ../../assets/centri/urban/urban-sala-corsi.jpg
+    foto: ../../assets/centri/urban/foto-8.jpg
   - nome: Spogliatoio donne
     mq: 111
     dotazione: "Armadietti a tutta altezza, panche, docce e wc. Zona specchi con lavabi in acciaio, phon e piani in grès."
-    foto: ../../assets/centri/urban/urban-spogliatoio-donne.jpg
+    foto: ../../assets/centri/urban/foto-5.jpg
   - nome: Spogliatoio uomini
     mq: 71
     dotazione: "Armadietti a tutta altezza, panche in legno, docce e wc, zona specchi e phon."
-    foto: ../../assets/centri/urban/urban-spogliatoio-uomini.jpg
+    foto: ../../assets/centri/urban/foto-7.jpg
   - nome: Area allenamento — piano −1
     mq: 521
     dotazione: "Gym 1, Gym 2 e Gym 3 in un unico open space alto 3,53 m: sala pesi Panatta, linea isotonica Monolith, plate loaded, rack e pedane, corsia funzionale Xenios e zona cardio."
-    foto: ../../assets/centri/urban/urban-gym-panoramica.jpg
+    foto: ../../assets/centri/urban/foto-6-2.jpg
 render:
-  - foto: ../../assets/centri/urban/urban-ingresso.jpg
-    didascalia: "Ingresso — parete verde e tornelli"
-  - foto: ../../assets/centri/urban/urban-reception.jpg
-    didascalia: "Reception"
-  - foto: ../../assets/centri/urban/urban-lounge.jpg
-    didascalia: "Lounge — Welcome to the Jungle"
-  - foto: ../../assets/centri/urban/urban-lounge-2.jpg
-    didascalia: "Lounge — mattoni a vista e wall art"
-  - foto: ../../assets/centri/urban/urban-connettivo.jpg
-    didascalia: "Connettivo — neon e murales"
-  - foto: ../../assets/centri/urban/urban-sala-corsi.jpg
-    didascalia: "Sala corsi — gli archi"
-  - foto: ../../assets/centri/urban/urban-sala-corsi-2.jpg
-    didascalia: "Sala corsi — il neon"
-  - foto: ../../assets/centri/urban/urban-gym-panoramica.jpg
-    didascalia: "Piano −1 — l'area allenamento"
-  - foto: ../../assets/centri/urban/urban-pesi-liberi.jpg
-    didascalia: "Pesi liberi e manubriera"
-  - foto: ../../assets/centri/urban/urban-rack-pedane.jpg
-    didascalia: "Rack, panche e pedane per gli stacchi"
-  - foto: ../../assets/centri/urban/urban-plate-loaded.jpg
-    didascalia: "Plate loaded Panatta"
-  - foto: ../../assets/centri/urban/urban-monolith.jpg
-    didascalia: "Linea isotonica Monolith"
-  - foto: ../../assets/centri/urban/urban-corsia-funzionale.jpg
-    didascalia: "Corsia funzionale Xenios"
-  - foto: ../../assets/centri/urban/urban-cardio.jpg
-    didascalia: "Zona cardio"
-  - foto: ../../assets/centri/urban/urban-gym-cardio.jpg
-    didascalia: "Cardio e isotonica, vista d'insieme"
-  - foto: ../../assets/centri/urban/urban-scala.jpg
-    didascalia: "La scala che collega i due piani"
-  - foto: ../../assets/centri/urban/urban-armadietti.jpg
+  - foto: ../../assets/centri/urban/foto-9.jpg
+    didascalia: "Ingresso — tornelli e wall art"
+  - foto: ../../assets/centri/urban/foto-1.jpg
+    didascalia: "Sala corsi — la vetrata sul connettivo"
+  - foto: ../../assets/centri/urban/foto-8.jpg
+    didascalia: "Sala corsi — gli archi e i reformer"
+  - foto: ../../assets/centri/urban/foto-3.jpg
+    didascalia: "Sala corsi — vista dal connettivo"
+  - foto: ../../assets/centri/urban/foto-4.jpg
+    didascalia: "Sala corsi — il murale della Venere"
+  - foto: ../../assets/centri/urban/foto-2.jpg
+    didascalia: "Connettivo — il David"
+  - foto: ../../assets/centri/urban/foto-7.jpg
     didascalia: "Spogliatoi — armadietti e panche"
-  - foto: ../../assets/centri/urban/urban-specchi.jpg
+  - foto: ../../assets/centri/urban/foto-5.jpg
+    didascalia: "Spogliatoi — armadietti e zona specchi"
+  - foto: ../../assets/centri/urban/foto-6.jpg
     didascalia: "Spogliatoi — la zona specchi"
-  - foto: ../../assets/centri/urban/urban-lavabi.jpg
-    didascalia: "Spogliatoi — lavabi e phon"
+  - foto: ../../assets/centri/urban/foto-6-2.jpg
+    didascalia: "Area allenamento — piano −1"
 superficie: 1000
-immagine: ../../assets/centri/urban/urban-gym-panoramica.jpg
+immagine: ../../assets/centri/urban/foto-1.jpg
 video: https://pub-90d4a80741cd4aadb6d995599fefc986.r2.dev/site/urban-sala.mp4
-videoPoster: ../../assets/centri/urban/urban-gym-panoramica.jpg
+videoPoster: ../../assets/centri/urban/foto-1.jpg
 perfectgymUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Registration"
 planningNota: "Orario della stagione 26/27, aggiornato a ottobre."
 planningAggiornatoIl: 2026-09-30
