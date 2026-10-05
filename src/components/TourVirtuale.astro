@@ -1,25 +1,29 @@
 ---
-import { TOUR } from '../data/tour';
-
-const { centro } = Astro.props as { centro: string };
-const tour = TOUR[centro];
+interface Scena {
+  id: string;
+  nome: string;
+  hotspot: { verso: string; yaw: number; pitch: number; testo?: string | null }[];
+}
+// Dati dal campo `tour` del centro (Keystatic). Immagini in public/tour/<centro>/<id>.jpg.
+const { centro, scene } = Astro.props as { centro: string; scene: Scena[] };
 const base = `/tour/${centro}`;
 ---
 
 {
-  tour && (
-    <div class="tour" data-tour data-base={base} data-scene={JSON.stringify(tour.scene)}>
+  scene.length > 0 && (
+    <div class="tour" data-tour data-base={base} data-scene={JSON.stringify(scene)}>
       <span class="label">Tour virtuale 360°</span>
       <div class="tour-box">
         <button type="button" class="tour-start" data-tour-start style={`background-image:url(${base}/poster.jpg)`}>
-          <span class="tour-play">{tour.titolo}</span>
-          <small>Trascina per guardarti intorno · {tour.scene.length} punti di vista</small>
+          <span class="tour-play">Fai un giro dentro</span>
+          <small>Trascina per guardarti intorno · {scene.length} punti di vista</small>
         </button>
         <div class="tour-view" data-tour-view hidden />
       </div>
+      <output class="tour-coord" data-tour-coord hidden />
       <div class="tour-nav" data-tour-nav role="group" aria-label="Punti di vista del tour" hidden>
-        {tour.scene.map((s, i) => (
-          <button type="button" class="chip" data-i={i}>{s.nome}</button>
+        {scene.map((s) => (
+          <button type="button" class="chip" data-id={s.id}>{s.nome}</button>
         ))}
       </div>
     </div>
@@ -44,6 +48,7 @@ const base = `/tour/${centro}`;
   .tour-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
   .tour-nav .chip { cursor: pointer; min-height: 44px; font: inherit; }
   .tour-nav .chip[aria-pressed='true'] { background: var(--red); color: #fff; }
+  .tour-coord { display: block; margin-top: 10px; font: 14px/1.4 monospace; color: var(--red-txt); }
 </style>
 
 <script>
@@ -59,12 +64,18 @@ const base = `/tour/${centro}`;
       document.head.append(el);
     });
 
+  type Scena = { id: string; nome: string; hotspot: { verso: string; yaw: number; pitch: number; testo?: string | null }[] };
+  // `?modifica`: un clic nel panorama mostra (e copia) yaw e pitch da scrivere in Keystatic.
+  const modifica = new URLSearchParams(location.search).has('modifica');
+
   document.querySelectorAll<HTMLElement>('[data-tour]').forEach((root) => {
     const start = root.querySelector<HTMLButtonElement>('[data-tour-start]')!;
     const view = root.querySelector<HTMLElement>('[data-tour-view]')!;
     const nav = root.querySelector<HTMLElement>('[data-tour-nav]')!;
+    const coord = root.querySelector<HTMLOutputElement>('[data-tour-coord]')!;
     const base = root.dataset.base!;
-    const scene: { file: string; nome: string }[] = JSON.parse(root.dataset.scene!);
+    const scene: Scena[] = JSON.parse(root.dataset.scene!);
+    const nomi = Object.fromEntries(scene.map((s) => [s.id, s.nome]));
     const chips = [...nav.querySelectorAll<HTMLButtonElement>('.chip')];
 
     start.addEventListener('click', async () => {
@@ -76,19 +87,38 @@ const base = `/tour/${centro}`;
         return;
       }
       const scenes = Object.fromEntries(
-        scene.map((s, i) => [`s${i}`, { type: 'equirectangular', panorama: `${base}/${s.file}.jpg`, title: s.nome }]),
+        scene.map((s) => [
+          s.id,
+          {
+            type: 'equirectangular',
+            panorama: `${base}/${s.id}.jpg`,
+            title: s.nome,
+            // verso inesistente (id scritto male nel CMS) = freccia saltata, non tour rotto
+            hotSpots: s.hotspot
+              .filter((h) => nomi[h.verso])
+              .map((h) => ({ type: 'scene', sceneId: h.verso, yaw: h.yaw, pitch: h.pitch, text: h.testo || nomi[h.verso] })),
+          },
+        ]),
       );
       // @ts-expect-error pannellum arriva dallo script caricato sopra
       const v = window.pannellum.viewer(view, {
-        default: { firstScene: 's0', autoLoad: true, showControls: true, hfov: 100, compass: false },
+        default: { firstScene: scene[0].id, autoLoad: true, showControls: true, hfov: 100, compass: false },
         scenes,
       });
       const evidenzia = () => {
         const cur = v.getScene();
-        chips.forEach((c) => c.setAttribute('aria-pressed', String(`s${c.dataset.i}` === cur)));
+        chips.forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.id === cur)));
       };
       v.on('scenechange', evidenzia);
-      chips.forEach((c) => c.addEventListener('click', () => v.loadScene(`s${c.dataset.i}`)));
+      chips.forEach((c) => c.addEventListener('click', () => v.loadScene(c.dataset.id)));
+      if (modifica) {
+        view.addEventListener('click', (e) => {
+          const [pitch, yaw] = v.mouseEventToCoords(e);
+          coord.hidden = false;
+          coord.textContent = `${nomi[v.getScene()]}: yaw ${yaw.toFixed(0)}, pitch ${pitch.toFixed(0)}`;
+          navigator.clipboard?.writeText(`${yaw.toFixed(0)}, ${pitch.toFixed(0)}`).catch(() => {});
+        });
+      }
       start.hidden = true;
       view.hidden = false;
       nav.hidden = false;

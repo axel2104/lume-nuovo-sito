@@ -524,6 +524,52 @@ export default config({
             itemLabel: (props) => props.fields.didascalia.value || 'Render',
           },
         ),
+        tour: fields.array(
+          fields.object({
+            id: fields.text({
+              label: 'File dell’immagine',
+              description: 'Il nome del file in public/tour/<centro>/, senza .jpg. Es. “01”. Non cambiarlo: serve ai collegamenti.',
+              validation: { isRequired: true },
+            }),
+            nome: fields.text({
+              label: 'Nome dell’angolo',
+              description: 'Compare in alto a sinistra nel tour e nel pulsante sotto. Es. “Sala corsi”.',
+              validation: { isRequired: true },
+            }),
+            hotspot: fields.array(
+              fields.object({
+                verso: fields.text({
+                  label: 'Porta a (file)',
+                  description: 'Il “File dell’immagine” della scena di arrivo. Es. “03”.',
+                  validation: { isRequired: true },
+                }),
+                testo: fields.text({
+                  label: 'Dicitura',
+                  description: 'Vuota = il nome dell’angolo di arrivo.',
+                }),
+                yaw: fields.number({
+                  label: 'Direzione (yaw)',
+                  description: 'Gradi, da −180 a 180. Apri la pagina del centro con ?modifica e clicca sul punto: te lo mostra.',
+                  validation: { isRequired: true },
+                }),
+                pitch: fields.number({
+                  label: 'Altezza (pitch)',
+                  description: '0 = orizzonte, negativo = verso il pavimento. Di solito tra −15 e 0.',
+                  validation: { isRequired: true },
+                }),
+              }),
+              {
+                label: 'Frecce verso altri angoli',
+                itemLabel: (props) => props.fields.testo.value || `→ ${props.fields.verso.value}`,
+              },
+            ),
+          }),
+          {
+            label: 'Tour virtuale 360°',
+            description: 'Gli angoli del tour, nell’ordine dei pulsanti. Per aggiungere un angolo nuovo serve prima caricare il file in public/tour/.',
+            itemLabel: (props) => props.fields.nome.value || 'Angolo',
+          },
+        ),
         // Il listino della sede. Deve restare allineato a `listino` nello
         // schema di `centri` in src/content.config.ts: se un campo esiste la'
         // e non qui, il primo salvataggio da Keystatic lo cancella.

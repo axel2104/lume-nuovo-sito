@@ -58,6 +58,130 @@ render:
     didascalia: "Spogliatoi — la zona specchi"
   - foto: ../../assets/centri/urban/foto-6-2.jpg
     didascalia: "Area allenamento — piano −1"
+tour:
+  - id: "01"
+    nome: "Ingresso"
+    hotspot:
+      - verso: "02"
+        yaw: 115
+        pitch: -10
+      - verso: "07"
+        yaw: 45
+        pitch: -8
+  - id: "02"
+    nome: "Lounge"
+    hotspot:
+      - verso: "01"
+        yaw: -165
+        pitch: -8
+      - verso: "07"
+        yaw: 25
+        pitch: -8
+      - verso: "03"
+        yaw: -60
+        pitch: -8
+  - id: "07"
+    nome: "Corridoio"
+    hotspot:
+      - verso: "02"
+        yaw: 115
+        pitch: -8
+      - verso: "03"
+        yaw: -45
+        pitch: -8
+      - verso: "04"
+        yaw: 165
+        pitch: -5
+  - id: "03"
+    nome: "Sala corsi"
+    hotspot:
+      - verso: "07"
+        yaw: 120
+        pitch: -8
+  - id: "04"
+    nome: "Connettivo"
+    hotspot:
+      - verso: "07"
+        yaw: -165
+        pitch: -8
+      - verso: "05"
+        yaw: -20
+        pitch: -5
+  - id: "05"
+    nome: "Spogliatoio"
+    hotspot:
+      - verso: "04"
+        yaw: 20
+        pitch: -5
+      - verso: "08"
+        yaw: -90
+        pitch: -10
+      - verso: "06"
+        yaw: 90
+        pitch: -8
+  - id: "08"
+    nome: "Spogliatoio · zona specchi"
+    hotspot:
+      - verso: "05"
+        yaw: 90
+        pitch: -8
+      - verso: "06"
+        yaw: 130
+        pitch: -8
+  - id: "06"
+    nome: "Servizi"
+    hotspot:
+      - verso: "05"
+        yaw: -160
+        pitch: -8
+      - verso: "08"
+        yaw: 140
+        pitch: -8
+  - id: "09"
+    nome: "Accesso area allenamento"
+    hotspot:
+      - verso: "10"
+        yaw: 20
+        pitch: -8
+      - verso: "11"
+        yaw: -35
+        pitch: -8
+      - verso: "07"
+        yaw: -140
+        pitch: 0
+  - id: "10"
+    nome: "Area allenamento 1"
+    hotspot:
+      - verso: "09"
+        yaw: -170
+        pitch: -8
+      - verso: "11"
+        yaw: 60
+        pitch: -10
+      - verso: "12"
+        yaw: 140
+        pitch: -10
+  - id: "11"
+    nome: "Area allenamento 2"
+    hotspot:
+      - verso: "10"
+        yaw: 20
+        pitch: -10
+      - verso: "12"
+        yaw: -120
+        pitch: -10
+      - verso: "09"
+        yaw: 175
+        pitch: -10
+  - id: "12"
+    nome: "Area allenamento 3"
+    hotspot:
+      - verso: "11"
+        yaw: -100
+        pitch: -10
+      - verso: "10"
+        yaw: 100
+        pitch: -10
 superficie: 1000
 immagine: ../../assets/centri/urban/foto-1.jpg
 video: https://pub-90d4a80741cd4aadb6d995599fefc986.r2.dev/site/urban-sala.mp4

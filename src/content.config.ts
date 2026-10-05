@@ -250,6 +250,32 @@ const centri = defineCollection({
       .array(z.object({ foto: image(), didascalia: z.string() }))
       .default([]),
     /**
+     * Tour virtuale 360°. Le immagini equirettangolari stanno in
+     * `public/tour/<centro>/<id>.jpg`; `id` è il nome del file senza estensione.
+     * Ogni hotspot porta a un'altra scena (`verso` = id di arrivo). `yaw` è la
+     * direzione orizzontale in gradi (0 = centro dell'immagine, positivo a
+     * destra), `pitch` l'altezza (0 = orizzonte, negativo = verso il pavimento).
+     * Per leggerli: apri la pagina del centro con `?modifica` e clicca sul punto.
+     */
+    tour: z
+      .array(
+        z.object({
+          id: z.string(),
+          nome: z.string(),
+          hotspot: z
+            .array(
+              z.object({
+                verso: z.string(),
+                yaw: z.number(),
+                pitch: z.number().default(0),
+                testo: z.string().nullish(),
+              }),
+            )
+            .default([]),
+        }),
+      )
+      .default([]),
+    /**
      * Video del centro, in loop muto sopra la foto del titolo.
      *
      * È un URL e non un `image()`: i video non passano dall'ottimizzazione di
