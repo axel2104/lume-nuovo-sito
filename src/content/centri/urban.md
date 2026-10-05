@@ -273,12 +273,17 @@ listino:
       pgm:
         annuale: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=3&PaymentPlanId=167
         rate: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=3&PaymentPlanId=170
+        mensile: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=3&PaymentPlanId=171
     - nome: Over 30
       per: Dai 30 anni in su
       annuale: 540
       rate: 576
       mensile: 65
       evidenza: false
+      pgm:
+        annuale: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=3&PaymentPlanId=167
+        rate: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=3&PaymentPlanId=170
+        mensile: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=3&PaymentPlanId=171
 ---
 
 **Allenati forte. Senza complicazioni.** Urban è lo strength club di Lume in
