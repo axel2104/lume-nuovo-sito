@@ -51,6 +51,11 @@ const nonRecuperabili = t.recuperi.nonRecuperabili as string[];
 // Nota sotto le chiusure (es. Giochi di Natale): non è un giorno, quindi non
 // sta nell'elenco. Come le date di stagione, vuota sparisce — vedi `campo()`.
 const notaChiusure = campo(t.recuperi, 'notaChiusure');
+interface GruppoOrari {
+  titolo: string;
+  righe: { nome: string; orari: string }[];
+}
+const orariRecuperi = ((t.recuperi as any).orari ?? []) as GruppoOrari[];
 ---
 
 <Layout title={t.seo.titolo} description={t.seo.descrizione}>
@@ -239,6 +244,31 @@ const notaChiusure = campo(t.recuperi, 'notaChiusure');
         </div>
       </div>
     </section>
+
+    {orariRecuperi.length > 0 && (
+      <section class="sec band" aria-labelledby="tit-orari-recuperi">
+        <div class="wrap">
+          <div class="sec-head">
+            <h2 class="d" id="tit-orari-recuperi">{(t.recuperi as any).titoloOrari}</h2>
+          </div>
+          <div class="sn-norme">
+            {orariRecuperi.map((g) => (
+              <article class="info-card">
+                <h3>{g.titolo}</h3>
+                <ul class="sn-elenco">
+                  {g.righe.map((r) => (
+                    <li>
+                      <b>{r.nome}</b><br />
+                      {r.orari}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
 
     <section class="sec" style="padding-top:0">
       <div class="wrap">

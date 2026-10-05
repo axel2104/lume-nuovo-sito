@@ -1236,6 +1236,24 @@ export default config({
             label: fields.text({ label: 'Sopratitolo' }),
             titolo: fields.text({ label: 'Titolo', validation: { isRequired: true } }),
             testo: fields.text({ label: 'Come si recupera una lezione', multiline: true }),
+            titoloOrari: fields.text({ label: 'Titolo degli orari dei recuperi' }),
+            orari: fields.array(
+              fields.object({
+                titolo: fields.text({ label: 'Gruppo (es. Scuola nuoto bambini — bilezione)' }),
+                righe: fields.array(
+                  fields.object({
+                    nome: fields.text({ label: 'Vasca o livello' }),
+                    orari: fields.text({ label: 'Giorni e orari' }),
+                  }),
+                  { label: 'Righe', itemLabel: (props) => props.fields.nome.value || 'Riga' },
+                ),
+              }),
+              {
+                label: 'Orari dei recuperi',
+                description: 'Vuoto = la tabella non compare.',
+                itemLabel: (props) => props.fields.titolo.value || 'Gruppo',
+              },
+            ),
             titoloNonRecuperabili: fields.text({ label: 'Titolo del riquadro delle chiusure' }),
             nonRecuperabili: fields.array(fields.text({ label: 'Giorno' }), {
               label: 'Giorni non recuperabili',

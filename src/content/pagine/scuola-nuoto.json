@@ -144,6 +144,33 @@
     "label": "Assenze",
     "titolo": "Recuperare una lezione",
     "testo": "Le lezioni perse si possono recuperare, ma l'assenza va dichiarata prima: si cancella la prenotazione almeno un'ora prima dell'inizio, e da quel momento si è abilitati a prenotare un recupero. Serve avere l'abbonamento attivo ed essere in regola con i pagamenti.",
+    "titoloOrari": "Orari dei recuperi",
+    "orari": [
+      {
+        "titolo": "Scuola nuoto bambini — bilezione",
+        "righe": [
+          { "nome": "Vasca piccola (ambientamento)", "orari": "Lun e Gio 17.20 · Mar e Ven 16.25 e 17.20" },
+          { "nome": "Vasca media (1° livello)", "orari": "Lun e Gio 17.20 e 18.15 · Mar e Ven 16.25 e 17.20" },
+          { "nome": "Vasca grande (2°, 3° e 4° livello)", "orari": "Lun e Gio 17.20 e 18.15 · Mar e Ven 16.25 e 17.20" }
+        ]
+      },
+      {
+        "titolo": "Scuola nuoto bambini — monolezione",
+        "righe": [
+          { "nome": "Vasca piccola (ambientamento)", "orari": "Mer 17.20 e 18.15 · Sab 16.25 e 17.20" },
+          { "nome": "Vasca media (1° livello)", "orari": "Mer 17.20 e 18.15 · Sab 15.30, 16.25 e 17.20" },
+          { "nome": "Vasca grande (2°, 3° e 4° livello)", "orari": "Mer 17.20 e 18.15 · Sab 15.30, 16.25 e 17.20" }
+        ]
+      },
+      {
+        "titolo": "Scuola nuoto ragazzi",
+        "righe": [
+          { "nome": "Principianti", "orari": "Lun, Mer e Gio 19.10" },
+          { "nome": "Intermedi", "orari": "Mar, Mer e Ven 19.10" },
+          { "nome": "Avanzati", "orari": "Lun e Gio 19.10" }
+        ]
+      }
+    ],
     "titoloNonRecuperabili": "Giorni non recuperabili",
     "nonRecuperabili": [
       "1 novembre",
