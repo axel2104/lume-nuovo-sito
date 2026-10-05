@@ -9,7 +9,7 @@ descrizione: >-
   solidale divisa tra ADMO e una realtà del territorio a tua scelta.
 luogo: Centro Commerciale Val di Chienti, Piediripa (Macerata)
 immagine: ../../assets/eventi/corriadmo.jpg
-iscrizioniHref: https://pci.jotform.com/form/261522557799370
+iscrizioniHref: https://n8n.lumeflow.it/form/corriadmo-2026
 postiLimitati: false
 pubblicato: true
 ---
@@ -38,8 +38,9 @@ Verde e Croce Rossa di Macerata.
 
 ## Come iscriversi
 
-- **Online**: compila il modulo dal pulsante «Iscriviti» in questa pagina —
-  puoi indicare anche familiari e amici e pagare con carta, PayPal o Satispay.
+- **Con noi**: compila il modulo dal pulsante «Iscriviti» in questa pagina —
+  ci servono nome, contatti e taglia della maglia; ti ricontattiamo noi per
+  quota di partecipazione e ritiro del braccialetto.
 - **Al Centro Commerciale**: presso il Box Informazioni o ai desk delle
   associazioni in galleria nei giorni dedicati.
 - **Il giorno stesso**: domenica 18 ottobre dalle 7:30 alle 8:30, presso gli
