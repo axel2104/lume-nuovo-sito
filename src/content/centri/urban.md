@@ -387,8 +387,8 @@ listino:
       mensile: 65
       evidenza: false
       pgm:
-        annuale: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=3&PaymentPlanId=167
-        rate: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=3&PaymentPlanId=170
+        annuale: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=3&PaymentPlanId=188
+        rate: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=3&PaymentPlanId=189
         mensile: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=3&PaymentPlanId=171
 ---
 
