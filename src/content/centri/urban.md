@@ -389,7 +389,7 @@ listino:
       pgm:
         annuale: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=3&PaymentPlanId=188
         rate: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=3&PaymentPlanId=189
-        mensile: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=3&PaymentPlanId=171
+        mensile: https://lumefitness.perfectgym.com/ClientPortal2/Registration/Start?clubID=3&PaymentPlanId=190
 ---
 
 **Allenati forte. Senza complicazioni.** Urban è lo strength club di Lume in
