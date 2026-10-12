@@ -30,11 +30,12 @@ let kb: { quando: number; fissa: string; punti: Punto[] } | null = null;
 
 async function leggiKb() {
   if (kb && Date.now() - kb.quando < 600_000) return kb;
-  const [l, r, centri, faq] = await Promise.all([
+  const [l, r, centri, faq, abbonamenti] = await Promise.all([
     Promise.resolve(listini({} as any)).then((x: Response) => x.json()),
     Promise.resolve(regolamento({} as any)).then((x: Response) => x.json()),
     getCollection('centri'),
     getCollection('helpdesk'),
+    getCollection('abbonamenti'),
   ]);
   const orari = centri
     .filter((c) => c.data.planning?.length)
@@ -43,8 +44,18 @@ async function leggiKb() {
         `# Orari corsi ${c.data.nome} (aggiornati al ${c.data.planningAggiornatoIl ?? 'n.d.'})\n${planningCompatto(c.data.planning!)}`,
     )
     .join('\n\n');
+  // Condizioni degli abbonamenti (preavviso, sospensioni): non stanno in listini.json.
+  const condizioni = abbonamenti
+    .filter((a) => a.data.pubblicato)
+    .map((a) => {
+      const d = a.data;
+      const formule = d.formule.map((f: any) => `${f.id}: ${f.prezzo} €/${f.periodo}, ${f.pagamento}, durata minima ${f.durataMinima}${f.condizioni?.length ? ` (${f.condizioni.join('; ')})` : ''}`).join(' | ');
+      return `## ${d.nome}: ${d.per}\nAttivazione ${d.attivazione} €, preavviso disdetta ${d.preavviso}. Include: ${d.attivita.join(', ')}.\n${formule}\n${a.body ?? ''}`;
+    })
+    .join('\n\n');
   const fissa = [
     `# Listini e centri (JSON)\n${JSON.stringify({ formule: l.formule, prova: l.prova, centri: l.centri, discipline: l.discipline.map((d: any) => d.nome) })}`,
+    `# Abbonamenti: condizioni\n${condizioni}`,
     orari,
     `# Domande frequenti\n${faq
       .filter((f) => f.data.pubblicato)
@@ -103,7 +114,8 @@ export const POST: APIRoute = async ({ request }) => {
     },
     body: JSON.stringify({
       model: MODELLO,
-      max_tokens: 400,
+      max_tokens: 700,
+      reasoning: { enabled: false }, // risposte brevi: i token di ragionamento si mangiano il limite
       temperature: 0.3,
       messages: [
         // La parte fissa (listini, orari, FAQ) è identica fra le richieste: con i modelli che supportano
