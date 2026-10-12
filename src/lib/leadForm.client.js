@@ -44,6 +44,9 @@ const RE_STATO = /^(iscritto|esiste|nuovo)(?:_(.+))?$/;
  */
 const MS_SOSPETTO = 1500;
 
+/** Portale PerfectGym di Lume: ripiego per le sedi senza `perfectgymUrl` proprio. */
+const PORTALE_PG = 'https://lumefitness.perfectgym.com/ClientPortal2/#/Registration';
+
 // ─── Accesso al contesto globale ──────────────────────────────────────────
 
 function cfg() {
@@ -447,9 +450,10 @@ export function initForm(root, options) {
     caricamento(true);
 
     const url = cfg().webhookLead;
+    let risposta = {};
     try {
       if (url) {
-        await postJson(url, corpo);
+        risposta = (await postJson(url, corpo)) || {};
       } else {
         console.info('[lume] lead (nessun webhook configurato)', corpo);
       }
@@ -470,8 +474,14 @@ export function initForm(root, options) {
       lead_attivita: corpo.attivita.join(', '),
     });
 
+    // Da qui in poi le azioni di questa pagina si agganciano al suo contatto.
+    try {
+      if (typeof window.lumeSetEmail === 'function') window.lumeSetEmail(corpo.email);
+    } catch (e) {}
+
     riepiloga(step.conferma, corpo);
     mostraPortale(step.conferma, corpo);
+    mostraCodice(step.conferma, risposta.codice);
     vaiA(step.conferma);
     void apriPrenotazione(step.conferma, corpo);
   }
@@ -504,6 +514,25 @@ export function initForm(root, options) {
       if (a) a.href = url;
     }
     blocco.hidden = !attivo;
+  }
+
+  /**
+   * Codice del guest pass sulla schermata finale, con il link al portale dove
+   * si attiva. Il codice lo manda il server solo a chi risulta nuovo: se manca
+   * mostriamo il ripiego "ti scriviamo noi", mai un codice inventato qui.
+   */
+  function mostraCodice(idConferma, codice) {
+    if (!steps[idConferma]?.codice) return;
+    const box = byId(idConferma + '-codice');
+    const ko = root.querySelector('[data-codice-ko]');
+    if (!box) return;
+    if (codice) {
+      box.querySelector('[data-codice]').textContent = codice;
+      const url = (stato.valori.centro || {}).pg || '';
+      box.querySelector('[data-codice-link]').href = url && url !== '#' ? url : PORTALE_PG;
+    }
+    box.hidden = !codice;
+    if (ko) ko.hidden = Boolean(codice);
   }
 
   // ─── Prenotazione Cal.com ───────────────────────────────────────────────
@@ -658,8 +687,14 @@ export function initForm(root, options) {
     qa('[data-cal-ko], [data-cal-alt]').forEach((el) => {
       el.hidden = true;
     });
-    qa('[data-pg-link]').forEach((el) => {
+    qa('[data-pg-link], [data-codice-box], [data-codice-ko]').forEach((el) => {
       el.hidden = true;
+    });
+    qa('[data-codice]').forEach((el) => {
+      el.textContent = '';
+    });
+    qa('[data-codice-copia]').forEach((el) => {
+      el.textContent = 'Copia il codice';
     });
     qa('[id$="-err"]').forEach((el) => {
       el.textContent = '';
@@ -725,6 +760,24 @@ export function initForm(root, options) {
       const valore = scelta.getAttribute('data-scelta');
       stato.valori.modalita = valore;
       return vaiA(valore);
+    }
+
+    const copia = t.closest('[data-codice-copia]');
+    if (copia) {
+      ev.preventDefault();
+      const codice = root.querySelector('[data-codice]')?.textContent || '';
+      const fatto = () => {
+        copia.textContent = 'Copiato ✓';
+        traccia('prova_codice_copiato', { lead_flusso: opts.flusso });
+      };
+      if (navigator.clipboard?.writeText) navigator.clipboard.writeText(codice).then(fatto, () => {});
+      else fatto();
+      return;
+    }
+
+    if (t.closest('[data-codice-link]')) {
+      traccia('prova_portale_aperto', { lead_flusso: opts.flusso });
+      return;
     }
 
     if (t.closest('[data-form-close]')) {

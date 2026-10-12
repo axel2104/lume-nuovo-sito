@@ -41,8 +41,10 @@ const canonical = new URL(Astro.url.pathname, base).toString();
 const ogImage = new URL(typeof image === 'string' ? image : image.src, base).toString();
 
 const clientConfig = {
-  webhookCheck: siteConfig.webhookCheck,
-  webhookLead: siteConfig.webhookLead,
+  // Il browser parla solo con le route del sito: Supabase e n8n restano lato server.
+  webhookCheck: '/api/verifica',
+  webhookLead: '/api/lead',
+  apiEvento: '/api/evento',
   webhookVisit: siteConfig.webhookVisit,
   calcomOrigin: siteConfig.calcomOrigin,
   webhookPlanning: siteConfig.webhookPlanning,

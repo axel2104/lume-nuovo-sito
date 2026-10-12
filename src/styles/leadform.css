@@ -490,3 +490,23 @@ textarea.lf-in {
   color: var(--red-txt);
   text-decoration: underline;
 }
+
+/* Codice del guest pass: l'unica cosa sulla schermata, quindi grande e copiabile. */
+.lf-codice {
+  display: grid;
+  gap: 12px;
+  margin: 18px 0;
+  text-align: center;
+}
+.lf-codice[hidden] {
+  display: none;
+}
+.lf-codice-val {
+  padding: 18px;
+  border: 2px dashed var(--line);
+  border-radius: 12px;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  user-select: all;
+}

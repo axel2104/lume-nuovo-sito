@@ -68,8 +68,41 @@
       }
       window.dataLayer.push(ev);
       pixelEvento(nome, ev);
+      inviaEvento(nome, ev);
     } catch (e) {}
   };
+
+  // ─── Azioni del cliente verso il CRM ────────────────────────────────────
+  /**
+   * Email di chi ha appena inviato un form, tenuta SOLO in memoria: finché la
+   * pagina resta aperta aggancia le azioni successive al suo contatto. Non si
+   * scrive su storage, quindi non serve consenso per tenerla; l'invio degli
+   * eventi invece richiede il vid, che esiste solo dopo il consenso analytics.
+   */
+  var emailSessione = '';
+  window.lumeSetEmail = function (email) {
+    emailSessione = String(email || '').trim().toLowerCase();
+  };
+
+  function inviaEvento(nome, ev) {
+    if (!CFG.apiEvento || !vidCorrente) return;
+    var dati = {};
+    for (var k in ev) if (k !== 'event') dati[k] = ev[k];
+    var body = JSON.stringify({
+      evento: nome,
+      vid: vidCorrente,
+      email: emailSessione || null,
+      pagina: location.pathname,
+      dati: dati,
+    });
+    try {
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(CFG.apiEvento, new Blob([body], { type: 'text/plain;charset=UTF-8' }));
+      } else {
+        fetch(CFG.apiEvento, { method: 'POST', body: body, keepalive: true }).catch(function () {});
+      }
+    } catch (e) {}
+  }
 
   // ─── Meta Pixel ─────────────────────────────────────────────────────────
   /**

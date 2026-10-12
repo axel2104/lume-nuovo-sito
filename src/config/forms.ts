@@ -60,10 +60,11 @@ export const INTERESSI_JUNIOR: readonly Interesse[] = [
 /**
  * Mappa slug del centro → opzione del campo `SEDE`.
  *
- * Le chiavi sono gli id della collection `centri`. Solo i due centri aperti: il
- * campo Airtable non ha altre opzioni, e Piediripa/Urban hanno un funnel di
- * prevendita separato (tabella `Prevendita Urban`). Un centro elencato qui che
- * su Airtable non esiste produce lead che si perdono in silenzio.
+ * Le chiavi sono gli id della collection `centri`. Il campo `SEDE` di Airtable
+ * ha MACERATA, MONTECASSIANO e URBAN; Piediripa non c'è. Urban non ha ancora
+ * event type Cal.com (`calcom` assente): il form invia il lead e salta il
+ * calendario. Un centro elencato qui che su Airtable non esiste produce lead
+ * che si perdono in silenzio.
  */
 export const SEDI: Record<string, string> = {
   macerata: 'MACERATA',
@@ -226,6 +227,11 @@ export interface Step {
    * comunque un contatto acquisito. Al contrario si perderebbe la maggioranza.
    */
   prenotazione?: Agenda;
+  /**
+   * Schermata finale che mostra il codice del guest pass (lo manda il server) e il
+   * link al portale PerfectGym dove si attiva. Solo su step `finale`.
+   */
+  codice?: boolean;
   /** Conta nell'indicatore di avanzamento. Conferme e vicoli ciechi no. */
   passo?: number;
 }
@@ -481,7 +487,7 @@ export const FLUSSI: Record<string, Flusso> = {
     tipoRichiesta: TIPO_RICHIESTA.prova,
     tipoRichiestaSe: { iscritto: TIPO_RICHIESTA.assistenza },
     medium: 'FormProva',
-    passi: 3,
+    passi: 2,
     steps: [
       {
         id: 'identita',
@@ -507,67 +513,22 @@ export const FLUSSI: Record<string, Flusso> = {
         id: 'anagrafica',
         passo: 2,
         titolo: 'Piacere di conoscerti',
-        sub: 'Ci servono per intestare il pass e avvisarti quando è pronto.',
+        sub: 'Ci servono per intestare il pass. Subito dopo ricevi il codice per attivarlo.',
         campi: [...campiAnagrafica, campoInteressi('(così prepariamo la settimana giusta)')],
-        avanti: 'Continua',
-        azione: 'next',
-        prossimo: 'attivazione',
+        avanti: 'Ottieni il codice',
+        azione: 'invia',
+        conferma: 'conferma-codice',
         indietro: 'identita',
-      },
-      {
-        id: 'attivazione',
-        passo: 3,
-        titolo: 'Come vuoi iniziare?',
-        sub: 'Il primo ingresso lo facciamo insieme: ti mostriamo le sale e come prenotare i corsi.',
-        campi: [
-          {
-            tipo: 'scelte',
-            nome: 'modalita',
-            opzioni: [
-              { valore: 'visita', label: 'Fisso ora il primo ingresso', nota: 'Scegli giorno e ora, ti aspettiamo in reception.' },
-              { valore: 'richiamata', label: 'Preferisco essere richiamato', nota: 'Ti chiamiamo noi per organizzare.' },
-            ],
-          },
-        ],
-        indietro: 'anagrafica',
-      },
-      {
-        id: 'visita',
-        titolo: 'Il tuo primo ingresso',
-        sub: 'Porta un documento: attiviamo il pass in reception.',
-        campi: [campoNota('Qualcosa che dovremmo sapere', 'Es. vengo con un amico, non mi alleno da un anno')],
-        avanti: 'Scegli quando',
-        azione: 'invia',
-        conferma: 'conferma-visita',
-        indietro: 'attivazione',
-      },
-      {
-        id: 'richiamata',
-        titolo: 'Ti chiamiamo noi',
-        sub: 'Ti spieghiamo come attivare il pass e organizziamo il primo ingresso.',
-        campi: [campoNota('Di cosa vuoi parlare', 'Es. vorrei sapere se ci sono corsi la sera')],
-        avanti: 'Scegli quando',
-        azione: 'invia',
-        conferma: 'conferma-richiamata',
-        indietro: 'attivazione',
       },
       stepGiaIscritto(
         'Il pass prova è riservato a chi non ha ancora avuto un abbonamento Lume, e la tua email risulta già registrata. Scrivici: troviamo la soluzione giusta per te.',
       ),
       {
-        id: 'conferma-visita',
-        titolo: 'Pass richiesto',
-        sub: 'Scegli quando venire: ti aspettiamo in reception per attivarlo.',
+        id: 'conferma-codice',
+        titolo: 'Il tuo codice',
+        sub: 'Copialo, poi attivalo sul portale: il pass parte da lì.',
         finale: true,
-        prenotazione: 'visita',
-        chiudi: 'Ho finito',
-      },
-      {
-        id: 'conferma-richiamata',
-        titolo: 'Pass richiesto',
-        sub: 'Scegli quando possiamo chiamarti per organizzare il primo ingresso.',
-        finale: true,
-        prenotazione: 'richiamata',
+        codice: true,
         chiudi: 'Ho finito',
       },
       confermaAssistenza,

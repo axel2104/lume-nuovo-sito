@@ -1,3 +1,9 @@
+> **Aggiornamento 12/10/2026 — questa architettura è superata.** Il browser non passa più da n8n:
+> parla con `/api/verifica`, `/api/lead`, `/api/evento` (route server Vercel), che scrivono su
+> `crm_leads` / `crm_site_events` di **lume-perfectgym** tramite funzioni `site_*` (migrazione
+> `20261012_sito_lead_eventi_rpc.sql`) e inoltrano a n8n/Airtable in parallelo. `utenti`/`richieste`
+> qui sotto non sono mai state applicate. Il check restituisce solo `stato` (chiude il punto §6).
+
 # Supabase — anagrafica, richieste e tutto ciò che verrà
 
 Il sito raccoglie lead da mesi e non sa dire se due richieste sono della stessa

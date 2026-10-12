@@ -346,6 +346,21 @@ const id = (step: Step, nome: string) => `${P}-${step.id}-${nome}`;
           </p>
         )}
 
+        {step.codice && (
+          <>
+            <div class="lf-codice" id={id(step, 'codice')} data-codice-box hidden>
+              <code class="lf-codice-val" data-codice></code>
+              <button type="button" class="btn btn-out btn-full" data-codice-copia>Copia il codice</button>
+              <a href="#" class="btn btn-red btn-full" target="_blank" rel="noopener" data-codice-link
+                >Vai al portale e attivalo ↗</a
+              >
+            </div>
+            <p class="lf-cal-ko" data-codice-ko hidden>
+              La richiesta è arrivata: ti scriviamo noi con il codice.
+            </p>
+          </>
+        )}
+
         {step.finale ? (
           <button type="button" class="btn btn-cream btn-full" data-form-close>
             {step.chiudi ?? 'Chiudi'}
