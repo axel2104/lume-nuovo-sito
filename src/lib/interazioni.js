@@ -103,13 +103,12 @@ export function avviaInterazioni() {
     });
     // Direttamente al database, senza passare da una funzione del sito: ogni visita costerebbe un'esecuzione
     // in più. La chiave è pubblica e può solo chiamare `site_visita`, che scrive una riga anonima.
+    // sendBeacon non può impostare intestazioni, quindi la chiave viaggia nell'indirizzo (lo accetta il gateway).
+    const url = `${SB_URL}/rest/v1/rpc/site_visita?apikey=${SB_KEY}`;
+    const dati = JSON.stringify({ p: JSON.parse(corpo) });
     try {
-      fetch(`${SB_URL}/rest/v1/rpc/site_visita`, {
-        method: 'POST',
-        headers: { apikey: SB_KEY, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ p: JSON.parse(corpo) }),
-        keepalive: true, // sopravvive alla chiusura della pagina
-      }).catch(() => {});
+      if (navigator.sendBeacon(url, new Blob([dati], { type: 'application/json' }))) return;
+      fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: dati, keepalive: true }).catch(() => {});
     } catch {
       /* statistiche: se falliscono, la pagina non deve accorgersene */
     }
