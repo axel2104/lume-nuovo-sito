@@ -754,3 +754,8 @@ a.chip{display:inline-flex;align-items:center;min-height:44px}
   border: 1px solid rgba(255, 255, 255, .18);
   cursor: pointer;
 }
+
+/* Pulsante di pausa dei video muti: mostra l'icona dell'azione possibile. */
+[data-centro-toggle] .ico-play, [data-hero-pausa] .ico-play { display: none; }
+[data-centro-toggle].is-in-pausa .ico-play, [data-hero-pausa].is-in-pausa .ico-play { display: inline; }
+[data-centro-toggle].is-in-pausa .ico-pausa, [data-hero-pausa].is-in-pausa .ico-pausa { display: none; }

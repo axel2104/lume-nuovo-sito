@@ -1,3 +1,4 @@
+import { mostraComando } from './videoCentro.client.js';
 /**
  * Anteprima video nelle tessere.
  *
@@ -125,8 +126,18 @@ export function initAnteprimeVideo(griglia, opzioni) {
  * Va richiamata anche sul contenuto iniettato nel pannello, che non passa
  * dal caricamento della pagina.
  */
+/** Per i video che parlano da soli (hero): conta solo la rete. Hover e «riduci movimento» servono alle anteprime. */
+function reteAdatta() {
+  try {
+    const rete = navigator.connection;
+    return !(rete && (rete.saveData || /(^|-)2g$/.test(rete.effectiveType || '')));
+  } catch (e) {
+    return true;
+  }
+}
+
 export function avviaVideoHero(radice) {
-  if (!radice || !ambienteAdatto()) return;
+  if (!radice || !reteAdatta()) return;
   radice.querySelectorAll('video[data-hero-video]').forEach((v) => {
     if (!v.dataset.sorgente || v.src) return;
     // L'attributo `muted` nel markup non basta: senza forzare anche la
@@ -135,5 +146,8 @@ export function avviaVideoHero(radice) {
     v.src = v.dataset.sorgente;
     const p = v.play();
     if (p && typeof p.catch === 'function') p.catch(() => {});
+    // Pulsante di pausa: compare quando il video suona davvero.
+    const bottone = v.closest('.disc-hero')?.querySelector('[data-hero-pausa]');
+    if (bottone) v.addEventListener('playing', () => mostraComando(v, bottone), { once: true });
   });
 }

@@ -77,6 +77,15 @@ const centroUnico = sediDisponibili.length === 1 ? sediDisponibili[0].id : '';
               )
             )
           }
+          {
+            d.video && (
+              <button type="button" class="hero-vcap hero-vcap-dx" data-hero-pausa hidden aria-label="Metti in pausa il video">
+                <svg class="ico-pausa" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true" fill="currentColor"><rect x="1" y="1" width="3.5" height="10" rx="1" /><rect x="7.5" y="1" width="3.5" height="10" rx="1" /></svg>
+          <svg class="ico-play" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true" fill="currentColor"><path d="M2 1l9 5-9 5z" /></svg>
+                Video
+              </button>
+            )
+          }
           <div class="disc-hero-in">
             <span class="label">{d.categoria}</span>
             <h1 class="d">{d.nome}</h1>

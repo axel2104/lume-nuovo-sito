@@ -230,6 +230,11 @@ function assaggio(p: (typeof piani)[number]) {
           sta guardando, non un montaggio unico per tutti — il vecchio
           showreel (girato a Urban) non è più in pagina.
         */}
+        <button type="button" class="hero-vcap" data-hero-pausa hidden aria-label="Metti in pausa il video">
+          <svg class="ico-pausa" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true" fill="currentColor"><rect x="1" y="1" width="3.5" height="10" rx="1" /><rect x="7.5" y="1" width="3.5" height="10" rx="1" /></svg>
+          <svg class="ico-play" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true" fill="currentColor"><path d="M2 1l9 5-9 5z" /></svg>
+          Pausa
+        </button>
         <button type="button" class="hero-vcap" data-hero-showreel aria-haspopup="dialog">
           <svg class="ico-play" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true" fill="currentColor">
             <path d="M2 1l9 5-9 5z" />
@@ -503,6 +508,7 @@ function assaggio(p: (typeof piani)[number]) {
 </Layout>
 
 <script>
+  import { mostraComando } from '../lib/videoCentro.client.js';
   /* ─── Galleria dell'hero ───────────────────────────────
      Il video del centro visibile parte da sé sopra la sua foto, e quando
      finisce passa al centro dopo: la durata del filmato è il tempo della
@@ -524,15 +530,17 @@ function assaggio(p: (typeof piani)[number]) {
       ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     } catch (e) {}
 
-    /* Il risparmio dati è una richiesta esplicita, la rete lenta un fatto
-       misurato: in entrambi i casi tre megabyte di drone non si spediscono. */
+    /* Il risparmio dati è una richiesta esplicita, la rete 2g un fatto misurato:
+       in entrambi i casi tre megabyte di drone non si spediscono. Il 3g non conta:
+       i telefoni lo dichiarano anche su linee che il video lo reggono. */
     let magra = false;
     try {
       const rete = (navigator as any).connection;
-      magra = Boolean(rete && (rete.saveData || /^(slow-2g|2g|3g)$/.test(rete.effectiveType || '')));
+      magra = Boolean(rete && (rete.saveData || /^(slow-2g|2g)$/.test(rete.effectiveType || '')));
     } catch (e) {}
 
-    const conVideo = clip instanceof HTMLVideoElement && !ridotto && !magra;
+    // Il video parte sempre, muto, anche con «riduci movimento»: c'è il pulsante Pausa. `ridotto` ferma solo il giro a tempo delle foto.
+    const conVideo = clip instanceof HTMLVideoElement && !magra;
 
     let attiva = 0;
     let giro = 0;
@@ -558,6 +566,7 @@ function assaggio(p: (typeof piani)[number]) {
         return;
       }
       if (clip.getAttribute('src') !== src) clip.setAttribute('src', src);
+      if (clip.dataset.pausaUtente) return; // chi ha messo in pausa non va contraddetto dal cambio slide
       const avvio = clip.play();
       if (avvio && avvio.catch) avvio.catch(() => aTempo());
     };
@@ -587,7 +596,10 @@ function assaggio(p: (typeof piani)[number]) {
     };
 
     if (clip instanceof HTMLVideoElement && conVideo) {
+      clip.muted = true; // l'attributo da solo non basta a tutti i browser mobili
       clip.addEventListener('canplay', () => clip.classList.add('pronto'));
+      const comando = document.querySelector('[data-hero-pausa]');
+      if (comando) clip.addEventListener('playing', () => mostraComando(clip, comando), { once: true });
       clip.addEventListener('ended', () => mostra(attiva + 1));
       /* Video mancante o rotto: si torna alle foto a tempo, non si resta
          appesi su una slide che aspetta un `ended` che non arriverà. */

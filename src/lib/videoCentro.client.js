@@ -22,7 +22,7 @@
 
 /** Il pulsante c'è solo se il video parte davvero: comandare un video che non
  *  esiste è peggio che non avere il comando. */
-function mostraComando(video, bottone) {
+export function mostraComando(video, bottone) {
   if (!bottone) return;
   bottone.hidden = false;
 
@@ -33,8 +33,14 @@ function mostraComando(video, bottone) {
   };
 
   bottone.addEventListener('click', () => {
-    if (video.paused) void video.play();
-    else video.pause();
+    // Chi ferma il video lo vuole fermo: il resto della pagina non deve riavviarlo (cambio scheda, cambio slide).
+    if (video.paused) {
+      delete video.dataset.pausaUtente;
+      void video.play();
+    } else {
+      video.dataset.pausaUtente = '1';
+      video.pause();
+    }
   });
   video.addEventListener('play', aggiorna);
   video.addEventListener('pause', aggiorna);
@@ -48,16 +54,16 @@ export function initVideoCentro(video) {
   const hero = video.closest('.page-hero');
   const bottone = hero?.querySelector('[data-centro-toggle]');
 
-  let ridotto = false;
+  // Il video parte da solo, muto, anche con «riduci movimento»: in cambio c'è sempre il pulsante di pausa.
+  // Restano fuori solo il risparmio dati e la rete 2g, che sono richieste esplicite o fatti misurati.
   let risparmio = false;
   try {
-    ridotto = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const rete = navigator.connection;
     risparmio =
       !!rete && (rete.saveData === true || rete.effectiveType === '2g' || rete.effectiveType === 'slow-2g');
   } catch (e) {}
 
-  if (ridotto || risparmio) return;
+  if (risparmio) return;
 
   /**
    * Il video si mostra solo quando sta davvero suonando, non quando gli
