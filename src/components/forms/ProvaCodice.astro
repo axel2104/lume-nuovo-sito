@@ -1,4 +1,14 @@
 ---
+import { getCollection } from 'astro:content';
+import { PASS } from '../../data/abbonamenti';
+import { SEDI } from '../../config/forms';
+
+// I due centri aperti: il pass vale solo lì, e il link del portale è quello del centro.
+const PORTALE = 'https://lumefitness.perfectgym.com/ClientPortal2/#/Registration';
+const centri = (await getCollection('centri'))
+  .filter((c) => ['macerata', 'montecassiano'].includes(c.id))
+  .sort((a, b) => a.data.ordine - b.data.ordine);
+
 /**
  * Landing /prova: niente form, un pulsante. Il popup chiede l'email, la manda a
  * /api/verifica (nessun abbonamento o pass nell'ultimo anno → "nuovo") e mostra il
@@ -9,25 +19,63 @@
 
 <div class="pc">
   <h2>Il tuo pass da 7 giorni</h2>
-  <p>Inserisci la tua email: controlliamo che tu sia idoneo e ti diamo subito il codice.</p>
+  <p>Lasciaci i tuoi dati: controlliamo che tu sia idoneo e ti diamo subito il codice.</p>
   <button type="button" class="btn btn-red pc-btn" data-prova-codice>Ottieni il codice</button>
 </div>
 
 <dialog class="pc-dialog" data-pc-dialog aria-labelledby="pc-titolo">
   <button type="button" class="pc-x" data-pc-close aria-label="Chiudi">×</button>
-  <h2 id="pc-titolo">Il tuo codice</h2>
+  <span class="pc-eye">Il tuo guest pass</span>
+  <h2 id="pc-titolo" data-pc-titolo>I tuoi dati</h2>
 
-  <form data-pc-form novalidate>
-    <label for="pc-email">La tua email</label>
-    <input id="pc-email" name="email" type="email" autocomplete="email" required placeholder="nome@email.it" />
+  <form data-pc-form>
+    <fieldset>
+      <legend>Dove vuoi attivarlo?</legend>
+      {centri.map((c, i) => (
+        <label class="pc-centro">
+          <input
+            type="radio"
+            name="centro"
+            value={c.id}
+            data-sede={SEDI[c.id]}
+            data-nome={c.data.nome}
+            data-pg={c.data.perfectgymUrl && c.data.perfectgymUrl !== '#' ? c.data.perfectgymUrl : PORTALE}
+            checked={i === 0}
+          />
+          {c.data.nome}
+        </label>
+      ))}
+    </fieldset>
+    <div class="pc-due">
+      <input name="nome" autocomplete="given-name" required placeholder="Nome" aria-label="Nome" />
+      <input name="cognome" autocomplete="family-name" required placeholder="Cognome" aria-label="Cognome" />
+    </div>
+    <input id="pc-email" name="email" type="email" autocomplete="email" required placeholder="Email" aria-label="Email" />
+    <input name="cellulare" type="tel" autocomplete="tel" required placeholder="Cellulare" aria-label="Cellulare" />
+    <label class="pc-consenso">
+      <input type="checkbox" name="privacy" required />
+      <span>Ho letto l’<a href="/privacy" target="_blank" rel="noopener">informativa privacy</a>: Lume può richiamarmi per attivare il pass.</span>
+    </label>
+    <label class="pc-consenso">
+      <input type="checkbox" name="marketing" />
+      <span>Voglio ricevere novità e offerte di Lume (facoltativo).</span>
+    </label>
     <button type="submit" class="btn btn-red">Controlla</button>
   </form>
 
   <div data-pc-ok hidden>
-    <p>Sei idoneo. Copia il codice e attivalo sul portale:</p>
-    <code data-pc-codice></code>
-    <button type="button" class="btn btn-red" data-pc-copia>Copia il codice</button>
-    <a class="pc-link" href="https://lumefitness.perfectgym.com/ClientPortal2/#/Registration" target="_blank" rel="noopener">Vai al portale</a>
+    <p>Copialo, poi aprilo sul portale: si incolla in fase di iscrizione e sblocca la settimana di prova a {PASS.pieno} €.</p>
+    <button type="button" class="pc-box" data-pc-copia>Codice: <b data-pc-codice></b> · <span data-pc-copia-txt>copia</span></button>
+    <ol class="pc-passi">
+      <li>Clicca su <b>Abbonamenti</b></li>
+      <li>Scegli una categoria e clicca su <b>Ho un codice promozionale</b></li>
+      <li>Clicca su <b>Avanti</b> e scegli il giorno di inizio del Pass</li>
+      <li>Nel riepilogo trovi il pagamento di <b>{PASS.pieno} €</b></li>
+      <li>Accetta il regolamento, firma e clicca su <b>Attiva Abbonamento</b></li>
+      <li>Inserisci il metodo di pagamento: carta o conto corrente</li>
+    </ol>
+    <a class="btn btn-red pc-link" data-pc-link href={PORTALE} target="_blank" rel="noopener">Vai all’iscrizione →</a>
+    <small>Il Pass si attiva entro 30 giorni. Se ti blocchi, chiamaci allo 0733 232905.</small>
   </div>
 
   <p data-pc-msg role="status" hidden></p>
@@ -43,6 +91,8 @@
     const email = q<HTMLInputElement>('#pc-email');
     const copia = q<HTMLButtonElement>('[data-pc-copia]');
 
+    const centro = () => form.querySelector<HTMLInputElement>('input[name=centro]:checked')!;
+    const val = (n: string) => (form.elements.namedItem(n) as HTMLInputElement).value.trim();
     const mostra = (t: string) => ((msg.textContent = t), (msg.hidden = !t));
 
     document.addEventListener('click', (ev) => {
@@ -58,13 +108,15 @@
     dlg.addEventListener('close', () => {
       form.hidden = false;
       ok.hidden = true;
-      copia.textContent = 'Copia il codice';
+      q('[data-pc-titolo]').textContent = 'I tuoi dati';
+      q('[data-pc-copia-txt]').textContent = 'copia';
       mostra('');
     });
 
     // Il lead parte a prescindere dall'esito, senza far aspettare chi guarda il
-    // codice. Nessun consenso raccolto qui: privacy e marketing restano false.
+    // codice. La privacy è obbligatoria per poter inviare; il marketing è facoltativo.
     const salvaLead = (verifica: string) => {
+      const tel = val('cellulare');
       let utm: Record<string, string> = {};
       try {
         utm = (window as any).lumeGetUtm?.() || {};
@@ -78,10 +130,17 @@
           flusso: 'prova',
           tipoRichiesta: 'RICHIESTA PROVA',
           email: email.value.trim(),
+          nome: val('nome'),
+          cognome: val('cognome'),
+          cellulare: tel.startsWith('+') ? tel : '+39 ' + tel,
+          prefisso: tel.startsWith('+') ? '' : '+39',
           nuovo: nuovo ? 'NUOVO' : 'ESISTE',
           verifica,
-          privacy: false,
-          marketing: false,
+          sede: centro().dataset.sede,
+          centro: centro().value,
+          centroLabel: centro().dataset.nome,
+          privacy: true,
+          marketing: (form.elements.namedItem('marketing') as HTMLInputElement).checked,
           source: utm.utm_source || 'SitoWeb',
           medium: 'PaginaProva',
           cta: 'Ottieni il codice',
@@ -94,7 +153,7 @@
 
     form.addEventListener('submit', async (ev) => {
       ev.preventDefault();
-      if (!email.checkValidity() || !email.value.trim()) return mostra('Controlla l’email: non sembra valida.');
+      if (!form.checkValidity()) return form.reportValidity();
       mostra('Controllo in corso…');
       try {
         const r = await fetch('/api/verifica', {
@@ -106,8 +165,10 @@
         salvaLead(d.stato);
         if (d.codice) {
           q('[data-pc-codice]').textContent = d.codice;
+          q<HTMLAnchorElement>('[data-pc-link]').href = centro().dataset.pg!;
           form.hidden = true;
           ok.hidden = false;
+          q('[data-pc-titolo]').textContent = 'Ecco il codice.';
           mostra('');
         } else {
           mostra(
@@ -121,7 +182,7 @@
 
     copia.addEventListener('click', () => {
       const c = q('[data-pc-codice]').textContent || '';
-      const fatto = () => (copia.textContent = 'Copiato ✓');
+      const fatto = () => (q('[data-pc-copia-txt]').textContent = 'copiato ✓');
       if (navigator.clipboard?.writeText) navigator.clipboard.writeText(c).then(fatto, () => {});
       else fatto();
     });
@@ -133,14 +194,29 @@
   .pc h2 { font-family: 'Anton', sans-serif; font-weight: 400; text-transform: uppercase; margin: 0 0 8px; }
   .pc p { margin: 0 0 18px; }
   .pc-btn { width: 100%; min-height: 56px; }
-  .pc-dialog { margin: auto; width: min(440px, 92vw); padding: 28px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: #fff; }
+  .pc-dialog { margin: auto; width: min(480px, 92vw); max-height: 92dvh; overflow-y: auto; padding: 28px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: #fff; }
   .pc-dialog::backdrop { background: rgba(0, 0, 0, 0.7); }
   .pc-dialog h2 { font-family: 'Anton', sans-serif; font-weight: 400; text-transform: uppercase; margin: 0 0 16px; }
   .pc-x { position: absolute; top: 6px; right: 10px; min-width: 44px; min-height: 44px; background: none; border: 0; color: #fff; font-size: 26px; cursor: pointer; }
   .pc-dialog form, .pc-dialog [data-pc-ok] { display: grid; gap: 12px; }
+  .pc-dialog fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .pc-dialog legend { padding: 0; margin-bottom: 8px; font-size: 14px; color: #cfcfcf; }
+  .pc-centro { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 14px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
+  .pc-centro:has(input:checked) { border-color: var(--red); background: rgba(196, 0, 66, 0.08); }
+  .pc-dialog .pc-centro input { min-height: 0; accent-color: var(--red); }
+  .pc-due { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .pc-consenso { display: flex; gap: 10px; align-items: flex-start; font-size: 12px; line-height: 1.45; color: var(--mut); }
+  .pc-consenso a { color: var(--red-txt); text-decoration: underline; }
+  .pc-dialog .pc-consenso input { min-height: 0; margin-top: 2px; accent-color: var(--red); }
   .pc-dialog input { min-height: 48px; padding: 0 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: #fff; font-size: 16px; }
+  .pc-eye { display: block; margin-bottom: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red-txt); }
+  .pc-box { min-height: 56px; border: 1px dashed var(--red); border-radius: 8px; background: rgba(196, 0, 66, 0.08); color: var(--red-txt); font-size: 18px; font-weight: 700; cursor: pointer; }
+  .pc-box b { font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: 0.08em; }
+  .pc-passi { margin: 0; padding-left: 20px; display: grid; gap: 8px; font-size: 14px; line-height: 1.45; color: #cfcfcf; }
+  .pc-passi b { color: #fff; }
+  .pc-dialog small { color: var(--mut); text-align: center; font-size: 12px; }
   .pc-dialog code { text-align: center; font-family: 'Anton', sans-serif; font-size: 34px; letter-spacing: 0.08em; padding: 14px; border: 1px dashed var(--red); border-radius: 8px; }
   .pc-dialog .btn { min-height: 48px; }
-  .pc-link { text-align: center; color: var(--red-txt); text-decoration: underline; }
+  .pc-link { display: inline-flex; align-items: center; justify-content: center; }
   [data-pc-msg] { margin: 14px 0 0; color: #ddd; font-size: 14px; line-height: 1.5; }
 </style>
