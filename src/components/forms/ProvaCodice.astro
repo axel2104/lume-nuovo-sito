@@ -3,10 +3,10 @@ import { getCollection } from 'astro:content';
 import { PASS } from '../../data/abbonamenti';
 import { SEDI } from '../../config/forms';
 
-// I due centri aperti: il pass vale solo lì, e il link del portale è quello del centro.
+// I centri aperti: il pass vale solo lì, e il link del portale è quello del centro.
 const PORTALE = 'https://lumefitness.perfectgym.com/ClientPortal2/#/Registration';
 const centri = (await getCollection('centri'))
-  .filter((c) => ['macerata', 'montecassiano'].includes(c.id))
+  .filter((c) => c.data.stato === 'aperto' && SEDI[c.id])
   .sort((a, b) => a.data.ordine - b.data.ordine);
 
 /**
