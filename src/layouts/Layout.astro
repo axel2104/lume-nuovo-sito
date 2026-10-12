@@ -14,8 +14,10 @@ import '../styles/leadform.css';
 import '../styles/editoriale.css';
 import '../styles/bento.css';
 import '../styles/planning.css';
+import '../styles/chat.css';
 import { siteConfig, consensoGestito } from '../config/site';
 import ModalForm from '../components/forms/ModalForm.astro';
+import ChatLume from '../components/ChatLume.astro';
 
 // Lo script di tracciamento è un file a sé (lintabile, versionabile) ma va
 // iniettato inline in <head>: deve girare prima di GTM, non dopo un bundle.
@@ -216,5 +218,6 @@ _iub.csConfiguration = {
     <ModalForm flusso="info" />
     <ModalForm flusso="prova" />
     <ModalForm flusso="iscrizione" />
+    <ChatLume />
   </body>
 </html>

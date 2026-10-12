@@ -1,0 +1,37 @@
+---
+/**
+ * Assistente del sito: un pulsante e un pannello, montati una volta per pagina.
+ * La logica è in `src/lib/chat.client.js`, le risposte arrivano da `/api/chat`.
+ */
+---
+
+<button type="button" class="chat-fab" aria-expanded="false" aria-controls="chat-panel" data-chat-toggle>
+  <span aria-hidden="true">💬</span> Chiedi a Lume
+</button>
+
+<section id="chat-panel" class="chat-panel" role="dialog" aria-label="Assistente Lume" hidden>
+  <header class="chat-head">
+    <strong>Assistente Lume</strong>
+    <button type="button" class="chat-close" aria-label="Chiudi" data-chat-toggle>×</button>
+  </header>
+  <div class="chat-log" role="log" aria-live="polite"></div>
+  <div class="chat-chips" aria-label="Domande rapide">
+    <button type="button" class="chat-chip">Quanto costa l'abbonamento?</button>
+    <button type="button" class="chat-chip">Orari dei corsi</button>
+    <button type="button" class="chat-chip">Voglio provare gratis</button>
+    <button type="button" class="chat-chip">Come disdico?</button>
+  </div>
+  <form class="chat-form" autocomplete="off">
+    <input class="chat-input" name="m" maxlength="500" placeholder="Scrivi la tua domanda" aria-label="La tua domanda" required />
+    <button class="chat-send" type="submit">Invia</button>
+  </form>
+  <p class="chat-nota">
+    Risposte automatiche dai contenuti del sito, possono contenere errori. Non scrivere dati personali o di salute.
+    <a href="/privacy">Privacy</a>
+  </p>
+</section>
+
+<script>
+  import { initChat } from '../lib/chat.client.js';
+  initChat();
+</script>
