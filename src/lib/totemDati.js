@@ -43,9 +43,3 @@ export function lezioniRestanti(lezioni, giorno, ora) {
 }
 
 export const nomeGiorno = (g) => NOMI_GIORNO[g] ?? '';
-
-/** Prezzo da mostrare in grande e nota sotto: il mensile se c'è, altrimenti l'annuale. */
-export function prezzoPiano(p) {
-  if (p.mensile) return { grande: `${p.mensile} €`, unita: 'al mese', nota: `oppure ${p.annuale} € in un anno` };
-  return { grande: `${p.annuale} €`, unita: 'in un anno', nota: '' };
-}

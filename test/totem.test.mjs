@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-const { parametri, urlQr, oraRoma, lezioniRestanti, prezzoPiano } = await import('../src/lib/totemDati.js');
+const { parametri, urlQr, oraRoma, lezioniRestanti } = await import('../src/lib/totemDati.js');
 
 test('parametri: il centro viene dal totem, ripulito', () => {
   assert.deepEqual(parametri('?t=Macerata-Ingresso'), { totem: 'macerata-ingresso', centro: 'macerata' });
@@ -37,9 +37,4 @@ test('lezioni: oggi quelle non finite, a fine giornata domani', () => {
   assert.equal(b.quando, 'domani');
   assert.deepEqual(b.lezioni.map((l) => l.corso), ['Yoga']);
   assert.equal(lezioniRestanti(lez, 7, 600).giorno, 1); // domenica → lunedì
-});
-
-test('prezzo del piano', () => {
-  assert.deepEqual(prezzoPiano({ mensile: 105, annuale: 900 }), { grande: '105 €', unita: 'al mese', nota: 'oppure 900 € in un anno' });
-  assert.equal(prezzoPiano({ mensile: null, annuale: 420 }).unita, 'in un anno');
 });

@@ -34,16 +34,26 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg) va
 .tt-box { padding: 3vh 3vw; border-radius: 24px; background: rgba(22,22,22,.85); border: 2px solid var(--line); }
 .tt-riga { margin: .4vh 0; }
 
-.tt-piani { display: grid; grid-template-columns: repeat(auto-fit, minmax(30vw, 1fr)); gap: 2vw; }
-.tt-piano { display: flex; flex-direction: column; gap: .4vh; padding: 3vh 2.4vw; border-radius: 24px; border: 2px solid var(--line); background: rgba(22,22,22,.85); color: var(--txt); text-align: left; font-family: inherit; }
+.tt-piani { display: flex; flex-direction: column; gap: 1.2vh; overflow-y: auto; flex: 1; }
+.tt-piano { padding: 1.5vh 2.2vw; border-radius: 24px; border: 2px solid var(--line); background: rgba(22,22,22,.88); }
 .tt-evidenza { border-color: var(--red); }
-.tt-scelto { background: var(--red); border-color: var(--red); }
-.tt-piano-nome { font: 400 1.7em Anton, sans-serif; text-transform: uppercase; }
-.tt-piano-per { color: var(--mut); font-size: .9em; min-height: 2.6em; }
-.tt-scelto .tt-piano-per, .tt-scelto .tt-piano-nota { color: #fff; }
-.tt-piano-prezzo { font: 400 2.6em Anton, sans-serif; }
-.tt-piano-unita { font-weight: 700; }
-.tt-piano-nota { color: var(--mut); font-size: .9em; }
+.tt-piano-testa { display: flex; align-items: baseline; gap: 2vw; flex-wrap: wrap; margin-bottom: 1vh; }
+.tt-piano-nome { font: 400 1.6em Anton, sans-serif; text-transform: uppercase; }
+.tt-piano-per { color: var(--mut); font-size: .9em; }
+.tt-formule { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4vw; }
+.tt-formula { display: flex; flex-direction: column; gap: .2vh; padding: 1.1vh 1.2vw; border-radius: 18px; border: 2px solid var(--red); background: rgba(196,0,66,.14); color: var(--txt); text-align: left; font-family: inherit; }
+.tt-formula:active { background: var(--red); }
+.tt-formula-off { border-color: var(--line); background: rgba(255,255,255,.04); color: var(--mut); }
+.tt-formula-nome { font-weight: 700; font-size: .95em; color: var(--cream); }
+.tt-formula-off .tt-formula-nome { color: var(--mut); }
+.tt-formula-prezzo { font: 400 2em Anton, sans-serif; line-height: 1.1; }
+.tt-formula-nota { font-size: .85em; color: var(--mut); }
+
+.tt-portale { position: fixed; inset: 0; z-index: 10; display: flex; flex-direction: column; background: #fff; cursor: auto; }
+.tt-portale-barra { display: flex; align-items: center; gap: 2vw; padding: 2vh 3vw; background: var(--bg); }
+.tt-portale-barra .tt-indietro { margin-left: 0; }
+.tt-portale-titolo { color: var(--mut); font-size: .85em; }
+.tt-portale-frame { flex: 1; width: 100%; border: 0; background: #fff; }
 
 .tt-corsi { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1.4vh; overflow-y: auto; flex: 1; }
 .tt-corsi li { display: flex; gap: 3vw; align-items: baseline; padding: 2vh 3vw; border-radius: 20px; background: rgba(22,22,22,.85); border: 2px solid var(--line); }

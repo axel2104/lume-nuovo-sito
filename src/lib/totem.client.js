@@ -1,6 +1,6 @@
 // Totem del centro: schermata d'attesa, quattro sezioni, QR verso il telefono, statistiche anonime.
 import qrcode from 'qrcode-generator';
-import { parametri, urlQr, oraRoma, lezioniRestanti, nomeGiorno, prezzoPiano } from './totemDati.js';
+import { parametri, urlQr, oraRoma, lezioniRestanti, nomeGiorno } from './totemDati.js';
 
 const INATTIVITA_MS = 60_000; // senza tocchi per un minuto: si torna all'attesa
 const RICARICA_MS = 6 * 3600_000; // contenuti aggiornati: il totem si ricarica da solo, ma solo in attesa
@@ -137,25 +137,64 @@ export function avviaTotem() {
     piazza(intestazione(true), el('h1', 'tt-titolo', 'Il centro'), lista, blocco);
   }
 
+  // ─── ClientPortal sopra il totem: il consulente attiva l'abbonamento senza uscire dalla pagina ───
+  const PORTALE_MS = 10 * 60_000; // dentro il portale i tocchi non arrivano qui: dopo 10 minuti si torna all'attesa
+  let portaleEl = null;
+  let timerPortale;
+  function chiudiPortale(daInattivita) {
+    clearTimeout(timerPortale);
+    portaleEl?.remove();
+    portaleEl = null;
+    if (daInattivita) attesa();
+    else riarma();
+  }
+  function apriPortale(url, titolo) {
+    clearTimeout(timer);
+    chiudiPortale(false);
+    clearTimeout(timer);
+    portaleEl = el('div', 'tt-portale');
+    const barra = el('div', 'tt-portale-barra');
+    const indietro = el('button', 'tt-indietro', '← Torna al totem');
+    indietro.type = 'button';
+    indietro.onclick = () => chiudiPortale(false);
+    barra.append(indietro, el('span', 'tt-portale-titolo', titolo));
+    const frame = el('iframe', 'tt-portale-frame');
+    frame.src = url;
+    frame.title = titolo;
+    portaleEl.append(barra, frame);
+    document.body.append(portaleEl);
+    timerPortale = setTimeout(() => chiudiPortale(true), PORTALE_MS);
+  }
+
   function vistaAbbonamenti() {
     const elenco = el('div', 'tt-piani');
     for (const p of centro.piani) {
-      const { grande, unita, nota } = prezzoPiano(p);
-      const c = el('button', `tt-piano${p.evidenza ? ' tt-evidenza' : ''}`);
-      c.type = 'button';
-      c.append(el('span', 'tt-piano-nome', p.nome), el('span', 'tt-piano-per', p.per), el('span', 'tt-piano-prezzo', grande), el('span', 'tt-piano-unita', unita));
-      if (nota) c.append(el('span', 'tt-piano-nota', nota));
-      c.onclick = () => {
-        invia('voce', { sezione: 'Abbonamenti', voce: p.nome });
-        elenco.querySelectorAll('.tt-piano').forEach((x) => x.classList.toggle('tt-scelto', x === c));
-      };
+      const c = el('div', `tt-piano${p.evidenza ? ' tt-evidenza' : ''}`);
+      const testa = el('div', 'tt-piano-testa');
+      testa.append(el('span', 'tt-piano-nome', p.nome), el('span', 'tt-piano-per', p.per));
+      const formule = el('div', 'tt-formule');
+      const voci = [
+        ['Soluzione unica', `${p.annuale} €`, 'in un anno', p.pgm.annuale],
+        ['12 rate', `${Math.round(p.rate / 12)} €`, `al mese · ${p.rate} € totali`, p.pgm.rate],
+        ...(p.mensile ? [['Mensile', `${p.mensile} €`, 'al mese', p.pgm.mensile]] : []),
+      ];
+      for (const [nome, prezzo, nota, url] of voci) {
+        const b = el('button', `tt-formula${url ? '' : ' tt-formula-off'}`);
+        b.type = 'button';
+        b.append(el('span', 'tt-formula-nome', nome), el('span', 'tt-formula-prezzo', prezzo), el('span', 'tt-formula-nota', url ? nota : `${nota} · in reception`));
+        if (url) {
+          b.onclick = () => {
+            invia('voce', { sezione: 'Abbonamenti', voce: `${p.nome} · ${nome}` });
+            apriPortale(url, `Attivazione online · ${p.nome} · ${nome}`);
+          };
+        } else b.disabled = true;
+        formule.append(b);
+      }
+      c.append(testa, formule);
       elenco.append(c);
     }
-    const q = el('div', 'tt-cta');
-    q.append(qr(urlQr('/iscriviti', slug, totem)), el('p', 'tt-cta-t', 'Iscriviti dal telefono'), el('p', 'tt-cta-s', 'Inquadra il codice con la fotocamera'));
-    invia('qr', { sezione: 'Abbonamenti' });
-    const extra = centro.attivazione ? el('p', 'tt-nota', `Quota di attivazione una tantum: ${centro.attivazione} €`) : el('span');
-    piazza(intestazione(true), el('h1', 'tt-titolo', 'Abbonamenti'), elenco, extra, q);
+    const extra = centro.attivazione ? el('p', 'tt-nota', `Quota di attivazione una tantum: ${centro.attivazione} €. Tocca una formula per attivarla online.`) : el('span');
+    piazza(intestazione(true), el('h1', 'tt-titolo', 'Abbonamenti'), elenco, extra);
   }
 
   function vistaCorsi() {
@@ -180,8 +219,8 @@ export function avviaTotem() {
     piazza(intestazione(true), el('h1', 'tt-titolo', 'Pass prova'), el('p', 'tt-testo', 'Sala pesi, corsi, acqua, CrossFit e Reformer per una settimana.'), box);
   }
 
-  // `?vista=menu|centro|abbonamenti|corsi|prova` apre subito quella schermata: per controllare i contenuti senza toccare lo schermo.
-  const diretta = { menu: home, centro: () => (sezione = { nome: 'Il centro', da: Date.now() }, home(), vistaCentro()), abbonamenti: vistaAbbonamenti, corsi: vistaCorsi, prova: vistaProva }[new URLSearchParams(location.search).get('vista')];
+  // `?vista=menu|centro|abbonamenti|corsi|prova|portale` apre subito quella schermata: per controllare i contenuti senza toccare lo schermo.
+  const diretta = { menu: home, centro: () => (sezione = { nome: 'Il centro', da: Date.now() }, home(), vistaCentro()), abbonamenti: vistaAbbonamenti, corsi: vistaCorsi, prova: vistaProva, portale: () => (vistaAbbonamenti(), apriPortale(centro.piani[0].pgm.annuale, `Attivazione online · ${centro.piani[0].nome}`)) }[new URLSearchParams(location.search).get('vista')];
   if (diretta) {
     sessioneDa = Date.now();
     diretta();

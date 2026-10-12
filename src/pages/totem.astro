@@ -37,7 +37,10 @@ const dati = await Promise.all(
         nome: p.nome,
         per: p.per ?? '',
         annuale: p.annuale,
+        rate: p.rate,
         mensile: p.mensile ?? null,
+        // Indirizzi del ClientPortal già sulla formula: dove manca, la formula si mostra ma non si apre.
+        pgm: { annuale: p.pgm?.annuale ?? null, rate: p.pgm?.rate ?? null, mensile: p.pgm?.mensile ?? null },
         evidenza: !!p.evidenza,
       })),
       attivazione: d.listino?.attivazione ?? null,
