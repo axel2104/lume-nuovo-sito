@@ -8,7 +8,8 @@ import { getCollection } from 'astro:content';
 import { GET as listini } from '../listini.json';
 import { GET as regolamento } from '../regolamento.json';
 import { pulisciMessaggi, planningCompatto, scegliPunti, type Punto } from '../../lib/kbChat';
-import { leggiJson } from '../../lib/supabaseRpc';
+import { classifica, urgenzaAlta, type Triage } from '../../lib/jev';
+import { leggiJson, rpc } from '../../lib/supabaseRpc';
 
 export const prerender = false;
 
@@ -77,6 +78,16 @@ function troppe(ip: string) {
   return v.length > 20;
 }
 
+/** Ogni scambio si salva per la revisione nel CRM. Un errore qui non deve togliere la risposta alla persona. */
+async function salva(corpo: any, domanda: string, risposta: string, ai: Triage | null) {
+  if (typeof corpo.sessione !== 'string') return;
+  await rpc('site_chat_log', { p: { sessione: corpo.sessione, domanda, risposta, pagina: corpo.pagina, ai } }).catch((e) =>
+    console.error('chat log', e),
+  );
+}
+
+const FUORI_TEMA =
+  'Posso aiutarti solo con informazioni su Lume Fitness Club: abbonamenti, orari dei corsi, centri e regolamento. Cosa vuoi sapere?';
 const FALLBACK = 'In questo momento non riesco a rispondere. Scrivici su https://www.lumefitness.it/contatti';
 
 export const POST: APIRoute = async ({ request }) => {
@@ -91,8 +102,19 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
 
-  const messaggi = pulisciMessaggi((await leggiJson(request)).messaggi);
+  const corpo = await leggiJson(request);
+  const messaggi = pulisciMessaggi(corpo.messaggi);
   if (!messaggi.length) return new Response(null, { status: 400 });
+
+  // Jev legge il messaggio PRIMA dell'agente: i fuori tema non costano una chiamata al modello grande,
+  // e gli altri arrivano con un'etichetta (intento, urgenza) che orienta la risposta e finisce nel CRM.
+  const ultima = messaggi[messaggi.length - 1].content;
+  const triage = process.env.TYPESAFE_API_KEY ? await classifica(ultima).catch(() => null) : null;
+  // Solo al primo messaggio: "sì, grazie" a metà conversazione non è fuori tema.
+  if (triage?.intento === 'fuori_tema' && messaggi.length === 1) {
+    await salva(corpo, ultima, FUORI_TEMA, triage);
+    return Response.json({ risposta: FUORI_TEMA });
+  }
 
   const { fissa, punti } = await leggiKb();
   const domanda = messaggi
@@ -100,6 +122,13 @@ export const POST: APIRoute = async ({ request }) => {
     .slice(-2)
     .map((m) => m.content)
     .join(' ');
+  const nota = triage
+    ? `Classificazione automatica dell'ultimo messaggio: intento ${triage.intento}, urgenza ${urgenzaAlta(triage) ? 'alta' : 'normale'}, probabilità di iscriversi ${Math.round(triage.pronto * 100)}%.` +
+      (triage.intento === 'disdetta_reclamo' || urgenzaAlta(triage)
+        ? ' La persona ha un problema o una richiesta urgente: mostra comprensione, dai i dati che hai e invitala a lasciare la sua email nel riquadro della chat o a contattare il centro.'
+        : '') +
+      (triage.pronto >= 0.5 ? ' Sembra pronta a iscriversi: proponi la settimana di prova.' : '')
+    : '';
   const regole = scegliPunti(punti, domanda)
     .map((p) => `## Regolamento ${p.id} ${p.titolo} (${p.url})\n${p.testo}`)
     .join('\n\n');
@@ -123,6 +152,7 @@ export const POST: APIRoute = async ({ request }) => {
         { role: 'system', content: [{ type: 'text', text: `${REGOLE}
 
 ${fissa}`, cache_control: { type: 'ephemeral' } }] },
+        ...(nota ? [{ role: 'system', content: nota }] : []),
         ...(regole ? [{ role: 'system', content: `Punti del regolamento pertinenti:
 
 ${regole}` }] : []),
@@ -134,5 +164,7 @@ ${regole}` }] : []),
 
   if (!r?.ok) return Response.json({ risposta: FALLBACK }, { status: 502 });
   const testo = ((await r.json()).choices?.[0]?.message?.content ?? '').trim();
-  return Response.json({ risposta: testo || FALLBACK });
+  const risposta = testo || FALLBACK;
+  if (testo) await salva(corpo, ultima, risposta, triage);
+  return Response.json({ risposta });
 };

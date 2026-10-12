@@ -21,12 +21,17 @@
     <button type="button" class="chat-chip">Voglio provare gratis</button>
     <button type="button" class="chat-chip">Come disdico?</button>
   </div>
+  <form class="chat-contatto" hidden>
+    <label>Vuoi che il team ti ricontatti? Lascia la tua email:
+      <span><input type="email" name="email" maxlength="254" placeholder="nome@email.it" autocomplete="email" /><button type="submit">Invia</button></span>
+    </label>
+  </form>
   <form class="chat-form" autocomplete="off">
     <input class="chat-input" name="m" maxlength="500" placeholder="Scrivi la tua domanda" aria-label="La tua domanda" required />
     <button class="chat-send" type="submit">Invia</button>
   </form>
   <p class="chat-nota">
-    Risposte automatiche dai contenuti del sito, possono contenere errori. Non scrivere dati personali o di salute.
+    Risposte automatiche dai contenuti del sito, possono contenere errori. Salviamo la conversazione per migliorare il servizio. Non scrivere dati di salute.
     <a href="/privacy">Privacy</a>
   </p>
 </section>

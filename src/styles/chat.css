@@ -1,6 +1,6 @@
 /* Assistente del sito: stesso linguaggio del resto (fondo scuro, rosso Lume). */
 .chat-fab {
-  position: fixed; right: 16px; bottom: 16px; z-index: 60;
+  position: fixed; right: 16px; bottom: 84px; z-index: 60;
   padding: 12px 18px; border: 0; border-radius: 999px; cursor: pointer;
   background: var(--red); color: #fff; font: 600 15px/1 Inter, sans-serif;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
@@ -9,8 +9,8 @@
 .chat-fab[hidden], .chat-panel[hidden] { display: none; }
 
 .chat-panel {
-  position: fixed; right: 16px; bottom: 16px; z-index: 61;
-  width: min(380px, calc(100vw - 32px)); height: min(560px, calc(100dvh - 32px));
+  position: fixed; right: 16px; bottom: 84px; z-index: 61;
+  width: min(380px, calc(100vw - 32px)); height: min(560px, calc(100dvh - 100px));
   display: flex; flex-direction: column; overflow: hidden;
   background: var(--bg2); color: var(--txt); border: 1px solid var(--line); border-radius: 16px;
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6); font: 400 15px/1.45 Inter, sans-serif;
@@ -34,3 +34,9 @@
 .chat-chip { padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--txt); font: 500 13px Inter, sans-serif; cursor: pointer; }
 .chat-chip:hover { border-color: var(--red); color: var(--red-txt); }
 .chat-chip:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
+.chat-contatto { margin: 0; padding: 8px 14px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--mut); }
+.chat-contatto[hidden] { display: none; }
+.chat-contatto span { display: flex; gap: 6px; margin-top: 6px; }
+.chat-contatto input { flex: 1; min-width: 0; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--txt); font: inherit; }
+.chat-contatto button { padding: 8px 12px; border: 0; border-radius: 8px; background: var(--card); color: var(--txt); border: 1px solid var(--line); font: 600 13px Inter, sans-serif; cursor: pointer; }
+.chat-contatto-ok { color: var(--cream); }

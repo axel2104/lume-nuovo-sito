@@ -1,5 +1,13 @@
 // Widget dell'assistente: cronologia in sessionStorage, risposte da /api/chat.
 const CHIAVE = 'lume-chat';
+const SESSIONE = 'lume-chat-id';
+const sessione = () => {
+  try {
+    return sessionStorage.getItem(SESSIONE) || (sessionStorage.setItem(SESSIONE, crypto.randomUUID()), sessionStorage.getItem(SESSIONE));
+  } catch {
+    return crypto.randomUUID();
+  }
+};
 const SALUTO = 'Ciao! Posso aiutarti con abbonamenti, orari dei corsi, centri e regolamento. Cosa ti serve?';
 
 const leggi = () => {
@@ -72,6 +80,26 @@ export function initChat() {
   document.addEventListener('keydown', (e) => e.key === 'Escape' && !pannello.hidden && apri(false));
 
   const chips = pannello.querySelector('.chat-chips');
+  const contatto = pannello.querySelector('.chat-contatto');
+  contatto.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = contatto.querySelector('input').value.trim();
+    if (!email) return;
+    let ok = false;
+    try {
+      const r = await fetch('/api/chat-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessione: sessione(), email }),
+      });
+      ok = r.ok;
+    } catch {
+      /* resta il messaggio d'errore */
+    }
+    contatto.replaceChildren(ok ? 'Grazie! Il team vedrà questa conversazione e potrà ricontattarti.' : 'Email non valida o servizio non raggiungibile: riprova.');
+    contatto.classList.toggle('chat-contatto-ok', ok);
+  });
+
   chips.addEventListener('click', (e) => {
     const chip = e.target.closest('.chat-chip');
     if (!chip) return;
@@ -94,7 +122,7 @@ export function initChat() {
       const r = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messaggi }),
+        body: JSON.stringify({ messaggi, sessione: sessione(), pagina: location.pathname }),
       });
       risposta = (await r.json()).risposta || risposta;
     } catch {
@@ -105,6 +133,7 @@ export function initChat() {
     log.scrollTop = log.scrollHeight;
     messaggi.push({ role: 'assistant', content: risposta });
     salva(messaggi);
+    contatto.hidden = contatto.classList.contains('chat-contatto-ok');
     inAttesa = false;
   });
 }
