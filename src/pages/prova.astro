@@ -40,7 +40,7 @@ import { getCollection } from 'astro:content';
 import { SEDI } from '../config/forms';
 import { PASS } from '../data/abbonamenti';
 
-// Foto vere dei due centri, arrivate dalle PSD e dagli scatti della piscina.
+// Foto vere dei centri, arrivate dalle PSD e dagli scatti della piscina.
 // Sono la ragione per cui in questa pagina lo stock è ridotto al minimo: una
 // panoramica della sala pesi con la gente dentro vende più di qualsiasi
 // immagine comprata.
@@ -104,6 +104,12 @@ const mosaico = [
   { foto: intensityou, tag: 'IntensitYOU', nota: 'Circuito funzionale' },
 ];
 
+const NOTE_CENTRO: Record<string, string> = {
+  macerata: 'Qui c’è il Box CrossFit.',
+  montecassiano: 'Qui c’è la piscina.',
+  urban: 'Nel centro storico di Macerata.',
+};
+
 const incluso = [
   {
     foto: gymFloor,
@@ -114,7 +120,7 @@ const incluso = [
   {
     foto: bodypump,
     titolo: `${discipline.length} discipline, corsi inclusi`,
-    testo: `Tutti i corsi di gruppo in licenza Les Mills, prenotabili da app. ${oreCorsi} ore di lezione a settimana fra i due centri: il problema è scegliere.`,
+    testo: `Tutti i corsi di gruppo in licenza Les Mills, prenotabili da app. ${oreCorsi} ore di lezione a settimana fra i tre centri: il problema è scegliere.`,
   },
   {
     foto: crossfit,
@@ -164,8 +170,8 @@ const domande = [
     r: 'No, ed è il punto. Al primo ingresso un tecnico ti accompagna, guarda come ti muovi e ti imposta una scheda. Nei sette giorni provi i corsi che vuoi: nessuno si aspetta che tu sappia già usare tutto.',
   },
   {
-    d: 'Posso allenarmi in entrambi i centri?',
-    r: 'Sì. Il pass vale su Macerata e Montecassiano, con gli orari di ciascuno. La piscina è a Montecassiano, il Box CrossFit a Macerata.',
+    d: 'Posso allenarmi in tutti i centri?',
+    r: 'Sì. Il pass vale su Macerata, Montecassiano e Urban, con gli orari di ciascuno. La piscina è a Montecassiano, il Box CrossFit a Macerata, Urban è nel centro storico di Macerata.',
   },
   {
     d: 'E se dopo volessi abbonarmi?',
@@ -343,7 +349,7 @@ const domande = [
         <div class="lp-banda-numeri">
           <div><b>{oreCorsi}</b><span>ore di corsi<br />a settimana</span></div>
           <div><b>{discipline.length}</b><span>discipline<br />in licenza</span></div>
-          <div><b>2</b><span>centri<br />un solo pass</span></div>
+          <div><b>3</b><span>centri<br />un solo pass</span></div>
           <div><b>7</b><span>giorni<br />consecutivi</span></div>
         </div>
       </div>
@@ -394,9 +400,9 @@ const domande = [
           <span class="lp-eyebrow">Chi siamo</span>
           <h2 class="d">Benessere a 360°, detto senza retorica</h2>
           <p>
-            Lume non è una sala pesi con qualche corso attorno. Sono due centri aperti nelle
-            Marche — Macerata e Montecassiano — con {oreCorsi} ore di lezione a settimana,
-            attrezzature Technogym, licenze Les Mills, una piscina, un Box CrossFit,
+            Lume non è una sala pesi con qualche corso attorno. Sono tre centri aperti nelle
+            Marche — Macerata, Montecassiano e Urban — con {oreCorsi} ore di lezione a settimana,
+            attrezzature Technogym e Panatta, licenze Les Mills, una piscina, un Box CrossFit,
             una sala Reformer e una sala olistica.
           </p>
           <p>
@@ -406,8 +412,8 @@ const domande = [
             È la ragione per cui la media delle recensioni sta a 4.97.
           </p>
           <p class="lp-nota">
-            Altri due centri, Piediripa e Urban, apriranno presto. Il pass prova vale sui
-            due aperti.
+            Un altro centro, Piediripa, aprirà presto. Il pass prova vale sui
+            tre aperti.
           </p>
         </div>
         <div class="lp-foto-coppia">
@@ -450,13 +456,13 @@ const domande = [
       </div>
     </section>
 
-    {/* ─── I due centri, con la loro foto ────────────────────────────────── */}
+    {/* ─── I centri, con la loro foto ────────────────────────────────── */}
     <section class="lp-sez lp-sez-scura" id="dove">
       <div class="lp-wrap">
         <span class="lp-eyebrow">Dove</span>
-        <h2 class="d">Due centri, un pass</h2>
+        <h2 class="d">Tre centri, un pass</h2>
         <div class="lp-sedi">
-          {centri.map((c, i) => (
+          {centri.map((c) => (
             <article class="lp-sede">
               {c.data.immagine && (
                 <Picture
@@ -478,7 +484,7 @@ const domande = [
                   </p>
                 )}
                 <p class="lp-sede-nota">
-                  {i === 0 ? 'Qui c’è il Box CrossFit.' : 'Qui c’è la piscina.'}
+                  {NOTE_CENTRO[c.id]}
                 </p>
               </div>
             </article>
@@ -541,7 +547,7 @@ const domande = [
         <a class="btn btn-red lp-cta-grande" href="#richiedi" data-prova-codice>Ottieni il codice · {PASS.pieno} €</a>
         <p class="lp-chiusura-tel">
           Preferisci parlare con qualcuno? <a href="tel:+390733232905">0733 232905</a>,
-          Macerata e Montecassiano.
+          Macerata, Montecassiano e Urban.
         </p>
       </div>
     </section>
