@@ -1,6 +1,7 @@
 /**
  * POST /api/verifica — { email } → { stato: "nuovo" | "esiste" | "iscritto" }
  * Risponde solo con la parola: mai nome, cognome o telefono (vedi docs/SUPABASE.md §6).
+ * Con `codice: true` e stato "nuovo" aggiunge il codice del pass prova (landing /prova).
  * Se il database non risponde il form tratta l'utente come nuovo, come col vecchio webhook.
  */
 import type { APIRoute } from 'astro';
@@ -14,5 +15,6 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     stato = await rpc<string>('site_verifica_email', { p_email: String(d.email || '') });
   } catch {}
-  return Response.json({ stato }, { headers: { 'Cache-Control': 'no-store' } });
+  const codice = d.codice && stato === 'nuovo' ? process.env.CODICE_PROVA || 'LUMEGOLD' : undefined;
+  return Response.json({ stato, codice }, { headers: { 'Cache-Control': 'no-store' } });
 };

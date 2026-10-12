@@ -34,7 +34,7 @@
  * fiducia è l'unica leva che conta davvero.
  */
 import Layout from '../layouts/Layout.astro';
-import FormInline from '../components/forms/FormInline.astro';
+import ProvaCodice from '../components/forms/ProvaCodice.astro';
 import { Picture } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import { SEDI } from '../config/forms';
@@ -271,11 +271,11 @@ const domande = [
         </div>
 
         {/*
-          Il form nell'hero, non in fondo: chi è già convinto non deve
-          scorrere. È l'unica istanza in pagina.
+          Il pulsante nell'hero, non in fondo: chi è già convinto non deve
+          scorrere. Apre il popup con email, controllo e codice.
         */}
         <div class="lp-form" id="richiedi">
-          <FormInline flusso="prova" medium="PaginaProva" />
+          <ProvaCodice />
         </div>
       </div>
     </header>
@@ -538,7 +538,7 @@ const domande = [
           giusta: entri, provi i corsi, sbagli qualche esercizio, ti fai correggere. Poi
           decidi — e se decidi che non è il posto giusto, hai speso quindici euro.
         </p>
-        <a class="btn btn-red lp-cta-grande" href="#richiedi">Richiedi il pass · {PASS.pieno} €</a>
+        <a class="btn btn-red lp-cta-grande" href="#richiedi" data-prova-codice>Ottieni il codice · {PASS.pieno} €</a>
         <p class="lp-chiusura-tel">
           Preferisci parlare con qualcuno? <a href="tel:+390733232905">0733 232905</a>,
           Macerata e Montecassiano.
@@ -571,7 +571,7 @@ const domande = [
         <b>{PASS.pieno} €</b>
         <span>7 giorni, tutto incluso</span>
       </div>
-      <a class="btn btn-red" href="#richiedi">Richiedi il pass</a>
+      <a class="btn btn-red" href="#richiedi" data-prova-codice>Ottieni il codice</a>
     </div>
   </main>
 </Layout>

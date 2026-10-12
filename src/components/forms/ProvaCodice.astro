@@ -1,0 +1,146 @@
+---
+/**
+ * Landing /prova: niente form, un pulsante. Il popup chiede l'email, la manda a
+ * /api/verifica (nessun abbonamento o pass nell'ultimo anno → "nuovo") e mostra il
+ * codice da copiare. Chi non è nuovo non riceve il codice: lo decide il server.
+ * Ogni elemento con `data-prova-codice` apre il popup.
+ */
+---
+
+<div class="pc">
+  <h2>Il tuo pass da 7 giorni</h2>
+  <p>Inserisci la tua email: controlliamo che tu sia idoneo e ti diamo subito il codice.</p>
+  <button type="button" class="btn btn-red pc-btn" data-prova-codice>Ottieni il codice</button>
+</div>
+
+<dialog class="pc-dialog" data-pc-dialog aria-labelledby="pc-titolo">
+  <button type="button" class="pc-x" data-pc-close aria-label="Chiudi">×</button>
+  <h2 id="pc-titolo">Il tuo codice</h2>
+
+  <form data-pc-form novalidate>
+    <label for="pc-email">La tua email</label>
+    <input id="pc-email" name="email" type="email" autocomplete="email" required placeholder="nome@email.it" />
+    <button type="submit" class="btn btn-red">Controlla</button>
+  </form>
+
+  <div data-pc-ok hidden>
+    <p>Sei idoneo. Copia il codice e attivalo sul portale:</p>
+    <code data-pc-codice></code>
+    <button type="button" class="btn btn-red" data-pc-copia>Copia il codice</button>
+    <a class="pc-link" href="https://lumefitness.perfectgym.com/ClientPortal2/#/Registration" target="_blank" rel="noopener">Vai al portale</a>
+  </div>
+
+  <p data-pc-msg role="status" hidden></p>
+</dialog>
+
+<script>
+  const dlg = document.querySelector<HTMLDialogElement>('[data-pc-dialog]');
+  if (dlg) {
+    const q = <T extends Element>(s: string) => dlg.querySelector<T>(s)!;
+    const form = q<HTMLFormElement>('[data-pc-form]');
+    const ok = q<HTMLElement>('[data-pc-ok]');
+    const msg = q<HTMLElement>('[data-pc-msg]');
+    const email = q<HTMLInputElement>('#pc-email');
+    const copia = q<HTMLButtonElement>('[data-pc-copia]');
+
+    const mostra = (t: string) => ((msg.textContent = t), (msg.hidden = !t));
+
+    document.addEventListener('click', (ev) => {
+      const t = ev.target instanceof Element ? ev.target.closest('[data-prova-codice]') : null;
+      if (!t) return;
+      ev.preventDefault();
+      dlg.showModal();
+    });
+    dlg.addEventListener('click', (ev) => {
+      if (ev.target === dlg || (ev.target as Element).closest('[data-pc-close]')) dlg.close();
+    });
+    // Alla chiusura si riparte da capo: niente codice rimasto a schermo.
+    dlg.addEventListener('close', () => {
+      form.hidden = false;
+      ok.hidden = true;
+      copia.textContent = 'Copia il codice';
+      mostra('');
+    });
+
+    // Il lead parte a prescindere dall'esito, senza far aspettare chi guarda il
+    // codice. Nessun consenso raccolto qui: privacy e marketing restano false.
+    const salvaLead = (verifica: string) => {
+      let utm: Record<string, string> = {};
+      try {
+        utm = (window as any).lumeGetUtm?.() || {};
+      } catch {}
+      const nuovo = verifica === 'nuovo';
+      fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        keepalive: true,
+        body: JSON.stringify({
+          flusso: 'prova',
+          tipoRichiesta: 'RICHIESTA PROVA',
+          email: email.value.trim(),
+          nuovo: nuovo ? 'NUOVO' : 'ESISTE',
+          verifica,
+          privacy: false,
+          marketing: false,
+          source: utm.utm_source || 'SitoWeb',
+          medium: 'PaginaProva',
+          cta: 'Ottieni il codice',
+          pagina: location.pathname,
+          utm,
+          inviatoIl: new Date().toISOString(),
+        }),
+      }).catch(() => {});
+    };
+
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      if (!email.checkValidity() || !email.value.trim()) return mostra('Controlla l’email: non sembra valida.');
+      mostra('Controllo in corso…');
+      try {
+        const r = await fetch('/api/verifica', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.value.trim(), codice: true }),
+        });
+        const d = await r.json();
+        salvaLead(d.stato);
+        if (d.codice) {
+          q('[data-pc-codice]').textContent = d.codice;
+          form.hidden = true;
+          ok.hidden = false;
+          mostra('');
+        } else {
+          mostra(
+            'Questa email risulta già in anagrafica: il pass è riservato a chi non ha avuto abbonamenti o pass nell’ultimo anno. Chiamaci allo 0733 232905 e ti aiutiamo.',
+          );
+        }
+      } catch {
+        mostra('Non riusciamo a controllare ora. Riprova, o chiamaci allo 0733 232905.');
+      }
+    });
+
+    copia.addEventListener('click', () => {
+      const c = q('[data-pc-codice]').textContent || '';
+      const fatto = () => (copia.textContent = 'Copiato ✓');
+      if (navigator.clipboard?.writeText) navigator.clipboard.writeText(c).then(fatto, () => {});
+      else fatto();
+    });
+  }
+</script>
+
+<style>
+  .pc { padding: 26px; }
+  .pc h2 { font-family: 'Anton', sans-serif; font-weight: 400; text-transform: uppercase; margin: 0 0 8px; }
+  .pc p { margin: 0 0 18px; }
+  .pc-btn { width: 100%; min-height: 56px; }
+  .pc-dialog { margin: auto; width: min(440px, 92vw); padding: 28px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: #fff; }
+  .pc-dialog::backdrop { background: rgba(0, 0, 0, 0.7); }
+  .pc-dialog h2 { font-family: 'Anton', sans-serif; font-weight: 400; text-transform: uppercase; margin: 0 0 16px; }
+  .pc-x { position: absolute; top: 6px; right: 10px; min-width: 44px; min-height: 44px; background: none; border: 0; color: #fff; font-size: 26px; cursor: pointer; }
+  .pc-dialog form, .pc-dialog [data-pc-ok] { display: grid; gap: 12px; }
+  .pc-dialog input { min-height: 48px; padding: 0 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: #fff; font-size: 16px; }
+  .pc-dialog code { text-align: center; font-family: 'Anton', sans-serif; font-size: 34px; letter-spacing: 0.08em; padding: 14px; border: 1px dashed var(--red); border-radius: 8px; }
+  .pc-dialog .btn { min-height: 48px; }
+  .pc-link { text-align: center; color: var(--red-txt); text-decoration: underline; }
+  [data-pc-msg] { margin: 14px 0 0; color: #ddd; font-size: 14px; line-height: 1.5; }
+</style>
