@@ -4,8 +4,8 @@ import assert from 'node:assert/strict';
 const { analizza, urlSicuro, segmenti } = await import('../src/lib/chatFormato.js');
 
 test('marcatori: pulsanti e risposte rapide escono dal testo', () => {
-  const r = analizza('Il **Gold** costa 900 €.\n[[Settimana di prova|https://www.lumefitness.it/prova]]\n((Macerata)) ((Urban))');
-  assert.deepEqual(r.bottoni, [{ etichetta: 'Settimana di prova', url: 'https://www.lumefitness.it/prova' }]);
+  const r = analizza('Il **Gold** costa 900 €.\n[[Pass prova|https://www.lumefitness.it/prova]]\n((Macerata)) ((Urban))');
+  assert.deepEqual(r.bottoni, [{ etichetta: 'Pass prova', url: 'https://www.lumefitness.it/prova' }]);
   assert.deepEqual(r.risposte, ['Macerata', 'Urban']);
   assert.deepEqual(r.blocchi, [{ tipo: 'p', riga: 'Il **Gold** costa 900 €.' }]);
 });

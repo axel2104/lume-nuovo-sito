@@ -26,6 +26,6 @@ ma il risultato si vede dalla seconda o terza lezione.
 
 ## Come iniziare
 
-Le prime due settimane sono dedicate alle prove gratuite: si prenota dall'app
+Le prime due settimane sono dedicate alle prove: si prenota dall'app
 oppure direttamente in reception. Se non hai mai fatto Pilates, chiedi della
 classe **Reformer Base**, pensata proprio per chi parte adesso.

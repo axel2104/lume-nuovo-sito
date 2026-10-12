@@ -1,7 +1,7 @@
 // Classificazione dei messaggi con Jev (TypeSafe System One). Solo server: la chiave non va mai al browser.
 // Stesse domande del CRM (lume-crm/lib/jev.ts): se cambiano le categorie, cambiarle in entrambi.
 export const INTENTI: Record<string, string> = {
-  prova_gratuita: 'Settimana di prova',
+  prova_gratuita: 'Pass prova',
   info_prezzi: 'Prezzi',
   info_orari_corsi: 'Orari e corsi',
   disdetta_reclamo: 'Disdetta o reclamo',
