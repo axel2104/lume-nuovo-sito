@@ -1,0 +1,192 @@
+// Totem del centro: schermata d'attesa, quattro sezioni, QR verso il telefono, statistiche anonime.
+import qrcode from 'qrcode-generator';
+import { parametri, urlQr, oraRoma, lezioniRestanti, nomeGiorno, prezzoPiano } from './totemDati.js';
+
+const INATTIVITA_MS = 60_000; // senza tocchi per un minuto: si torna all'attesa
+const RICARICA_MS = 6 * 3600_000; // contenuti aggiornati: il totem si ricarica da solo, ma solo in attesa
+
+const el = (tag, cls, testo) => {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (testo != null) e.textContent = testo;
+  return e;
+};
+
+function qr(url) {
+  const q = qrcode(0, 'M');
+  q.addData(url);
+  q.make();
+  const box = el('div', 'tt-qr');
+  box.innerHTML = q.createSvgTag({ cellSize: 8, margin: 2, scalable: true }); // SVG generato dalla libreria da un URL nostro
+  return box;
+}
+
+export function avviaTotem() {
+  const centri = JSON.parse(document.body.dataset.centri);
+  const { totem, centro: slug } = parametri(location.search);
+  const app = document.getElementById('app');
+  const centro = centri.find((c) => c.slug === slug);
+
+  // Indirizzo senza totem valido: elenco per chi configura lo schermo.
+  if (!totem || !centro) {
+    app.append(el('h1', 'tt-titolo', 'Configura il totem'));
+    app.append(el('p', 'tt-testo', 'Apri questo indirizzo con il nome del totem, per esempio:'));
+    for (const c of centri) app.append(el('p', 'tt-codice', `/totem?t=${c.slug}-ingresso`));
+    return;
+  }
+
+  // ─── Video di sfondo: parte da solo e non si ferma mai ───
+  const video = document.querySelector('.tt-video');
+  if (centro.poster) document.body.style.setProperty('--tt-poster', `url(${centro.poster})`);
+  if (centro.video) {
+    video.poster = centro.poster || '';
+    video.src = centro.video;
+    const riparti = () => video.play().catch(() => {});
+    video.addEventListener('pause', riparti);
+    video.addEventListener('stalled', riparti);
+    riparti();
+  }
+
+  // ─── Statistiche: un evento per gesto, in coda al thread (sendBeacon) ───
+  const invia = (evento, extra = {}) => {
+    const corpo = JSON.stringify({ totem, centro: slug, evento, ...extra });
+    try {
+      if (!navigator.sendBeacon('/api/totem', new Blob([corpo], { type: 'application/json' }))) throw new Error();
+    } catch {
+      fetch('/api/totem', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: corpo, keepalive: true }).catch(() => {});
+    }
+  };
+
+  let sezione = null; // { nome, da } mentre una sezione è aperta
+  let sessioneDa = 0; // inizio della sessione di tocchi, 0 = in attesa
+  const secondi = (da) => Math.round((Date.now() - da) / 1000);
+  const chiudiSezione = () => {
+    if (sezione) invia('sezione', { sezione: sezione.nome, durata: secondi(sezione.da) });
+    sezione = null;
+  };
+
+  let timer;
+  const riarma = () => {
+    clearTimeout(timer);
+    if (sessioneDa) timer = setTimeout(attesa, INATTIVITA_MS);
+  };
+  document.addEventListener('pointerdown', riarma, true);
+  document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+  const piazza = (...nodi) => app.replaceChildren(...nodi);
+  const intestazione = (indietro) => {
+    const h = el('header', 'tt-testa');
+    h.append(el('span', 'tt-marchio', 'LUME'), el('span', 'tt-centro', centro.nome));
+    if (indietro) {
+      const b = el('button', 'tt-indietro', '← Menu');
+      b.type = 'button';
+      b.onclick = home;
+      h.append(b);
+    }
+    return h;
+  };
+
+  // ─── Schermate ───
+  function attesa() {
+    chiudiSezione();
+    if (sessioneDa) invia('attesa', { durata: secondi(sessioneDa) });
+    sessioneDa = 0;
+    clearTimeout(timer);
+    const s = el('section', 'tt-attesa');
+    s.append(el('p', 'tt-sopra', 'Benvenuto in'), el('h1', 'tt-grande', centro.nome), el('p', 'tt-tocca', 'Tocca per scoprire'));
+    s.onclick = home;
+    piazza(s);
+  }
+
+  function home() {
+    chiudiSezione();
+    if (!sessioneDa) sessioneDa = Date.now();
+    riarma();
+    const griglia = el('div', 'tt-griglia');
+    const voci = [
+      ['Il centro', 'Servizi e orari', vistaCentro, 'gym1'],
+      ['Abbonamenti', 'Piani e prezzi', vistaAbbonamenti, 'weights'],
+      ['Corsi di oggi', 'Cosa c’è in programma', vistaCorsi, 'reformer'],
+      ['Pass prova', '7 giorni a 15 €', vistaProva, 'crossfit'],
+    ];
+    for (const [titolo, sotto, vista, foto] of voci) {
+      const b = el('button', 'tt-tessera');
+      b.type = 'button';
+      b.style.backgroundImage = `linear-gradient(to top, rgba(10,10,10,.94) 8%, rgba(10,10,10,.2) 70%), url(/media/${foto}.jpg)`;
+      b.append(el('span', 'tt-tessera-t', titolo), el('span', 'tt-tessera-s', sotto));
+      b.onclick = () => {
+        sezione = { nome: titolo, da: Date.now() };
+        vista();
+      };
+      griglia.append(b);
+    }
+    piazza(intestazione(false), el('h1', 'tt-titolo', 'Cosa vuoi scoprire?'), griglia);
+  }
+
+  function vistaCentro() {
+    const lista = el('ul', 'tt-pillole');
+    for (const s of centro.servizi) lista.append(el('li', null, s));
+    const blocco = el('div', 'tt-box');
+    if (centro.orari) {
+      blocco.append(el('h2', 'tt-sottotitolo', 'Orari di apertura'));
+      const o = centro.orari;
+      for (const [k, v] of [['Lun – Ven', o.feriali], ['Sabato', o.sabato], ['Domenica', o.domenica]]) if (v) blocco.append(el('p', 'tt-riga', `${k}: ${v}`));
+    }
+    if (centro.indirizzo) blocco.append(el('p', 'tt-riga', centro.indirizzo));
+    if (centro.telefono) blocco.append(el('p', 'tt-riga', `Tel. ${centro.telefono}`));
+    piazza(intestazione(true), el('h1', 'tt-titolo', 'Il centro'), lista, blocco);
+  }
+
+  function vistaAbbonamenti() {
+    const elenco = el('div', 'tt-piani');
+    for (const p of centro.piani) {
+      const { grande, unita, nota } = prezzoPiano(p);
+      const c = el('button', `tt-piano${p.evidenza ? ' tt-evidenza' : ''}`);
+      c.type = 'button';
+      c.append(el('span', 'tt-piano-nome', p.nome), el('span', 'tt-piano-per', p.per), el('span', 'tt-piano-prezzo', grande), el('span', 'tt-piano-unita', unita));
+      if (nota) c.append(el('span', 'tt-piano-nota', nota));
+      c.onclick = () => {
+        invia('voce', { sezione: 'Abbonamenti', voce: p.nome });
+        elenco.querySelectorAll('.tt-piano').forEach((x) => x.classList.toggle('tt-scelto', x === c));
+      };
+      elenco.append(c);
+    }
+    const q = el('div', 'tt-cta');
+    q.append(qr(urlQr('/iscriviti', slug, totem)), el('p', 'tt-cta-t', 'Iscriviti dal telefono'), el('p', 'tt-cta-s', 'Inquadra il codice con la fotocamera'));
+    invia('qr', { sezione: 'Abbonamenti' });
+    const extra = centro.attivazione ? el('p', 'tt-nota', `Quota di attivazione una tantum: ${centro.attivazione} €`) : el('span');
+    piazza(intestazione(true), el('h1', 'tt-titolo', 'Abbonamenti'), elenco, extra, q);
+  }
+
+  function vistaCorsi() {
+    const { giorno, minuti } = oraRoma();
+    const r = lezioniRestanti(centro.lezioni, giorno, minuti);
+    const titolo = r.quando === 'oggi' ? 'Corsi di oggi' : `Corsi di ${nomeGiorno(r.giorno)}`;
+    const lista = el('ul', 'tt-corsi');
+    for (const l of r.lezioni) {
+      const li = el('li');
+      li.append(el('span', 'tt-ora', l.inizio), el('span', 'tt-corso', l.corso));
+      li.onclick = () => invia('voce', { sezione: 'Corsi', voce: l.corso });
+      lista.append(li);
+    }
+    if (!r.lezioni.length) lista.append(el('li', 'tt-vuoto', 'Nessun corso in programma: chiedi in reception.'));
+    piazza(intestazione(true), el('h1', 'tt-titolo', titolo), lista, el('p', 'tt-nota', 'Orario della settimana tipo: per prenotare usa l’app o chiedi in reception.'));
+  }
+
+  function vistaProva() {
+    const box = el('div', 'tt-cta tt-cta-grande');
+    box.append(qr(urlQr('/prova', slug, totem)), el('p', 'tt-cta-t', 'Prova Lume per 7 giorni'), el('p', 'tt-cta-s', 'A 15 €, senza vincoli di rinnovo. Inquadra il codice con la fotocamera.'));
+    invia('qr', { sezione: 'Pass prova' });
+    piazza(intestazione(true), el('h1', 'tt-titolo', 'Pass prova'), el('p', 'tt-testo', 'Sala pesi, corsi, acqua, CrossFit e Reformer per una settimana.'), box);
+  }
+
+  // `?vista=menu|centro|abbonamenti|corsi|prova` apre subito quella schermata: per controllare i contenuti senza toccare lo schermo.
+  const diretta = { menu: home, centro: () => (sezione = { nome: 'Il centro', da: Date.now() }, home(), vistaCentro()), abbonamenti: vistaAbbonamenti, corsi: vistaCorsi, prova: vistaProva }[new URLSearchParams(location.search).get('vista')];
+  if (diretta) {
+    sessioneDa = Date.now();
+    diretta();
+  } else attesa();
+  setInterval(() => {
+    if (!sessioneDa && performance.now() > RICARICA_MS) location.reload();
+  }, 600_000);
+}

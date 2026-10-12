@@ -1,0 +1,67 @@
+---
+/**
+ * /totem — la home pensata per gli schermi nei centri (verticali, touch, a schermo intero).
+ *
+ * Ogni totem apre il proprio indirizzo: /totem?t=macerata-ingresso. Il pezzo prima del primo "-"
+ * è il centro, l'intero valore identifica il totem nelle statistiche del CRM (/totem nel CRM).
+ *
+ * Niente Layout del sito: qui non servono banner cookie, assistente, GTM né menu. Il video del
+ * centro gira sempre sullo sfondo; sopra c'è una schermata d'attesa che torna dopo un minuto
+ * senza tocchi. I dati dei centri sono incorporati in pagina: il totem non dipende dalla rete
+ * per mostrare prezzi e orari (solo il video e le statistiche la usano).
+ */
+import '@fontsource/anton/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/700.css';
+import '../styles/totem.css';
+import { getCollection } from 'astro:content';
+import { getImage } from 'astro:assets';
+
+export const prerender = true;
+
+const centri = (await getCollection('centri')).filter((c) => c.data.stato === 'aperto').sort((a, b) => a.data.ordine - b.data.ordine);
+
+const dati = await Promise.all(
+  centri.map(async (c) => {
+    const d = c.data;
+    return {
+      slug: c.id,
+      nome: d.nome,
+      video: d.video ?? '',
+      poster: d.videoPoster ? (await getImage({ src: d.videoPoster, width: 1080, format: 'webp' })).src : '',
+      servizi: d.servizi ?? [],
+      orari: d.orari ?? null,
+      indirizzo: d.indirizzo ?? '',
+      telefono: d.telefono ?? '',
+      piani: (d.listino?.piani ?? []).map((p) => ({
+        nome: p.nome,
+        per: p.per ?? '',
+        annuale: p.annuale,
+        mensile: p.mensile ?? null,
+        evidenza: !!p.evidenza,
+      })),
+      attivazione: d.listino?.attivazione ?? null,
+      lezioni: (d.planning ?? []).map((l) => ({ giorno: Number(l.giorno), inizio: l.inizio, fine: l.fine, corso: l.corso })),
+    };
+  }),
+);
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Lume Fitness Club</title>
+  </head>
+  <body class="totem" data-centri={JSON.stringify(dati)}>
+    <video class="tt-video" muted loop playsinline autoplay preload="auto" aria-hidden="true"></video>
+    <div class="tt-velo"></div>
+    <main class="tt-app" id="app"></main>
+    <script>
+      import { avviaTotem } from '../lib/totem.client.js';
+      avviaTotem();
+    </script>
+  </body>
+</html>

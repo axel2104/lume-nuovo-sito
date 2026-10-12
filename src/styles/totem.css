@@ -1,0 +1,60 @@
+/* Totem verticale (1080×1920 e simili), touch. Le misure scalano con la larghezza dello schermo. */
+:root { --bg: #0a0a0a; --card: #161616; --line: #2a2a2a; --red: #C40042; --red2: #D7272A; --red-txt: #E84A6F; --cream: #F5F3EA; --txt: #f4f4f4; --mut: #b4b4b4; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg) var(--tt-poster, none) center / cover no-repeat; color: var(--txt); font: 500 clamp(18px, 2.4vw, 30px) / 1.35 Inter, sans-serif; touch-action: manipulation; user-select: none; -webkit-user-select: none; cursor: none; }
+.tt-video { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.tt-velo { position: fixed; inset: 0; z-index: 1; background: linear-gradient(to bottom, rgba(10,10,10,.55), rgba(10,10,10,.82) 55%, rgba(10,10,10,.92)); }
+.tt-app { position: relative; z-index: 2; height: 100dvh; padding: 5vh 6vw; display: flex; flex-direction: column; gap: 3vh; overflow: hidden; }
+
+.tt-testa { display: flex; align-items: center; gap: 2vw; }
+.tt-marchio { font: 400 clamp(36px, 5vw, 64px) Anton, sans-serif; letter-spacing: .06em; color: var(--red-txt); }
+.tt-centro { color: var(--mut); font-size: .8em; }
+.tt-indietro { margin-left: auto; padding: 1.6vh 3vw; border-radius: 999px; border: 2px solid var(--line); background: rgba(22,22,22,.8); color: var(--txt); font: 700 1em Inter, sans-serif; }
+.tt-titolo { margin: 0; font: 400 clamp(44px, 7vw, 96px) / 1.05 Anton, sans-serif; text-transform: uppercase; }
+.tt-sottotitolo { margin: 0 0 1vh; font: 700 1.1em Inter, sans-serif; color: var(--cream); }
+.tt-testo { margin: 0; color: var(--cream); font-size: 1.15em; }
+.tt-nota { margin: 0; color: var(--mut); font-size: .95em; }
+.tt-codice { font: 700 1em monospace; color: var(--cream); }
+
+.tt-attesa { margin: auto 0 8vh; text-align: left; cursor: pointer; }
+.tt-sopra { margin: 0; color: var(--mut); font-size: 1.2em; }
+.tt-grande { margin: 1vh 0 5vh; font: 400 clamp(72px, 13vw, 180px) / .95 Anton, sans-serif; text-transform: uppercase; }
+.tt-tocca { display: inline-block; margin: 0; padding: 2.2vh 5vw; border-radius: 999px; background: var(--red); font: 700 1.25em Inter, sans-serif; animation: tt-pulsa 2.4s ease-in-out infinite; }
+@keyframes tt-pulsa { 50% { transform: scale(1.06); background: var(--red2); } }
+
+.tt-griglia { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 3vw; margin-bottom: 2vh; }
+.tt-tessera { display: flex; flex-direction: column; justify-content: flex-end; gap: .6vh; padding: 3vh 3vw; border-radius: 28px; border: 2px solid var(--line); background: var(--card) center / cover no-repeat; color: var(--txt); text-align: left; font-family: inherit; }
+.tt-tessera:active { background: var(--red); border-color: var(--red); }
+.tt-tessera:nth-child(4) { border-color: var(--red); }
+.tt-tessera-t { font: 400 clamp(38px, 5.6vw, 76px) / 1 Anton, sans-serif; text-transform: uppercase; }
+.tt-tessera-s { color: #e0e0e0; font-size: 1em; }
+
+.tt-pillole { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 1.5vh 1.5vw; }
+.tt-pillole li { padding: 1.4vh 2.6vw; border-radius: 999px; background: rgba(22,22,22,.85); border: 2px solid var(--line); font-weight: 700; }
+.tt-box { padding: 3vh 3vw; border-radius: 24px; background: rgba(22,22,22,.85); border: 2px solid var(--line); }
+.tt-riga { margin: .4vh 0; }
+
+.tt-piani { display: grid; grid-template-columns: repeat(auto-fit, minmax(30vw, 1fr)); gap: 2vw; }
+.tt-piano { display: flex; flex-direction: column; gap: .4vh; padding: 3vh 2.4vw; border-radius: 24px; border: 2px solid var(--line); background: rgba(22,22,22,.85); color: var(--txt); text-align: left; font-family: inherit; }
+.tt-evidenza { border-color: var(--red); }
+.tt-scelto { background: var(--red); border-color: var(--red); }
+.tt-piano-nome { font: 400 1.7em Anton, sans-serif; text-transform: uppercase; }
+.tt-piano-per { color: var(--mut); font-size: .9em; min-height: 2.6em; }
+.tt-scelto .tt-piano-per, .tt-scelto .tt-piano-nota { color: #fff; }
+.tt-piano-prezzo { font: 400 2.6em Anton, sans-serif; }
+.tt-piano-unita { font-weight: 700; }
+.tt-piano-nota { color: var(--mut); font-size: .9em; }
+
+.tt-corsi { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1.4vh; overflow-y: auto; flex: 1; }
+.tt-corsi li { display: flex; gap: 3vw; align-items: baseline; padding: 2vh 3vw; border-radius: 20px; background: rgba(22,22,22,.85); border: 2px solid var(--line); }
+.tt-ora { font: 400 1.6em Anton, sans-serif; color: var(--red-txt); min-width: 3.4em; }
+.tt-corso { font-weight: 700; font-size: 1.1em; }
+.tt-vuoto { color: var(--mut); }
+
+.tt-cta { margin-top: auto; display: flex; flex-direction: column; align-items: center; gap: .6vh; padding: 2.2vh; border-radius: 28px; background: rgba(22,22,22,.9); border: 2px solid var(--red); text-align: center; }
+.tt-cta-grande { margin: auto 0; padding: 5vh 4vw; }
+.tt-qr { width: min(38vw, 28vh); background: #fff; padding: 1.5vh; border-radius: 16px; }
+.tt-cta-grande .tt-qr { width: min(66vw, 46vh); }
+.tt-qr svg { display: block; width: 100%; height: auto; }
+.tt-cta-t { margin: 1vh 0 0; font: 400 1.9em Anton, sans-serif; text-transform: uppercase; }
+.tt-cta-s { margin: 0; color: var(--mut); font-size: 1em; }
