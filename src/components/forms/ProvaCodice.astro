@@ -194,8 +194,12 @@ const centri = (await getCollection('centri'))
   .pc h2 { font-family: 'Anton', sans-serif; font-weight: 400; text-transform: uppercase; margin: 0 0 8px; }
   .pc p { margin: 0 0 18px; }
   .pc-btn { width: 100%; min-height: 56px; }
-  .pc-dialog { margin: auto; width: min(480px, 92vw); max-height: 92dvh; overflow-y: auto; padding: 28px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: #fff; }
+  .pc-dialog { margin: auto; width: min(480px, 92vw); max-height: 92dvh; overflow-y: auto; overflow-x: hidden; padding: 28px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: #fff; }
   .pc-dialog::backdrop { background: rgba(0, 0, 0, 0.7); }
+  .pc-dialog, .pc-dialog * { box-sizing: border-box; }
+  .pc-dialog { overflow-wrap: anywhere; }
+  .pc-dialog form > *, .pc-dialog [data-pc-ok] > * { min-width: 0; }
+  .pc-dialog input:not([type='radio']):not([type='checkbox']) { width: 100%; }
   .pc-dialog h2 { font-family: 'Anton', sans-serif; font-weight: 400; text-transform: uppercase; margin: 0 0 16px; }
   .pc-x { position: absolute; top: 6px; right: 10px; min-width: 44px; min-height: 44px; background: none; border: 0; color: #fff; font-size: 26px; cursor: pointer; }
   .pc-dialog form, .pc-dialog [data-pc-ok] { display: grid; gap: 12px; }
@@ -204,19 +208,19 @@ const centri = (await getCollection('centri'))
   .pc-centro { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 14px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
   .pc-centro:has(input:checked) { border-color: var(--red); background: rgba(196, 0, 66, 0.08); }
   .pc-dialog .pc-centro input { min-height: 0; accent-color: var(--red); }
-  .pc-due { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .pc-due { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
   .pc-consenso { display: flex; gap: 10px; align-items: flex-start; font-size: 12px; line-height: 1.45; color: var(--mut); }
   .pc-consenso a { color: var(--red-txt); text-decoration: underline; }
   .pc-dialog .pc-consenso input { min-height: 0; margin-top: 2px; accent-color: var(--red); }
   .pc-dialog input { min-height: 48px; padding: 0 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: #fff; font-size: 16px; }
   .pc-eye { display: block; margin-bottom: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--red-txt); }
-  .pc-box { min-height: 56px; border: 1px dashed var(--red); border-radius: 8px; background: rgba(196, 0, 66, 0.08); color: var(--red-txt); font-size: 18px; font-weight: 700; cursor: pointer; }
+  .pc-box { min-height: 56px; border: 1px dashed var(--red); border-radius: 8px; background: rgba(196, 0, 66, 0.08); color: var(--red-txt); font-size: 16px; font-weight: 700; cursor: pointer; padding: 8px 12px; width: 100%; }
   .pc-box b { font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: 0.08em; }
   .pc-passi { margin: 0; padding-left: 20px; display: grid; gap: 8px; font-size: 14px; line-height: 1.45; color: #cfcfcf; }
   .pc-passi b { color: #fff; }
   .pc-dialog small { color: var(--mut); text-align: center; font-size: 12px; }
   .pc-dialog code { text-align: center; font-family: 'Anton', sans-serif; font-size: 34px; letter-spacing: 0.08em; padding: 14px; border: 1px dashed var(--red); border-radius: 8px; }
   .pc-dialog .btn { min-height: 48px; }
-  .pc-link { display: inline-flex; align-items: center; justify-content: center; }
+  .pc-link { width: 100%; text-align: center; display: inline-flex; align-items: center; justify-content: center; }
   [data-pc-msg] { margin: 14px 0 0; color: #ddd; font-size: 14px; line-height: 1.5; }
 </style>
