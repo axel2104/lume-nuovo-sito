@@ -1,3 +1,5 @@
+import { analizza, segmenti } from './chatFormato.js';
+
 // Widget dell'assistente: cronologia in sessionStorage, risposte da /api/chat.
 const CHIAVE = 'lume-chat';
 const SESSIONE = 'lume-chat-id';
@@ -25,19 +27,55 @@ const salva = (m) => {
   }
 };
 
-/** Testo semplice con i link cliccabili, costruito da nodi: mai innerHTML con testo del modello. */
-function scrivi(el, testo) {
-  for (const parte of testo.split(/(https?:\/\/[^\s)]+)/g)) {
-    if (/^https?:\/\//.test(parte)) {
+/** Risposta dell'assistente: paragrafi, elenchi, grassetti, poi pulsanti e risposte rapide. Solo nodi DOM, mai innerHTML. */
+function disegna(el, testo) {
+  el.replaceChildren();
+  const { blocchi, bottoni, risposte } = analizza(testo);
+  const riga = (parent, r) => {
+    for (const { t, b } of segmenti(r)) {
+      if (b) {
+        const strong = document.createElement('strong');
+        strong.textContent = t;
+        parent.append(strong);
+      } else parent.append(t);
+    }
+  };
+  for (const bl of blocchi) {
+    if (bl.tipo === 'p') {
+      const p = document.createElement('p');
+      riga(p, bl.riga);
+      el.append(p);
+    } else {
+      const ul = document.createElement('ul');
+      for (const r of bl.righe) riga(ul.appendChild(document.createElement('li')), r);
+      el.append(ul);
+    }
+  }
+  if (bottoni.length) {
+    const d = document.createElement('div');
+    d.className = 'chat-azioni';
+    for (const b of bottoni) {
       const a = document.createElement('a');
-      a.href = parte;
-      a.textContent = parte.replace(/^https?:\/\/(www\.)?/, '');
+      a.className = 'chat-btn';
+      a.href = b.url;
       a.target = '_blank';
       a.rel = 'noopener';
-      el.append(a);
-    } else {
-      el.append(parte);
+      a.textContent = b.etichetta;
+      d.append(a);
     }
+    el.append(d);
+  }
+  if (risposte.length) {
+    const d = document.createElement('div');
+    d.className = 'chat-risposte';
+    for (const r of risposte) {
+      const bt = document.createElement('button');
+      bt.type = 'button';
+      bt.className = 'chat-chip chat-risposta';
+      bt.textContent = r;
+      d.append(bt);
+    }
+    el.append(d);
   }
 }
 
@@ -54,7 +92,8 @@ export function initChat() {
   const bolla = (ruolo, testo) => {
     const d = document.createElement('div');
     d.className = `chat-msg chat-${ruolo}`;
-    scrivi(d, testo);
+    if (ruolo === 'assistant') disegna(d, testo);
+    else d.textContent = testo;
     log.append(d);
     log.scrollTop = log.scrollHeight;
     return d;
@@ -78,6 +117,15 @@ export function initChat() {
 
   document.querySelectorAll('[data-chat-toggle]').forEach((b) => b.addEventListener('click', () => apri(pannello.hidden)));
   document.addEventListener('keydown', (e) => e.key === 'Escape' && !pannello.hidden && apri(false));
+
+  // Risposte rapide del modello (es. il centro): un tocco le invia e le altre spariscono.
+  log.addEventListener('click', (e) => {
+    const bt = e.target.closest('.chat-risposta');
+    if (!bt || inAttesa) return;
+    bt.closest('.chat-risposte').remove();
+    input.value = bt.textContent;
+    form.requestSubmit();
+  });
 
   const chips = pannello.querySelector('.chat-chips');
   const contatto = pannello.querySelector('.chat-contatto');
@@ -128,8 +176,7 @@ export function initChat() {
     } catch {
       /* resta il messaggio di ripiego */
     }
-    attesa.replaceChildren();
-    scrivi(attesa, risposta);
+    disegna(attesa, risposta);
     log.scrollTop = log.scrollHeight;
     messaggi.push({ role: 'assistant', content: risposta });
     salva(messaggi);
