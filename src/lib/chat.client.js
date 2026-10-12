@@ -99,11 +99,32 @@ export function initChat() {
     return d;
   };
 
+  // Su telefono il pannello è a schermo intero e segue l'area visibile: con la tastiera aperta
+  // l'altezza si riduce e il campo resta in vista. Su desktop non serve e non si tocca nulla.
+  const telefono = window.matchMedia('(max-width: 640px), (max-height: 520px)');
+  const vv = window.visualViewport;
+  const adatta = () => {
+    if (pannello.hidden) return;
+    if (telefono.matches && vv) {
+      pannello.style.setProperty('--chat-h', `${vv.height}px`);
+      pannello.style.setProperty('--chat-top', `${vv.offsetTop}px`);
+      log.scrollTop = log.scrollHeight;
+    } else {
+      pannello.style.removeProperty('--chat-h');
+      pannello.style.removeProperty('--chat-top');
+    }
+  };
+  vv?.addEventListener('resize', adatta);
+  vv?.addEventListener('scroll', adatta);
+  telefono.addEventListener('change', adatta);
+
   const apri = (aperto) => {
     pannello.hidden = !aperto;
     fab.setAttribute('aria-expanded', String(aperto));
     fab.hidden = aperto;
+    document.documentElement.classList.toggle('chat-aperta', aperto);
     if (aperto) {
+      adatta();
       chips.hidden = messaggi.length > 0;
       if (!log.childElementCount) {
         bolla('assistant', SALUTO);
@@ -183,4 +204,6 @@ export function initChat() {
     contatto.hidden = contatto.classList.contains('chat-contatto-ok');
     inAttesa = false;
   });
+
+  if (location.hash === '#assistente') apri(true);
 }

@@ -1,6 +1,9 @@
 /* Assistente del sito: stesso linguaggio del resto (fondo scuro, rosso Lume). */
+/* Il badge Iubenda in basso a destra resta fuori dai piedi finché la chat è aperta: ricompare alla chiusura. */
+html.chat-aperta .iubenda-tp-btn-container { display: none !important; }
+
 .chat-fab {
-  position: fixed; right: 16px; bottom: 84px; z-index: 60;
+  position: fixed; right: 16px; bottom: 84px; z-index: 2147483000;
   padding: 12px 18px; border: 0; border-radius: 999px; cursor: pointer;
   background: var(--red); color: #fff; font: 600 15px/1 Inter, sans-serif;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
@@ -9,7 +12,7 @@
 .chat-fab[hidden], .chat-panel[hidden] { display: none; }
 
 .chat-panel {
-  position: fixed; right: 16px; bottom: 84px; z-index: 61;
+  position: fixed; right: 16px; bottom: 84px; z-index: 2147483647; /* sopra Iubenda (banner e badge), che usano valori altissimi */
   width: min(380px, calc(100vw - 32px)); height: min(560px, calc(100dvh - 100px));
   display: flex; flex-direction: column; overflow: hidden;
   background: var(--bg2); color: var(--txt); border: 1px solid var(--line); border-radius: 16px;
@@ -51,3 +54,27 @@
 .chat-btn:hover { background: var(--red2); }
 .chat-btn:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
 .chat-risposte .chat-chip { border-color: var(--red); color: var(--txt); }
+
+/* Telefono (e schermi bassi, come un telefono in orizzontale): il pannello occupa tutta la pagina.
+   L'altezza arriva dall'area visibile (tastiera compresa), la pagina sotto non scorre. */
+@media (max-width: 640px), (max-height: 520px) {
+  html.chat-aperta, html.chat-aperta body { overflow: hidden; overscroll-behavior: none; }
+  .chat-fab { right: 12px; bottom: 76px; }
+  .chat-panel {
+    top: var(--chat-top, 0); left: 0; right: 0; bottom: auto;
+    width: 100%; height: var(--chat-h, 100dvh); max-height: none;
+    border: 0; border-radius: 0; box-shadow: none;
+  }
+  .chat-head { padding: calc(12px + env(safe-area-inset-top)) 16px 12px; }
+  .chat-head strong { font-size: 17px; }
+  .chat-close { font-size: 34px; min-width: 44px; min-height: 44px; }
+  .chat-log { padding: 14px 14px 8px; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+  .chat-msg { max-width: 92%; font-size: 16px; }
+  .chat-chip { padding: 10px 14px; font-size: 15px; }
+  .chat-btn { padding: 12px 18px; font-size: 15px; }
+  .chat-form { padding: 10px 10px calc(10px + env(safe-area-inset-bottom)); }
+  /* 16px: sotto questa soglia Safari ingrandisce la pagina quando si tocca il campo. */
+  .chat-input, .chat-contatto input { font-size: 16px; min-height: 46px; }
+  .chat-send { min-height: 46px; padding: 0 18px; font-size: 16px; }
+  .chat-nota { padding: 0 14px calc(8px + env(safe-area-inset-bottom)); }
+}
