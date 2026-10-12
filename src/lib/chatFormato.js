@@ -11,7 +11,7 @@
 const HOST_OK = new Set(['lumefitness.it', 'www.lumefitness.it', 'lumefitness.perfectgym.com']);
 
 const ETICHETTE = [
-  [/\/prova/, 'Prova gratuita'],
+  [/\/prova/, 'Settimana di prova'],
   [/\/contatti/, 'Contatta il centro'],
   [/\/regolamento/, 'Leggi il regolamento'],
   [/\/planning/, 'Vedi gli orari'],
