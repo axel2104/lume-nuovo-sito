@@ -1,0 +1,11 @@
+---
+/**
+ * Statistiche anonime di ogni pagina (tempo attivo, scroll, click): vedi src/lib/interazioni.js.
+ * Sta in un componente e non nel Layout perché Astro emette lo script di un componente, non quello del Layout.
+ */
+---
+
+<script>
+  import { avviaInterazioni } from '../lib/interazioni.js';
+  avviaInterazioni();
+</script>

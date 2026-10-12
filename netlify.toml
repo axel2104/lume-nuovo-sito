@@ -12,11 +12,37 @@
 # avrebbe detto a Google di non indicizzare nulla, lasciando in indice
 # solo le vecchie pagine WordPress.)
 
-# Asset con hash nel nome: immutabili, cache lunga.
+# ─── CACHE ────────────────────────────────────────────────────────────────
+# Il sito cambia solo quando arriva un deploy, e Netlify svuota la cache del
+# CDN a ogni deploy da solo. Quindi:
+#  - il CDN tiene tutto fino al prossimo deploy (è già così per i file statici);
+#  - il browser riusa le pagine per 5 minuti, invece di chiedere conferma al CDN
+#    a ogni apertura: meno richieste, navigazione indietro/avanti istantanea.
+# Cinque minuti e non di più: dopo un deploy nessuno resta con una pagina vecchia a lungo.
+# Le regole più in basso (asset con hash, media, API) prevalgono su questa.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
+
+# I dati per gli assistenti: l'header impostato dal codice non arriva per i file
+# pre-generati, quindi va dichiarato qui.
+[[headers]]
+  for = "/*.json"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+# Asset con hash nel nome (JS, CSS, foto ottimizzate in build): immutabili, cache lunga.
 [[headers]]
   for = "/_astro/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Le route dinamiche non si mettono mai in cache.
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Cache-Control = "no-store"
 
 [[headers]]
   for = "/media/*"

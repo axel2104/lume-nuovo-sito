@@ -27,14 +27,12 @@ export default defineConfig({
   // Le pagine si precaricano quando l'utente sfiora un link: la navigazione
   // diventa quasi istantanea senza cambiare una riga di markup.
   prefetch: true,
-  // Le immagini le ridimensiona e converte il CDN di Netlify, su richiesta e
-  // in cache. Misurato su 13 foto: con questa opzione la build dura 8 secondi,
-  // pre-generando tutto con sharp (`netlify({ imageCDN: false })`) ne dura 25 e
-  // produce 49 file di varianti. Con un CMS dove ogni salvataggio fa una build,
-  // e con una fototeca destinata a crescere, la differenza conta.
-  // Rovescio della medaglia: le varianti esistono solo su Netlify, quindi per
-  // vedere le foto in locale si usa `npm run dev`, non il contenuto di dist.
-  adapter: netlify(),
+  // Le foto si ottimizzano in build con sharp (`imageCDN: false`): diventano file statici
+  // sotto /_astro/ con l'hash nel nome, quindi cache di un anno e nessuna trasformazione
+  // a ogni accesso. Misurato il 13/10/2026: 421 file, build di 12 secondi. Con il CDN delle
+  // immagini di Netlify ogni variante si trasformava al volo e la cache si svuotava a
+  // ogni deploy. Per vedere le foto in locale va bene anche il contenuto di dist.
+  adapter: netlify({ imageCDN: false }),
   integrations: [
     react(),
     keystatic(),
