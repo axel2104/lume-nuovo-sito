@@ -33,13 +33,12 @@ const minuti = (hhmm) => {
   return h * 60 + m;
 };
 
-/** Le lezioni di oggi non ancora finite, per orario. Se è tutto finito, quelle di domani. */
-export function lezioniRestanti(lezioni, giorno, ora) {
-  const di = (g) => lezioni.filter((l) => l.giorno === g && Number.isFinite(minuti(l.inizio))).sort((a, b) => minuti(a.inizio) - minuti(b.inizio));
-  const oggi = di(giorno).filter((l) => minuti(l.fine) > ora);
-  if (oggi.length) return { quando: 'oggi', giorno, lezioni: oggi };
-  const domani = (giorno % 7) + 1;
-  return { quando: 'domani', giorno: domani, lezioni: di(domani) };
+/** Planning della settimana: sette giorni a partire da oggi, ognuno con le sue lezioni per orario. Giorni senza lezioni omessi. */
+export function settimana(lezioni, giorno) {
+  return Array.from({ length: 7 }, (_, i) => {
+    const g = ((giorno - 1 + i) % 7) + 1;
+    return { giorno: g, lezioni: lezioni.filter((l) => l.giorno === g && Number.isFinite(minuti(l.inizio))).sort((a, b) => minuti(a.inizio) - minuti(b.inizio)) };
+  }).filter((d) => d.lezioni.length);
 }
 
 export const nomeGiorno = (g) => NOMI_GIORNO[g] ?? '';

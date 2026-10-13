@@ -1,6 +1,6 @@
 // Totem del centro: schermata d'attesa, quattro sezioni (cinque a Montecassiano, con la scuola nuoto), QR verso il telefono, statistiche anonime.
 import qrcode from 'qrcode-generator';
-import { parametri, urlQr, oraRoma, lezioniRestanti, nomeGiorno } from './totemDati.js';
+import { parametri, urlQr, oraRoma, settimana, nomeGiorno } from './totemDati.js';
 import { PREDEFINITI } from './totemTesti.js';
 
 const INATTIVITA_MS = 60_000; // senza tocchi per un minuto: si torna all'attesa
@@ -245,18 +245,20 @@ export function avviaTotem() {
   }
 
   function vistaCorsi() {
-    const { giorno, minuti } = oraRoma();
-    const r = lezioniRestanti(centro.lezioni, giorno, minuti);
-    const titolo = r.quando === 'oggi' ? titoloDi('corsi') || 'Corsi di oggi' : `Corsi di ${nomeGiorno(r.giorno)}`;
+    const { giorno } = oraRoma();
+    const giorni = settimana(centro.lezioni, giorno);
     const lista = el('ul', 'tt-corsi');
-    for (const l of r.lezioni) {
-      const li = el('li');
-      li.append(el('span', 'tt-ora', l.inizio), el('span', 'tt-corso', l.corso));
-      li.onclick = () => invia('voce', { sezione: 'Corsi', voce: l.corso });
-      lista.append(li);
+    for (const d of giorni) {
+      lista.append(el('li', 'tt-giorno', d.giorno === giorno ? `Oggi · ${nomeGiorno(d.giorno)}` : nomeGiorno(d.giorno)));
+      for (const l of d.lezioni) {
+        const li = el('li');
+        li.append(el('span', 'tt-ora', l.inizio), el('span', 'tt-corso', l.corso));
+        li.onclick = () => invia('voce', { sezione: 'Corsi', voce: l.corso });
+        lista.append(li);
+      }
     }
-    if (!r.lezioni.length) lista.append(el('li', 'tt-vuoto', T.corsiVuoto));
-    piazza(intestazione(true), el('h1', 'tt-titolo', titolo), lista, el('p', 'tt-nota', T.corsiNota));
+    if (!giorni.length) lista.append(el('li', 'tt-vuoto', T.corsiVuoto));
+    piazza(intestazione(true), el('h1', 'tt-titolo', titoloDi('corsi') || 'Corsi della settimana'), lista, el('p', 'tt-nota', T.corsiNota));
   }
 
   function vistaProva() {

@@ -9,7 +9,7 @@ export const PREDEFINITI = {
   tessere: [
     { chiave: 'centro', titolo: 'Il centro', sotto: 'Servizi e orari', foto: '/media/gym1.jpg' },
     { chiave: 'abbonamenti', titolo: 'Abbonamenti', sotto: 'Piani e prezzi', foto: '/media/weights.jpg' },
-    { chiave: 'corsi', titolo: 'Corsi di oggi', sotto: 'Cosa c’è in programma', foto: '/media/reformer.jpg' },
+    { chiave: 'corsi', titolo: 'Corsi della settimana', sotto: 'Cosa c’è in programma', foto: '/media/reformer.jpg' },
     { chiave: 'prova', titolo: 'Pass prova', sotto: '7 giorni a 15 €', foto: '/media/crossfit.jpg' },
     { chiave: 'scuolanuoto', titolo: 'Scuola nuoto', sotto: 'Bambini e ragazzi, 3–18 anni', foto: '' }, // foto vuota = quella del centro
   ],
