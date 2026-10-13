@@ -18,9 +18,16 @@ import { getCollection } from 'astro:content';
 import { getImage } from 'astro:assets';
 import piscina from '../assets/centri/montecassiano-piscina.jpg';
 import { campo } from '../lib/copy';
+import totemJson from '../content/pagine/totem.json';
+import { unisci } from '../lib/totemTesti.js';
 import { testiScuolaNuoto as sn } from '../data/testi';
 
 export const prerender = true;
+
+// Foto scelte da Keystatic (src/assets/totem): si ottimizzano in build come le altre.
+const fotoEditor = import.meta.glob('../assets/totem/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' }) as Record<string, any>;
+const fotoRisolte = new Map(await Promise.all(Object.entries(fotoEditor).map(async ([p, img]) => [p.split('/').pop(), (await getImage({ src: img, width: 900, format: 'jpg' })).src] as const)));
+const testi = unisci(totemJson, (percorso: string) => fotoRisolte.get(percorso.split('/').pop() ?? '') ?? '');
 
 const fotoPiscina = (await getImage({ src: piscina, width: 900, format: 'jpg' })).src;
 
@@ -72,7 +79,7 @@ const dati = await Promise.all(
     <meta name="robots" content="noindex, nofollow" />
     <title>Lume Fitness Club</title>
   </head>
-  <body class="totem" data-centri={JSON.stringify(dati)}>
+  <body class="totem" data-centri={JSON.stringify(dati)} data-testi={JSON.stringify(testi)}>
     <video class="tt-video" muted loop playsinline autoplay preload="auto" aria-hidden="true"></video>
     <div class="tt-velo"></div>
     <main class="tt-app" id="app"></main>

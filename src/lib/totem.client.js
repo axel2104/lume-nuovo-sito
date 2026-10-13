@@ -1,6 +1,7 @@
 // Totem del centro: schermata d'attesa, quattro sezioni (cinque a Montecassiano, con la scuola nuoto), QR verso il telefono, statistiche anonime.
 import qrcode from 'qrcode-generator';
 import { parametri, urlQr, oraRoma, lezioniRestanti, nomeGiorno } from './totemDati.js';
+import { PREDEFINITI } from './totemTesti.js';
 
 const INATTIVITA_MS = 60_000; // senza tocchi per un minuto: si torna all'attesa
 const RICARICA_MS = 6 * 3600_000; // contenuti aggiornati: il totem si ricarica da solo, ma solo in attesa
@@ -23,6 +24,8 @@ function qr(url) {
 
 export function avviaTotem() {
   const centri = JSON.parse(document.body.dataset.centri);
+  const T = JSON.parse(document.body.dataset.testi); // testi e menu da Keystatic (con i valori di serie dove manca qualcosa)
+  const titoloDi = (chiave) => T.tessere.find((t) => t.chiave === chiave)?.titolo;
   const { totem, centro: slug } = parametri(location.search);
   const app = document.getElementById('app');
   const centro = centri.find((c) => c.slug === slug);
@@ -93,7 +96,7 @@ export function avviaTotem() {
     sessioneDa = 0;
     clearTimeout(timer);
     const s = el('section', 'tt-attesa');
-    s.append(el('p', 'tt-sopra', 'Benvenuto in'), el('h1', 'tt-grande', centro.nome), el('p', 'tt-tocca', 'Tocca per scoprire'));
+    s.append(el('p', 'tt-sopra', T.attesaSopra), el('h1', 'tt-grande', centro.nome), el('p', 'tt-tocca', T.attesaTocca));
     s.onclick = home;
     piazza(s);
   }
@@ -103,25 +106,24 @@ export function avviaTotem() {
     if (!sessioneDa) sessioneDa = Date.now();
     riarma();
     const griglia = el('div', 'tt-griglia');
-    const voci = [
-      ['Il centro', 'Servizi e orari', vistaCentro, '/media/gym1.jpg'],
-      ['Abbonamenti', 'Piani e prezzi', vistaAbbonamenti, '/media/weights.jpg'],
-      ['Corsi di oggi', 'Cosa c’è in programma', vistaCorsi, '/media/reformer.jpg'],
-      ['Pass prova', '7 giorni a 15 €', vistaProva, '/media/crossfit.jpg'],
-      ...(centro.scuolaNuoto ? [['Scuola nuoto', 'Bambini e ragazzi, 3–18 anni', vistaScuolaNuoto, centro.scuolaNuoto.foto]] : []),
-    ];
-    for (const [titolo, sotto, vista, foto] of voci) {
+    const viste = { centro: vistaCentro, abbonamenti: vistaAbbonamenti, corsi: vistaCorsi, prova: vistaProva, scuolanuoto: vistaScuolaNuoto };
+    // La scuola nuoto c'è solo dove il centro la ha; la sua foto di serie è quella della piscina del centro.
+    const voci = T.tessere
+      .filter((t) => t.chiave !== 'scuolanuoto' || centro.scuolaNuoto)
+      .map((t) => [t.titolo, t.sotto, viste[t.chiave], t.foto || centro.scuolaNuoto?.foto || '', t.chiave]);
+    for (const [titolo, sotto, vista, foto, chiave] of voci) {
       const b = el('button', 'tt-tessera');
       b.type = 'button';
       b.style.backgroundImage = `linear-gradient(to top, rgba(10,10,10,.94) 8%, rgba(10,10,10,.2) 70%), url(${foto})`;
       b.append(el('span', 'tt-tessera-t', titolo), el('span', 'tt-tessera-s', sotto));
       b.onclick = () => {
-        sezione = { nome: titolo, da: Date.now() };
+        // Nelle statistiche la sezione ha sempre il nome di serie: rinominare la tessera non spezza i conteggi.
+        sezione = { nome: PREDEFINITI.tessere.find((x) => x.chiave === chiave).titolo, da: Date.now() };
         vista();
       };
       griglia.append(b);
     }
-    piazza(intestazione(false), el('h1', 'tt-titolo', 'Cosa vuoi scoprire?'), griglia);
+    piazza(intestazione(false), el('h1', 'tt-titolo', T.menuTitolo), griglia);
   }
 
   function vistaCentro() {
@@ -129,13 +131,13 @@ export function avviaTotem() {
     for (const s of centro.servizi) lista.append(el('li', null, s));
     const blocco = el('div', 'tt-box');
     if (centro.orari) {
-      blocco.append(el('h2', 'tt-sottotitolo', 'Orari di apertura'));
+      blocco.append(el('h2', 'tt-sottotitolo', T.centroOrari));
       const o = centro.orari;
       for (const [k, v] of [['Lun – Ven', o.feriali], ['Sabato', o.sabato], ['Domenica', o.domenica]]) if (v) blocco.append(el('p', 'tt-riga', `${k}: ${v}`));
     }
     if (centro.indirizzo) blocco.append(el('p', 'tt-riga', centro.indirizzo));
     if (centro.telefono) blocco.append(el('p', 'tt-riga', `Tel. ${centro.telefono}`));
-    piazza(intestazione(true), el('h1', 'tt-titolo', 'Il centro'), lista, blocco);
+    piazza(intestazione(true), el('h1', 'tt-titolo', titoloDi('centro') || 'Il centro'), lista, blocco);
   }
 
   // ─── ClientPortal sopra il totem: il consulente attiva l'abbonamento senza uscire dalla pagina ───
@@ -194,8 +196,8 @@ export function avviaTotem() {
       c.append(testa, formule);
       elenco.append(c);
     }
-    const extra = centro.attivazione ? el('p', 'tt-nota', `Quota di attivazione una tantum: ${centro.attivazione} €. Tocca una formula per attivarla online.`) : el('span');
-    piazza(intestazione(true), el('h1', 'tt-titolo', 'Abbonamenti'), elenco, extra);
+    const extra = centro.attivazione ? el('p', 'tt-nota', `Quota di attivazione una tantum: ${centro.attivazione} €. ${T.abbonamentiNota}`) : el('span');
+    piazza(intestazione(true), el('h1', 'tt-titolo', titoloDi('abbonamenti') || 'Abbonamenti'), elenco, extra);
   }
 
   // Prezzi della scuola nuoto: arrivano dai piani PerfectGym (sincronizzati nel database). Se la rete manca, la vista resta senza prezzi.
@@ -234,8 +236,8 @@ export function avviaTotem() {
     }
     piazza(
       intestazione(true),
-      el('h1', 'tt-titolo', 'Scuola nuoto'),
-      el('p', 'tt-testo', `Lume-H2O · scuola nuoto federale FIN${sn.stagione ? ` · stagione ${sn.stagione}` : ''}. Tocca la fascia d’età di tuo figlio.`),
+      el('h1', 'tt-titolo', titoloDi('scuolanuoto') || 'Scuola nuoto'),
+      el('p', 'tt-testo', `Lume-H2O · scuola nuoto federale FIN${sn.stagione ? ` · stagione ${sn.stagione}` : ''}. ${T.scuolaNuotoTesto}`),
       prezzi,
       elenco,
     );
@@ -245,7 +247,7 @@ export function avviaTotem() {
   function vistaCorsi() {
     const { giorno, minuti } = oraRoma();
     const r = lezioniRestanti(centro.lezioni, giorno, minuti);
-    const titolo = r.quando === 'oggi' ? 'Corsi di oggi' : `Corsi di ${nomeGiorno(r.giorno)}`;
+    const titolo = r.quando === 'oggi' ? titoloDi('corsi') || 'Corsi di oggi' : `Corsi di ${nomeGiorno(r.giorno)}`;
     const lista = el('ul', 'tt-corsi');
     for (const l of r.lezioni) {
       const li = el('li');
@@ -253,15 +255,15 @@ export function avviaTotem() {
       li.onclick = () => invia('voce', { sezione: 'Corsi', voce: l.corso });
       lista.append(li);
     }
-    if (!r.lezioni.length) lista.append(el('li', 'tt-vuoto', 'Nessun corso in programma: chiedi in reception.'));
-    piazza(intestazione(true), el('h1', 'tt-titolo', titolo), lista, el('p', 'tt-nota', 'Orario della settimana tipo: per prenotare usa l’app o chiedi in reception.'));
+    if (!r.lezioni.length) lista.append(el('li', 'tt-vuoto', T.corsiVuoto));
+    piazza(intestazione(true), el('h1', 'tt-titolo', titolo), lista, el('p', 'tt-nota', T.corsiNota));
   }
 
   function vistaProva() {
     const box = el('div', 'tt-cta tt-cta-grande');
-    box.append(qr(urlQr('/prova', slug, totem)), el('p', 'tt-cta-t', 'Prova Lume per 7 giorni'), el('p', 'tt-cta-s', 'A 15 €, senza vincoli di rinnovo. Inquadra il codice con la fotocamera.'));
+    box.append(qr(urlQr('/prova', slug, totem)), el('p', 'tt-cta-t', T.provaTitolo), el('p', 'tt-cta-s', T.provaSotto));
     invia('qr', { sezione: 'Pass prova' });
-    piazza(intestazione(true), el('h1', 'tt-titolo', 'Pass prova'), el('p', 'tt-testo', 'Sala pesi, corsi, acqua, CrossFit e Reformer per una settimana.'), box);
+    piazza(intestazione(true), el('h1', 'tt-titolo', titoloDi('prova') || 'Pass prova'), el('p', 'tt-testo', T.provaTesto), box);
   }
 
   // `?vista=menu|centro|abbonamenti|scuolanuoto|corsi|prova|portale` apre subito quella schermata: per controllare i contenuti senza toccare lo schermo.

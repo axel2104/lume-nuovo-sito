@@ -180,7 +180,7 @@ export default config({
   ui: {
     brand: { name: 'LUMe Fitness Club' },
     navigation: {
-      'Testi delle pagine': ['home', 'scuolaNuoto'],
+      'Testi delle pagine': ['home', 'scuolaNuoto', 'totem'],
       'Corsi e centri': ['discipline', 'centri'],
       Listino: ['abbonamenti'],
       'Lume Life': ['news', 'eventi', 'servizi', 'helpdesk'],
@@ -1120,6 +1120,57 @@ export default config({
           },
           { label: 'Sezione wiki' },
         ),
+      },
+    }),
+
+    // ─── Totem ─────────────────────────────────────────────────────────
+    // Testi, menu e foto dello schermo nei centri (/totem). Ogni campo lasciato vuoto
+    // ricade sul testo di serie (src/lib/totemTesti.js): non si può rompere il totem svuotando un campo.
+    totem: singleton({
+      label: 'Totem',
+      path: 'src/content/pagine/totem',
+      format: { data: 'json' },
+      schema: {
+        attesaSopra: fields.text({ label: 'Schermata d’attesa: riga sopra il nome del centro', description: 'Es. “Benvenuto in”.' }),
+        attesaTocca: fields.text({ label: 'Schermata d’attesa: pulsante', description: 'Es. “Tocca per scoprire”.' }),
+        menuTitolo: fields.text({ label: 'Titolo del menu', description: 'Es. “Cosa vuoi scoprire?”.' }),
+        tessere: fields.array(
+          fields.object({
+            chiave: fields.select({
+              label: 'Sezione',
+              options: [
+                { label: 'Il centro (servizi e orari)', value: 'centro' },
+                { label: 'Abbonamenti', value: 'abbonamenti' },
+                { label: 'Corsi di oggi', value: 'corsi' },
+                { label: 'Pass prova', value: 'prova' },
+                { label: 'Scuola nuoto (solo dove il centro la ha)', value: 'scuolanuoto' },
+              ],
+              defaultValue: 'centro',
+            }),
+            titolo: fields.text({ label: 'Titolo', description: 'Compare sulla tessera e in cima alla schermata. Nelle statistiche del CRM la sezione resta con il nome di serie.' }),
+            sotto: fields.text({ label: 'Riga sotto il titolo' }),
+            foto: fields.image({
+              label: 'Foto della tessera',
+              description: 'Vuota = la foto di serie. Meglio una foto in orizzontale o quadrata, almeno 900 pixel di lato.',
+              directory: 'src/assets/totem',
+              publicPath: '../../assets/totem/',
+              validation: { isRequired: false },
+            }),
+          }),
+          {
+            label: 'Tessere del menu',
+            description: 'L’ordine qui è l’ordine sul totem (a coppie, da sinistra a destra). Togli una tessera per nasconderla. Se la lista è vuota vale il menu di serie.',
+            itemLabel: (props) => props.fields.titolo.value || props.fields.chiave.value,
+          },
+        ),
+        centroOrari: fields.text({ label: 'Il centro: titolo degli orari', description: 'Es. “Orari di apertura”.' }),
+        abbonamentiNota: fields.text({ label: 'Abbonamenti: nota in fondo', description: 'Segue la quota di attivazione. Es. “Tocca una formula per attivarla online.”' }),
+        corsiNota: fields.text({ label: 'Corsi: nota in fondo', multiline: true }),
+        corsiVuoto: fields.text({ label: 'Corsi: frase quando non c’è nessun corso' }),
+        provaTesto: fields.text({ label: 'Pass prova: frase sotto il titolo', multiline: true }),
+        provaTitolo: fields.text({ label: 'Pass prova: titolo accanto al codice QR' }),
+        provaSotto: fields.text({ label: 'Pass prova: frase accanto al codice QR', multiline: true }),
+        scuolaNuotoTesto: fields.text({ label: 'Scuola nuoto: invito sotto il titolo', description: 'Le fasce d’età, le date e i link stanno in “Scuola nuoto”.' }),
       },
     }),
 
