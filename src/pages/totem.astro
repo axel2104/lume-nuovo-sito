@@ -16,10 +16,13 @@ import '@fontsource/inter/700.css';
 import '../styles/totem.css';
 import { getCollection } from 'astro:content';
 import { getImage } from 'astro:assets';
+import piscina from '../assets/centri/montecassiano-piscina.jpg';
 import { campo } from '../lib/copy';
 import { testiScuolaNuoto as sn } from '../data/testi';
 
 export const prerender = true;
+
+const fotoPiscina = (await getImage({ src: piscina, width: 900, format: 'jpg' })).src;
 
 const centri = (await getCollection('centri')).filter((c) => c.data.stato === 'aperto').sort((a, b) => a.data.ordine - b.data.ordine);
 
@@ -50,6 +53,7 @@ const dati = await Promise.all(
       scuolaNuoto:
         c.id === 'montecassiano'
           ? {
+              foto: fotoPiscina,
               stagione: [campo(sn.stagione, 'inizio'), campo(sn.stagione, 'fine')].filter(Boolean).join(' — '),
               fasce: sn.fasce.voci.map((f: any) => ({ eta: f.eta, livelli: f.livelli, href: f.href ?? null })),
             }

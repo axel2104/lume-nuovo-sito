@@ -104,16 +104,16 @@ export function avviaTotem() {
     riarma();
     const griglia = el('div', 'tt-griglia');
     const voci = [
-      ['Il centro', 'Servizi e orari', vistaCentro, 'gym1'],
-      ['Abbonamenti', 'Piani e prezzi', vistaAbbonamenti, 'weights'],
-      ['Corsi di oggi', 'Cosa c’è in programma', vistaCorsi, 'reformer'],
-      ['Pass prova', '7 giorni a 15 €', vistaProva, 'crossfit'],
-      ...(centro.scuolaNuoto ? [['Scuola nuoto', 'Bambini e ragazzi, 3–18 anni', vistaScuolaNuoto, 'discipline/montecassiano-piscina']] : []),
+      ['Il centro', 'Servizi e orari', vistaCentro, '/media/gym1.jpg'],
+      ['Abbonamenti', 'Piani e prezzi', vistaAbbonamenti, '/media/weights.jpg'],
+      ['Corsi di oggi', 'Cosa c’è in programma', vistaCorsi, '/media/reformer.jpg'],
+      ['Pass prova', '7 giorni a 15 €', vistaProva, '/media/crossfit.jpg'],
+      ...(centro.scuolaNuoto ? [['Scuola nuoto', 'Bambini e ragazzi, 3–18 anni', vistaScuolaNuoto, centro.scuolaNuoto.foto]] : []),
     ];
     for (const [titolo, sotto, vista, foto] of voci) {
       const b = el('button', 'tt-tessera');
       b.type = 'button';
-      b.style.backgroundImage = `linear-gradient(to top, rgba(10,10,10,.94) 8%, rgba(10,10,10,.2) 70%), url(/media/${foto}.jpg)`;
+      b.style.backgroundImage = `linear-gradient(to top, rgba(10,10,10,.94) 8%, rgba(10,10,10,.2) 70%), url(${foto})`;
       b.append(el('span', 'tt-tessera-t', titolo), el('span', 'tt-tessera-s', sotto));
       b.onclick = () => {
         sezione = { nome: titolo, da: Date.now() };
@@ -214,8 +214,10 @@ export function avviaTotem() {
       } else b.disabled = true;
       elenco.append(b);
     }
-    const info = el('div', 'tt-cta');
-    info.append(qr(urlQr('/scuola-nuoto', slug, totem)), el('p', 'tt-cta-t', 'Non sai da che livello partire?'), el('p', 'tt-cta-s', 'Inquadra il codice: livelli, norme e richiesta di informazioni.'));
+    const info = el('div', 'tt-cta tt-cta-riga');
+    const testo = el('div', 'tt-cta-testo');
+    testo.append(el('p', 'tt-cta-t', 'Non sai da che livello partire?'), el('p', 'tt-cta-s', 'Inquadra il codice: livelli, norme e richiesta di informazioni.'));
+    info.append(qr(urlQr('/scuola-nuoto', slug, totem)), testo);
     piazza(
       intestazione(true),
       el('h1', 'tt-titolo', 'Scuola nuoto'),
