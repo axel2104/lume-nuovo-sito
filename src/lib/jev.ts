@@ -50,7 +50,7 @@ const QUESTIONS = {
   },
 }
 
-export type Triage = { intento: string; pronto: number; urgenza: number; iniezione?: number; centro?: string; arrabbiata?: number; confidenza?: number; fuoriTema: number; fuoriTema: number }
+export type Triage = { intento: string; pronto: number; urgenza: number; iniezione?: number; centro?: string; arrabbiata?: number; confidenza?: number; fuoriTema: number }
 
 export async function classifica(testo: string): Promise<Triage> {
   const key = process.env.TYPESAFE_API_KEY
