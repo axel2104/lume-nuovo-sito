@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-const { scegliPunti, planningCompatto, pulisciMessaggi } = await import('../src/lib/kbChat.ts');
+const { scegliPunti, planningCompatto, pulisciMessaggi, scegliCorrezioni } = await import('../src/lib/kbChat.ts');
 
 const punti = [
   { id: '6.10', titolo: 'Disdetta dell’abbonamento', url: 'u1', testo: 'Il preavviso per la disdetta è di dieci giorni.' },
@@ -31,4 +31,16 @@ test('messaggi: ruoli validi, ultimo dell’utente, testo troncato', () => {
   ]);
   assert.equal(pulisciMessaggi([{ role: 'user', content: 'a'.repeat(900) }])[0].content.length, 600);
   assert.deepEqual(pulisciMessaggi([{ role: 'user', content: 'a' }, { role: 'assistant', content: 'b' }]), []);
+});
+
+test('correzioni: solo quelle pertinenti (desinenze e accenti ignorati) più le «sempre»', () => {
+  const c = [
+    { testo: 'Massimo 5 prenotazioni.', parole: ['prenotazioni', 'massimo'], sempre: false },
+    { testo: 'Parla sempre del centro.', parole: [], sempre: true },
+    { testo: 'La piscina chiude il lunedì.', parole: ['piscina'], sempre: false },
+  ];
+  assert.deepEqual(scegliCorrezioni(c, 'Quante lezioni posso prenotare?').map((x) => x.testo), ['Parla sempre del centro.', 'Massimo 5 prenotazioni.']);
+  assert.deepEqual(scegliCorrezioni(c, 'orari piscina').map((x) => x.testo), ['Parla sempre del centro.', 'La piscina chiude il lunedì.']);
+  assert.deepEqual(scegliCorrezioni(c.slice(0, 1), 'ciao'), []);
+  assert.deepEqual(scegliCorrezioni([], 'prenotare'), []);
 });

@@ -27,6 +27,25 @@ export function scegliPunti(punti: Punto[], domanda: string, n = 4): Punto[] {
     .map((x) => x.p);
 }
 
+export type Correzione = { testo: string; parole: string[]; sempre: boolean };
+
+const radice = (w: string) => w.slice(0, 6); // «prenotazioni» e «prenotare» condividono «prenot»
+
+/**
+ * Le correzioni del team da dire all'agente: quelle «sempre» e quelle che condividono una parola chiave con la
+ * domanda (accenti e desinenze ignorati). Poche righe per domanda: la KB di correzioni può crescere senza costare token.
+ */
+export function scegliCorrezioni(correzioni: Correzione[], domanda: string, n = 5): Correzione[] {
+  const cerca = new Set(parole(domanda).map(radice));
+  const punteggio = (c: Correzione) => c.parole.reduce((s, p) => s + (cerca.has(radice(senzaAccenti(p))) ? 1 : 0), 0);
+  return correzioni
+    .map((c) => ({ c, s: c.sempre ? 99 : punteggio(c) }))
+    .filter((x) => x.s > 0)
+    .sort((a, b) => b.s - a.s)
+    .slice(0, n)
+    .map((x) => x.c);
+}
+
 type Lezione = { giorno: string | number; inizio: string; corso: string };
 
 /** "Lun 07:00 CrossFit, 08:30 Pilates": l'orario settimanale in una riga per giorno. */

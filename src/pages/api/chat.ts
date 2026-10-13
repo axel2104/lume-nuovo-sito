@@ -7,7 +7,7 @@ import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { GET as listini } from '../listini.json';
 import { GET as regolamento } from '../regolamento.json';
-import { pulisciMessaggi, planningCompatto, scegliPunti, type Punto } from '../../lib/kbChat';
+import { pulisciMessaggi, planningCompatto, scegliCorrezioni, scegliPunti, type Correzione, type Punto } from '../../lib/kbChat';
 import { classifica, urgenzaAlta, type Triage } from '../../lib/jev';
 import { leggiJson, rpc } from '../../lib/supabaseRpc';
 
@@ -35,7 +35,7 @@ Formato della risposta (viene disegnata in una chat, non è una pagina web):
 - Chiudi con un solo invito all'azione concreto quando ha senso (iscriversi, scrivere al centro), mai più di uno. Il pass prova non è un invito di chiusura standard: vale la regola fondamentale sopra.`;
 
 // KB in memoria per 10 minuti: ricostruirla a ogni messaggio non serve.
-let kb: { quando: number; fissa: string; punti: Punto[] } | null = null;
+let kb: { quando: number; fissa: string; punti: Punto[]; correzioni: Correzione[] } | null = null;
 
 async function leggiKb() {
   if (kb && Date.now() - kb.quando < 600_000) return kb;
@@ -71,7 +71,9 @@ async function leggiKb() {
       .map((f) => `## ${f.data.titolo}\n${f.body ?? ''}`)
       .join('\n\n')}`,
   ].join('\n\n');
-  kb = { quando: Date.now(), fissa, punti: r.contenuto };
+  // Correzioni del team (CRM → KB del bot): regole corte approvate da una persona, valide subito, senza deploy.
+  const correzioni = await rpc<Correzione[]>('site_kb_correzioni', {}).catch(() => [] as Correzione[]);
+  kb = { quando: Date.now(), fissa, punti: r.contenuto, correzioni };
   return kb;
 }
 
@@ -129,7 +131,7 @@ export const POST: APIRoute = async ({ request }) => {
     return Response.json({ risposta: FUORI_TEMA });
   }
 
-  const { fissa, punti } = await leggiKb();
+  const { fissa, punti, correzioni } = await leggiKb();
   const domanda = messaggi
     .filter((m) => m.role === 'user')
     .slice(-2)
@@ -142,6 +144,9 @@ export const POST: APIRoute = async ({ request }) => {
         : '') +
       (triage.pronto >= 0.5 ? ' Sembra pronta a iscriversi: accompagnala verso l’iscrizione, senza proporre la prova.' : '')
     : '';
+  const correzioniPertinenti = scegliCorrezioni(correzioni, domanda)
+    .map((c) => `- ${c.testo}`)
+    .join('\n');
   const regole = scegliPunti(punti, domanda)
     .map((p) => `## Regolamento ${p.id} ${p.titolo} (${p.url})\n${p.testo}`)
     .join('\n\n');
@@ -166,6 +171,10 @@ export const POST: APIRoute = async ({ request }) => {
 
 ${fissa}`, cache_control: { type: 'ephemeral' } }] },
         ...(nota ? [{ role: 'system', content: nota }] : []),
+        ...(correzioniPertinenti
+          ? [{ role: 'system', content: `Correzioni del team, verificate da una persona: usale per rispondere nel modo migliore alla persona e applicale così come sono. Valgono PIÙ dei dati sopra se in contrasto.
+${correzioniPertinenti}` }]
+          : []),
         ...(regole ? [{ role: 'system', content: `Punti del regolamento pertinenti:
 
 ${regole}` }] : []),
