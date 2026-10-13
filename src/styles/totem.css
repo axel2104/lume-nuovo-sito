@@ -66,11 +66,12 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg) va
 .tt-portale-titolo { color: var(--mut); font-size: .85em; }
 .tt-portale-frame { flex: 1; width: 100%; border: 0; background: #fff; }
 
-.tt-corsi { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1.4vh; overflow-y: auto; flex: 1; }
-.tt-corsi li { display: flex; gap: 3vw; align-items: baseline; padding: 2vh 3vw; border-radius: 20px; background: rgba(22,22,22,.85); border: 2px solid var(--line); }
-.tt-corsi li.tt-giorno { display: block; padding: 0; background: none; border: 0; margin-top: 1vh; font: 400 1.3em Anton, sans-serif; text-transform: capitalize; color: var(--mut); }
-.tt-ora { font: 400 1.6em Anton, sans-serif; color: var(--red-txt); min-width: 3.4em; }
-.tt-corso { font-weight: 700; font-size: 1.1em; }
+.tt-planning { display: grid; grid-template-columns: auto repeat(7, minmax(0, 1fr)); gap: .6vh .5vw; overflow-y: auto; flex: 1; align-content: start; grid-auto-rows: max-content; }
+.tt-pl-testa { position: sticky; top: 0; z-index: 1; padding: 1vh 0; text-align: center; font: 400 1.1em Anton, sans-serif; text-transform: uppercase; background: rgba(10,10,10,.92); color: var(--mut); }
+.tt-pl-ora { font: 400 .9em Anton, sans-serif; color: var(--red-txt); padding: 1vh 1vw 1vh 0; }
+.tt-pl-cella { display: flex; flex-direction: column; gap: .4vh; min-height: 4vh; border-radius: 10px; }
+.tt-pl-oggi { background: rgba(196,0,66,.18); color: var(--cream); }
+.tt-pl-corso { flex-shrink: 0; padding: .8vh .4vw; border-radius: 10px; border: 1px solid var(--line); background: rgba(22,22,22,.9); color: var(--txt); font: 700 .56em / 1.15 Inter, sans-serif; text-align: center; overflow-wrap: break-word; }
 .tt-vuoto { color: var(--mut); }
 
 .tt-cta { margin-top: auto; display: flex; flex-direction: column; align-items: center; gap: .6vh; padding: 2.2vh; border-radius: 28px; background: rgba(22,22,22,.9); border: 2px solid var(--red); text-align: center; }

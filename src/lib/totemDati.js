@@ -2,6 +2,7 @@
 
 const SITO = 'https://www.lumefitness.it';
 const GIORNI = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 7 };
+export const GIORNI_BREVI = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
 const NOMI_GIORNO = ['', 'lunedì', 'martedì', 'mercoledì', 'giovedì', 'venerdì', 'sabato', 'domenica'];
 
 /** `?t=macerata-ingresso` → totem "macerata-ingresso", centro "macerata". `?centro=` ha la precedenza. */
@@ -33,12 +34,11 @@ const minuti = (hhmm) => {
   return h * 60 + m;
 };
 
-/** Planning della settimana: sette giorni a partire da oggi, ognuno con le sue lezioni per orario. Giorni senza lezioni omessi. */
-export function settimana(lezioni, giorno) {
-  return Array.from({ length: 7 }, (_, i) => {
-    const g = ((giorno - 1 + i) % 7) + 1;
-    return { giorno: g, lezioni: lezioni.filter((l) => l.giorno === g && Number.isFinite(minuti(l.inizio))).sort((a, b) => minuti(a.inizio) - minuti(b.inizio)) };
-  }).filter((d) => d.lezioni.length);
+/** Planning della settimana a griglia: una riga per orario d'inizio, una colonna per giorno (1 = lunedì). */
+export function griglia(lezioni) {
+  const valide = lezioni.filter((l) => Number.isFinite(minuti(l.inizio)));
+  const orari = [...new Set(valide.map((l) => l.inizio))].sort((a, b) => minuti(a) - minuti(b));
+  return { orari, in: (giorno, ora) => valide.filter((l) => l.giorno === giorno && l.inizio === ora) };
 }
 
 export const nomeGiorno = (g) => NOMI_GIORNO[g] ?? '';
