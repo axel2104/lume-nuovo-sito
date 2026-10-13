@@ -44,3 +44,20 @@ test('correzioni: solo quelle pertinenti (desinenze e accenti ignorati) più le 
   assert.deepEqual(scegliCorrezioni(c.slice(0, 1), 'ciao'), []);
   assert.deepEqual(scegliCorrezioni([], 'prenotare'), []);
 });
+
+const { priorita, tentaIniezione, incerta, serveModelloForte } = await import('../src/lib/jev.ts');
+
+test('Jev: priorità 0-100, iniezione e modello forte', () => {
+  assert.equal(priorita(null), 0);
+  assert.equal(priorita({ pronto: 1, urgenza: 2, arrabbiata: 1 }), 100);
+  assert.equal(priorita({ pronto: 0.5, urgenza: 1 }), 40);
+  assert.equal(tentaIniezione({ iniezione: 0.9 }), true);
+  assert.equal(tentaIniezione({ iniezione: 0.5 }), false);
+  assert.equal(tentaIniezione(null), false);
+  assert.equal(incerta({ confidenza: 0.3 }), true);
+  assert.equal(incerta({}), false);
+  assert.equal(serveModelloForte({ intento: 'info_prezzi' }, 1), false);
+  assert.equal(serveModelloForte({ intento: 'disdetta_reclamo' }, 1), true);
+  assert.equal(serveModelloForte({ intento: 'altro', arrabbiata: 0.8 }, 1), true);
+  assert.equal(serveModelloForte(null, 10), false);
+});

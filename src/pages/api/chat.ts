@@ -8,13 +8,15 @@ import { getCollection } from 'astro:content';
 import { GET as listini } from '../listini.json';
 import { GET as regolamento } from '../regolamento.json';
 import { pulisciMessaggi, planningCompatto, scegliCorrezioni, scegliPunti, type Correzione, type Punto } from '../../lib/kbChat';
-import { classifica, urgenzaAlta, type Triage } from '../../lib/jev';
+import { classifica, urgenzaAlta, tentaIniezione, incerta, serveModelloForte, type Triage } from '../../lib/jev';
 import { leggiJson, rpc } from '../../lib/supabaseRpc';
 
 export const prerender = false;
 
 // OpenRouter: stesso formato di OpenAI, un solo credito per qualunque modello. Si cambia modello con CHAT_MODEL.
 const MODELLO = process.env.CHAT_MODEL || 'anthropic/claude-haiku-5.5';
+// Di serie uguale a MODELLO (sempre Haiku): il router è pronto, si attiva impostando CHAT_MODEL_FORTE. Userebbe il forte solo per reclami, persone arrabbiate, intento incerto, conversazioni lunghe (serveModelloForte in jev.ts).
+const MODELLO_FORTE = process.env.CHAT_MODEL_FORTE || MODELLO;
 
 const REGOLE = `Sei l'assistente di Lume Fitness Club (centri nelle Marche). Rispondi in italiano, con tono cordiale e diretto, in massimo 90 parole.
 Regole:
@@ -133,6 +135,11 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   const triage = process.env.TYPESAFE_API_KEY ? await classifica(ultima).catch(() => null) : null;
+  // Tentativo di manipolare il bot: risposta fissa a qualunque punto della conversazione, senza passare dal modello.
+  if (tentaIniezione(triage)) {
+    await salva(corpo, ultima, FUORI_TEMA, triage);
+    return Response.json({ risposta: FUORI_TEMA });
+  }
   // Solo al primo messaggio: "sì, grazie" a metà conversazione non è fuori tema.
   // Il rifiuto fisso solo se Jev è SICURO e il messaggio non parla di palestra: «Orari dei corsi» è finito qui per errore.
   if (triage?.intento === 'fuori_tema' && triage.fuoriTema >= 0.9 && !PAROLE_PALESTRA.test(ultima) && messaggi.length === 1) {
@@ -151,6 +158,8 @@ export const POST: APIRoute = async ({ request }) => {
       (triage.intento === 'disdetta_reclamo' || urgenzaAlta(triage)
         ? ' La persona ha un problema o una richiesta urgente: mostra comprensione, dai i dati che hai e invitala a lasciare la sua email nel riquadro della chat o a contattare il centro.'
         : '') +
+      (triage.centro && triage.centro !== 'nessuno' ? ` Il messaggio parla del centro ${triage.centro}.` : '') +
+      (incerta(triage) ? ' Non è chiaro cosa voglia: fai una sola domanda per capire, senza indovinare.' : '') +
       (triage.pronto >= 0.5 ? ' Sembra pronta a iscriversi: accompagnala verso l’iscrizione, senza proporre la prova.' : '')
     : '';
   const correzioniPertinenti = scegliCorrezioni(correzioni, domanda)
@@ -169,7 +178,7 @@ export const POST: APIRoute = async ({ request }) => {
       'X-Title': 'Lume Fitness assistente',
     },
     body: JSON.stringify({
-      model: MODELLO,
+      model: serveModelloForte(triage, messaggi.length) ? MODELLO_FORTE : MODELLO,
       max_tokens: 700,
       reasoning: { enabled: false }, // risposte brevi: i token di ragionamento si mangiano il limite
       temperature: 0.3,
