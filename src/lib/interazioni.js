@@ -1,7 +1,7 @@
 /**
  * Statistiche anonime di ogni pagina: quanto tempo ci si interagisce davvero e cosa si clicca.
  *
- * Nessun cookie, nessun identificativo, niente localStorage: a fine visita parte UN solo messaggio, scritto direttamente nel database, con
+ * Nessun cookie, nessun identificativo, niente localStorage: a fine visita parte UN solo messaggio, inoltrato al database da un rewrite di Netlify, con
  * pagina, tipo di dispositivo, provenienza, secondi di attività, scroll massimo e click raggruppati.
  * Non si sa chi sia la persona, quindi non serve il consenso; chi ha Do Not Track attivo non si conta.
  *
@@ -11,9 +11,6 @@
  * Limite noto: se la scheda va in secondo piano e poi torna, la visita si chiude alla prima uscita.
  */
 
-// Stessi valori pubblici di src/lib/supabaseRpc.ts (progetto lume-perfectgym, chiave publishable).
-const SB_URL = 'https://rnhzuecojiewmrskgufe.supabase.co';
-const SB_KEY = 'sb_publishable_B8oR_WcbrzufxxeaJKD8Sg_uXj1R6Sh';
 const BOT = /bot|crawl|spider|headless|lighthouse|prerender|pagespeed/i;
 const ATTIVO_ENTRO_MS = 15_000;
 
@@ -101,14 +98,11 @@ export function avviaInterazioni() {
       scroll,
       clicks: [...clicks].slice(0, 20).map(([v, n]) => ({ v, n })),
     });
-    // Direttamente al database, senza passare da una funzione del sito: ogni visita costerebbe un'esecuzione
-    // in più. La chiave è pubblica e può solo chiamare queste funzioni, che scrivono una riga anonima.
-    // sendBeacon non può impostare intestazioni, quindi la chiave viaggia nell'indirizzo (lo accetta il gateway);
-    // il corpo è text/plain, che non richiede la richiesta preliminare CORS e quindi sopravvive alla chiusura della pagina.
-    const url = `${SB_URL}/rest/v1/rpc/site_visita_testo?apikey=${SB_KEY}`;
+    // /api/v è un rewrite di Netlify (netlify.toml) verso il database: nessuna funzione per ogni accesso,
+    // e same-origin, quindi il messaggio sopravvive alla chiusura della pagina.
     try {
-      if (navigator.sendBeacon(url, new Blob([corpo], { type: 'text/plain;charset=UTF-8' }))) return;
-      fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body: corpo, keepalive: true }).catch(() => {});
+      if (navigator.sendBeacon('/api/v', new Blob([corpo], { type: 'text/plain;charset=UTF-8' }))) return;
+      fetch('/api/v', { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body: corpo, keepalive: true }).catch(() => {});
     } catch {
       /* statistiche: se falliscono, la pagina non deve accorgersene */
     }

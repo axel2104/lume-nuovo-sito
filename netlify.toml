@@ -38,6 +38,16 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+# Statistiche di visita: il browser scrive sullo stesso dominio e Netlify inoltra al database
+# aggiungendo la chiave pubblica. Nessuna funzione parte (costerebbe un'esecuzione a ogni accesso)
+# e il messaggio è same-origin, quindi sopravvive alla chiusura della pagina.
+[[redirects]]
+  from = "/api/v"
+  to = "https://rnhzuecojiewmrskgufe.supabase.co/rest/v1/rpc/site_visita_testo"
+  status = 200
+  force = true
+  headers = {apikey = "sb_publishable_B8oR_WcbrzufxxeaJKD8Sg_uXj1R6Sh"}
+
 # Le route dinamiche non si mettono mai in cache.
 [[headers]]
   for = "/api/*"
