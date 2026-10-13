@@ -1,20 +1,51 @@
-/* Calendario di prenotazione interno: giorni in alto, orari sotto, poi i dati. Tema scuro, angoli vivi come il resto del sito. */
-.pi { display: flex; flex-direction: column; gap: 16px; color: var(--txt); }
-.pi-giorni { display: flex; flex-wrap: wrap; gap: 8px; }
-.pi-orari { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; }
-.pi-giorno, .pi-ora, .pi-indietro { border: 1px solid var(--line); background: var(--card); padding: 10px 14px; font-weight: 600; text-transform: capitalize; }
-.pi-ora { text-align: center; text-transform: none; }
-.pi-giorno[aria-pressed='true'] { background: var(--red); border-color: var(--red); }
-.pi-ora:hover, .pi-giorno:hover { border-color: var(--red-txt); }
-.pi-scelta { font: 400 1.4em Anton, sans-serif; text-transform: uppercase; }
-.pi-ok { font: 400 1.8em Anton, sans-serif; text-transform: uppercase; color: var(--red-txt); }
-.pi-nota, .pi-avviso { color: var(--mut); }
+/* Calendario di prenotazione: mese a sinistra, orari a destra, conferma sotto. Tema scuro del sito. */
+.pi { display: flex; flex-direction: column; gap: 20px; color: var(--txt); padding: clamp(14px, 3vw, 28px); }
+.pi-colonne { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: clamp(18px, 4vw, 40px); align-items: start; }
+@media (max-width: 720px) { .pi-colonne { grid-template-columns: 1fr; } }
+
+/* react-day-picker: le variabili ne cambiano i colori senza toccare le sue classi */
+.pi-cal .rdp-root {
+  --rdp-accent-color: var(--red);
+  --rdp-accent-background-color: var(--red);
+  --rdp-day-height: 44px;
+  --rdp-day-width: 44px;
+  --rdp-day_button-height: 40px;
+  --rdp-day_button-width: 40px;
+  --rdp-day_button-border-radius: 10px;
+  --rdp-selected-border: 2px solid var(--red-txt);
+  --rdp-disabled-opacity: 0.28;
+  margin: 0;
+  color: var(--txt);
+}
+.pi-cal .rdp-month_caption { font: 400 1.25em Anton, sans-serif; text-transform: uppercase; letter-spacing: .02em; }
+.pi-cal .rdp-weekday { color: var(--mut); font-size: .75em; font-weight: 700; text-transform: uppercase; }
+.pi-cal .rdp-chevron { fill: var(--txt); }
+.pi-cal .rdp-button_previous, .pi-cal .rdp-button_next { color: var(--txt); }
+.pi-cal .rdp-day:not(.rdp-disabled):not(.rdp-selected) .rdp-day_button { background: rgba(196, 0, 66, .14); font-weight: 700; }
+.pi-cal .rdp-day:not(.rdp-disabled):not(.rdp-selected) .rdp-day_button:hover { background: rgba(196, 0, 66, .32); }
+.pi-cal .rdp-selected .rdp-day_button { background: var(--red); color: #fff; font-weight: 700; }
+.pi-cal .rdp-today:not(.rdp-selected) .rdp-day_button { color: var(--red-txt); }
+
+.pi-titolo { margin: 0 0 12px; font: 400 1.3em Anton, sans-serif; text-transform: uppercase; }
+.pi-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 8px; max-height: 340px; overflow-y: auto; padding-right: 4px; }
+.pi-ora { border: 1px solid var(--line); background: var(--card); padding: 11px 8px; font-weight: 700; text-align: center; border-radius: 10px; transition: border-color .15s, background .15s; }
+.pi-ora:hover { border-color: var(--red-txt); }
+.pi-ora[aria-selected='true'] { background: var(--red); border-color: var(--red); color: #fff; }
+
+.pi-conferma { display: grid; gap: 14px; max-width: 520px; padding-top: 18px; border-top: 1px solid var(--line); }
+.pi-scelta { font: 400 1.5em Anton, sans-serif; text-transform: uppercase; }
+.pi-ok { font: 400 2em Anton, sans-serif; text-transform: uppercase; color: var(--red-txt); }
+.pi-nota, .pi-link { color: var(--mut); }
+.pi-link a { color: var(--red-txt); text-decoration: underline; }
+.pi-esito { gap: 10px; }
 .pi-avviso { border-left: 3px solid var(--red); padding-left: 10px; color: var(--cream); }
-.pi-form { display: grid; gap: 12px; max-width: 460px; }
-.pi-campo { display: grid; gap: 4px; font-size: .9em; color: var(--mut); }
-.pi-campo input { border: 1px solid var(--line); background: var(--card); padding: 10px 12px; color: var(--txt); }
-.pi-privacy { display: flex; gap: 8px; font-size: .85em; color: var(--mut); }
-.pi-invia { background: var(--red); padding: 12px 18px; font-weight: 700; }
+.pi-dati { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 560px) { .pi-dati { grid-template-columns: 1fr; } }
+.pi-campo { display: grid; gap: 4px; font-size: .85em; color: var(--mut); }
+.pi-campo input { border: 1px solid var(--line); background: var(--card); padding: 11px 12px; color: var(--txt); border-radius: 10px; }
+.pi-campo input:focus { outline: 2px solid var(--red-txt); outline-offset: 1px; }
+.pi-privacy { grid-column: 1 / -1; display: flex; gap: 8px; font-size: .8em; color: var(--mut); }
+.pi-privacy a { text-decoration: underline; }
+.pi-invia { background: var(--red); color: #fff; padding: 14px 20px; font-weight: 700; border-radius: 10px; }
 .pi-invia:disabled { opacity: .6; }
-.pi-indietro { background: none; width: fit-content; }
 .pi-errore { color: #ff8a8a; }

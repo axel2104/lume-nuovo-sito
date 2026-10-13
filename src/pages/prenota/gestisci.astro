@@ -1,0 +1,88 @@
+---
+/**
+ * /prenota/gestisci?t=<token> — il link «Sposta o disdici» delle mail di conferma e promemoria.
+ * Il token è l'unica chiave: mostra solo tipo, sede e orario. Lo spostamento riusa lo stesso calendario della prenotazione.
+ */
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+export const prerender = false;
+---
+
+<Layout title="Gestisci il tuo appuntamento — Lume Fitness Club" description="Sposta o disdici il tuo appuntamento a Lume Fitness Club.">
+  <Header />
+  <main id="contenuto">
+    <section class="sec">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">Il tuo appuntamento</span>
+          <h1 class="d">Sposta o <em>disdici</em></h1>
+        </div>
+        <div class="gest" data-gestisci>
+          <p data-gest-stato>Carico il tuo appuntamento…</p>
+          <div class="gest-azioni" data-gest-azioni hidden>
+            <button type="button" class="gest-btn" data-gest-sposta>Sposta</button>
+            <button type="button" class="gest-btn gest-btn-no" data-gest-disdici>Disdici</button>
+          </div>
+          <div class="gest-cal" data-gest-cal hidden></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .sec-head h1 em { color: var(--red-txt); font-style: normal; }
+  .gest { display: grid; gap: 18px; max-width: 880px; margin-top: 24px; }
+  .gest [data-gest-stato] { font: 400 1.5em Anton, sans-serif; text-transform: uppercase; }
+  .gest-azioni { display: flex; gap: 10px; flex-wrap: wrap; }
+  .gest-btn { background: var(--red); color: #fff; padding: 13px 22px; border-radius: 10px; font-weight: 700; }
+  .gest-btn-no { background: none; border: 1px solid var(--line); }
+  .gest-cal { border: 1px solid var(--line); background: var(--card); border-radius: 12px; }
+</style>
+
+<script>
+  import { montaPrenotazioneInterna } from '../../lib/prenotaInterna.client.js';
+
+  const radice = document.querySelector('[data-gestisci]');
+  const token = new URLSearchParams(location.search).get('t') || '';
+  if (radice) {
+    const stato = radice.querySelector('[data-gest-stato]') as HTMLElement;
+    const azioni = radice.querySelector('[data-gest-azioni]') as HTMLElement;
+    const cal = radice.querySelector('[data-gest-cal]') as HTMLElement;
+    const quando = (iso: string) =>
+      new Date(iso).toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Rome' }) +
+      ' alle ' + new Date(iso).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Rome' });
+
+    let app: { tipo: string; sede: string; inizio: string; stato: string } | null = null;
+    const mostra = () => {
+      if (!app) { stato.textContent = 'Non troviamo questo appuntamento. Chiamaci allo 0733 232905.'; return; }
+      if (app.stato !== 'da_fare') { stato.textContent = 'Questo appuntamento è stato annullato.'; azioni.hidden = true; cal.hidden = true; return; }
+      if (Date.parse(app.inizio) < Date.now()) { stato.textContent = 'Questo appuntamento è già passato.'; azioni.hidden = true; return; }
+      stato.textContent = (app.tipo === 'chiamata' ? 'Chiamata: ' : 'Visita in sede: ') + quando(app.inizio);
+      azioni.hidden = false;
+    };
+
+    fetch('/api/appuntamento?t=' + encodeURIComponent(token))
+      .then((r) => (r.ok ? r.json() : null))
+      .then((a) => { app = a; mostra(); })
+      .catch(() => { stato.textContent = 'Non riusciamo a caricare l’appuntamento: riprova tra poco.'; });
+
+    radice.querySelector('[data-gest-sposta]')?.addEventListener('click', async () => {
+      if (!app) return;
+      cal.hidden = false;
+      const ok = await montaPrenotazioneInterna(cal, { tipoDiretto: app.tipo, sede: app.sede, token });
+      if (!ok) cal.textContent = 'Non ci sono altri orari liberi: chiamaci allo 0733 232905.';
+      azioni.hidden = true;
+    });
+
+    radice.querySelector('[data-gest-disdici]')?.addEventListener('click', async () => {
+      if (!confirm('Vuoi disdire questo appuntamento?')) return;
+      const r = await fetch('/api/disdici', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ t: token }) });
+      if (r.ok) { stato.textContent = 'Appuntamento disdetto. Se cambi idea puoi prenotarne un altro da /prenota.'; azioni.hidden = true; }
+      else stato.textContent = 'Non siamo riusciti a disdire: chiamaci allo 0733 232905.';
+    });
+  }
+</script>
