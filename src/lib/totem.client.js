@@ -208,10 +208,9 @@ export function avviaTotem() {
     }
     for (const [chiave, nome, sotto] of [['monosettimanale', 'Monosettimanale', '1 volta a settimana'], ['bisettimanale', 'Bisettimanale', '2 volte a settimana']]) {
       const p = prezziScuola?.[chiave];
-      if (!p?.mensile) continue;
+      if (!p) continue;
       const c = el('div', 'tt-prezzo');
-      c.append(el('span', 'tt-formula-nome', nome), el('span', 'tt-formula-prezzo', `${p.mensile.prezzo} €`), el('span', 'tt-formula-nota', `al mese · ${sotto}`));
-      if (p.stagionale) c.append(el('span', 'tt-formula-nota', `oppure ${p.stagionale.prezzo} € per i ${p.stagionale.mesi} mesi della stagione`));
+      c.append(el('span', 'tt-formula-nome', nome), el('span', 'tt-formula-prezzo', `${p.prezzo} €`), el('span', 'tt-formula-nota', `${sotto} · tutta la stagione (${p.mesi} mesi)`));
       box.append(c);
     }
   };
