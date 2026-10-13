@@ -26,6 +26,11 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg) va
 .tt-tessera { display: flex; flex-direction: column; justify-content: flex-end; gap: .6vh; padding: 3vh 3vw; border-radius: 28px; border: 2px solid var(--line); background: var(--card) center / cover no-repeat; color: var(--txt); text-align: left; font-family: inherit; }
 .tt-tessera:active { background: var(--red); border-color: var(--red); }
 .tt-tessera:nth-child(4) { border-color: var(--red); }
+.tt-tessera:nth-child(5):last-child { grid-column: 1 / -1; }
+.tt-fascia { width: 100%; flex-direction: row; align-items: baseline; gap: 2.5vw; padding: 1.6vh 2.2vw; }
+.tt-fascia .tt-formula-prezzo { min-width: 5.2em; }
+.tt-fascia .tt-formula-nota { flex: 1; }
+.tt-fascia .tt-formula-nome { white-space: nowrap; }
 .tt-tessera-t { font: 400 clamp(38px, 5.6vw, 76px) / 1 Anton, sans-serif; text-transform: uppercase; }
 .tt-tessera-s { color: #e0e0e0; font-size: 1em; }
 

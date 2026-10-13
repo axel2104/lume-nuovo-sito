@@ -1,4 +1,4 @@
-// Totem del centro: schermata d'attesa, quattro sezioni, QR verso il telefono, statistiche anonime.
+// Totem del centro: schermata d'attesa, quattro sezioni (cinque a Montecassiano, con la scuola nuoto), QR verso il telefono, statistiche anonime.
 import qrcode from 'qrcode-generator';
 import { parametri, urlQr, oraRoma, lezioniRestanti, nomeGiorno } from './totemDati.js';
 
@@ -108,6 +108,7 @@ export function avviaTotem() {
       ['Abbonamenti', 'Piani e prezzi', vistaAbbonamenti, 'weights'],
       ['Corsi di oggi', 'Cosa c’è in programma', vistaCorsi, 'reformer'],
       ['Pass prova', '7 giorni a 15 €', vistaProva, 'crossfit'],
+      ...(centro.scuolaNuoto ? [['Scuola nuoto', 'Bambini e ragazzi, 3–18 anni', vistaScuolaNuoto, 'discipline/montecassiano-piscina']] : []),
     ];
     for (const [titolo, sotto, vista, foto] of voci) {
       const b = el('button', 'tt-tessera');
@@ -197,6 +198,33 @@ export function avviaTotem() {
     piazza(intestazione(true), el('h1', 'tt-titolo', 'Abbonamenti'), elenco, extra);
   }
 
+  // Scuola nuoto bambini e ragazzi: una riga per fascia d'età, che apre i turni disponibili sul ClientPortal.
+  function vistaScuolaNuoto() {
+    const sn = centro.scuolaNuoto;
+    const elenco = el('div', 'tt-piani');
+    for (const f of sn.fasce) {
+      const b = el('button', `tt-formula tt-fascia${f.href ? '' : ' tt-formula-off'}`);
+      b.type = 'button';
+      b.append(el('span', 'tt-formula-prezzo', f.eta), el('span', 'tt-formula-nota', f.livelli), el('span', 'tt-formula-nome', f.href ? 'Orari e iscrizione →' : 'In reception'));
+      if (f.href) {
+        b.onclick = () => {
+          invia('voce', { sezione: 'Scuola nuoto', voce: f.eta });
+          apriPortale(f.href, `Scuola nuoto · ${f.eta}`);
+        };
+      } else b.disabled = true;
+      elenco.append(b);
+    }
+    const info = el('div', 'tt-cta');
+    info.append(qr(urlQr('/scuola-nuoto', slug, totem)), el('p', 'tt-cta-t', 'Non sai da che livello partire?'), el('p', 'tt-cta-s', 'Inquadra il codice: livelli, norme e richiesta di informazioni.'));
+    piazza(
+      intestazione(true),
+      el('h1', 'tt-titolo', 'Scuola nuoto'),
+      el('p', 'tt-testo', `Lume-H2O · scuola nuoto federale FIN${sn.stagione ? ` · stagione ${sn.stagione}` : ''}. Tocca la fascia d’età di tuo figlio.`),
+      elenco,
+      info,
+    );
+  }
+
   function vistaCorsi() {
     const { giorno, minuti } = oraRoma();
     const r = lezioniRestanti(centro.lezioni, giorno, minuti);
@@ -219,8 +247,8 @@ export function avviaTotem() {
     piazza(intestazione(true), el('h1', 'tt-titolo', 'Pass prova'), el('p', 'tt-testo', 'Sala pesi, corsi, acqua, CrossFit e Reformer per una settimana.'), box);
   }
 
-  // `?vista=menu|centro|abbonamenti|corsi|prova|portale` apre subito quella schermata: per controllare i contenuti senza toccare lo schermo.
-  const diretta = { menu: home, centro: () => (sezione = { nome: 'Il centro', da: Date.now() }, home(), vistaCentro()), abbonamenti: vistaAbbonamenti, corsi: vistaCorsi, prova: vistaProva, portale: () => (vistaAbbonamenti(), apriPortale(centro.piani[0].pgm.annuale, `Attivazione online · ${centro.piani[0].nome}`)) }[new URLSearchParams(location.search).get('vista')];
+  // `?vista=menu|centro|abbonamenti|scuolanuoto|corsi|prova|portale` apre subito quella schermata: per controllare i contenuti senza toccare lo schermo.
+  const diretta = { menu: home, centro: () => (sezione = { nome: 'Il centro', da: Date.now() }, home(), vistaCentro()), abbonamenti: vistaAbbonamenti, scuolanuoto: () => centro.scuolaNuoto && vistaScuolaNuoto(), corsi: vistaCorsi, prova: vistaProva, portale: () => (vistaAbbonamenti(), apriPortale(centro.piani[0].pgm.annuale, `Attivazione online · ${centro.piani[0].nome}`)) }[new URLSearchParams(location.search).get('vista')];
   if (diretta) {
     sessioneDa = Date.now();
     diretta();

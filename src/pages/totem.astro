@@ -16,6 +16,8 @@ import '@fontsource/inter/700.css';
 import '../styles/totem.css';
 import { getCollection } from 'astro:content';
 import { getImage } from 'astro:assets';
+import { campo } from '../lib/copy';
+import { testiScuolaNuoto as sn } from '../data/testi';
 
 export const prerender = true;
 
@@ -44,6 +46,14 @@ const dati = await Promise.all(
         evidenza: !!p.evidenza,
       })),
       attivazione: d.listino?.attivazione ?? null,
+      // La scuola nuoto bambini vive solo a Montecassiano (stessi dati della pagina /scuola-nuoto).
+      scuolaNuoto:
+        c.id === 'montecassiano'
+          ? {
+              stagione: [campo(sn.stagione, 'inizio'), campo(sn.stagione, 'fine')].filter(Boolean).join(' — '),
+              fasce: sn.fasce.voci.map((f: any) => ({ eta: f.eta, livelli: f.livelli, href: f.href ?? null })),
+            }
+          : null,
       lezioni: (d.planning ?? []).map((l) => ({ giorno: Number(l.giorno), inizio: l.inizio, fine: l.fine, corso: l.corso })),
     };
   }),
