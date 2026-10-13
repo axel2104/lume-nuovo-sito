@@ -118,6 +118,49 @@ export function initChat() {
   vv?.addEventListener('scroll', adatta);
   telefono.addEventListener('change', adatta);
 
+  // Risposta della segreteria: bolla con l'etichetta, mai passata per il disegno dell'assistente.
+  const bollaOp = (testo) => {
+    const d = document.createElement('div');
+    d.className = 'chat-msg chat-operatore';
+    const b = document.createElement('b');
+    b.textContent = 'Segreteria Lume';
+    d.append(b, testo);
+    log.append(d);
+    log.scrollTop = log.scrollHeight;
+  };
+  const nota = (testo) => {
+    const d = document.createElement('div');
+    d.className = 'chat-nota';
+    d.textContent = testo;
+    log.append(d);
+    log.scrollTop = log.scrollHeight;
+  };
+  let avvisato = false;
+
+  // Con la chat aperta e una conversazione avviata, ogni 5 secondi si chiede se la segreteria ha risposto.
+  // Una richiesta minuscola verso lo stesso dominio (rewrite Netlify, nessuna funzione).
+  let ultimoOp = messaggi.reduce((m, x) => Math.max(m, x.op || 0), 0);
+  const controlla = async () => {
+    if (pannello.hidden || document.hidden || !messaggi.length) return;
+    try {
+      const r = await fetch('/api/cs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ p_sessione: sessione(), p_dopo: ultimoOp }),
+      });
+      const { messaggi: nuovi = [] } = await r.json();
+      for (const n of nuovi) {
+        ultimoOp = Math.max(ultimoOp, n.id);
+        messaggi.push({ role: 'assistant', content: n.testo, op: n.id });
+        bollaOp(n.testo);
+      }
+      if (nuovi.length) salva(messaggi);
+    } catch {
+      /* rete assente: riprova al giro dopo */
+    }
+  };
+  setInterval(controlla, 5000);
+
   const apri = (aperto) => {
     pannello.hidden = !aperto;
     fab.setAttribute('aria-expanded', String(aperto));
@@ -128,8 +171,9 @@ export function initChat() {
       chips.hidden = messaggi.length > 0;
       if (!log.childElementCount) {
         bolla('assistant', SALUTO);
-        for (const m of messaggi) bolla(m.role, m.content);
+        for (const m of messaggi) (m.op ? bollaOp(m.content) : bolla(m.role, m.content));
       }
+      controlla();
       input.focus();
     } else {
       fab.focus();
@@ -193,7 +237,17 @@ export function initChat() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messaggi, sessione: sessione(), pagina: location.pathname }),
       });
-      risposta = (await r.json()).risposta || risposta;
+      const j = await r.json();
+      if (j.operatore) {
+        // La segreteria segue la conversazione: il bot non risponde, la risposta arriva con il controllo periodico.
+        attesa.remove();
+        if (!avvisato) nota('La segreteria di Lume sta seguendo la conversazione e ti risponde qui appena possibile.');
+        avvisato = true;
+        contatto.hidden = contatto.classList.contains('chat-contatto-ok');
+        inAttesa = false;
+        return;
+      }
+      risposta = j.risposta || risposta;
     } catch {
       /* resta il messaggio di ripiego */
     }

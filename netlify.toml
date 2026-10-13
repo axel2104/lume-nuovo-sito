@@ -48,6 +48,15 @@
   force = true
   headers = {apikey = "sb_publishable_B8oR_WcbrzufxxeaJKD8Sg_uXj1R6Sh"}
 
+# Chat con la segreteria: il widget chiede se c'è un operatore e legge le sue risposte (solo quelle),
+# senza funzioni: stessa tecnica di /api/v.
+[[redirects]]
+  from = "/api/cs"
+  to = "https://rnhzuecojiewmrskgufe.supabase.co/rest/v1/rpc/site_chat_stato"
+  status = 200
+  force = true
+  headers = {apikey = "sb_publishable_B8oR_WcbrzufxxeaJKD8Sg_uXj1R6Sh"}
+
 # Le route dinamiche non si mettono mai in cache.
 [[headers]]
   for = "/api/*"

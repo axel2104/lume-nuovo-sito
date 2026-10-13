@@ -123,6 +123,15 @@ export const POST: APIRoute = async ({ request }) => {
   // Jev legge il messaggio PRIMA dell'agente: i fuori tema non costano una chiamata al modello grande,
   // e gli altri arrivano con un'etichetta (intento, urgenza) che orienta la risposta e finisce nel CRM.
   const ultima = messaggi[messaggi.length - 1].content;
+  // Se la segreteria ha preso in carico la conversazione il bot tace: il messaggio si salva e basta.
+  if (typeof corpo.sessione === 'string') {
+    const stato = await rpc<{ operatore: boolean }>('site_chat_stato', { p_sessione: corpo.sessione, p_dopo: Number.MAX_SAFE_INTEGER }).catch(() => null);
+    if (stato?.operatore) {
+      await rpc('site_chat_utente', { p: { sessione: corpo.sessione, domanda: ultima, pagina: corpo.pagina } }).catch((e) => console.error('chat utente', e));
+      return Response.json({ operatore: true });
+    }
+  }
+
   const triage = process.env.TYPESAFE_API_KEY ? await classifica(ultima).catch(() => null) : null;
   // Solo al primo messaggio: "sì, grazie" a metà conversazione non è fuori tema.
   // Il rifiuto fisso solo se Jev è SICURO e il messaggio non parla di palestra: «Orari dei corsi» è finito qui per errore.

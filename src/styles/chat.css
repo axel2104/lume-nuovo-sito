@@ -24,6 +24,9 @@ html.chat-aperta .iubenda-tp-btn-container { display: none !important; }
 .chat-msg { max-width: 88%; padding: 9px 13px; border-radius: 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
 .chat-assistant { align-self: flex-start; background: var(--card); border: 1px solid var(--line); }
 .chat-user { align-self: flex-end; background: var(--red); color: #fff; }
+.chat-operatore { align-self: flex-start; background: var(--card); border: 1px solid var(--red); }
+.chat-operatore b { display: block; font-size: 11.5px; color: var(--red-txt); margin-bottom: 2px; }
+.chat-nota { align-self: center; max-width: 92%; text-align: center; font-size: 12.5px; color: var(--mut); }
 .chat-msg a { color: var(--red-txt); text-decoration: underline; }
 .chat-user a { color: #fff; }
 .chat-form { display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--line); }
