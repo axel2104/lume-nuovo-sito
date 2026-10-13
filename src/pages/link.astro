@@ -1,56 +1,282 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { LINK_BOTTONI } from '../config/linktree';
+import { LINK_BOTTONI, SFONDI } from '../config/linktree';
 ---
 
 <Layout
   title="Link — Lume Fitness Club"
   description="Tutti i link di Lume Fitness Club: prevendita, informazioni, planning e sedi."
 >
+  <div class="lk-bg" aria-hidden="true" data-bg data-sfondi={JSON.stringify(SFONDI)}>
+    <div class="lk-foto"></div>
+    <video class="lk-video" muted loop playsinline preload="none" data-v="a"></video>
+    <video class="lk-video" muted loop playsinline preload="none" data-v="b"></video>
+    <div class="lk-scrim"></div>
+  </div>
+  <div class="lk-luce" aria-hidden="true" data-luce></div>
+
   <main id="contenuto" class="lk">
     <header class="lk-head">
-      <img src="/logo-lume.png" alt="" width="88" height="88" onerror="this.remove()" />
-      <h1>Lume Fitness Club</h1>
+      <span class="lk-logo"><img src="/logo-lume.png" alt="" width="84" height="84" onerror="this.remove()" /></span>
+      <h1>Lume <em>Fitness</em> Club</h1>
       <p>Benessere a 360°</p>
+      <button type="button" class="lk-share" data-share aria-label="Condividi questa pagina">
+        <svg viewBox="0 0 256 256" width="20" height="20" aria-hidden="true" fill="currentColor"><path d="M229.66 109.66l-48 48a8 8 0 0 1-11.32-11.32L204.69 112H165a88 88 0 0 0-85.23 66 8 8 0 0 1-15.5-4A103.94 103.94 0 0 1 165 96h39.71l-34.37-34.34a8 8 0 0 1 11.32-11.32l48 48a8 8 0 0 1 0 11.32ZM192 208H40V88a8 8 0 0 0-16 0v128a8 8 0 0 0 8 8h160a8 8 0 0 0 0-16Z"/></svg>
+        <span data-share-testo>Condividi</span>
+      </button>
     </header>
 
     <nav class="lk-list" aria-label="Link">
       {
-        LINK_BOTTONI.map((b) => (
+        LINK_BOTTONI.map((b, i) => (
           <a
-            class={`lk-btn${b.evidenza ? ' lk-btn--on' : ''}`}
+            class={`lk-card lk-${b.formato ?? 'pill'}${b.evidenza ? ' lk-on' : ''}`}
             href={b.href}
             data-slug={b.slug}
             data-vid={b.vid ? '1' : undefined}
+            data-sfondo={b.sfondo}
+            style={`--i:${i}`}
           >
-            {b.label}
+            {b.img && <img class="lk-img" src={b.img} alt="" loading={i < 3 ? 'eager' : 'lazy'} decoding="async" />}
+            <span class="lk-testo">
+              <span class="lk-label">{b.label}</span>
+              {b.sotto && <span class="lk-sotto">{b.sotto}</span>}
+            </span>
+            <span class="lk-freccia" aria-hidden="true">
+              <svg viewBox="0 0 256 256" width="22" height="22" fill="currentColor"><path d="M221.66 133.66l-72 72a8 8 0 0 1-11.32-11.32L196.69 136H40a8 8 0 0 1 0-16h156.69l-58.35-58.34a8 8 0 0 1 11.32-11.32l72 72a8 8 0 0 1 0 11.32Z"/></svg>
+            </span>
           </a>
         ))
       }
     </nav>
+
+    <footer class="lk-foot">
+      <a href="/privacy">Privacy</a>
+    </footer>
   </main>
 </Layout>
 
 <style>
-  .lk { max-width: 480px; margin: 0 auto; padding: 48px 16px 64px; min-height: 100vh; }
-  .lk-head { text-align: center; margin-bottom: 32px; }
-  .lk-head img { border-radius: 50%; margin-bottom: 12px; }
-  .lk-head h1 { font-family: 'Anton', sans-serif; font-weight: 400; font-size: 2rem; margin: 0; text-transform: uppercase; }
-  .lk-head p { color: var(--mut); margin: 4px 0 0; }
-  .lk-list { display: flex; flex-direction: column; gap: 12px; }
-  .lk-btn {
-    display: block; padding: 16px 20px; text-align: center; font-weight: 600; text-decoration: none;
-    color: var(--txt); background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  :global(body) { background: #0a0a0a; }
+
+  /* ── Sfondo: foto → video (solo se la rete e le preferenze lo permettono) ── */
+  .lk-bg { position: fixed; inset: 0; z-index: -2; overflow: hidden; background: #0a0a0a; }
+  .lk-foto {
+    position: absolute; inset: -4%; background: url('/media/gym2.jpg') center/cover;
+    animation: lk-zoom 26s ease-in-out infinite alternate;
   }
-  .lk-btn:hover, .lk-btn:focus-visible { border-color: var(--red-txt); }
-  .lk-btn--on { background: var(--red); border-color: var(--red); }
+  .lk-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.9s ease; }
+  .lk-video.on { opacity: 1; }
+  .lk-scrim {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(120% 70% at 50% 0%, rgba(10, 10, 10, 0.25), rgba(10, 10, 10, 0.85) 70%),
+      linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.9));
+  }
+  .lk-luce {
+    position: fixed; width: 420px; height: 420px; left: 0; top: 0; z-index: -1; pointer-events: none; opacity: 0;
+    background: radial-gradient(closest-side, rgba(196, 0, 84, 0.28), transparent);
+    transform: translate(-50%, -50%); transition: opacity 0.4s;
+  }
+  @keyframes lk-zoom { to { transform: scale(1.12) translate(1%, -1%); } }
+
+  /* ── Pagina ── */
+  .lk { max-width: 520px; margin: 0 auto; padding: 44px 16px calc(40px + env(safe-area-inset-bottom)); min-height: 100dvh; }
+  .lk-head { text-align: center; margin-bottom: 28px; display: grid; grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 4px; }
+  .lk-head h1 { text-wrap: balance; }
+  .lk-logo { position: relative; display: grid; place-items: center; width: 96px; height: 96px; margin-bottom: 10px; }
+  .lk-logo::before, .lk-logo::after {
+    content: ''; position: absolute; inset: 0; border-radius: 50%; border: 2px solid var(--red);
+    animation: lk-onda 3.2s ease-out infinite;
+  }
+  .lk-logo::after { animation-delay: 1.6s; }
+  .lk-logo img { position: relative; border-radius: 50%; background: #0a0a0a; }
+  @keyframes lk-onda { from { transform: scale(0.9); opacity: 0.8; } to { transform: scale(1.55); opacity: 0; } }
+  .lk-head h1 { font: 400 clamp(2.1rem, 9vw, 2.8rem)/1 Anton, sans-serif; text-transform: uppercase; margin: 0; letter-spacing: 0.01em; text-shadow: 0 2px 24px rgba(0, 0, 0, 0.6); }
+  .lk-head h1 em { color: var(--red-txt); font-style: normal; }
+  .lk-head p { margin: 2px 0 0; color: #d8d8d8; }
+  .lk-share {
+    margin-top: 14px; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px;
+    border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.28); background: rgba(255, 255, 255, 0.08);
+    color: #fff; font-weight: 600; cursor: pointer; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    transition: background 0.2s, transform 0.2s;
+  }
+  .lk-share:hover { background: rgba(255, 255, 255, 0.16); }
+  .lk-share:active { transform: scale(0.96); }
+
+  .lk-list { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+  .lk-hero, .lk-pill { grid-column: span 2; }
+
+  /* ── Card ── */
+  .lk-card {
+    --mx: 50%; --my: 50%;
+    position: relative; overflow: hidden; isolation: isolate; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;
+    color: #fff; text-decoration: none; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 4px;
+    background: rgba(22, 22, 22, 0.72); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.25s, box-shadow 0.25s;
+    -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+    opacity: 0; translate: 0 22px;
+  }
+  .lk-card.vista { opacity: 1; translate: 0 0; transition: opacity 0.6s ease calc(var(--i) * 70ms), translate 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) calc(var(--i) * 70ms), transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.25s, box-shadow 0.25s; }
+  .lk-card::after { /* riflesso che segue il dito o il mouse */
+    content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity 0.3s;
+    background: radial-gradient(220px circle at var(--mx) var(--my), rgba(255, 255, 255, 0.22), transparent 70%);
+  }
+  .lk-card:hover::after, .lk-card:focus-visible::after, .lk-card.premuto::after { opacity: 1; }
+  .lk-card:hover, .lk-card:focus-visible { border-color: var(--red-txt); box-shadow: 0 10px 34px rgba(196, 0, 84, 0.35); }
+  .lk-card:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+  .lk-card:active { scale: 0.975; }
+
+  .lk-img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  .lk-card:hover .lk-img, .lk-card.premuto .lk-img { transform: scale(1.08); }
+  .lk-hero, .lk-meta { min-height: 150px; padding: 18px; }
+  .lk-meta { min-height: 190px; flex-direction: column; align-items: flex-start; justify-content: flex-end; }
+  .lk-hero::before, .lk-meta::before { /* velo per leggere il testo sulla foto */
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(180deg, rgba(10, 10, 10, 0.05) 20%, rgba(10, 10, 10, 0.88));
+  }
+  .lk-pill { min-height: 58px; padding: 0 18px; align-items: center; }
+
+  .lk-testo { display: grid; gap: 2px; min-width: 0; }
+  .lk-label { font: 400 1.5rem/1.05 Anton, sans-serif; text-transform: uppercase; letter-spacing: 0.01em; }
+  .lk-pill .lk-label { font: 600 1rem/1.2 system-ui, sans-serif; text-transform: none; }
+  .lk-sotto { font-size: 0.88rem; color: #e6e6e6; }
+  .lk-freccia {
+    flex: none; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14); border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.25s;
+  }
+  .lk-meta .lk-freccia { position: absolute; top: 12px; right: 12px; width: 38px; height: 38px; }
+  .lk-card:hover .lk-freccia, .lk-card:focus-visible .lk-freccia { transform: translateX(4px); background: var(--red); border-color: var(--red); }
+
+  /* card in evidenza: bordo che pulsa e lampo che la attraversa */
+  .lk-on { border-color: var(--red); animation: lk-pulsa 2.6s ease-in-out infinite; }
+  .lk-on .lk-label { font-size: 2.1rem; }
+  .lk-on::before { background: linear-gradient(180deg, rgba(196, 0, 66, 0.05) 10%, rgba(10, 10, 10, 0.9)); }
+  .lk-on .lk-testo::before {
+    content: ''; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; z-index: 1; pointer-events: none;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+    transform: skewX(-18deg); animation: lk-lampo 4.5s ease-in-out infinite;
+  }
+  @keyframes lk-pulsa { 0%, 100% { box-shadow: 0 0 0 0 rgba(196, 0, 66, 0.55); } 50% { box-shadow: 0 0 0 10px rgba(196, 0, 66, 0); } }
+  @keyframes lk-lampo { 0%, 55% { left: -60%; } 100% { left: 130%; } }
+
+  /* onda al tocco */
+  .lk-onda { position: absolute; border-radius: 50%; width: 20px; height: 20px; margin: -10px 0 0 -10px; z-index: 0; pointer-events: none; background: rgba(255, 255, 255, 0.45); animation: lk-tocco 0.6s ease-out forwards; }
+  @keyframes lk-tocco { to { transform: scale(26); opacity: 0; } }
+
+  .lk-foot { text-align: center; margin-top: 28px; font-size: 0.85rem; }
+  .lk-foot a { color: #bdbdbd; padding: 12px; display: inline-block; }
+
+  @media (min-width: 700px) { .lk { padding-top: 72px; } }
+  @media (prefers-reduced-motion: reduce) {
+    .lk-foto, .lk-logo::before, .lk-logo::after, .lk-on, .lk-on .lk-testo::before { animation: none; }
+    .lk-card { opacity: 1; translate: 0 0; transition: border-color 0.2s; }
+    .lk-card.vista { transition: border-color 0.2s; }
+    .lk-img, .lk-freccia { transition: none; }
+    .lk-card:hover .lk-img { transform: none; }
+    .lk-luce { display: none; }
+  }
 </style>
 
 <script>
-  // Un click = un beacon verso /api/click. Il beacon sopravvive alla navigazione.
-  // vid e UTM esistono solo dopo il consenso analytics: senza, il click è anonimo.
   const w = window as any;
-  document.querySelectorAll<HTMLAnchorElement>('.lk-btn').forEach((a) => {
+  const ridotto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const puntatoreFine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const carte = [...document.querySelectorAll<HTMLAnchorElement>('.lk-card')];
+
+  // 1) Ingresso a cascata
+  if ('IntersectionObserver' in window && !ridotto) {
+    const io = new IntersectionObserver((voci) => voci.forEach((v) => { if (v.isIntersecting) { v.target.classList.add('vista'); io.unobserve(v.target); } }), { threshold: 0.12 });
+    carte.forEach((c) => io.observe(c));
+  } else carte.forEach((c) => c.classList.add('vista'));
+
+  // 2) Sfondo video: parte solo se non c'è risparmio dati, rete lenta o movimento ridotto.
+  const bg = document.querySelector<HTMLElement>('[data-bg]');
+  const sfondi: Record<string, string> = bg ? JSON.parse(bg.dataset.sfondi || '{}') : {};
+  const conn = (navigator as any).connection;
+  const videoOk = !ridotto && !(conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || '')));
+  const vids = bg ? [...bg.querySelectorAll<HTMLVideoElement>('video')] : [];
+  let attivo = -1;
+  let corrente = '';
+  const mostra = (chiave: string) => {
+    if (!videoOk || !sfondi[chiave] || chiave === corrente || !vids.length) return;
+    corrente = chiave;
+    const prossimo = (attivo + 1) % vids.length;
+    const v = vids[prossimo];
+    v.src = sfondi[chiave];
+    // preload="none": il caricamento parte con play(); il video si mostra solo quando sta davvero girando
+    v.addEventListener('playing', () => {
+      vids.forEach((x, i) => x.classList.toggle('on', i === prossimo));
+      attivo = prossimo;
+    }, { once: true });
+    v.play().catch(() => { corrente = ''; });
+  };
+  const ciclo = Object.keys(sfondi);
+  if (videoOk && ciclo.length) {
+    const avvia = () => mostra(ciclo[0]);
+    document.readyState === 'complete' ? setTimeout(avvia, 400) : addEventListener('load', () => setTimeout(avvia, 400), { once: true });
+  }
+  document.addEventListener('visibilitychange', () => vids.forEach((v) => (document.hidden ? v.pause() : v.classList.contains('on') && v.play().catch(() => {})))); // niente batteria sprecata a schermo spento
+
+  // 3) Card: riflesso che segue il dito/mouse, inclinazione (solo mouse), onda e vibrazione al tocco, sfondo che cambia con la sede
+  carte.forEach((c) => {
+    const segui = (e: PointerEvent) => {
+      const r = c.getBoundingClientRect();
+      c.style.setProperty('--mx', `${e.clientX - r.left}px`);
+      c.style.setProperty('--my', `${e.clientY - r.top}px`);
+      if (puntatoreFine && !ridotto) {
+        c.style.setProperty('--ry', `${((e.clientX - r.left) / r.width - 0.5) * 6}deg`);
+        c.style.setProperty('--rx', `${(0.5 - (e.clientY - r.top) / r.height) * 6}deg`);
+      }
+    };
+    c.addEventListener('pointermove', segui);
+    c.addEventListener('pointerleave', () => { c.style.setProperty('--rx', '0deg'); c.style.setProperty('--ry', '0deg'); c.classList.remove('premuto'); });
+    c.addEventListener('pointerdown', (e) => {
+      c.classList.add('premuto');
+      segui(e);
+      if (!ridotto) {
+        const r = c.getBoundingClientRect();
+        const o = document.createElement('span');
+        o.className = 'lk-onda';
+        o.style.left = `${e.clientX - r.left}px`;
+        o.style.top = `${e.clientY - r.top}px`;
+        c.appendChild(o);
+        setTimeout(() => o.remove(), 650);
+      }
+      navigator.vibrate?.(8);
+      const s = c.dataset.sfondo;
+      if (s) mostra(s);
+    });
+    c.addEventListener('pointerup', () => c.classList.remove('premuto'));
+    const s = c.dataset.sfondo;
+    if (s) { c.addEventListener('pointerenter', () => mostra(s)); c.addEventListener('focus', () => mostra(s)); }
+  });
+
+  // 4) Alone che segue il mouse (solo desktop) e leggero movimento dello sfondo allo scorrimento
+  const luce = document.querySelector<HTMLElement>('[data-luce]');
+  if (luce && puntatoreFine && !ridotto) {
+    addEventListener('pointermove', (e) => { luce.style.opacity = '1'; luce.style.transform = `translate(${e.clientX - 210}px, ${e.clientY - 210}px)`; }, { passive: true });
+  }
+  if (bg && !ridotto) {
+    let t = 0;
+    addEventListener('scroll', () => { cancelAnimationFrame(t); t = requestAnimationFrame(() => { bg.style.transform = `translateY(${-Math.min(scrollY, 400) * 0.08}px)`; }); }, { passive: true });
+  }
+
+  // 5) Condividi
+  const share = document.querySelector<HTMLButtonElement>('[data-share]');
+  const shareTesto = document.querySelector<HTMLElement>('[data-share-testo]');
+  share?.addEventListener('click', async () => {
+    const dati = { title: 'Lume Fitness Club', url: location.href.split('?')[0] };
+    try {
+      if (navigator.share) await navigator.share(dati);
+      else { await navigator.clipboard.writeText(dati.url); if (shareTesto) { shareTesto.textContent = 'Link copiato'; setTimeout(() => (shareTesto.textContent = 'Condividi'), 1800); } }
+    } catch { /* annullato dall'utente */ }
+  });
+
+  // 6) Tracciamento: un click = un beacon verso /api/click. vid e UTM esistono solo dopo il consenso analytics: senza, il click è anonimo.
+  carte.forEach((a) => {
     a.addEventListener('click', () => {
       const vid = w.lumeGetVid?.() ?? null;
       const utm = w.lumeGetUtm?.() ?? null;
