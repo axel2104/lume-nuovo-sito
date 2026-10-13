@@ -69,7 +69,7 @@ const dati = await Promise.all(
               fasce: sn.fasce.voci.map((f: any) => ({ eta: f.eta, livelli: f.livelli, href: f.href ?? null })),
             }
           : null,
-      lezioni: (d.planning ?? []).map((l) => ({ giorno: Number(l.giorno), inizio: l.inizio, fine: l.fine, corso: l.corso, colore: coloreDisciplina.get(l.disciplina) ?? SENZA_CATEGORIA.schermo })),
+      lezioni: (d.planning ?? []).map((l) => ({ giorno: Number(l.giorno), inizio: l.inizio, fine: l.fine, corso: l.corso, colore: coloreDisciplina.get(l.disciplina ?? "") ?? SENZA_CATEGORIA.schermo })),
     };
   }),
 );
