@@ -335,8 +335,11 @@ const origine = siteConfig.calcomOrigin.replace(/\/$/, '');
 
 <script>
   import { montaPrenotazione, smontaPrenotazione } from '../lib/calcom.client.js';
+  import { montaPrenotazioneInterna, prenotazioneInternaAttiva } from '../lib/prenotaInterna.client.js';
 
   const radice = document.querySelector('[data-prenota]');
+  // Letto una volta sola: aggiorna() riscrive la query string e ?interna=1 andrebbe perso.
+  const interna = prenotazioneInternaAttiva();
 
   if (radice) {
     const contenitore = radice.querySelector('[data-pren-cal]');
@@ -381,6 +384,16 @@ const origine = siteConfig.calcomOrigin.replace(/\/$/, '');
       if (!(contenitore instanceof HTMLElement)) return;
       const calLink = linkDi();
 
+      // Calendario interno del CRM: gli orari li dà il database, non Cal.com.
+      if (interna) {
+        smontaPrenotazione(contenitore);
+        contenitore.hidden = false;
+        if (ko) (ko as HTMLElement).hidden = true;
+        const interno = await montaPrenotazioneInterna(contenitore, { agenda: tipo, sede: centro.toUpperCase(), meta: { flusso: 'prenota' } });
+        if (!interno) contenitore.textContent = 'Per questa sede non ci sono orari liberi: chiamaci e fissiamo insieme.';
+        return;
+      }
+
       smontaPrenotazione(contenitore);
       contenitore.hidden = false;
       if (attesa) contenitore.appendChild(attesa);
@@ -423,6 +436,7 @@ const origine = siteConfig.calcomOrigin.replace(/\/$/, '');
       // La query string segue la scelta: così il link si può copiare e mandare
       // a qualcuno con la sede giusta già selezionata.
       const nuova = new URLSearchParams({ centro, tipo });
+      if (interna && new URLSearchParams(window.location.search).get('interna') === '1') nuova.set('interna', '1');
       window.history.replaceState(null, '', window.location.pathname + '?' + nuova.toString());
       void monta();
     };

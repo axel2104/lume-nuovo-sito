@@ -26,6 +26,7 @@
 
 import { FLUSSI, INTERESSI_JUNIOR } from '../config/forms';
 import { montaPrenotazione, smontaPrenotazione } from './calcom.client.js';
+import { montaPrenotazioneInterna, prenotazioneInternaAttiva } from './prenotaInterna.client.js';
 
 const RE_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const RE_TEL = /^[\d\s-]{6,20}$/;
@@ -573,6 +574,25 @@ export function initForm(root, options) {
         ripiego.hidden = false;
       }
     };
+
+    // Calendario interno del CRM (al posto di Cal.com): se la sede non ha orari, parla il ripiego.
+    if (prenotazioneInternaAttiva()) {
+      const interno = await montaPrenotazioneInterna(contenitore, {
+        agenda: conferma.prenotazione,
+        sede: corpo.sede,
+        prefill: { nome: corpo.nome, cognome: corpo.cognome, email: corpo.email, telefono: corpo.cellulare, note: corpo.messaggio },
+        meta: { flusso: corpo.flusso },
+        onPrenotato: (dati) => {
+          traccia('appuntamento_prenotato', {
+            lead_flusso: corpo.flusso,
+            lead_sede: corpo.sede,
+            lead_agenda: conferma.prenotazione,
+            booking_uid: dati?.uid || '',
+          });
+        },
+      });
+      return interno ? undefined : soloRipiego();
+    }
 
     if (!calLink) return soloRipiego();
 

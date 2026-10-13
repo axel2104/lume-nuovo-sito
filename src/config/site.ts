@@ -96,6 +96,9 @@ export const siteConfig = {
    */
   calcomOrigin: env.PUBLIC_CALCOM_ORIGIN ?? 'https://cal.com',
 
+  /** '1' = prenotazioni dal calendario interno del CRM (al posto di Cal.com). Per provarlo: `?interna=1` nell'indirizzo. */
+  prenotaInterna: env.PUBLIC_PRENOTA_INTERNA ?? '',
+
   /** Fuso orario delle sedi: usato per filtrare gli slot già passati. */
   timezone: 'Europe/Rome',
 } as const;

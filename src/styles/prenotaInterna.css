@@ -1,0 +1,20 @@
+/* Calendario di prenotazione interno: giorni in alto, orari sotto, poi i dati. Tema scuro, angoli vivi come il resto del sito. */
+.pi { display: flex; flex-direction: column; gap: 16px; color: var(--txt); }
+.pi-giorni { display: flex; flex-wrap: wrap; gap: 8px; }
+.pi-orari { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px; }
+.pi-giorno, .pi-ora, .pi-indietro { border: 1px solid var(--line); background: var(--card); padding: 10px 14px; font-weight: 600; text-transform: capitalize; }
+.pi-ora { text-align: center; text-transform: none; }
+.pi-giorno[aria-pressed='true'] { background: var(--red); border-color: var(--red); }
+.pi-ora:hover, .pi-giorno:hover { border-color: var(--red-txt); }
+.pi-scelta { font: 400 1.4em Anton, sans-serif; text-transform: uppercase; }
+.pi-ok { font: 400 1.8em Anton, sans-serif; text-transform: uppercase; color: var(--red-txt); }
+.pi-nota, .pi-avviso { color: var(--mut); }
+.pi-avviso { border-left: 3px solid var(--red); padding-left: 10px; color: var(--cream); }
+.pi-form { display: grid; gap: 12px; max-width: 460px; }
+.pi-campo { display: grid; gap: 4px; font-size: .9em; color: var(--mut); }
+.pi-campo input { border: 1px solid var(--line); background: var(--card); padding: 10px 12px; color: var(--txt); }
+.pi-privacy { display: flex; gap: 8px; font-size: .85em; color: var(--mut); }
+.pi-invia { background: var(--red); padding: 12px 18px; font-weight: 700; }
+.pi-invia:disabled { opacity: .6; }
+.pi-indietro { background: none; width: fit-content; }
+.pi-errore { color: #ff8a8a; }
