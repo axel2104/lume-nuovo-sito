@@ -57,6 +57,14 @@
   force = true
   headers = {apikey = "sb_publishable_B8oR_WcbrzufxxeaJKD8Sg_uXj1R6Sh"}
 
+# Prezzi della scuola nuoto per il totem di Montecassiano: letti dai piani PerfectGym già nel database.
+[[redirects]]
+  from = "/api/sp"
+  to = "https://rnhzuecojiewmrskgufe.supabase.co/rest/v1/rpc/site_scuola_nuoto_prezzi"
+  status = 200
+  force = true
+  headers = {apikey = "sb_publishable_B8oR_WcbrzufxxeaJKD8Sg_uXj1R6Sh"}
+
 # Le route dinamiche non si mettono mai in cache.
 [[headers]]
   for = "/api/*"

@@ -198,9 +198,28 @@ export function avviaTotem() {
     piazza(intestazione(true), el('h1', 'tt-titolo', 'Abbonamenti'), elenco, extra);
   }
 
+  // Prezzi della scuola nuoto: arrivano dai piani PerfectGym (sincronizzati nel database). Se la rete manca, la vista resta senza prezzi.
+  let prezziScuola;
+  const aggiornaPrezzi = async (box) => {
+    try {
+      prezziScuola ??= await (await fetch('/api/sp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' })).json();
+    } catch {
+      return;
+    }
+    for (const [chiave, nome, sotto] of [['monosettimanale', 'Monosettimanale', '1 volta a settimana'], ['bisettimanale', 'Bisettimanale', '2 volte a settimana']]) {
+      const p = prezziScuola?.[chiave];
+      if (!p?.mensile) continue;
+      const c = el('div', 'tt-prezzo');
+      c.append(el('span', 'tt-formula-nome', nome), el('span', 'tt-formula-prezzo', `${p.mensile.prezzo} €`), el('span', 'tt-formula-nota', `al mese · ${sotto}`));
+      if (p.stagionale) c.append(el('span', 'tt-formula-nota', `oppure ${p.stagionale.prezzo} € per i ${p.stagionale.mesi} mesi della stagione`));
+      box.append(c);
+    }
+  };
+
   // Scuola nuoto bambini e ragazzi: una riga per fascia d'età, che apre i turni disponibili sul ClientPortal.
   function vistaScuolaNuoto() {
     const sn = centro.scuolaNuoto;
+    const prezzi = el('div', 'tt-prezzi');
     const elenco = el('div', 'tt-piani');
     for (const f of sn.fasce) {
       const b = el('button', `tt-formula tt-fascia${f.href ? '' : ' tt-formula-off'}`);
@@ -214,17 +233,14 @@ export function avviaTotem() {
       } else b.disabled = true;
       elenco.append(b);
     }
-    const info = el('div', 'tt-cta tt-cta-riga');
-    const testo = el('div', 'tt-cta-testo');
-    testo.append(el('p', 'tt-cta-t', 'Non sai da che livello partire?'), el('p', 'tt-cta-s', 'Inquadra il codice: livelli, norme e richiesta di informazioni.'));
-    info.append(qr(urlQr('/scuola-nuoto', slug, totem)), testo);
     piazza(
       intestazione(true),
       el('h1', 'tt-titolo', 'Scuola nuoto'),
       el('p', 'tt-testo', `Lume-H2O · scuola nuoto federale FIN${sn.stagione ? ` · stagione ${sn.stagione}` : ''}. Tocca la fascia d’età di tuo figlio.`),
+      prezzi,
       elenco,
-      info,
     );
+    aggiornaPrezzi(prezzi);
   }
 
   function vistaCorsi() {

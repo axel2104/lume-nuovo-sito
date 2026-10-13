@@ -30,6 +30,9 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg) va
 .tt-fascia { width: 100%; flex-direction: row; align-items: baseline; gap: 2.5vw; padding: 1.6vh 2.2vw; }
 .tt-fascia .tt-formula-prezzo { min-width: 5.2em; }
 .tt-fascia .tt-formula-nota { flex: 1; font-size: 1em; }
+.tt-prezzi { display: grid; grid-template-columns: 1fr 1fr; gap: 2vw; }
+.tt-prezzi:empty { display: none; }
+.tt-prezzo { display: flex; flex-direction: column; gap: .3vh; padding: 1.6vh 2vw; border-radius: 22px; border: 2px solid var(--line); background: rgba(22,22,22,.88); }
 .tt-cta-riga { flex-direction: row; text-align: left; gap: 3vw; margin-top: 0; padding: 2vh 3vw; }
 .tt-cta-riga .tt-qr { width: min(24vw, 18vh); flex: none; }
 .tt-cta-riga .tt-cta-t { margin: 0; font-size: 1.6em; }
