@@ -41,10 +41,10 @@ export function avviaTotem() {
   // ─── Video di sfondo: parte da solo e non si ferma mai ───
   const video = document.querySelector('.tt-video');
   if (centro.poster) document.body.style.setProperty('--tt-poster', `url(${centro.poster})`);
+  const riparti = () => !document.body.classList.contains('tt-fermo') && centro.video && video.play().catch(() => {});
   if (centro.video) {
     video.poster = centro.poster || '';
     video.src = centro.video;
-    const riparti = () => video.play().catch(() => {});
     video.addEventListener('pause', riparti);
     video.addEventListener('stalled', riparti);
     riparti();
@@ -76,7 +76,9 @@ export function avviaTotem() {
   document.addEventListener('pointerdown', riarma, true);
   document.addEventListener('contextmenu', (e) => e.preventDefault());
 
-  const piazza = (...nodi) => app.replaceChildren(...nodi);
+  const piazza = (...nodi) => (document.body.classList.remove('tt-fermo'), riparti(), app.replaceChildren(...nodi));
+  // Schede dense (planning): video fermo e nascosto, resta lo sfondo scuro. Si chiama dopo piazza().
+  const fermaVideo = () => (document.body.classList.add('tt-fermo'), video.pause());
   const intestazione = (indietro) => {
     const h = el('header', 'tt-testa');
     h.append(el('span', 'tt-marchio', 'LUME'), el('span', 'tt-centro', centro.nome));
@@ -257,6 +259,7 @@ export function avviaTotem() {
         for (const l of g.in(d, ora)) {
           const c = el('button', 'tt-pl-corso', l.corso);
           c.type = 'button';
+          c.style.setProperty('--cat', l.colore);
           c.onclick = () => invia('voce', { sezione: 'Corsi', voce: l.corso });
           cella.append(c);
         }
@@ -265,6 +268,7 @@ export function avviaTotem() {
     }
     if (!g.orari.length) tab.append(el('p', 'tt-vuoto', T.corsiVuoto));
     piazza(intestazione(true), el('h1', 'tt-titolo', titoloDi('corsi') || 'Corsi della settimana'), tab, el('p', 'tt-nota', T.corsiNota));
+    fermaVideo();
   }
 
   function vistaProva() {

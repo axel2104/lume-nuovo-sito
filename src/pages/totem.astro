@@ -21,6 +21,7 @@ import { campo } from '../lib/copy';
 import totemJson from '../content/pagine/totem.json';
 import { unisci } from '../lib/totemTesti.js';
 import { testiScuolaNuoto as sn } from '../data/testi';
+import { categoriaDiNome, SENZA_CATEGORIA } from '../data/categorie';
 
 export const prerender = true;
 
@@ -32,6 +33,9 @@ const testi = unisci(totemJson, (percorso: string) => fotoRisolte.get(percorso.s
 const fotoPiscina = (await getImage({ src: piscina, width: 900, format: 'jpg' })).src;
 
 const centri = (await getCollection('centri')).filter((c) => c.data.stato === 'aperto').sort((a, b) => a.data.ordine - b.data.ordine);
+
+// Colore di ogni lezione = tinta della categoria della sua disciplina, la stessa del planning sul sito.
+const coloreDisciplina = new Map((await getCollection('discipline')).map((s) => [s.id, (categoriaDiNome(s.data.categoria) ?? SENZA_CATEGORIA).schermo]));
 
 const dati = await Promise.all(
   centri.map(async (c) => {
@@ -65,7 +69,7 @@ const dati = await Promise.all(
               fasce: sn.fasce.voci.map((f: any) => ({ eta: f.eta, livelli: f.livelli, href: f.href ?? null })),
             }
           : null,
-      lezioni: (d.planning ?? []).map((l) => ({ giorno: Number(l.giorno), inizio: l.inizio, fine: l.fine, corso: l.corso })),
+      lezioni: (d.planning ?? []).map((l) => ({ giorno: Number(l.giorno), inizio: l.inizio, fine: l.fine, corso: l.corso, colore: coloreDisciplina.get(l.disciplina) ?? SENZA_CATEGORIA.schermo })),
     };
   }),
 );
