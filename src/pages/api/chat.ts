@@ -94,6 +94,10 @@ async function salva(corpo: any, domanda: string, risposta: string, ai: Triage |
   );
 }
 
+/** Qualunque messaggio con una di queste parole arriva sempre all'agente: costa poco e non rifiuta mai per errore chi chiede della palestra. */
+const PAROLE_PALESTRA =
+  /abbonament|orari|corsi|corso|prezz|cost|tariff|disdi|sospen|prov|iscri|centro|centri|palestra|nuoto|piscina|crossfit|reformer|pilates|yoga|sala|prenot|rata|rate|mensil|attivazion|lume|regolament|certificat|fattura|ingress|badge|app/i;
+
 const FUORI_TEMA =
   'Posso aiutarti solo con informazioni su Lume Fitness Club: abbonamenti, orari dei corsi, centri e regolamento. Cosa vuoi sapere?';
 const FALLBACK = 'In questo momento non riesco a rispondere. Scrivici su https://www.lumefitness.it/contatti';
@@ -119,7 +123,8 @@ export const POST: APIRoute = async ({ request }) => {
   const ultima = messaggi[messaggi.length - 1].content;
   const triage = process.env.TYPESAFE_API_KEY ? await classifica(ultima).catch(() => null) : null;
   // Solo al primo messaggio: "sì, grazie" a metà conversazione non è fuori tema.
-  if (triage?.intento === 'fuori_tema' && messaggi.length === 1) {
+  // Il rifiuto fisso solo se Jev è SICURO e il messaggio non parla di palestra: «Orari dei corsi» è finito qui per errore.
+  if (triage?.intento === 'fuori_tema' && triage.fuoriTema >= 0.9 && !PAROLE_PALESTRA.test(ultima) && messaggi.length === 1) {
     await salva(corpo, ultima, FUORI_TEMA, triage);
     return Response.json({ risposta: FUORI_TEMA });
   }

@@ -30,7 +30,7 @@ const QUESTIONS = {
   },
 }
 
-export type Triage = { intento: string; pronto: number; urgenza: number }
+export type Triage = { intento: string; pronto: number; urgenza: number; fuoriTema: number }
 
 export async function classifica(testo: string): Promise<Triage> {
   const key = process.env.TYPESAFE_API_KEY
@@ -43,7 +43,7 @@ export async function classifica(testo: string): Promise<Triage> {
   })
   if (!r.ok) throw new Error(`Jev HTTP ${r.status}`)
   const a = (await r.json()).answers
-  return { intento: a.intento.choice, pronto: a.pronto.noul, urgenza: a.urgenza.score }
+  return { intento: a.intento.choice, pronto: a.pronto.noul, urgenza: a.urgenza.score, fuoriTema: a.intento.probabilities?.fuori_tema ?? 0 }
 }
 
 // Urgenza 0-2: sopra 1.5 = rispondere in giornata.
