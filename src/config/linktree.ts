@@ -33,6 +33,7 @@ export const LINK_BOTTONI: LinkBottone[] = [
   { slug: 'info', label: 'Richiedi informazioni', sotto: 'Ti rispondiamo noi, senza impegno', href: 'https://n8n.lumeflow.it/form/iscrizioni?source=Instagram&medium=LinkInBio', formato: 'hero', img: '/media/pt.jpg', vid: true },
   { slug: 'lume-macerata', label: 'Macerata', sotto: 'Scopri il centro', href: 'https://www.lumefitness.it/centri/macerata', formato: 'meta', img: '/media/weights.jpg', sfondo: 'macerata' },
   { slug: 'lume-montecassiano', label: 'Montecassiano', sotto: 'Scopri il centro', href: 'https://www.lumefitness.it/centri/montecassiano', formato: 'meta', img: '/media/cardio.jpg', sfondo: 'montecassiano' },
+  { slug: 'lume-urban', label: 'Urban', sotto: 'Il centro nel cuore di Macerata', href: 'https://www.lumefitness.it/centri/urban', formato: 'hero', img: '/media/urban.jpg' },
   { slug: 'planning', label: 'Il nostro planning', sotto: 'Corsi e orari della settimana', href: 'https://www.lumefitness.it/planning/', formato: 'hero', img: '/media/crossfit.jpg' },
   { slug: 'sito', label: 'Lume Fitness Club – Benessere a 360', href: 'https://www.lumefitness.it/' },
   { slug: 'regole-automazione', label: 'Regole per automatizzazione', href: 'https://www.lumefitness.it/lp-istruzioni-automazione/' },
