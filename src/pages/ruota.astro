@@ -1,0 +1,31 @@
+---
+/**
+ * Pagina del QR per la ruota della serata universitaria.
+ * Stesso popup di /prova (`ProvaCodice`) in modalità evento: prezzo 5 €,
+ * lead con source=EventoUni / medium=RuotaUni, codice da env CODICE_EVENTO.
+ */
+import Layout from '../layouts/Layout.astro';
+import ProvaCodice from '../components/forms/ProvaCodice.astro';
+---
+
+<Layout
+  title="Gira la ruota — Lume Fitness Club"
+  description="Registrati, gira la ruota e prova Lume per una settimana a 5 euro."
+>
+  <main id="contenuto" class="rt">
+    <header class="rt-head">
+      <img src="/logo-lume.png" alt="" width="72" height="72" onerror="this.remove()" />
+      <h1>Gira la ruota</h1>
+      <p>Registrati e prova Lume per una settimana a <strong>5 €</strong>.</p>
+    </header>
+    <ProvaCodice evento />
+  </main>
+</Layout>
+
+<style>
+  .rt { max-width: 480px; margin: 0 auto; padding: 32px 16px 64px; }
+  .rt-head { text-align: center; margin-bottom: 24px; }
+  .rt-head img { border-radius: 50%; margin-bottom: 8px; }
+  .rt-head h1 { font-family: 'Anton', sans-serif; font-weight: 400; font-size: 2rem; margin: 0; text-transform: uppercase; }
+  .rt-head p { color: var(--mut); margin: 6px 0 0; }
+</style>

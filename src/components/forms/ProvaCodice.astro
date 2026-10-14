@@ -5,6 +5,12 @@ import { SEDI } from '../../config/forms';
 
 // I centri aperti: il pass vale solo lì, e il link del portale è quello del centro.
 const PORTALE = 'https://lumefitness.perfectgym.com/ClientPortal2/#/Registration';
+interface Props {
+  /** Landing della serata universitaria: prezzo 5 €, lead taggati EventoUni. */
+  evento?: boolean;
+}
+const { evento = false } = Astro.props;
+const prezzo = evento ? PASS.referral : PASS.pieno;
 const centri = (await getCollection('centri'))
   .filter((c) => c.data.stato === 'aperto' && SEDI[c.id])
   .sort((a, b) => a.data.ordine - b.data.ordine);
@@ -18,12 +24,12 @@ const centri = (await getCollection('centri'))
 ---
 
 <div class="pc">
-  <h2>Il tuo pass da 7 giorni</h2>
+  <h2>{evento ? `Settimana di prova a ${prezzo} €` : 'Il tuo pass da 7 giorni'}</h2>
   <p>Lasciaci i tuoi dati: controlliamo che tu sia idoneo e ti diamo subito il codice.</p>
   <button type="button" class="btn btn-red pc-btn" data-prova-codice>Ottieni il codice</button>
 </div>
 
-<dialog class="pc-dialog" data-pc-dialog aria-labelledby="pc-titolo">
+<dialog class="pc-dialog" data-pc-dialog data-evento={evento ? '1' : undefined} aria-labelledby="pc-titolo">
   <button type="button" class="pc-x" data-pc-close aria-label="Chiudi">×</button>
   <span class="pc-eye">Il tuo guest pass</span>
   <h2 id="pc-titolo" data-pc-titolo>I tuoi dati</h2>
@@ -64,13 +70,13 @@ const centri = (await getCollection('centri'))
   </form>
 
   <div data-pc-ok hidden>
-    <p>Copialo, poi aprilo sul portale: si incolla in fase di iscrizione e sblocca la settimana di prova a {PASS.pieno} €.</p>
+    <p>Copialo, poi aprilo sul portale: si incolla in fase di iscrizione e sblocca la settimana di prova a {prezzo} €.</p>
     <button type="button" class="pc-box" data-pc-copia>Codice: <b data-pc-codice></b> · <span data-pc-copia-txt>copia</span></button>
     <ol class="pc-passi">
       <li>Clicca su <b>Abbonamenti</b></li>
       <li>Scegli una categoria e clicca su <b>Ho un codice promozionale</b></li>
       <li>Clicca su <b>Avanti</b> e scegli il giorno di inizio del Pass</li>
-      <li>Nel riepilogo trovi il pagamento di <b>{PASS.pieno} €</b></li>
+      <li>Nel riepilogo trovi il pagamento di <b>{prezzo} €</b></li>
       <li>Accetta il regolamento, firma e clicca su <b>Attiva Abbonamento</b></li>
       <li>Inserisci il metodo di pagamento: carta o conto corrente</li>
     </ol>
@@ -90,6 +96,7 @@ const centri = (await getCollection('centri'))
     const msg = q<HTMLElement>('[data-pc-msg]');
     const email = q<HTMLInputElement>('#pc-email');
     const copia = q<HTMLButtonElement>('[data-pc-copia]');
+    const evento = dlg.dataset.evento === '1';
 
     const centro = () => form.querySelector<HTMLInputElement>('input[name=centro]:checked')!;
     const val = (n: string) => (form.elements.namedItem(n) as HTMLInputElement).value.trim();
@@ -141,8 +148,8 @@ const centri = (await getCollection('centri'))
           centroLabel: centro().dataset.nome,
           privacy: true,
           marketing: (form.elements.namedItem('marketing') as HTMLInputElement).checked,
-          source: utm.utm_source || 'SitoWeb',
-          medium: 'PaginaProva',
+          source: utm.utm_source || (evento ? 'EventoUni' : 'SitoWeb'),
+          medium: evento ? 'RuotaUni' : 'PaginaProva',
           cta: 'Ottieni il codice',
           pagina: location.pathname,
           utm,
@@ -159,7 +166,7 @@ const centri = (await getCollection('centri'))
         const r = await fetch('/api/verifica', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email.value.trim(), codice: true }),
+          body: JSON.stringify({ email: email.value.trim(), codice: evento ? 'evento' : true }),
         });
         const d = await r.json();
         salvaLead(d.stato);

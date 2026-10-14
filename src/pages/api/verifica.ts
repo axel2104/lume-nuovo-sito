@@ -15,6 +15,9 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     stato = await rpc<string>('site_verifica_email', { p_email: String(d.email || '') });
   } catch {}
-  const codice = d.codice && stato === 'nuovo' ? process.env.CODICE_PROVA || 'LUMEGOLD' : undefined;
+  // `codice: 'evento'` = pass a 5 € della serata universitaria (promo PerfectGym a parte).
+  const prova = process.env.CODICE_PROVA || 'LUMEGOLD';
+  const valore = d.codice === 'evento' ? process.env.CODICE_EVENTO || prova : prova;
+  const codice = d.codice && stato === 'nuovo' ? valore : undefined;
   return Response.json({ stato, codice }, { headers: { 'Cache-Control': 'no-store' } });
 };
