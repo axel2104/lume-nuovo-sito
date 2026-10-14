@@ -83,6 +83,13 @@ export function initChat() {
   const pannello = document.getElementById('chat-panel');
   const fab = document.querySelector('.chat-fab');
   if (!pannello || !fab) return;
+  // Interruttore del CRM: se l'assistente è spento il pulsante e il pannello spariscono. Se la richiesta fallisce resta acceso.
+  fetch('/api/ca', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' })
+    .then((r) => r.json())
+    .then((d) => {
+      if (d?.attiva === false) (pannello.remove(), fab.remove());
+    })
+    .catch(() => {});
   const log = pannello.querySelector('.chat-log');
   const form = pannello.querySelector('.chat-form');
   const input = pannello.querySelector('.chat-input');

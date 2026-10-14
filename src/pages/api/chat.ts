@@ -118,6 +118,8 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
 
+  // Interruttore del CRM: spento = nessuna risposta (se il database non risponde resta acceso).
+  if ((await rpc<{ attiva: boolean }>('site_chat_attiva', {}).catch(() => null))?.attiva === false) return new Response(null, { status: 503 });
   const corpo = await leggiJson(request);
   const messaggi = pulisciMessaggi(corpo.messaggi);
   if (!messaggi.length) return new Response(null, { status: 400 });

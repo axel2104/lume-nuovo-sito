@@ -57,6 +57,14 @@
   force = true
   headers = {apikey = "sb_publishable_B8oR_WcbrzufxxeaJKD8Sg_uXj1R6Sh"}
 
+# Interruttore dell'assistente: il widget chiede se è acceso (si cambia dal CRM, senza deploy).
+[[redirects]]
+  from = "/api/ca"
+  to = "https://rnhzuecojiewmrskgufe.supabase.co/rest/v1/rpc/site_chat_attiva"
+  status = 200
+  force = true
+  headers = {apikey = "sb_publishable_B8oR_WcbrzufxxeaJKD8Sg_uXj1R6Sh"}
+
 # Prezzi della scuola nuoto per il totem di Montecassiano: letti dai piani PerfectGym già nel database.
 [[redirects]]
   from = "/api/sp"
