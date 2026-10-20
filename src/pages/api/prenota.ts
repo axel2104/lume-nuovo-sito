@@ -38,7 +38,7 @@ async function avvisaN8n(d: any, r: { token?: string; inizio?: string; fine?: st
           endTime: r.fine,
           additionalNotes: String(d.messaggio || ''),
           attendees: [{ email: d.email, name: [d.nome, d.cognome].filter(Boolean).join(' ') }],
-          metadata: { vid: d.vid || '', sede, flusso, source: u.source || d.source || 'SitoWeb', medium: u.medium || d.medium || 'Prenota' },
+          metadata: { vid: d.vid || '', sede, flusso, source: u.source || d.source || 'SitoWeb', medium: u.medium || d.medium || 'Prenota', interno: true },
         },
       }),
       signal: AbortSignal.timeout(5000),
