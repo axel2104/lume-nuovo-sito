@@ -464,8 +464,232 @@ planning:
     corso: 'Hybrid Class'
     sala: Box Hyrox
     istruttore: 'Istruttore CrossFit'
+  - giorno: '1'
+    inizio: '07:00'
+    fine: '08:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '1'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '1'
+    inizio: '12:30'
+    fine: '13:30'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '1'
+    inizio: '17:15'
+    fine: '18:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '1'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '1'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '1'
+    inizio: '20:15'
+    fine: '21:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '2'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '2'
+    inizio: '13:45'
+    fine: '14:45'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '2'
+    inizio: '17:15'
+    fine: '18:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '2'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '2'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '3'
+    inizio: '07:00'
+    fine: '08:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '3'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '3'
+    inizio: '12:30'
+    fine: '13:30'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '3'
+    inizio: '17:15'
+    fine: '18:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '3'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '3'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '3'
+    inizio: '20:15'
+    fine: '21:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '4'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '4'
+    inizio: '13:45'
+    fine: '14:45'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '4'
+    inizio: '17:15'
+    fine: '18:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '4'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '4'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '5'
+    inizio: '07:00'
+    fine: '08:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '5'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '5'
+    inizio: '12:30'
+    fine: '13:30'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '5'
+    inizio: '17:15'
+    fine: '18:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '5'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '5'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '5'
+    inizio: '20:15'
+    fine: '21:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '6'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
 planningNota: 'Palinsesto di apertura provvisorio: istruttori e alcune attività sono in fase di conferma.'
-planningAggiornatoIl: 2026-10-01
+planningAggiornatoIl: 2026-10-24
 ---
 
 **Il fitness integrato nella vita quotidiana.** Il nuovo centro Lume di
