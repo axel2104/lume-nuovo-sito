@@ -35,10 +35,31 @@ const AGENDE = [
     etichetta: 'Ti richiamiamo',
     testo: 'Preferisci sentirci prima? Scegli l’ora che ti va bene e ti chiamiamo noi.',
   },
-] as const;
+  // Gli altri tipi esistono solo nel calendario interno del CRM (crm_tipi_appuntamento, chiave `<id>-<sede>`):
+  // con Cal.com non hanno un event type, quindi i chip restano nascosti finché `interna` non è attiva.
+  {
+    id: 'segreteria',
+    etichetta: 'Segreteria',
+    interno: true,
+    testo: 'Abbonamenti, rinnovi, pagamenti e documenti: scegli l’ora e ti aspettiamo in segreteria. Bastano un quarto d’ora.',
+  },
+  {
+    id: 'sala-pesi',
+    etichetta: 'Sala pesi',
+    interno: true,
+    testo: 'Un appuntamento in sala pesi con il nostro staff: ti mostriamo gli attrezzi e come usarli. Un quarto d’ora.',
+  },
+  {
+    id: 'colloquio-check',
+    etichetta: 'Colloquio e check',
+    interno: true,
+    testo: 'Un colloquio con lo staff per fare il punto sul tuo allenamento e controllare come stai andando.',
+  },
+] as { id: string; etichetta: string; testo: string; interno?: boolean }[];
 
 const centri = (await getCollection('centri'))
-  .filter((c) => c.data.calcom?.visita || c.data.calcom?.richiamata)
+  // Urban non ha agende Cal.com: c'è solo nel calendario interno, quindi il suo chip resta nascosto finché `interna` non è attiva.
+  .filter((c) => c.id === 'urban' || c.data.calcom?.visita || c.data.calcom?.richiamata)
   .sort((a, b) => a.data.ordine - b.data.ordine)
   .map((c) => ({
     id: c.id,
@@ -48,6 +69,7 @@ const centri = (await getCollection('centri'))
     orari: c.data.orari,
     visita: c.data.calcom?.visita ?? '',
     richiamata: c.data.calcom?.richiamata ?? '',
+    interno: !c.data.calcom?.visita && !c.data.calcom?.richiamata,
   }));
 
 const origine = siteConfig.calcomOrigin.replace(/\/$/, '');
@@ -92,6 +114,7 @@ const origine = siteConfig.calcomOrigin.replace(/\/$/, '');
                       type="button"
                       class="pren-chip"
                       data-pren-centro={c.id}
+                      data-pren-interno={c.interno ? '1' : undefined}
                       data-cal-visita={c.visita}
                       data-cal-richiamata={c.richiamata}
                       aria-pressed={i === 0 ? 'true' : 'false'}
@@ -110,6 +133,7 @@ const origine = siteConfig.calcomOrigin.replace(/\/$/, '');
                       type="button"
                       class="pren-chip"
                       data-pren-tipo={a.id}
+                      data-pren-interno={a.interno ? '1' : undefined}
                       aria-pressed={i === 0 ? 'true' : 'false'}
                     >
                       {a.etichetta}
@@ -346,8 +370,17 @@ const origine = siteConfig.calcomOrigin.replace(/\/$/, '');
     const attesa = radice.querySelector('[data-pren-attesa]');
     const ko = radice.querySelector('[data-pren-ko]');
     const koLink = radice.querySelector('[data-pren-ko-link]');
-    const chipCentri = Array.from(radice.querySelectorAll('[data-pren-centro]'));
-    const chipTipi = Array.from(radice.querySelectorAll('[data-pren-tipo]'));
+    const chipCentri = Array.from(radice.querySelectorAll('[data-pren-centro]')).filter((e) => {
+      const soloInterno = e.getAttribute('data-pren-interno') === '1';
+      if (soloInterno && !interna) (e as HTMLElement).hidden = true;
+      return !soloInterno || interna;
+    });
+    // Con Cal.com restano solo visita e richiamata: gli altri tipi esistono nel calendario interno.
+    const chipTipi = Array.from(radice.querySelectorAll('[data-pren-tipo]')).filter((e) => {
+      const soloInterno = e.getAttribute('data-pren-interno') === '1';
+      if (soloInterno && !interna) (e as HTMLElement).hidden = true;
+      return !soloInterno || interna;
+    });
     const note = Array.from(radice.querySelectorAll('[data-pren-nota]'));
     const origine = (radice.getAttribute('data-cal-origine') || 'https://cal.com').replace(/\/$/, '');
 
@@ -389,7 +422,16 @@ const origine = siteConfig.calcomOrigin.replace(/\/$/, '');
         smontaPrenotazione(contenitore);
         contenitore.hidden = false;
         if (ko) (ko as HTMLElement).hidden = true;
-        const interno = await montaPrenotazioneInterna(contenitore, { agenda: tipo, sede: centro.toUpperCase(), meta: { flusso: 'prenota' } });
+        const interno = await montaPrenotazioneInterna(contenitore, {
+          agenda: tipo,
+          sede: centro.toUpperCase(),
+          // segreteria, sala pesi e colloquio hanno un tipo per sede: la chiave del CRM è `<tipo>-<sede>`
+          tipoDiretto: chipTipi.find((e) => e.getAttribute('data-pren-tipo') === tipo)?.getAttribute('data-pren-interno') === '1' ? `${tipo}-${centro}` : null,
+          meta: { flusso: 'prenota' },
+          onPrenotato: (dati: { uid?: string }) => {
+            (window as any).lumeTrack?.('appuntamento_prenotato', { lead_flusso: 'prenota', lead_sede: centro.toUpperCase(), lead_agenda: tipo, booking_uid: dati?.uid || '' });
+          },
+        });
         if (!interno) contenitore.textContent = 'Per questa sede non ci sono orari liberi: chiamaci e fissiamo insieme.';
         return;
       }

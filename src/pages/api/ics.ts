@@ -4,7 +4,7 @@ import { rpc } from '../../lib/supabaseRpc';
 
 export const prerender = false;
 
-const SEDI: Record<string, string> = { MACERATA: 'Lume Macerata, Piazzale Mario Fattorini 1, Macerata', MONTECASSIANO: 'Lume Montecassiano, Via Sergio Piermanni 3, Montecassiano' };
+const SEDI: Record<string, string> = { MACERATA: 'Lume Macerata, Piazzale Mario Fattorini 1, Macerata', MONTECASSIANO: 'Lume Montecassiano, Via Sergio Piermanni 3, Montecassiano', URBAN: 'Lume Urban, Viale Giacomo Leopardi 91, Macerata' };
 const utc = (iso: string) => new Date(iso).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
 
 export const GET: APIRoute = async ({ url }) => {

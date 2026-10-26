@@ -49,7 +49,7 @@ export default function PrenotaInterna({ tipo, sede, slotIniziali, prefill = {},
     ev.preventDefault();
     setInvio(true);
     setErrore('');
-    const corpo = token ? { t: token, inizio: scelto } : { tipo, sede, inizio: scelto, ...dati, messaggio: prefill.note || '', flusso: meta.flusso || 'prenota' };
+    const corpo = token ? { t: token, inizio: scelto } : { tipo, sede, inizio: scelto, ...dati, messaggio: prefill.note || '', flusso: meta.flusso || 'prenota', utm: window.lumeGetUtm?.() || {}, vid: window.lumeGetVid?.() || '' };
     try {
       const r = await fetch(token ? '/api/sposta' : '/api/prenota', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corpo) });
       const d = await r.json().catch(() => ({}));

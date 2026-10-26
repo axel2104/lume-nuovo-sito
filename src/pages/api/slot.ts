@@ -1,5 +1,5 @@
 /**
- * GET /api/slot?tipo=chiamata|in_sede&sede=MACERATA|MONTECASSIANO — orari liberi del calendario interno.
+ * GET /api/slot?tipo=chiamata|in_sede&sede=MACERATA|MONTECASSIANO|URBAN — orari liberi del calendario interno.
  * Restituisce solo gli orari (ISO UTC): nessun dato di chi ha già prenotato.
  */
 import type { APIRoute } from 'astro';
