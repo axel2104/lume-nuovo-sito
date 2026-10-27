@@ -59,7 +59,7 @@ const AGENDE = [
 
 const centri = (await getCollection('centri'))
   // Urban non ha agende Cal.com: c'è solo nel calendario interno, quindi il suo chip resta nascosto finché `interna` non è attiva.
-  .filter((c) => c.id === 'urban' || c.data.calcom?.visita || c.data.calcom?.richiamata)
+  .filter((c) => c.id === 'urban' || c.id === 'piediripa' || c.data.calcom?.visita || c.data.calcom?.richiamata)
   .sort((a, b) => a.data.ordine - b.data.ordine)
   .map((c) => ({
     id: c.id,
