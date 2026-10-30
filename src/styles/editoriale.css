@@ -447,6 +447,13 @@
 .art-body strong {
   color: #fff;
 }
+.art-body img {
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  margin: 6px 0 26px;
+}
 .art-body blockquote {
   border-left: 3px solid var(--red);
   padding-left: 18px;
