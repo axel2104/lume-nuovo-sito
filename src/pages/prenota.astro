@@ -477,8 +477,11 @@ const origine = siteConfig.calcomOrigin.replace(/\/$/, '');
       mostraNota();
       // La query string segue la scelta: così il link si può copiare e mandare
       // a qualcuno con la sede giusta già selezionata.
-      const nuova = new URLSearchParams({ centro, tipo });
-      if (interna && new URLSearchParams(window.location.search).get('interna') === '1') nuova.set('interna', '1');
+      // Si parte dalla query attuale e si cambiano solo centro e tipo: altrimenti le utm_* del link
+      // (campagna, storia Instagram, QR) spariscono dall'indirizzo prima che il lead le legga.
+      const nuova = new URLSearchParams(window.location.search);
+      nuova.set('centro', centro);
+      nuova.set('tipo', tipo);
       window.history.replaceState(null, '', window.location.pathname + '?' + nuova.toString());
       void monta();
     };
