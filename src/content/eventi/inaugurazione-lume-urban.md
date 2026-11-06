@@ -5,7 +5,8 @@ ora: "18:30"
 categoria: evento
 descrizione: >-
   Il 12 novembre dalle 18:30 inauguriamo Lume Urban, il nuovo centro in viale
-  Leopardi 91 a Macerata: food truck, dj set e taglio del nastro.
+  Leopardi 91 a Macerata: special guest Carletto Life, dj set con Francesco Luv, food truck e taglio
+  del nastro.
 luogo: Lume Urban, viale Leopardi 91, Macerata
 centro: urban
 immagine: ../../assets/centri/urban/foto-9.jpg
@@ -20,9 +21,38 @@ fare festa con noi.
 
 ## La serata
 
-- **Dj set** dalle 18:30, per fare festa insieme.
-- **Food truck** per cenare e restare con noi tutta la serata.
-- **Taglio del nastro**, il momento ufficiale dell'inaugurazione.
+<div class="ev-neon">
+
+<p class="ev-neon-ora">Dalle 18:30</p>
+
+<ul class="ev-neon-lista">
+<li><span>Special guest</span><b>Carletto Life</b></li>
+<li><span>DJ set</span><b>Francesco Luv</b></li>
+<li><span>All'inaugurazione</span><b>Food truck</b></li>
+<li><span>Il momento ufficiale</span><b>Taglio del nastro</b></li>
+</ul>
+
+</div>
+
+Musica, cena e festa per tutta la sera: il **dj set** di Francesco Luv, lo
+**special guest** Carletto Life, il **food truck** per cenare con noi e il
+**taglio del nastro**.
+
+<div class="ev-galleria">
+
+![Inaugurazione Lume Urban, 12 novembre dalle 18:30](../../assets/eventi/urban-carosello-01.png)
+
+![Il programma del 12 novembre: taglio del nastro, food truck, dj set](../../assets/eventi/urban-carosello-02.png)
+
+![Special guest Carletto Life](../../assets/eventi/urban-carosello-05.png)
+
+![Dj set con Francesco Luv](../../assets/eventi/urban-carosello-04.png)
+
+![Food truck all'inaugurazione](../../assets/eventi/urban-carosello-03.png)
+
+![Ti aspettiamo il 12 novembre dalle 18:30 a Lume Urban](../../assets/eventi/urban-carosello-06.png)
+
+</div>
 
 ## Dentro Lume Urban
 
