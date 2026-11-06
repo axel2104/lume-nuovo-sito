@@ -275,9 +275,11 @@ Lume Macerata:
 | --- | --- | --- | --- |
 | Sala Pesi | Sala cardio e pesi, programma di allenamento, Technogym App | 660 euro | 60 euro/mese |
 | All Lume | Sala cardio e pesi, corsi fitness, Technogym App | 720 euro | 65 euro/mese |
-| All Lume GOLD | Tutte le attività della sede, box CrossFit senza limiti, bevande energetiche, Technogym App | 900 euro | 80 euro/mese |
+| All Lume GOLD | Tutte le attività della sede, box CrossFit senza limiti, Technogym App | 900 euro | 80 euro/mese |
 
 All Lume GOLD è disponibile anche in formula Mensile (Flex) a 105 euro al mese.
+
+L'All Lume GOLD di Lume Macerata comprende: accesso senza limiti orari, sala cardio e pesi, corsi fitness, acqua fitness e nuoto libero, box CrossFit senza limiti, Technogym App. Vale presso la sede di Macerata.
 
 Lume Montecassiano:
 
@@ -285,18 +287,21 @@ Lume Montecassiano:
 | --- | --- | --- | --- |
 | Sala Pesi | Sala cardio e pesi, programma di allenamento, Technogym App | 468 euro | 43 euro/mese |
 | All Lume Fitness | Sala cardio e pesi, corsi fitness, Technogym App | 576 euro | 52 euro/mese |
-| All Lume Acqua | Acqua fitness, nuoto libero, scuola nuoto adulti, sala cardio e pesi, Technogym App | 640 euro | 58 euro/mese |
+| All Lume Acqua | Acqua fitness, nuoto libero, scuola nuoto adulti. Sala cardio e pesi non inclusa | 640 euro | 58 euro/mese |
 | All Lume GOLD | Tutte le attività della sede, piscina inclusa, Technogym App | 690 euro | 63 euro/mese |
 
 All Lume GOLD è disponibile anche in formula Mensile (Flex) a 90 euro al mese.
+
+L'All Lume GOLD di Lume Montecassiano comprende: accesso senza limiti orari, sala cardio e pesi, corsi fitness, nuoto libero, acqua fitness e scuola nuoto adulti, Technogym App. Vale presso la sede di Montecassiano e non dà accesso al box CrossFit di Macerata.
 
 Lume Urban:
 
 | Profilo | Cosa comprende | Soluzione unica | 12 rate |
 | --- | --- | --- | --- |
-| All Lume Urban | Sala cardio e pesi e corsi fitness della sede Urban, Technogym App | 420 euro | 38 euro/mese |
+| All Lume Urban Under 30 (fino a 30 anni) | Sala cardio e pesi e corsi fitness della sede Urban, Technogym App | 420 euro | 38 euro/mese |
+| All Lume Urban Over 30 (dai 30 anni in su) | Sala cardio e pesi e corsi fitness della sede Urban, Technogym App | 540 euro | 48 euro/mese |
 
-Disponibile anche in formula Mensile (Flex).
+Disponibile anche in formula Mensile (Flex): 55 euro al mese Under 30, 65 euro al mese Over 30.
 
 Corsi estivi, tutte le sedi:
 

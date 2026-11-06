@@ -19,6 +19,7 @@ import { siteConfig, consensoGestito } from '../config/site';
 import ModalForm from '../components/forms/ModalForm.astro';
 import ChatLume from '../components/ChatLume.astro';
 import Interazioni from '../components/Interazioni.astro';
+import BannerCampagna from '../components/BannerCampagna.astro';
 
 // Lo script di tracciamento è un file a sé (lintabile, versionabile) ma va
 // iniettato inline in <head>: deve girare prima di GTM, non dopo un bundle.
@@ -211,6 +212,7 @@ _iub.csConfiguration = {
   </head>
   <body>
     <a class="skip-link" href="#contenuto">Salta al contenuto</a>
+    <BannerCampagna />
     <slot />
     <!--
       I tre modal sono montati una volta per pagina e aperti da qualsiasi CTA con

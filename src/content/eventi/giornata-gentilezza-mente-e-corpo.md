@@ -10,9 +10,12 @@ descrizione: >-
 luogo: Lume Fitness Club, piazzale M. Fattorini 1, Macerata
 centro: macerata
 immagine: ../../assets/centri/macerata-interni.jpg
+iscrizioniHref: https://lumefitness.perfectgym.com/ClientPortal2/#/Classes/1/List?date=2026-11-13&categoryId=17
 postiLimitati: true
 pubblicato: true
 ---
+
+![Illustrazione di un ramo fiorito con fiori gialli e foglie verdi](../../assets/eventi/gentilezza-fiori.avif)
 
 Da sempre Lume non è solo un luogo dove vivere esperienze di allenamento, ma
 uno spazio in cui giorno dopo giorno coltiviamo insieme benessere, attenzione
@@ -38,5 +41,7 @@ BodyBalance.
 
 Lezione gratuita con obbligo di prenotazione tramite app, le prenotazioni si
 apriranno venerdì 6 novembre alle ore 9:00.
+
+![Illustrazione di un ramo con fiori di gelsomino gialli](../../assets/eventi/gentilezza-gelsomino.avif)
 
 **Non puoi mancare!**

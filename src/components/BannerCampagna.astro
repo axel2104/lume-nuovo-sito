@@ -1,0 +1,54 @@
+---
+/**
+ * Banner personalizzato in base a `utm_campaign` (vedi config/campagne.ts).
+ *
+ * Gli UTM li legge direttamente dall'URL, non dallo storage: così funziona anche
+ * prima del consenso cookie (non scrive nulla di tracciante). Gli UTM si
+ * propagano sui link interni (tracking.js), quindi il banner resta durante la
+ * navigazione. Alla chiusura ricorda la scelta solo per la sessione.
+ * In cima alla pagina e non fisso: in basso c'è il banner cookie di Iubenda e sul telefono un banner fisso mangia troppo schermo.
+ */
+import { campagne } from '../config/campagne';
+---
+
+<div id="banner-campagna" class="bc" role="region" aria-label="Messaggio per te" hidden></div>
+
+<style is:global>
+  .bc { position: relative; z-index: 90; background: var(--red); color: #fff;
+    padding: 12px var(--pad); display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: center;
+    font: 500 15px/1.35 Inter, sans-serif; box-shadow: 0 2px 12px rgba(0, 0, 0, .35); }
+  .bc[hidden] { display: none; }
+  .bc b { font-weight: 800; }
+  .bc a.bc-cta { background: #fff; color: var(--red); font-weight: 700; padding: 9px 16px; text-decoration: none; }
+  .bc a.bc-cta2 { color: #fff; text-decoration: underline; font-weight: 600; }
+  .bc button { background: none; border: 0; color: #fff; font-size: 24px; line-height: 1; cursor: pointer; padding: 4px 8px; }
+  @media (max-width: 640px) { .bc { font-size: 14px; padding-right: 44px; } .bc button { position: absolute; top: 6px; right: 6px; } }
+</style>
+
+<script is:inline define:vars={{ campagne }}>
+  (function () {
+    try {
+      var q = new URLSearchParams(location.search);
+      var lista = campagne[(q.get('utm_campaign') || '').toLowerCase()];
+      if (!lista) return;
+      var medium = (q.get('utm_medium') || '').toLowerCase();
+      var oggi = new Date().toISOString().slice(0, 10);
+      var c = lista.filter(function (x) { return (!x.medium || x.medium === medium) && (!x.fine || x.fine >= oggi); })[0];
+      if (!c) return;
+      var chiave = 'lume_banner_chiuso_' + q.get('utm_campaign');
+      try { if (sessionStorage.getItem(chiave)) return; } catch (e) {}
+      var el = document.getElementById('banner-campagna');
+      var esc = function (s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; };
+      el.innerHTML = '<span><b>' + esc(c.titolo) + '</b> ' + esc(c.testo) + '</span>' +
+        '<a class="bc-cta" href="' + esc(c.cta.href) + '">' + esc(c.cta.label) + '</a>' +
+        (c.cta2 ? '<a class="bc-cta2" href="' + esc(c.cta2.href) + '">' + esc(c.cta2.label) + '</a>' : '') +
+        '<button type="button" aria-label="Chiudi">&times;</button>';
+      el.querySelector('button').onclick = function () {
+        el.hidden = true;
+        try { sessionStorage.setItem(chiave, '1'); } catch (e) {}
+      };
+      el.hidden = false;
+      if (window.lumeTrack) window.lumeTrack('banner_campagna_visto', { campagna: q.get('utm_campaign'), medium: medium });
+    } catch (e) {}
+  })();
+</script>

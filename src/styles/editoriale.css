@@ -614,3 +614,11 @@
 .leg-pref {
   margin: 18px 0 4px;
 }
+/* illustrazioni decorative negli articoli: piccole, centrate, senza cornice */
+.art-body img[alt^='Illustrazione'] {
+  display: block;
+  width: min(280px, 70%);
+  margin: 10px auto 26px;
+  border: 0;
+  border-radius: 0;
+}
