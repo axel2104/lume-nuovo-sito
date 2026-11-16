@@ -50,6 +50,13 @@ planning:
   - giorno: '1'
     inizio: '07:00'
     fine: '08:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '1'
+    inizio: '07:00'
+    fine: '08:00'
     corso: 'Pilates'
     disciplina: pilates
     istruttore: 'Alice Z.'
@@ -66,10 +73,24 @@ planning:
     disciplina: reformer
     istruttore: 'Alice Z.'
   - giorno: '1'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '1'
     inizio: '10:00'
     fine: '11:00'
     corso: 'Gentle Training'
     istruttore: 'Alice Z.'
+  - giorno: '1'
+    inizio: '12:30'
+    fine: '13:30'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '1'
     inizio: '12:45'
     fine: '13:30'
@@ -94,11 +115,25 @@ planning:
     disciplina: reformer
     istruttore: 'Alice Z.'
   - giorno: '1'
+    inizio: '17:15'
+    fine: '18:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '1'
     inizio: '17:30'
     fine: '18:30'
     corso: 'Yoga'
     disciplina: yoga
     istruttore: 'Alice Z.'
+  - giorno: '1'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '1'
     inizio: '18:30'
     fine: '19:30'
@@ -112,6 +147,13 @@ planning:
     disciplina: lesmills-bodypump
     istruttore: 'Gea'
   - giorno: '1'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '1'
     inizio: '19:30'
     fine: '20:30'
     corso: 'Hybrid Class'
@@ -124,10 +166,12 @@ planning:
     disciplina: lesmills-core
     istruttore: 'Gea'
   - giorno: '1'
-    inizio: '20:30'
-    fine: '21:30'
-    corso: 'Pilates'
-    disciplina: pilates
+    inizio: '20:15'
+    fine: '21:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '2'
     inizio: '07:00'
     fine: '08:00'
@@ -135,17 +179,18 @@ planning:
     sala: Box Hyrox
     istruttore: 'Istruttore CrossFit'
   - giorno: '2'
-    inizio: '07:30'
-    fine: '08:30'
-    corso: 'LesMills Shapes'
-    disciplina: lesmills-shapes
-    istruttore: 'Gea'
-  - giorno: '2'
     inizio: '08:30'
     fine: '09:30'
     corso: 'LesMills Core'
     disciplina: lesmills-core
     istruttore: 'Lara'
+  - giorno: '2'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '2'
     inizio: '10:30'
     fine: '11:20'
@@ -163,37 +208,65 @@ planning:
     fine: '13:30'
     corso: 'LesMills Core'
     disciplina: lesmills-core
-    istruttore: 'Ludovica'
+    istruttore: 'Gea'
   - giorno: '2'
     inizio: '13:30'
     fine: '14:30'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
-    istruttore: 'Ludovica'
+    istruttore: 'Gea'
+  - giorno: '2'
+    inizio: '13:45'
+    fine: '14:45'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '2'
     inizio: '16:30'
     fine: '17:30'
     corso: 'LesMills BodyBalance'
     disciplina: lesmills-bodybalance
-    istruttore: 'Gian'
-  - giorno: '2'
-    inizio: '17:30'
-    fine: '18:20'
-    corso: 'LesMills Pilates'
-    disciplina: pilates-lesmills
     istruttore: 'Ludovica'
   - giorno: '2'
-    inizio: '18:30'
-    fine: '19:30'
-    corso: 'Bodycombat'
-    disciplina: lesmills-bodycombat
-    istruttore: 'Ludovica'
+    inizio: '17:15'
+    fine: '18:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '2'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '2'
     inizio: '18:30'
     fine: '19:30'
     corso: 'Hybrid Class'
     sala: Box Hyrox
     istruttore: 'Istruttore CrossFit'
+  - giorno: '2'
+    inizio: '18:30'
+    fine: '19:30'
+    corso: 'LesMills BodyAttack'
+    disciplina: lesmills-bodyattack
+    istruttore: 'Ludovica'
+  - giorno: '2'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '2'
+    inizio: '19:30'
+    fine: '20:30'
+    corso: 'Bodycombat'
+    disciplina: lesmills-bodycombat
+    istruttore: 'Ludovica'
   - giorno: '2'
     inizio: '19:30'
     fine: '20:30'
@@ -202,17 +275,24 @@ planning:
     sala: Box Hyrox
     istruttore: 'Alessandro Carf.'
   - giorno: '2'
-    inizio: '19:30'
-    fine: '20:30'
-    corso: 'LesMills BodyAttack'
-    disciplina: lesmills-bodyattack
-    istruttore: 'Ludovica'
-  - giorno: '2'
     inizio: '20:30'
     fine: '21:30'
     corso: 'Hybrid Class'
     sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit / Alessandro Carfagna'
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '3'
+    inizio: '07:00'
+    fine: '08:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '3'
+    inizio: '07:30'
+    fine: '08:30'
+    corso: 'LesMills Shapes'
+    disciplina: lesmills-shapes
+    istruttore: 'Gea'
   - giorno: '3'
     inizio: '08:30'
     fine: '09:30'
@@ -220,11 +300,12 @@ planning:
     sala: Box Hyrox
     istruttore: 'Istruttore CrossFit'
   - giorno: '3'
-    inizio: '08:30'
-    fine: '09:30'
-    corso: 'LesMills BodyPump'
-    disciplina: lesmills-bodypump
-    istruttore: 'Nuove Leve'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '3'
     inizio: '09:00'
     fine: '10:00'
@@ -237,6 +318,13 @@ planning:
     corso: 'Reformer'
     disciplina: reformer
     istruttore: 'Alessandra'
+  - giorno: '3'
+    inizio: '12:30'
+    fine: '13:30'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '3'
     inizio: '12:45'
     fine: '13:30'
@@ -260,13 +348,27 @@ planning:
     fine: '15:30'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
-    istruttore: 'Nuove Leve'
+    istruttore: 'Giorgia'
+  - giorno: '3'
+    inizio: '17:15'
+    fine: '18:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '3'
     inizio: '17:30'
     fine: '18:30'
-    corso: 'LesMills BodyPump'
-    disciplina: lesmills-bodypump
-    istruttore: 'Nuove Leve'
+    corso: 'LesMills Shapes'
+    disciplina: lesmills-shapes
+    istruttore: 'Giorgia'
+  - giorno: '3'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '3'
     inizio: '18:30'
     fine: '19:30'
@@ -280,6 +382,13 @@ planning:
     disciplina: lesmills-bodybalance
     istruttore: 'Lara'
   - giorno: '3'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '3'
     inizio: '19:30'
     fine: '20:30'
     corso: 'Hybrid Class'
@@ -287,10 +396,17 @@ planning:
     istruttore: 'Istruttore CrossFit'
   - giorno: '3'
     inizio: '19:30'
-    fine: '20:30'
-    corso: 'LesMills Shapes'
-    disciplina: lesmills-shapes
-    istruttore: 'Lara - Alice C.'
+    fine: '20:20'
+    corso: 'LesMills Pilates'
+    disciplina: pilates-lesmills
+    istruttore: 'Lara'
+  - giorno: '3'
+    inizio: '20:15'
+    fine: '21:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '3'
     inizio: '20:30'
     fine: '21:30'
@@ -310,6 +426,13 @@ planning:
     disciplina: pilates
     istruttore: 'Alessandra Danieli'
   - giorno: '4'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '4'
     inizio: '10:00'
     fine: '11:00'
     corso: 'Yoga'
@@ -326,13 +449,18 @@ planning:
     fine: '13:30'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
-    istruttore: 'Nuove Leve'
   - giorno: '4'
     inizio: '13:30'
     fine: '14:30'
     corso: 'Pilates'
     disciplina: pilates
-    istruttore: 'Alessandra'
+  - giorno: '4'
+    inizio: '13:45'
+    fine: '14:45'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '4'
     inizio: '14:30'
     fine: '15:30'
@@ -344,13 +472,25 @@ planning:
     fine: '17:30'
     corso: 'Reformer'
     disciplina: reformer
-    istruttore: 'Alessandra'
+  - giorno: '4'
+    inizio: '17:15'
+    fine: '18:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '4'
     inizio: '17:30'
     fine: '18:30'
     corso: 'LesMills RPM'
     disciplina: lesmills-rpm
-    istruttore: 'Gian'
+  - giorno: '4'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '4'
     inizio: '18:30'
     fine: '19:30'
@@ -360,9 +500,16 @@ planning:
   - giorno: '4'
     inizio: '18:30'
     fine: '19:30'
-    corso: 'Reformer'
-    disciplina: reformer
-    istruttore: 'Alessandra'
+    corso: 'LesMills Shapes'
+    disciplina: lesmills-shapes
+    istruttore: 'Giorgia'
+  - giorno: '4'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '4'
     inizio: '19:30'
     fine: '20:30'
@@ -373,15 +520,22 @@ planning:
   - giorno: '4'
     inizio: '19:30'
     fine: '20:30'
-    corso: 'Pilates'
-    disciplina: pilates
-    istruttore: 'Alessandra'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
+    istruttore: 'Giorgia'
   - giorno: '4'
     inizio: '20:30'
     fine: '21:30'
     corso: 'Hybrid Class'
     sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit / Alessandro Carfagna'
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '5'
+    inizio: '07:00'
+    fine: '08:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '5'
     inizio: '07:00'
     fine: '08:00'
@@ -401,17 +555,31 @@ planning:
     disciplina: lesmills-bodybalance
     istruttore: 'Lara'
   - giorno: '5'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '5'
     inizio: '10:30'
     fine: '11:30'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
-    istruttore: 'Nuove Leve'
+    istruttore: 'Giorgia'
+  - giorno: '5'
+    inizio: '12:30'
+    fine: '13:30'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '5'
     inizio: '12:45'
     fine: '13:45'
     corso: 'Reformer'
     disciplina: reformer
-    istruttore: 'Giovanna'
+    istruttore: 'Alessandra Danieli'
   - giorno: '5'
     inizio: '13:30'
     fine: '14:30'
@@ -420,21 +588,36 @@ planning:
     istruttore: 'Istruttore CrossFit'
   - giorno: '5'
     inizio: '13:30'
-    fine: '14:30'
+    fine: '14:00'
     corso: 'LesMills Core'
     disciplina: lesmills-core
-    istruttore: 'Chiara – Gea'
+    istruttore: 'Gea'
   - giorno: '5'
     inizio: '14:30'
     fine: '15:30'
-    corso: 'LesMills BodyBalance'
-    disciplina: lesmills-bodybalance
-    istruttore: 'Ludovica'
+    corso: 'Pilates'
+    disciplina: pilates
+    istruttore: 'Alessandra Danieli'
+  - giorno: '5'
+    inizio: '17:15'
+    fine: '18:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '5'
     inizio: '17:30'
     fine: '18:30'
-    corso: 'LesMills Core'
-    disciplina: lesmills-core
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
+    istruttore: 'Benedetta'
+  - giorno: '5'
+    inizio: '18:15'
+    fine: '19:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
   - giorno: '5'
     inizio: '18:30'
     fine: '19:30'
@@ -442,9 +625,36 @@ planning:
     sala: Box Hyrox
     istruttore: 'Istruttore CrossFit'
   - giorno: '5'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '5'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'LesMills Shapes'
+    disciplina: lesmills-shapes
+    istruttore: 'Benedetta'
+  - giorno: '5'
     inizio: '19:30'
     fine: '20:30'
     corso: 'Hybrid Class'
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '5'
+    inizio: '20:15'
+    fine: '21:15'
+    corso: 'CrossFit'
+    disciplina: crossfit
+    sala: Box Hyrox
+    istruttore: 'Istruttore CrossFit'
+  - giorno: '6'
+    inizio: '09:00'
+    fine: '10:00'
+    corso: 'CrossFit'
+    disciplina: crossfit
     sala: Box Hyrox
     istruttore: 'Istruttore CrossFit'
   - giorno: '6'
@@ -464,232 +674,8 @@ planning:
     corso: 'Hybrid Class'
     sala: Box Hyrox
     istruttore: 'Istruttore CrossFit'
-  - giorno: '1'
-    inizio: '07:00'
-    fine: '08:00'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '1'
-    inizio: '09:00'
-    fine: '10:00'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '1'
-    inizio: '12:30'
-    fine: '13:30'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '1'
-    inizio: '17:15'
-    fine: '18:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '1'
-    inizio: '18:15'
-    fine: '19:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '1'
-    inizio: '19:15'
-    fine: '20:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '1'
-    inizio: '20:15'
-    fine: '21:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '2'
-    inizio: '09:00'
-    fine: '10:00'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '2'
-    inizio: '13:45'
-    fine: '14:45'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '2'
-    inizio: '17:15'
-    fine: '18:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '2'
-    inizio: '18:15'
-    fine: '19:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '2'
-    inizio: '19:15'
-    fine: '20:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '3'
-    inizio: '07:00'
-    fine: '08:00'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '3'
-    inizio: '09:00'
-    fine: '10:00'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '3'
-    inizio: '12:30'
-    fine: '13:30'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '3'
-    inizio: '17:15'
-    fine: '18:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '3'
-    inizio: '18:15'
-    fine: '19:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '3'
-    inizio: '19:15'
-    fine: '20:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '3'
-    inizio: '20:15'
-    fine: '21:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '4'
-    inizio: '09:00'
-    fine: '10:00'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '4'
-    inizio: '13:45'
-    fine: '14:45'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '4'
-    inizio: '17:15'
-    fine: '18:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '4'
-    inizio: '18:15'
-    fine: '19:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '4'
-    inizio: '19:15'
-    fine: '20:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '5'
-    inizio: '07:00'
-    fine: '08:00'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '5'
-    inizio: '09:00'
-    fine: '10:00'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '5'
-    inizio: '12:30'
-    fine: '13:30'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '5'
-    inizio: '17:15'
-    fine: '18:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '5'
-    inizio: '18:15'
-    fine: '19:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '5'
-    inizio: '19:15'
-    fine: '20:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '5'
-    inizio: '20:15'
-    fine: '21:15'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
-  - giorno: '6'
-    inizio: '09:00'
-    fine: '10:00'
-    corso: 'CrossFit'
-    disciplina: crossfit
-    sala: Box Hyrox
-    istruttore: 'Istruttore CrossFit'
 planningNota: 'Palinsesto di apertura provvisorio: istruttori e alcune attività sono in fase di conferma.'
-planningAggiornatoIl: 2026-10-24
+planningAggiornatoIl: 2026-11-16
 ---
 
 **Il fitness integrato nella vita quotidiana.** Il nuovo centro Lume di
