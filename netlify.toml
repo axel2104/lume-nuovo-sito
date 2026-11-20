@@ -130,6 +130,15 @@
   status = 301
   force = true
 
+# TEMPORANEO: la landing Black Friday è in revisione, nel frattempo porta a /prova.
+# 302 (non 301) perché va tolto: così browser e Google non lo ricordano.
+# Per riattivare la pagina basta cancellare questo blocco.
+[[redirects]]
+  from = "/blackfriday"
+  to = "/prova"
+  status = 302
+  force = true
+
 [[redirects]]
   from = "/provagratis"
   to = "/prova"
