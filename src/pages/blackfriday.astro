@@ -2,57 +2,100 @@
 /**
  * Landing delle ads Black Week Red Pass (23–29/11/2026).
  *
- * Una card per centro con la sua proposta; l'unico obiettivo è far prenotare
- * una chiamata o una visita in sede, dove si chiude. I pulsanti vanno al
- * calendario interno (/prenota) con centro e tipo già scelti; gli UTM della
- * ad si propagano da soli (tracking.js), quindi nel CRM si vede quale ad ha
- * portato ogni appuntamento.
- *
- * Offerte e prezzi sono qui sotto: per cambiarli si tocca solo questo elenco.
+ * Struttura: hero con countdown → Lume Gold (un abbonamento, quattro club) →
+ * Reformer (promo comune, in vista) → una sezione per club con la sua promo.
+ * Testi e prezzi vengono da «BLACK WEEK aggiornata 2026.docx»: non cambiarli
+ * qui senza cambiarli lì. Ogni sezione-club ha un'ancora (#macerata, ...) usata
+ * dalle ads. I pulsanti vanno al calendario interno (/prenota) con centro e tipo
+ * già scelti; gli UTM si propagano da soli (tracking.js).
  * Dopo FINE la pagina mostra «offerta terminata» da sola.
  */
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import BfBento from '../components/BfBento.astro';
 
 const FINE = '2026-11-29'; // domenica, ore 23:59
 
-interface Offerta { nome: string; prezzo: string; prima?: string; nota?: string }
-const centri: { id: string; nome: string; sotto: string; offerte: Offerta[] }[] = [
+const servizi = ['Sala attrezzi', 'Piscina', 'Corsi di gruppo', 'Box CrossFit'];
+
+const fasce = [
+  { orario: '00:00 – 11:59', soci: '410 €', esterni: '555 €' },
+  { orario: '12:00 – 17:59', soci: '440 €', esterni: '598 €' },
+  { orario: '18:00 – 23:59', soci: '470 €', esterni: '639 €' },
+];
+
+// Ogni club usa lo STESSO schema (sezione, foto, tessere, nota Gold, pulsanti):
+// per cambiare un'offerta si tocca solo questo elenco.
+interface Tessera { nome: string; prezzo: string; prima?: string; badge?: string; nota?: string; top?: boolean }
+const clubs: { id: string; nome: string; label: string; lead: string; foto: { src: string; alt: string }[]; tessere: Tessera[] }[] = [
   {
     id: 'macerata',
-    nome: 'Lume Macerata',
-    sotto: 'Il centro completo',
-    offerte: [
-      { nome: 'Gold', prezzo: '800 €', prima: '900 €', nota: 'Per i nuovi iscritti' },
-      { nome: 'Reformer', prezzo: 'da 555 €', nota: 'Solo venerdì 27/11 · prezzo per fascia oraria · posti limitati' },
+    nome: 'Macerata',
+    label: 'Club · Il centro completo',
+    lead: 'Sala attrezzi, corsi di gruppo, Box CrossFit: vieni a vedere il centro e chiudi l’offerta con un consulente. Qui si attiva il Gold e si prenota il Reformer.',
+    foto: [
+      { src: '/media/crossfit.jpg', alt: 'Il Box CrossFit di Lume Macerata' },
+      { src: '/media/reformer.jpg', alt: 'La sala Reformer di Lume Macerata' },
+      { src: '/media/weights.jpg', alt: 'La sala attrezzi di Lume Macerata' },
+    ],
+    tessere: [
+      { nome: 'Lume Gold', prezzo: '800 €', prima: '900 €', nota: 'Quattro club, un solo abbonamento · soci: Gold Upgrade a 720 €', top: true },
+      { nome: 'Black Reformer Friday', prezzo: 'da 410 €', nota: 'Solo venerdì 27/11 · prezzo per fascia oraria (esterni da 555 €) · posti limitati' },
     ],
   },
   {
     id: 'montecassiano',
-    nome: 'Lume Montecassiano',
-    sotto: 'Palestra e piscina',
-    offerte: [
-      { nome: 'Attivazione', prezzo: '25 €', nota: 'New start' },
-      { nome: 'Sala', prezzo: '440 €' },
-      { nome: 'All in palestra', prezzo: '530 €' },
-      { nome: 'All in piscina', prezzo: '576 €' },
-      { nome: 'All in palestra + piscina', prezzo: '608 €' },
+    nome: 'Montecassiano',
+    label: 'Club · Palestra e piscina',
+    lead: 'Iscrizione annuale di 12 mesi con la quota di attivazione scontata del 50%: 25 €. In più, un ulteriore vantaggio sull’abbonamento che scegli.',
+    foto: [
+      { src: '/media/montecassiano-sala.jpg', alt: 'La sala attrezzi di Lume Montecassiano' },
+      { src: '/media/gym1.jpg', alt: 'Attrezzi e macchinari di Lume Montecassiano' },
+      { src: '/media/gym2.jpg', alt: 'La sala di Lume Montecassiano vista dal fondo' },
+    ],
+    tessere: [
+      { nome: 'Sala pesi', prezzo: '440 €', badge: '-6%', nota: '12 mesi + attivazione 25 €' },
+      { nome: 'All in palestra', prezzo: '530 €', badge: '-8%', nota: '12 mesi + attivazione 25 €' },
+      { nome: 'All in piscina', prezzo: '576 €', badge: '-10%', nota: '12 mesi + attivazione 25 €' },
+      { nome: 'All in palestra + piscina', prezzo: '608 €', badge: '-12%', nota: '12 mesi + attivazione 25 €', top: true },
     ],
   },
   {
     id: 'urban',
-    nome: 'Lume Urban',
-    sotto: 'Nel centro storico',
-    offerte: [
-      { nome: 'Under 30 · 12 mesi + 1', prezzo: '399 €', prima: '420 €' },
-      { nome: 'Over 30', prezzo: 'Attivazione omaggio', nota: 'Pagamento in 2–3 rate' },
+    nome: 'Urban',
+    label: 'Il nuovo club · Nel cuore del centro storico di Macerata',
+    lead: 'Scopri il nuovo club Lume Urban. Vieni a vedere il centro e chiudi l’offerta con un consulente.',
+    foto: [
+      { src: '/media/urban-ingresso.jpg', alt: 'L’ingresso di Lume Urban' },
+      { src: '/media/urban-reformer.jpg', alt: 'La sala Reformer di Lume Urban' },
+      { src: '/media/urban-murale.jpg', alt: 'Il murale all’ingresso delle sale di Lume Urban' },
+      { src: '/media/urban-spogliatoi.jpg', alt: 'Gli spogliatoi di Lume Urban' },
+    ],
+    tessere: [
+      { nome: '12 mesi + 1 · Under 30', prezzo: '399 €', prima: '420 €', badge: 'Risparmi 71 €', nota: 'Quota di attivazione omaggio (valore 50 €)', top: true },
+      { nome: '12 mesi + 1 · Over 30', prezzo: 'Attivazione omaggio', nota: 'Valore 50 € · puoi dividere il pagamento in 2 o 3 rate senza costi aggiuntivi' },
     ],
   },
 ];
 
+const fotoHero = [
+  { src: '/media/crossfit.jpg', alt: 'Il Box CrossFit di Lume Macerata' },
+  { src: '/media/urban-murale.jpg', alt: 'Lume Urban' },
+  { src: '/media/gym1.jpg', alt: 'Lume Montecassiano' },
+];
+const fotoGold = [
+  { src: '/media/montecassiano-sala.jpg', alt: 'Lume Montecassiano' },
+  { src: '/media/urban-ingresso.jpg', alt: 'Lume Urban' },
+  { src: '/media/weights.jpg', alt: 'Lume Macerata' },
+];
+const fotoReformer = [
+  { src: '/media/reformer.jpg', alt: 'Reformer a Lume Macerata' },
+  { src: '/media/urban-reformer.jpg', alt: 'Reformer a Lume Urban' },
+];
+
 const passi = [
-  'Scegli il tuo centro e prenota.',
+  'Scegli il tuo club e prenota.',
   'Un consulente ti aspetta in sede o ti chiama.',
   'Vedi il centro e chiudi l’offerta con lui.',
 ];
@@ -60,96 +103,229 @@ const passi = [
 
 <Layout
   title="Black Week Red Pass — Lume Fitness Club"
-  description="Dal 23 al 29 novembre le offerte Black Week Red Pass nei centri Lume. Prenota una chiamata o una visita e chiudi in sede."
+  description="Dal 23 al 29 novembre: Lume Gold a 800 € per tutti e quattro i club, Black Reformer Friday e le promo di ogni centro. Prenota una chiamata o una visita."
 >
   <Header />
 
   <main>
     <section class="bf-hero">
-      <div class="wrap">
-        <span class="label">Dal 23 al 29 novembre</span>
-        <h1 class="d">Black Week<br /><em>Red Pass</em></h1>
-        <p class="bf-lead">
-          Una proposta per ogni centro Lume. Scegli il tuo, prenota in un minuto e chiudi l’offerta con un consulente.
-        </p>
-        <a class="btn btn-red" href="#centri">Scegli il tuo centro</a>
-        <p class="bf-scad" data-scad hidden>L’offerta è terminata. Scrivici e ti diciamo cosa c’è di nuovo.</p>
-      </div>
-    </section>
-
-    <section class="sec" id="centri" data-offerte>
-      <div class="wrap">
-        <div class="bf-grid">
-          {
-            centri.map((c) => (
-              <article class="bf-card" id={c.id}>
-                <h2 class="d">{c.nome}</h2>
-                <p class="bf-sotto">{c.sotto}</p>
-                <ul class="bf-offerte">
-                  {c.offerte.map((o) => (
-                    <li>
-                      <span class="bf-nome">{o.nome}</span>
-                      <span class="bf-prezzo">
-                        {o.prima && <s>{o.prima}</s>} <b>{o.prezzo}</b>
-                      </span>
-                      {o.nota && <small>{o.nota}</small>}
-                    </li>
-                  ))}
-                </ul>
-                <div class="bf-cta">
-                  <a class="btn btn-red btn-full" href={`/prenota?centro=${c.id}&tipo=visita`}>Vieni in sede</a>
-                  <a class="btn btn-out btn-full" href={`/prenota?centro=${c.id}&tipo=richiamata`}>Fatti chiamare</a>
-                </div>
-              </article>
-            ))
-          }
+      <div class="wrap bf-split">
+        <div>
+          <span class="label">Dal 23 al 29 novembre</span>
+          <h1 class="d">Black Week<br /><em>Red Pass</em></h1>
+          <p class="bf-lead">
+            Il tuo benessere, un’opportunità da non perdere. Una promo per ogni club Lume, più il Gold che li apre tutti.
+          </p>
+          <div class="bf-count" data-count aria-live="off">
+            <div><b data-d>--</b><span>giorni</span></div>
+            <div><b data-h>--</b><span>ore</span></div>
+            <div><b data-m>--</b><span>minuti</span></div>
+            <div><b data-s>--</b><span>secondi</span></div>
+          </div>
+          <p class="bf-fine">alla fine delle offerte · domenica 29 novembre, ore 23:59</p>
+          <a class="btn btn-red" href="#gold">Scopri il Gold</a>
+          <p class="bf-scad" data-scad hidden>L’offerta è terminata. Scrivici e ti diciamo cosa c’è di nuovo.</p>
         </div>
+        <BfBento foto={fotoHero} />
       </div>
     </section>
 
-    <section class="sec bf-passi">
-      <div class="wrap">
-        <ol>
-          {passi.map((p, i) => <li><b>{i + 1}</b>{p}</li>)}
-        </ol>
-        <p class="bf-note">Offerte valide fino a domenica 29 novembre alle 23:59 e fino a esaurimento posti. Prezzi per i nuovi iscritti; i soci chiedano al centro.</p>
-      </div>
-    </section>
+    <div data-offerte>
+      <!-- GOLD: valido in tutti i club -->
+      <section class="sec bf-gold" id="gold">
+        <div class="wrap bf-split">
+          <div>
+          <span class="label">Un abbonamento · tutti i club</span>
+          <h2 class="d">Lume Gold:<br />quattro club,<br /><em>un solo abbonamento!</em></h2>
+          <p class="bf-lead">
+            Con il Gold hai libero accesso a tutti e quattro i club Lume e puoi vivere liberamente tutti i servizi,
+            scegliendo ogni giorno ciò che preferisci. Lo attivi a Macerata o a Montecassiano, lo usi ovunque.
+          </p>
+          <ul class="bf-serv">
+            {servizi.map((s) => <li>{s}</li>)}
+          </ul>
+          </div>
+          <BfBento foto={fotoGold} />
+        </div>
+        <div class="wrap">
+          <div class="bf-gold-grid">
+            <article class="bf-gold-card">
+              <h3>Nuovi iscritti, esterni ed ex iscritti</h3>
+              <p class="bf-prezzo-big"><s>900 €</s> <b>800 €</b></p>
+              <p>Un anno per vivere tutta l’esperienza Lume: tutte le proposte di allenamento e tutti i centri. Sconto di 100 €, più un vantaggio speciale sulla quota di attivazione iniziale.</p>
+              <a class="btn btn-red btn-full" href="/prenota?centro=macerata&tipo=visita">Attiva il Gold</a>
+            </article>
+            <article class="bf-gold-card">
+              <h3>Gold Upgrade · per i soci</h3>
+              <p class="bf-prezzo-big"><s>900 €</s> <b>720 €</b></p>
+              <p>Per chi vuole passare al Gold al termine dell’abbonamento attuale: blocchi ora la tariffa speciale, versando la differenza rispetto al valore del tuo abbonamento; alla scadenza versi solo la somma già prevista per il rinnovo.</p>
+              <p class="bf-esempio">Esempio: abbonamento attivo da 600 € → oggi 120 €, alla scadenza 600 €. Totale Gold: 720 €.</p>
+              <a class="btn btn-out btn-full" href="/prenota?centro=macerata&tipo=richiamata">Prenota il tuo upgrade</a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- REFORMER: promo comune, in vista -->
+      <section class="sec bf-ref" id="reformer">
+        <div class="wrap bf-split">
+          <div>
+            <span class="label">Solo venerdì 27 novembre · posti limitati</span>
+            <h2 class="d">Black <em>Reformer</em> Friday</h2>
+            <p class="bf-lead">Il prezzo cambia in base all’orario di acquisto: più sei veloce, più risparmi. Si parte dalla mezzanotte!</p>
+            <table class="bf-fasce">
+              <thead><tr><th>Orario di acquisto</th><th>Soci</th><th>Esterni</th></tr></thead>
+              <tbody>
+                {fasce.map((f) => <tr><td>{f.orario}</td><td><b>{f.soci}</b></td><td><b>{f.esterni}</b></td></tr>)}
+              </tbody>
+            </table>
+            <p class="bf-note">Il prezzo migliore è riservato a chi sceglie per primo.</p>
+            <a class="btn btn-red" href="/prenota?centro=macerata&tipo=richiamata">Voglio il Reformer</a>
+          </div>
+          <BfBento foto={fotoReformer} />
+        </div>
+      </section>
+
+      <!-- UN BLOCCO PER CLUB, tutti uguali -->
+      {
+        clubs.map((c) => (
+          <section class="sec bf-club" id={c.id}>
+            <div class="wrap bf-split">
+              <div>
+                <span class="label">{c.label}</span>
+                <h2 class="d">Lume <em>{c.nome}</em></h2>
+                <p class="bf-lead">{c.lead}</p>
+                <p class="bf-gold-nota">Incluso nel <a href="#gold">Lume Gold</a>: libero accesso anche a Lume {c.nome}.</p>
+                <div class="bf-cta bf-cta-row">
+                  <a class="btn btn-red" href={`/prenota?centro=${c.id}&tipo=visita`}>Vieni in sede</a>
+                  <a class="btn btn-out" href={`/prenota?centro=${c.id}&tipo=richiamata`}>Fatti chiamare</a>
+                </div>
+              </div>
+              <BfBento foto={c.foto} />
+            </div>
+            <div class="wrap">
+              <div class="bf-tiles">
+                {c.tessere.map((t) => (
+                  <div class={t.top ? 'bf-tile top' : 'bf-tile'}>
+                    {t.badge && <span class="bf-sconto">{t.badge}</span>}
+                    <span class="bf-nome">{t.nome}</span>
+                    <b class={t.prezzo.length > 9 ? 'long' : undefined}>
+                      {t.prima && <s>{t.prima}</s>} {t.prezzo}
+                    </b>
+                    {t.nota && <small>{t.nota}</small>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        ))
+      }
+
+      <section class="sec bf-passi">
+        <div class="wrap">
+          <ol>
+            {passi.map((p, i) => <li><b>{i + 1}</b>{p}</li>)}
+          </ol>
+          <p class="bf-note">Offerte valide fino a domenica 29 novembre alle 23:59 e fino a esaurimento posti, soggette a condizioni. Prezzi per i nuovi iscritti; i soci chiedano al centro.</p>
+        </div>
+      </section>
+    </div>
   </main>
 
   <Footer />
 </Layout>
 
 <script is:inline define:vars={{ FINE }}>
-  if (new Date().toISOString().slice(0, 10) > FINE) {
-    var s = document.querySelector('[data-scad]');
-    var o = document.querySelector('[data-offerte]');
-    if (s) s.hidden = false;
-    if (o) o.hidden = true;
-  }
+  (function () {
+    var box = document.querySelector('[data-count]');
+    var end = new Date(FINE + 'T23:59:59+01:00').getTime();
+    if (Date.now() > end) {
+      var s = document.querySelector('[data-scad]');
+      var o = document.querySelector('[data-offerte]');
+      if (s) s.hidden = false;
+      if (o) o.hidden = true;
+      if (box) box.hidden = true;
+      return;
+    }
+    if (!box) return;
+    var q = function (k) { return box.querySelector('[data-' + k + ']'); };
+    var p = function (n) { return String(n).padStart(2, '0'); };
+    function tick() {
+      var t = Math.max(0, end - Date.now());
+      q('d').textContent = Math.floor(t / 864e5);
+      q('h').textContent = p(Math.floor(t / 36e5) % 24);
+      q('m').textContent = p(Math.floor(t / 6e4) % 60);
+      q('s').textContent = p(Math.floor(t / 1e3) % 60);
+    }
+    tick(); setInterval(tick, 1000);
+  })();
 </script>
 
 <style>
   .bf-hero { padding: 72px 0 40px; background: radial-gradient(120% 90% at 50% 0%, rgba(196, 0, 66, 0.28), transparent 70%); }
   .bf-hero h1 { font-size: clamp(56px, 11vw, 140px); margin: 14px 0 18px; }
-  .bf-hero em { color: var(--red-txt); font-style: normal; }
-  .bf-lead { max-width: 520px; color: var(--mut); font-size: 18px; line-height: 1.5; margin: 0 0 28px; }
+  .bf-hero em, .bf-gold em, .bf-ref em, .bf-club em { color: var(--red-txt); font-style: normal; }
+  .bf-lead { max-width: 560px; color: var(--mut); font-size: 18px; line-height: 1.5; margin: 0 0 28px; }
   .bf-scad { margin-top: 20px; color: var(--cream); font-weight: 600; }
 
-  .bf-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-  .bf-card { scroll-margin-top: 80px; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 28px 24px; display: flex; flex-direction: column; }
-  .bf-card h2 { font-size: 32px; margin: 0; }
-  .bf-sotto { color: var(--mut); margin: 6px 0 20px; }
-  .bf-offerte { list-style: none; margin: 0 0 24px; padding: 0; flex: 1; }
-  .bf-offerte li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; padding: 14px 0; border-top: 1px solid var(--line); }
+  .bf-count { display: flex; gap: 10px; margin: 0 0 8px; }
+  .bf-count[hidden] { display: none; }
+  .bf-count div { min-width: 72px; padding: 12px 8px; text-align: center; background: var(--card); border: 1px solid var(--line); border-radius: 12px; }
+  .bf-count b { display: block; font-family: 'Anton', sans-serif; font-weight: 400; font-size: clamp(28px, 6vw, 44px); line-height: 1; color: var(--cream); font-variant-numeric: tabular-nums; }
+  .bf-count span { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--mut); }
+  .bf-fine { margin: 0 0 28px; font-size: 13px; color: var(--mut); }
+
+  /* Gold */
+  .bf-gold { background: linear-gradient(180deg, rgba(196, 0, 66, .16), transparent 80%); border-top: 1px solid var(--line); }
+  .bf-gold h2 { font-size: clamp(40px, 7vw, 84px); margin: 12px 0 18px; }
+  .bf-serv { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 32px; padding: 0; }
+  .bf-serv li { padding: 9px 16px; border: 1px solid var(--red); border-radius: 999px; font-weight: 600; color: var(--cream); }
+  .bf-gold-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .bf-gold-card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 28px 24px; display: flex; flex-direction: column; gap: 12px; }
+  .bf-gold-card:first-child { border-color: var(--red); }
+  .bf-gold-card h3 { margin: 0; font-size: 15px; letter-spacing: .06em; text-transform: uppercase; color: var(--mut); font-weight: 600; }
+  .bf-gold-card p { margin: 0; color: var(--txt); line-height: 1.5; }
+  .bf-prezzo-big { font-family: 'Anton', sans-serif; font-size: 22px; }
+  .bf-prezzo-big b { font-weight: 400; font-size: clamp(48px, 9vw, 72px); color: var(--red-txt); line-height: 1; }
+  .bf-prezzo-big s { color: var(--mut); margin-right: 8px; }
+  .bf-esempio { font-size: 14px; color: var(--mut); }
+  .bf-gold-card .btn { margin-top: auto; }
+
+  /* Reformer */
+  .bf-ref { background: var(--bg2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .bf-ref h2 { font-size: clamp(40px, 7vw, 76px); margin: 12px 0 14px; }
+  .bf-fasce { width: 100%; border-collapse: collapse; margin: 0 0 14px; }
+  .bf-fasce th { text-align: left; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--mut); font-weight: 600; padding: 8px 0; }
+  .bf-fasce td { padding: 12px 0; border-top: 1px solid var(--line); }
+  .bf-fasce b { font-size: 22px; color: var(--cream); }
+  .bf-fasce td:nth-child(2) b { color: var(--red-txt); }
+
+  /* Club (stesso schema per tutti) */
+  .bf-club { border-top: 1px solid var(--line); scroll-margin-top: 80px; }
+  .bf-club h2 { font-size: clamp(40px, 7vw, 76px); margin: 12px 0 14px; }
+  .bf-lead b { color: var(--red-txt); }
+  /* Regola unica: ogni sezione = testo a sinistra, foto bento a destra; le offerte sotto, a tutta larghezza */
+  .bf-split { display: grid; gap: 40px; align-items: center; grid-template-columns: 1.05fr 1fr; }
+  @media (max-width: 860px) { .bf-split { grid-template-columns: 1fr; gap: 28px; } }
+  .bf-gold .bf-split, .bf-club .bf-split { margin-bottom: 32px; }
+  .bf-tiles { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin: 0 0 20px; }
+  .bf-tile { display: flex; flex-direction: column; gap: 8px; padding: 22px 20px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; }
+  .bf-tile.top { border-color: var(--red); background: rgba(196, 0, 66, .14); }
   .bf-nome { font-weight: 600; }
-  .bf-prezzo b { font-size: 20px; color: var(--cream); }
-  .bf-prezzo s { color: var(--mut); margin-right: 6px; }
-  .bf-offerte small { flex-basis: 100%; color: var(--mut); font-size: 13px; }
+  .bf-tile b { font-family: 'Anton', sans-serif; font-weight: 400; font-size: 40px; line-height: 1.05; color: var(--cream); }
+  .bf-tile b.long { font-size: 26px; }
+  .bf-tile.top b { color: var(--red-txt); }
+  .bf-tile s { font-size: 20px; color: var(--mut); margin-right: 6px; }
+  .bf-tile small { color: var(--mut); font-size: 13px; line-height: 1.4; }
+  .bf-sconto { white-space: nowrap; align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: var(--red); color: #fff; font-size: 13px; font-weight: 700; }
+  .bf-gold-nota { margin: 0 0 24px; color: var(--mut); }
+  .bf-gold-nota a { color: var(--red-txt); font-weight: 600; }
   .bf-cta { display: grid; gap: 10px; }
+  .bf-cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
 
   .bf-passi ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
   .bf-passi li { display: flex; gap: 14px; align-items: center; color: var(--txt); }
   .bf-passi li b { font-family: 'Anton', sans-serif; font-size: 28px; color: var(--red-txt); font-weight: 400; }
-  .bf-note { margin: 28px 0 0; color: var(--mut); font-size: 13px; line-height: 1.5; }
+  .bf-note { margin: 14px 0 18px; color: var(--mut); font-size: 13px; line-height: 1.5; }
+  .bf-passi .bf-note { margin-top: 28px; }
 </style>
