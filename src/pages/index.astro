@@ -180,6 +180,10 @@ function assaggio(p: (typeof piani)[number]) {
         <span data-hero-nome>{vetrinaCentri[0]?.nome ?? 'Lume Fitness Club'}</span>
       </div>
       <div class="hero-copy">
+        {/* Black Week: countdown fino al via (lun 23/11), poi «finisce tra». Nascosto fuori periodo. */}
+        <a href="/blackfriday?utm_source=sito&utm_medium=hero&utm_campaign=blackfriday" class="hero-bf" data-bf hidden>
+          <b>Black Week</b> <span data-bf-testo></span> <i data-bf-timer></i> <u>Scopri →</u>
+        </a>
         <span class="label">{testi.hero.label}</span>
         <h1 class="d">
           {righe(testi.hero.titolo).map((r, i) => (
@@ -684,3 +688,33 @@ function assaggio(p: (typeof piani)[number]) {
   }
 </script>
 
+<script is:inline>
+  (function () {
+    var el = document.querySelector('[data-bf]');
+    if (!el) return;
+    var INIZIO = new Date('2026-11-23T00:00:00+01:00').getTime();
+    var FINE = new Date('2026-11-30T00:00:00+01:00').getTime();
+    var t = el.querySelector('[data-bf-testo]'), c = el.querySelector('[data-bf-timer]');
+    var p = function (n) { return (n < 10 ? '0' : '') + n; };
+    function tick() {
+      var now = Date.now();
+      if (now >= FINE) { el.hidden = true; return; }
+      var inCorso = now >= INIZIO, ms = (inCorso ? FINE : INIZIO) - now;
+      var s = Math.floor(ms / 1000), g = Math.floor(s / 86400);
+      t.textContent = inCorso ? 'finisce tra' : 'parte tra';
+      c.textContent = (g ? g + 'g ' : '') + p(Math.floor(s % 86400 / 3600)) + ':' + p(Math.floor(s % 3600 / 60)) + ':' + p(s % 60);
+      el.hidden = false;
+      setTimeout(tick, 1000);
+    }
+    tick();
+  })();
+</script>
+
+<style is:global>
+  .hero-bf { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-bottom: 18px; padding: 9px 16px;
+    background: var(--red); color: #fff; border-radius: 999px; font-size: 13px; font-weight: 600; text-decoration: none; }
+  .hero-bf[hidden] { display: none; }
+  .hero-bf b { font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: .04em; text-transform: uppercase; font-size: 15px; }
+  .hero-bf i { font-style: normal; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .hero-bf u { text-underline-offset: 3px; }
+</style>
