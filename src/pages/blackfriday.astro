@@ -17,7 +17,8 @@ import Footer from '../components/Footer.astro';
 
 const FINE = '2026-11-29'; // domenica, ore 23:59
 
-const centri = [
+interface Offerta { nome: string; prezzo: string; prima?: string; nota?: string }
+const centri: { id: string; nome: string; sotto: string; offerte: Offerta[] }[] = [
   {
     id: 'macerata',
     nome: 'Lume Macerata',
