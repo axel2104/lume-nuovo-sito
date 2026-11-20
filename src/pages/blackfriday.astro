@@ -1,0 +1,154 @@
+---
+/**
+ * Landing delle ads Black Week Red Pass (23–29/11/2026).
+ *
+ * Una card per centro con la sua proposta; l'unico obiettivo è far prenotare
+ * una chiamata o una visita in sede, dove si chiude. I pulsanti vanno al
+ * calendario interno (/prenota) con centro e tipo già scelti; gli UTM della
+ * ad si propagano da soli (tracking.js), quindi nel CRM si vede quale ad ha
+ * portato ogni appuntamento.
+ *
+ * Offerte e prezzi sono qui sotto: per cambiarli si tocca solo questo elenco.
+ * Dopo FINE la pagina mostra «offerta terminata» da sola.
+ */
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const FINE = '2026-11-29'; // domenica, ore 23:59
+
+const centri = [
+  {
+    id: 'macerata',
+    nome: 'Lume Macerata',
+    sotto: 'Il centro completo',
+    offerte: [
+      { nome: 'Gold', prezzo: '800 €', prima: '900 €', nota: 'Per i nuovi iscritti' },
+      { nome: 'Reformer', prezzo: 'da 555 €', nota: 'Solo venerdì 27/11 · prezzo per fascia oraria · posti limitati' },
+    ],
+  },
+  {
+    id: 'montecassiano',
+    nome: 'Lume Montecassiano',
+    sotto: 'Palestra e piscina',
+    offerte: [
+      { nome: 'Attivazione', prezzo: '25 €', nota: 'New start' },
+      { nome: 'Sala', prezzo: '440 €' },
+      { nome: 'All in palestra', prezzo: '530 €' },
+      { nome: 'All in piscina', prezzo: '576 €' },
+      { nome: 'All in palestra + piscina', prezzo: '608 €' },
+    ],
+  },
+  {
+    id: 'urban',
+    nome: 'Lume Urban',
+    sotto: 'Nel centro storico',
+    offerte: [
+      { nome: 'Under 30 · 12 mesi + 1', prezzo: '399 €', prima: '420 €' },
+      { nome: 'Over 30', prezzo: 'Attivazione omaggio', nota: 'Pagamento in 2–3 rate' },
+    ],
+  },
+];
+
+const passi = [
+  'Scegli il tuo centro e prenota.',
+  'Un consulente ti aspetta in sede o ti chiama.',
+  'Vedi il centro e chiudi l’offerta con lui.',
+];
+---
+
+<Layout
+  title="Black Week Red Pass — Lume Fitness Club"
+  description="Dal 23 al 29 novembre le offerte Black Week Red Pass nei centri Lume. Prenota una chiamata o una visita e chiudi in sede."
+>
+  <Header />
+
+  <main>
+    <section class="bf-hero">
+      <div class="wrap">
+        <span class="label">Dal 23 al 29 novembre</span>
+        <h1 class="d">Black Week<br /><em>Red Pass</em></h1>
+        <p class="bf-lead">
+          Una proposta per ogni centro Lume. Scegli il tuo, prenota in un minuto e chiudi l’offerta con un consulente.
+        </p>
+        <a class="btn btn-red" href="#centri">Scegli il tuo centro</a>
+        <p class="bf-scad" data-scad hidden>L’offerta è terminata. Scrivici e ti diciamo cosa c’è di nuovo.</p>
+      </div>
+    </section>
+
+    <section class="sec" id="centri" data-offerte>
+      <div class="wrap">
+        <div class="bf-grid">
+          {
+            centri.map((c) => (
+              <article class="bf-card">
+                <h2 class="d">{c.nome}</h2>
+                <p class="bf-sotto">{c.sotto}</p>
+                <ul class="bf-offerte">
+                  {c.offerte.map((o) => (
+                    <li>
+                      <span class="bf-nome">{o.nome}</span>
+                      <span class="bf-prezzo">
+                        {o.prima && <s>{o.prima}</s>} <b>{o.prezzo}</b>
+                      </span>
+                      {o.nota && <small>{o.nota}</small>}
+                    </li>
+                  ))}
+                </ul>
+                <div class="bf-cta">
+                  <a class="btn btn-red btn-full" href={`/prenota?centro=${c.id}&tipo=visita`}>Vieni in sede</a>
+                  <a class="btn btn-out btn-full" href={`/prenota?centro=${c.id}&tipo=richiamata`}>Fatti chiamare</a>
+                </div>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="sec bf-passi">
+      <div class="wrap">
+        <ol>
+          {passi.map((p, i) => <li><b>{i + 1}</b>{p}</li>)}
+        </ol>
+        <p class="bf-note">Offerte valide fino a domenica 29 novembre alle 23:59 e fino a esaurimento posti. Prezzi per i nuovi iscritti; i soci chiedano al centro.</p>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<script is:inline define:vars={{ FINE }}>
+  if (new Date().toISOString().slice(0, 10) > FINE) {
+    var s = document.querySelector('[data-scad]');
+    var o = document.querySelector('[data-offerte]');
+    if (s) s.hidden = false;
+    if (o) o.hidden = true;
+  }
+</script>
+
+<style>
+  .bf-hero { padding: 72px 0 40px; background: radial-gradient(120% 90% at 50% 0%, rgba(196, 0, 66, 0.28), transparent 70%); }
+  .bf-hero h1 { font-size: clamp(56px, 11vw, 140px); margin: 14px 0 18px; }
+  .bf-hero em { color: var(--red-txt); font-style: normal; }
+  .bf-lead { max-width: 520px; color: var(--mut); font-size: 18px; line-height: 1.5; margin: 0 0 28px; }
+  .bf-scad { margin-top: 20px; color: var(--cream); font-weight: 600; }
+
+  .bf-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .bf-card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 28px 24px; display: flex; flex-direction: column; }
+  .bf-card h2 { font-size: 32px; margin: 0; }
+  .bf-sotto { color: var(--mut); margin: 6px 0 20px; }
+  .bf-offerte { list-style: none; margin: 0 0 24px; padding: 0; flex: 1; }
+  .bf-offerte li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; padding: 14px 0; border-top: 1px solid var(--line); }
+  .bf-nome { font-weight: 600; }
+  .bf-prezzo b { font-size: 20px; color: var(--cream); }
+  .bf-prezzo s { color: var(--mut); margin-right: 6px; }
+  .bf-offerte small { flex-basis: 100%; color: var(--mut); font-size: 13px; }
+  .bf-cta { display: grid; gap: 10px; }
+
+  .bf-passi ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .bf-passi li { display: flex; gap: 14px; align-items: center; color: var(--txt); }
+  .bf-passi li b { font-family: 'Anton', sans-serif; font-size: 28px; color: var(--red-txt); font-weight: 400; }
+  .bf-note { margin: 28px 0 0; color: var(--mut); font-size: 13px; line-height: 1.5; }
+</style>
