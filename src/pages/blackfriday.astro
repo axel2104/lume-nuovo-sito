@@ -1,6 +1,6 @@
 ---
 /**
- * Landing delle ads Black Week Red Pass (23–29/11/2026).
+ * Landing delle ads Black Week Red Pass (23–30/11/2026).
  *
  * Struttura: hero con countdown → Lume Gold (un abbonamento, quattro club) →
  * Reformer (promo comune, in vista) → una sezione per club con la sua promo.
@@ -15,9 +15,12 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BfBento from '../components/BfBento.astro';
 
-const FINE = '2026-11-29'; // domenica, ore 23:59
+const FINE = '2026-11-30'; // lunedì, ore 20:00
 // Prima di SVELA i prezzi del Reformer sono sfocati (valori finti nel markup, quelli veri in data-v, sostituiti dallo script).
-const SVELA = '2026-11-27T00:00:00+01:00'; // venerdì, mezzanotte
+// Prevendita Lume Val di Chienti: stessa scadenza della pagina promo.lumefitness.it/val-di-chienti
+const PREVENDITA_FINE = '2026-11-29T19:00:00+01:00';
+const PREVENDITA_URL = 'https://promo.lumefitness.it/val-di-chienti?utm_source=lumefitness&utm_medium=landing&utm_campaign=black-week-red-pass&utm_content=countdown-prevendita';
+const SVELA = '2026-11-26T00:00:00+01:00'; // giovedì, mezzanotte: 24 ore prima dell'apertura del venerdì
 
 // Tutti i pulsanti vanno al calendario interno (interna=1) con sede, tipo e offerta già scelti:
 // l'offerta finisce nelle note dell'appuntamento, gli UTM li propaga tracking.js.
@@ -40,7 +43,7 @@ const clubs: { id: string; nome: string; label: string; lead: string; foto: { sr
     id: 'macerata',
     nome: 'Macerata',
     label: 'Club · Il centro completo',
-    lead: 'Sala attrezzi, corsi di gruppo, Box CrossFit: vieni a vedere il centro e chiudi l’offerta con un consulente. Qui si attiva il Gold e si prenota il Reformer.',
+    lead: 'Sala attrezzi, corsi di gruppo, Box CrossFit: vieni a scoprire il centro. Attiva qui o nelle altre sedi il tuo Gold.',
     foto: [
       { src: '/media/crossfit.jpg', alt: 'Il Box CrossFit di Lume Macerata' },
       { src: '/media/reformer.jpg', alt: 'La sala Reformer di Lume Macerata' },
@@ -48,31 +51,31 @@ const clubs: { id: string; nome: string; label: string; lead: string; foto: { sr
     ],
     tessere: [
       { nome: 'Lume Gold', prezzo: '800 €', prima: '900 €', nota: 'Quattro club, un solo abbonamento · soci: Gold Upgrade a 720 €', top: true },
-      { nome: 'Black Reformer Friday', prezzo: '000 €', segreto: 'da 410 €', nota: 'Solo venerdì 27/11 · prezzo per fascia oraria · posti limitati', notaVera: 'Solo venerdì 27/11 · prezzo per fascia oraria (esterni da 555 €) · posti limitati' },
+      { nome: 'Black Reformer Friday', prezzo: '000 €', segreto: 'da 410 €', nota: 'Solo venerdì 27/11 · prezzo per fascia oraria · pacchetti limitati', notaVera: 'Solo venerdì 27/11 · prezzo per fascia oraria (esterni da 555 €) · pacchetti limitati' },
     ],
   },
   {
     id: 'montecassiano',
     nome: 'Montecassiano',
     label: 'Club · Palestra e piscina',
-    lead: 'Iscrizione annuale di 12 mesi con la quota di attivazione scontata del 50%: 25 €. In più, un ulteriore vantaggio sull’abbonamento che scegli.',
+    lead: 'Iscrizione annuale di 12 mesi con la quota di attivazione <b>dimezzata: 25 € invece di 50 €</b>. In più, un ulteriore vantaggio sull’abbonamento che scegli.',
     foto: [
       { src: '/media/montecassiano-sala.jpg', alt: 'La sala attrezzi di Lume Montecassiano' },
       { src: '/media/gym1.jpg', alt: 'Attrezzi e macchinari di Lume Montecassiano' },
       { src: '/media/gym2.jpg', alt: 'La sala di Lume Montecassiano vista dal fondo' },
     ],
     tessere: [
-      { nome: 'Sala pesi', prezzo: '440 €', badge: '-6%', nota: '12 mesi + attivazione 25 €' },
-      { nome: 'All in palestra', prezzo: '530 €', badge: '-8%', nota: '12 mesi + attivazione 25 €' },
-      { nome: 'All in piscina', prezzo: '576 €', badge: '-10%', nota: '12 mesi + attivazione 25 €' },
-      { nome: 'All in palestra + piscina', prezzo: '608 €', badge: '-12%', nota: '12 mesi + attivazione 25 €', top: true },
+      { nome: 'Sala pesi', prezzo: '440 €', prima: '468 €', badge: 'Risparmi 53 €', nota: '12 mesi + attivazione 25 € invece di 50 €' },
+      { nome: 'All in palestra', prezzo: '530 €', prima: '576 €', badge: 'Risparmi 71 €', nota: '12 mesi + attivazione 25 € invece di 50 €' },
+      { nome: 'All in piscina', prezzo: '576 €', prima: '640 €', badge: 'Risparmi 89 €', nota: '12 mesi + attivazione 25 € invece di 50 €' },
+      { nome: 'All in palestra + piscina', prezzo: '608 €', prima: '690 €', badge: 'Risparmi 107 €', nota: '12 mesi + attivazione 25 € invece di 50 €', top: true },
     ],
   },
   {
     id: 'urban',
     nome: 'Urban',
     label: 'Il nuovo club · Nel cuore del centro storico di Macerata',
-    lead: 'Scopri il nuovo club Lume Urban. Vieni a vedere il centro e chiudi l’offerta con un consulente.',
+    lead: 'Scopri il nuovo club Lume Urban. Vieni a scoprire il centro: attiva qui o nelle altre sedi il tuo Gold.',
     foto: [
       { src: '/media/urban-ingresso.jpg', alt: 'L’ingresso di Lume Urban' },
       { src: '/media/urban-reformer.jpg', alt: 'La sala Reformer di Lume Urban' },
@@ -81,7 +84,7 @@ const clubs: { id: string; nome: string; label: string; lead: string; foto: { sr
     ],
     tessere: [
       { nome: '12 mesi + 1 · Under 30', prezzo: '399 €', prima: '420 €', badge: 'Risparmi 71 €', nota: 'Quota di attivazione omaggio (valore 50 €)', top: true },
-      { nome: '12 mesi + 1 · Over 30', prezzo: 'Attivazione omaggio', nota: 'Valore 50 € · puoi dividere il pagamento in 2 o 3 rate senza costi aggiuntivi' },
+      { nome: '12 mesi + 1 · Over 30', prezzo: 'Attivazione gratis', prima: '50 €', badge: 'Risparmi 50 €', nota: 'Quota di attivazione omaggio invece di 50 € · puoi dividere il pagamento in 2 o 3 rate senza costi aggiuntivi', top: true },
     ],
   },
 ];
@@ -101,16 +104,11 @@ const fotoReformer = [
   { src: '/media/urban-reformer.jpg', alt: 'Reformer a Lume Urban' },
 ];
 
-const passi = [
-  'Scegli il tuo club e prenota.',
-  'Un consulente ti aspetta in sede o ti chiama.',
-  'Vedi il centro e chiudi l’offerta con lui.',
-];
 ---
 
 <Layout
   title="Black Week Red Pass — Lume Fitness Club"
-  description="Dal 23 al 29 novembre: Lume Gold a 800 € per tutti e quattro i club, Black Reformer Friday e le promo di ogni centro. Prenota una chiamata o una visita."
+  description="Dal 23 al 30 novembre: Lume Gold a 800 € per tutti e quattro i club, Black Reformer Friday e le promo di ogni centro. Prenota una chiamata o una visita."
 >
   <Header />
 
@@ -118,7 +116,7 @@ const passi = [
     <section class="bf-hero">
       <div class="wrap bf-split">
         <div>
-          <span class="label">Dal 23 al 29 novembre</span>
+          <span class="label">Dal 23 al 30 novembre</span>
           <h1 class="d">Black Week<br /><em>Red Pass</em></h1>
           <p class="bf-lead">
             Il tuo benessere, un’opportunità da non perdere. Una promo per ogni club Lume, più il Gold che li apre tutti.
@@ -129,7 +127,7 @@ const passi = [
             <div><b data-m>--</b><span>minuti</span></div>
             <div><b data-s>--</b><span>secondi</span></div>
           </div>
-          <p class="bf-fine">alla fine delle offerte · domenica 29 novembre, ore 23:59</p>
+          <p class="bf-fine">alla fine delle offerte · lunedì 30 novembre, ore 20:00</p>
           <a class="btn btn-red" href="#gold">Scopri il Gold</a>
           <a class="btn btn-out" href={pren('macerata', 'visita', 'visita dalla pagina (hero)')}>Prenota una visita</a>
           <p class="bf-scad" data-scad hidden>L’offerta è terminata. Scrivici e ti diciamo cosa c’è di nuovo.</p>
@@ -147,7 +145,7 @@ const passi = [
           <h2 class="d">Lume Gold:<br />quattro club,<br /><em>un solo abbonamento!</em></h2>
           <p class="bf-lead">
             Con il Gold hai libero accesso a tutti e quattro i club Lume e puoi vivere liberamente tutti i servizi,
-            scegliendo ogni giorno ciò che preferisci. Lo attivi a Macerata o a Montecassiano, lo usi ovunque.
+            scegliendo ogni giorno ciò che preferisci. Lo puoi attivare in qualsiasi club, anche a Urban, e lo usi ovunque.
           </p>
           <ul class="bf-serv">
             {servizi.map((s) => <li>{s}</li>)}
@@ -158,7 +156,7 @@ const passi = [
         <div class="wrap">
           <div class="bf-gold-grid">
             <article class="bf-gold-card">
-              <h3>Nuovi iscritti, esterni ed ex iscritti</h3>
+              <h3>Nuove iscrizioni</h3>
               <p class="bf-prezzo-big"><s>900 €</s> <b>800 €</b></p>
               <p>Un anno per vivere tutta l’esperienza Lume: tutte le proposte di allenamento e tutti i centri. Sconto di 100 €, più un vantaggio speciale sulla quota di attivazione iniziale.</p>
               <a class="btn btn-red btn-full" href={pren('macerata', 'visita', 'Gold 800 €')}>Attiva il Gold</a>
@@ -178,18 +176,16 @@ const passi = [
       <section class="sec bf-ref" id="reformer">
         <div class="wrap bf-split">
           <div>
-            <span class="label">Solo venerdì 27 novembre · posti limitati</span>
+            <span class="label">Solo venerdì 27 novembre · pacchetti limitati</span>
             <h2 class="d">Black <em>Reformer</em> Friday</h2>
-            <p class="bf-lead" data-bf-prima>Una notte sola. Un prezzo che sale con le ore. <b>Quello di partenza lo sveliamo venerdì a mezzanotte</b>: chi arriva per primo risparmia di più.</p>
+            <p class="bf-lead" data-bf-prima>Una sola notte. <b>Rimani connesso: lo sveleremo solamente 24 ore prima. Pacchetti limitati.</b></p>
             <p class="bf-lead" data-bf-dopo hidden>Il prezzo cambia in base all’orario di acquisto: più sei veloce, più risparmi. Si parte dalla mezzanotte!</p>
-            <p class="bf-svela" data-svela>Si svela tra <b data-sv-t>--</b></p>
             <table class="bf-fasce">
               <thead><tr><th>Orario di acquisto</th><th>Soci</th><th>Esterni</th></tr></thead>
               <tbody>
                 {fasce.map((f) => <tr><td>{f.orario}</td><td><b class="bf-sv" data-v={f.soci}>000 €</b></td><td><b class="bf-sv" data-v={f.esterni}>000 €</b></td></tr>)}
               </tbody>
             </table>
-            <p class="bf-note">Il prezzo migliore è riservato a chi sceglie per primo.</p>
             <a class="btn btn-red" href={pren('macerata', 'richiamata', 'Black Reformer Friday')}><span data-bf-prima>Avvisami quando si apre</span><span data-bf-dopo hidden>Voglio il Reformer</span></a>
           </div>
           <BfBento foto={fotoReformer} />
@@ -204,7 +200,7 @@ const passi = [
               <div>
                 <span class="label">{c.label}</span>
                 <h2 class="d">Lume <em>{c.nome}</em></h2>
-                <p class="bf-lead">{c.lead}</p>
+                <p class="bf-lead" set:html={c.lead} />
                 <p class="bf-gold-nota">Incluso nel <a href="#gold">Lume Gold</a>: libero accesso anche a Lume {c.nome}.</p>
                 <div class="bf-cta bf-cta-row">
                   <a class="btn btn-red" href={pren(c.id, 'visita', 'Lume ' + c.nome + ' · vieni in sede')}>Vieni in sede</a>
@@ -232,12 +228,33 @@ const passi = [
         ))
       }
 
+      <section class="sec bf-club" data-vdc>
+        <div class="wrap bf-split">
+          <div>
+            <span class="label">Prevendita · Lume Val di Chienti</span>
+            <h2 class="d">La prevendita<br /><em>sta per chiudere</em></h2>
+            <p class="bf-lead">Il nuovo club di Piediripa apre a novembre: <b>blocca ora la tua tariffa in prevendita</b> prima che scada.</p>
+            <div class="bf-count" data-vdc-count aria-live="off">
+              <div><b data-d>--</b><span>giorni</span></div>
+              <div><b data-h>--</b><span>ore</span></div>
+              <div><b data-m>--</b><span>minuti</span></div>
+              <div><b data-s>--</b><span>secondi</span></div>
+            </div>
+            <p class="bf-fine">alla fine della prevendita · domenica 29 novembre, ore 19:00</p>
+            <a class="btn btn-red" href={PREVENDITA_URL} data-vdc-link>Attiva la prevendita</a>
+          </div>
+          <div class="bf-vdc-video">
+            <video autoplay muted loop playsinline preload="metadata" poster="/media/vdc/val-di-chienti-poster.webp" aria-label="Il nuovo club Lume Val di Chienti">
+              <source src="/media/vdc/val-di-chienti.webm" type="video/webm" />
+              <source src="/media/vdc/val-di-chienti.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </section>
+
       <section class="sec bf-passi">
         <div class="wrap">
-          <ol>
-            {passi.map((p, i) => <li><b>{i + 1}</b>{p}</li>)}
-          </ol>
-          <p class="bf-note">Offerte valide fino a domenica 29 novembre alle 23:59 e fino a esaurimento posti, soggette a condizioni. Prezzi per i nuovi iscritti; i soci chiedano al centro.</p>
+          <p class="bf-note">Offerte valide fino al 30 novembre alle ore 20:00 e fino a esaurimento posti, soggette a condizioni. Prezzi per i nuovi iscritti; i soci chiedano al centro.</p>
         </div>
       </section>
     </div>
@@ -259,19 +276,35 @@ const passi = [
       q('[data-svela]').forEach(function (e) { e.hidden = true; });
     }
     if (Date.now() >= t0) return svela();
-    var el = document.querySelector('[data-sv-t]');
-    var iv = setInterval(function () {
-      var t = t0 - Date.now();
-      if (t <= 0) { clearInterval(iv); return svela(); }
-      if (el) el.textContent = Math.floor(t / 864e5) + 'g ' + p(Math.floor(t / 36e5) % 24) + ':' + p(Math.floor(t / 6e4) % 60) + ':' + p(Math.floor(t / 1e3) % 60);
-    }, 1000);
+    setTimeout(svela, Math.min(t0 - Date.now(), 2147483647));
+  })();
+</script>
+
+<script is:inline define:vars={{ PREVENDITA_FINE }}>
+  (function () {
+    var sez = document.querySelector('[data-vdc]');
+    var box = document.querySelector('[data-vdc-count]');
+    if (!sez || !box) return;
+    var end = new Date(PREVENDITA_FINE).getTime();
+    if (Date.now() > end) { sez.hidden = true; return; }
+    var q = function (k) { return box.querySelector('[data-' + k + ']'); };
+    var p = function (n) { return String(n).padStart(2, '0'); };
+    function tick() {
+      var t = end - Date.now();
+      if (t <= 0) { sez.hidden = true; return; }
+      q('d').textContent = Math.floor(t / 864e5);
+      q('h').textContent = p(Math.floor(t / 36e5) % 24);
+      q('m').textContent = p(Math.floor(t / 6e4) % 60);
+      q('s').textContent = p(Math.floor(t / 1e3) % 60);
+    }
+    tick(); setInterval(tick, 1000);
   })();
 </script>
 
 <script is:inline define:vars={{ FINE }}>
   (function () {
     var box = document.querySelector('[data-count]');
-    var end = new Date(FINE + 'T23:59:59+01:00').getTime();
+    var end = new Date(FINE + 'T20:00:00+01:00').getTime();
     if (Date.now() > end) {
       var s = document.querySelector('[data-scad]');
       var o = document.querySelector('[data-offerte]');
@@ -363,9 +396,10 @@ const passi = [
   .bf-cta { display: grid; gap: 10px; }
   .bf-cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
 
-  .bf-passi ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-  .bf-passi li { display: flex; gap: 14px; align-items: center; color: var(--txt); }
-  .bf-passi li b { font-family: 'Anton', sans-serif; font-size: 28px; color: var(--red-txt); font-weight: 400; }
   .bf-note { margin: 14px 0 18px; color: var(--mut); font-size: 13px; line-height: 1.5; }
   .bf-passi .bf-note { margin-top: 28px; }
+</style>
+<style is:global>
+  .bf-vdc-video { border-radius: 18px; overflow: hidden; border: 1px solid var(--line, #333); box-shadow: 0 18px 50px rgba(196, 0, 66, .22); background: #000; aspect-ratio: 16 / 10; }
+  .bf-vdc-video video { display: block; width: 100%; height: 100%; object-fit: cover; }
 </style>
