@@ -187,8 +187,7 @@ immagine: ../../assets/centri/urban/foto-1.jpg
 video: https://pub-90d4a80741cd4aadb6d995599fefc986.r2.dev/site/urban-sala.mp4
 videoPoster: ../../assets/centri/urban/foto-1.jpg
 perfectgymUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Registration"
-planningNota: "Orario della stagione 26/27, aggiornato a ottobre."
-planningAggiornatoIl: 2026-09-30
+planningNota: "Orario della stagione 26/27."
 planning:
   - giorno: '1'
     inizio: '07:00'
@@ -212,7 +211,7 @@ planning:
     disciplina: lesmills-bodypump
   - giorno: '1'
     inizio: '17:30'
-    fine: '18:20'
+    fine: '18:30'
     corso: 'Functional Training Hyrox'
   - giorno: '1'
     inizio: '17:30'
@@ -230,11 +229,6 @@ planning:
     corso: 'LesMills Core'
     disciplina: lesmills-core
   - giorno: '2'
-    inizio: '07:00'
-    fine: '08:00'
-    corso: 'LesMills BodyPump'
-    disciplina: lesmills-bodypump
-  - giorno: '2'
     inizio: '10:00'
     fine: '11:00'
     corso: 'Pilates'
@@ -249,10 +243,6 @@ planning:
     fine: '15:30'
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
-  - giorno: '2'
-    inizio: '18:30'
-    fine: '19:30'
-    corso: 'Functional Training Hyrox'
   - giorno: '2'
     inizio: '19:30'
     fine: '20:20'
@@ -293,6 +283,10 @@ planning:
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
   - giorno: '3'
+    inizio: '19:00'
+    fine: '20:00'
+    corso: 'Functional Training Hyrox'
+  - giorno: '3'
     inizio: '19:30'
     fine: '20:30'
     corso: 'LesMills BodyPump'
@@ -318,6 +312,11 @@ planning:
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
   - giorno: '4'
+    inizio: '17:30'
+    fine: '18:30'
+    corso: 'Yoga'
+    disciplina: yoga
+  - giorno: '4'
     inizio: '18:30'
     fine: '19:30'
     corso: 'LesMills BodyPump'
@@ -325,17 +324,8 @@ planning:
   - giorno: '4'
     inizio: '19:30'
     fine: '20:30'
-    corso: 'Functional Training Hyrox'
-  - giorno: '4'
-    inizio: '19:30'
-    fine: '20:30'
     corso: 'Pilates'
     disciplina: pilates
-  - giorno: '4'
-    inizio: '20:30'
-    fine: '21:20'
-    corso: 'LesMills Shapes'
-    disciplina: lesmills-shapes
   - giorno: '5'
     inizio: '07:00'
     fine: '08:00'
@@ -364,8 +354,7 @@ planning:
   - giorno: '5'
     inizio: '18:30'
     fine: '19:30'
-    corso: 'LesMills BodyBalance'
-    disciplina: lesmills-bodybalance
+    corso: 'Functional Training Hyrox'
 listino:
   nota: Un listino a fasce d'età. I prezzi valgono dall'apertura del centro.
   attivazione: 50

@@ -164,8 +164,7 @@ perfectgymCorsiUrl: "https://lumefitness.perfectgym.com/ClientPortal2/#/Classes/
 calcom:
   visita: lumefitness/visita-macerata
   richiamata: lumefitness/richiamata
-planningNota: "Orario della stagione 26/27, aggiornato a ottobre: qualche dettaglio può ancora cambiare."
-planningAggiornatoIl: 2026-09-30
+planningNota: "Orario della stagione 26/27: qualche dettaglio può ancora cambiare."
 planning:
   - giorno: '1'
     inizio: '07:00'
@@ -238,7 +237,7 @@ planning:
   - giorno: '1'
     inizio: '14:30'
     fine: '15:30'
-    corso: 'Reformer Intermedi'
+    corso: 'Reformer Intermedio'
     disciplina: reformer
   - giorno: '1'
     inizio: '17:15'
@@ -292,15 +291,15 @@ planning:
   - giorno: '1'
     inizio: '19:15'
     fine: '20:15'
-    corso: 'Bodycombat'
-    disciplina: lesmills-bodycombat
-  - giorno: '1'
-    inizio: '19:15'
-    fine: '20:15'
     corso: 'CrossFit'
     disciplina: crossfit
     sala: Box CrossFit
     sezione: CrossFit
+  - giorno: '1'
+    inizio: '19:15'
+    fine: '20:15'
+    corso: 'LesMills BodyCombat'
+    disciplina: lesmills-bodycombat
   - giorno: '1'
     inizio: '19:30'
     fine: '20:30'
@@ -334,13 +333,6 @@ planning:
     corso: 'Corpo Libero'
     disciplina: corpo-libero
   - giorno: '2'
-    inizio: '09:00'
-    fine: '10:00'
-    corso: 'Strength and Conditioning'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '2'
     inizio: '10:00'
     fine: '11:00'
     corso: 'Reformer'
@@ -350,13 +342,6 @@ planning:
     fine: '11:15'
     corso: 'Yoga'
     disciplina: yoga
-  - giorno: '2'
-    inizio: '12:30'
-    fine: '13:30'
-    corso: 'Strength and Conditioning'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
   - giorno: '2'
     inizio: '13:15'
     fine: '14:15'
@@ -378,24 +363,10 @@ planning:
     corso: 'Yoga'
     disciplina: yoga
   - giorno: '2'
-    inizio: '13:45'
-    fine: '14:45'
-    corso: 'Strength and Conditioning'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '2'
     inizio: '17:00'
     fine: '18:00'
     corso: 'WBS'
     disciplina: wbs
-  - giorno: '2'
-    inizio: '17:15'
-    fine: '18:15'
-    corso: 'Strength and Conditioning'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
   - giorno: '2'
     inizio: '18:00'
     fine: '19:00'
@@ -412,13 +383,6 @@ planning:
     corso: 'LesMills BodyPump'
     disciplina: lesmills-bodypump
   - giorno: '2'
-    inizio: '18:15'
-    fine: '19:15'
-    corso: 'Strength and Conditioning'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '2'
     inizio: '18:30'
     fine: '19:30'
     corso: 'LesMills Dance'
@@ -434,13 +398,6 @@ planning:
     corso: 'IntensitYOU'
     disciplina: intensityou
   - giorno: '2'
-    inizio: '19:15'
-    fine: '20:15'
-    corso: 'Strength and Conditioning'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
-  - giorno: '2'
     inizio: '19:30'
     fine: '20:30'
     corso: 'LesMills Shapes'
@@ -450,13 +407,6 @@ planning:
     fine: '21:00'
     corso: 'Pilates Base'
     disciplina: pilates
-  - giorno: '2'
-    inizio: '20:15'
-    fine: '21:15'
-    corso: 'Strength and Conditioning'
-    disciplina: crossfit
-    sala: Box CrossFit
-    sezione: CrossFit
   - giorno: '2'
     inizio: '20:30'
     fine: '21:30'
@@ -477,7 +427,7 @@ planning:
   - giorno: '3'
     inizio: '08:30'
     fine: '09:30'
-    corso: 'Reformer Intermedi'
+    corso: 'Reformer Intermedio'
     disciplina: reformer
   - giorno: '3'
     inizio: '09:00'
@@ -505,14 +455,14 @@ planning:
     sezione: CrossFit
   - giorno: '3'
     inizio: '13:30'
-    fine: '14:30'
-    corso: 'LesMills BodyPump'
-    disciplina: lesmills-bodypump
-  - giorno: '3'
-    inizio: '13:30'
     fine: '14:15'
     corso: 'LesMills RPM Virtual'
     disciplina: lesmills-rpm
+  - giorno: '3'
+    inizio: '13:30'
+    fine: '14:30'
+    corso: 'LesMills BodyPump'
+    disciplina: lesmills-bodypump
   - giorno: '3'
     inizio: '13:30'
     fine: '14:30'
@@ -562,7 +512,7 @@ planning:
   - giorno: '3'
     inizio: '18:30'
     fine: '19:30'
-    corso: 'Bodycombat'
+    corso: 'LesMills BodyCombat'
     disciplina: lesmills-bodycombat
   - giorno: '3'
     inizio: '19:00'
@@ -572,7 +522,7 @@ planning:
   - giorno: '3'
     inizio: '19:00'
     fine: '20:00'
-    corso: 'Reformer Intermedi'
+    corso: 'Reformer Intermedio'
     disciplina: reformer
   - giorno: '3'
     inizio: '19:00'
@@ -714,6 +664,11 @@ planning:
     corso: 'Walking'
     disciplina: walking
   - giorno: '4'
+    inizio: '19:00'
+    fine: '20:00'
+    corso: 'Spartan System'
+    disciplina: spartan-system
+  - giorno: '4'
     inizio: '19:15'
     fine: '20:15'
     corso: 'Hybrid Class'
@@ -725,11 +680,6 @@ planning:
     fine: '20:15'
     corso: 'LesMills Core'
     disciplina: lesmills-core
-  - giorno: '4'
-    inizio: '19:00'
-    fine: '20:00'
-    corso: 'Spartan System'
-    disciplina: spartan-system
   - giorno: '4'
     inizio: '19:30'
     fine: '20:30'
@@ -811,7 +761,7 @@ planning:
   - giorno: '5'
     inizio: '13:30'
     fine: '14:30'
-    corso: 'Reformer Intermedi'
+    corso: 'Reformer Intermedio'
     disciplina: reformer
   - giorno: '5'
     inizio: '13:45'
