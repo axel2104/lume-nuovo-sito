@@ -436,6 +436,8 @@ const origine = siteConfig.calcomOrigin.replace(/\/$/, '');
           sede: centro.toUpperCase(),
           // segreteria, sala pesi e colloquio hanno un tipo per sede: la chiave del CRM è `<tipo>-<sede>`
           tipoDiretto: chipTipi.find((e) => e.getAttribute('data-pren-tipo') === tipo)?.getAttribute('data-pren-interno') === '1' ? `${tipo}-${centro}` : null,
+          // ?offerta=… (pulsanti delle landing): finisce nelle note dell'appuntamento, così la segreteria sa per cosa viene
+          prefill: q.get('offerta') ? { note: 'Offerta: ' + q.get('offerta') } : {},
           meta: { flusso: 'prenota' },
           onPrenotato: (dati: { uid?: string }) => {
             (window as any).lumeTrack?.('appuntamento_prenotato', { lead_flusso: 'prenota', lead_sede: centro.toUpperCase(), lead_agenda: tipo, booking_uid: dati?.uid || '' });

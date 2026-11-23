@@ -19,6 +19,11 @@ const FINE = '2026-11-29'; // domenica, ore 23:59
 // Prima di SVELA i prezzi del Reformer sono sfocati (valori finti nel markup, quelli veri in data-v, sostituiti dallo script).
 const SVELA = '2026-11-27T00:00:00+01:00'; // venerdì, mezzanotte
 
+// Tutti i pulsanti vanno al calendario interno (interna=1) con sede, tipo e offerta già scelti:
+// l'offerta finisce nelle note dell'appuntamento, gli UTM li propaga tracking.js.
+const pren = (centro: string, tipo: string, offerta: string) =>
+  `/prenota?centro=${centro}&tipo=${tipo}&interna=1&offerta=${encodeURIComponent('Black Week Red Pass · ' + offerta)}`;
+
 const servizi = ['Sala attrezzi', 'Piscina', 'Corsi di gruppo', 'Box CrossFit'];
 
 const fasce = [
@@ -126,6 +131,7 @@ const passi = [
           </div>
           <p class="bf-fine">alla fine delle offerte · domenica 29 novembre, ore 23:59</p>
           <a class="btn btn-red" href="#gold">Scopri il Gold</a>
+          <a class="btn btn-out" href={pren('macerata', 'visita', 'visita dalla pagina (hero)')}>Prenota una visita</a>
           <p class="bf-scad" data-scad hidden>L’offerta è terminata. Scrivici e ti diciamo cosa c’è di nuovo.</p>
         </div>
         <BfBento foto={fotoHero} />
@@ -155,14 +161,14 @@ const passi = [
               <h3>Nuovi iscritti, esterni ed ex iscritti</h3>
               <p class="bf-prezzo-big"><s>900 €</s> <b>800 €</b></p>
               <p>Un anno per vivere tutta l’esperienza Lume: tutte le proposte di allenamento e tutti i centri. Sconto di 100 €, più un vantaggio speciale sulla quota di attivazione iniziale.</p>
-              <a class="btn btn-red btn-full" href="/prenota?centro=macerata&tipo=visita">Attiva il Gold</a>
+              <a class="btn btn-red btn-full" href={pren('macerata', 'visita', 'Gold 800 €')}>Attiva il Gold</a>
             </article>
             <article class="bf-gold-card">
               <h3>Gold Upgrade · per i soci</h3>
               <p class="bf-prezzo-big"><s>900 €</s> <b>720 €</b></p>
               <p>Per chi vuole passare al Gold al termine dell’abbonamento attuale: blocchi ora la tariffa speciale, versando la differenza rispetto al valore del tuo abbonamento; alla scadenza versi solo la somma già prevista per il rinnovo.</p>
               <p class="bf-esempio">Esempio: abbonamento attivo da 600 € → oggi 120 €, alla scadenza 600 €. Totale Gold: 720 €.</p>
-              <a class="btn btn-out btn-full" href="/prenota?centro=macerata&tipo=richiamata">Prenota il tuo upgrade</a>
+              <a class="btn btn-out btn-full" href={pren('macerata', 'richiamata', 'Gold Upgrade soci 720 €')}>Prenota il tuo upgrade</a>
             </article>
           </div>
         </div>
@@ -184,7 +190,7 @@ const passi = [
               </tbody>
             </table>
             <p class="bf-note">Il prezzo migliore è riservato a chi sceglie per primo.</p>
-            <a class="btn btn-red" href="/prenota?centro=macerata&tipo=richiamata"><span data-bf-prima>Avvisami quando si apre</span><span data-bf-dopo hidden>Voglio il Reformer</span></a>
+            <a class="btn btn-red" href={pren('macerata', 'richiamata', 'Black Reformer Friday')}><span data-bf-prima>Avvisami quando si apre</span><span data-bf-dopo hidden>Voglio il Reformer</span></a>
           </div>
           <BfBento foto={fotoReformer} />
         </div>
@@ -201,8 +207,8 @@ const passi = [
                 <p class="bf-lead">{c.lead}</p>
                 <p class="bf-gold-nota">Incluso nel <a href="#gold">Lume Gold</a>: libero accesso anche a Lume {c.nome}.</p>
                 <div class="bf-cta bf-cta-row">
-                  <a class="btn btn-red" href={`/prenota?centro=${c.id}&tipo=visita`}>Vieni in sede</a>
-                  <a class="btn btn-out" href={`/prenota?centro=${c.id}&tipo=richiamata`}>Fatti chiamare</a>
+                  <a class="btn btn-red" href={pren(c.id, 'visita', 'Lume ' + c.nome + ' · vieni in sede')}>Vieni in sede</a>
+                  <a class="btn btn-out" href={pren(c.id, 'richiamata', 'Lume ' + c.nome + ' · fatti chiamare')}>Fatti chiamare</a>
                 </div>
               </div>
               <BfBento foto={c.foto} />
@@ -217,6 +223,7 @@ const passi = [
                       {t.prima && <s>{t.prima}</s>} {t.prezzo}
                     </b>
                     {t.nota && <small data-v={t.notaVera}>{t.nota}</small>}
+                    <a class="bf-tile-cta" href={pren(c.id, 'visita', c.nome + ' · ' + t.nome)}>Prenota una visita →</a>
                   </div>
                 ))}
               </div>
@@ -348,6 +355,8 @@ const passi = [
   .bf-tile.top b { color: var(--red-txt); }
   .bf-tile s { font-size: 20px; color: var(--mut); margin-right: 6px; }
   .bf-tile small { color: var(--mut); font-size: 13px; line-height: 1.4; }
+  .bf-tile-cta { margin-top: auto; padding-top: 6px; color: var(--red-txt); font-weight: 600; font-size: 14px; text-decoration: none; }
+  .bf-tile-cta:hover { text-decoration: underline; }
   .bf-sconto { white-space: nowrap; align-self: flex-start; padding: 3px 10px; border-radius: 999px; background: var(--red); color: #fff; font-size: 13px; font-weight: 700; }
   .bf-gold-nota { margin: 0 0 24px; color: var(--mut); }
   .bf-gold-nota a { color: var(--red-txt); font-weight: 600; }
