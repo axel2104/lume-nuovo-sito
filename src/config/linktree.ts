@@ -30,6 +30,7 @@ export const SFONDI = {
 
 export const LINK_BOTTONI: LinkBottone[] = [
   { slug: 'prevendita', label: 'Prevendita', sotto: 'Entra prima degli altri a Lume Fitness Club', href: 'https://promo.lumefitness.it', formato: 'hero', img: '/media/gym1.jpg', evidenza: true },
+  { slug: 'tour-valdichienti', label: 'Tour Val di Chienti', sotto: 'Domenica 29 novembre: prenota la tua visita, 30 minuti', href: '/prenota?centro=piediripa&tipo=tour&interna=1&utm_source=instagram&utm_medium=bio&utm_campaign=tour-inaugurazione-vdc', formato: 'hero', img: '/media/gym2.jpg', evidenza: true },
   { slug: 'info', label: 'Richiedi informazioni', sotto: 'Ti rispondiamo noi, senza impegno', href: 'https://n8n.lumeflow.it/form/iscrizioni?source=Instagram&medium=LinkInBio', formato: 'hero', img: '/media/pt.jpg', vid: true },
   { slug: 'lume-macerata', label: 'Macerata', sotto: 'Scopri il centro', href: 'https://www.lumefitness.it/centri/macerata', formato: 'meta', img: '/media/weights.jpg', sfondo: 'macerata' },
   { slug: 'lume-montecassiano', label: 'Montecassiano', sotto: 'Scopri il centro', href: 'https://www.lumefitness.it/centri/montecassiano', formato: 'meta', img: '/media/cardio.jpg', sfondo: 'montecassiano' },

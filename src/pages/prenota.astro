@@ -55,7 +55,15 @@ const AGENDE = [
     interno: true,
     testo: 'Un colloquio con lo staff per fare il punto sul tuo allenamento e controllare come stai andando.',
   },
-] as { id: string; etichetta: string; testo: string; interno?: boolean }[];
+  // Solo Val di Chienti, solo domenica 29/11 (finestre per data in crm_disponibilita_tipo): chiave CRM `tour-piediripa`.
+  {
+    id: 'tour',
+    etichetta: 'Tour della struttura',
+    interno: true,
+    solo: 'piediripa',
+    testo: 'Domenica 29 novembre, prima dell’inaugurazione: scegli l’ora e ti facciamo vedere la nuova struttura. Mezz’ora.',
+  },
+] as { id: string; etichetta: string; testo: string; interno?: boolean; solo?: string }[];
 
 const centri = (await getCollection('centri'))
   // Urban non ha agende Cal.com: c'è solo nel calendario interno, quindi il suo chip resta nascosto finché `interna` non è attiva.
@@ -133,6 +141,7 @@ const origine = siteConfig.calcomOrigin.replace(/\/$/, '');
                       type="button"
                       class="pren-chip"
                       data-pren-tipo={a.id}
+                      data-pren-solo={a.solo}
                       data-pren-interno={a.interno ? '1' : undefined}
                       aria-pressed={i === 0 ? 'true' : 'false'}
                     >
@@ -474,6 +483,13 @@ const origine = siteConfig.calcomOrigin.replace(/\/$/, '');
     };
 
     const aggiorna = () => {
+      // i chip legati a una sede (es. il tour) spariscono sulle altre; se era scelto, si torna al primo tipo
+      chipTipi.forEach((e) => {
+        const solo = e.getAttribute('data-pren-solo');
+        if (solo) (e as HTMLElement).hidden = solo !== centro;
+      });
+      const scelto = chipTipi.find((e) => e.getAttribute('data-pren-tipo') === tipo);
+      if (scelto && (scelto as HTMLElement).hidden) tipo = scegli(chipTipi.filter((e) => !(e as HTMLElement).hidden), 'data-pren-tipo', null);
       mostraNota();
       // La query string segue la scelta: così il link si può copiare e mandare
       // a qualcuno con la sede giusta già selezionata.
