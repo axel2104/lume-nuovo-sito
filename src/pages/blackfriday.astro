@@ -16,6 +16,8 @@ import Footer from '../components/Footer.astro';
 import BfBento from '../components/BfBento.astro';
 
 const FINE = '2026-11-29'; // domenica, ore 23:59
+// Prima di SVELA i prezzi del Reformer sono sfocati (valori finti nel markup, quelli veri in data-v, sostituiti dallo script).
+const SVELA = '2026-11-27T00:00:00+01:00'; // venerdì, mezzanotte
 
 const servizi = ['Sala attrezzi', 'Piscina', 'Corsi di gruppo', 'Box CrossFit'];
 
@@ -27,7 +29,7 @@ const fasce = [
 
 // Ogni club usa lo STESSO schema (sezione, foto, tessere, nota Gold, pulsanti):
 // per cambiare un'offerta si tocca solo questo elenco.
-interface Tessera { nome: string; prezzo: string; prima?: string; badge?: string; nota?: string; top?: boolean }
+interface Tessera { segreto?: string; notaVera?: string; nome: string; prezzo: string; prima?: string; badge?: string; nota?: string; top?: boolean }
 const clubs: { id: string; nome: string; label: string; lead: string; foto: { src: string; alt: string }[]; tessere: Tessera[] }[] = [
   {
     id: 'macerata',
@@ -41,7 +43,7 @@ const clubs: { id: string; nome: string; label: string; lead: string; foto: { sr
     ],
     tessere: [
       { nome: 'Lume Gold', prezzo: '800 €', prima: '900 €', nota: 'Quattro club, un solo abbonamento · soci: Gold Upgrade a 720 €', top: true },
-      { nome: 'Black Reformer Friday', prezzo: 'da 410 €', nota: 'Solo venerdì 27/11 · prezzo per fascia oraria (esterni da 555 €) · posti limitati' },
+      { nome: 'Black Reformer Friday', prezzo: '000 €', segreto: 'da 410 €', nota: 'Solo venerdì 27/11 · prezzo per fascia oraria · posti limitati', notaVera: 'Solo venerdì 27/11 · prezzo per fascia oraria (esterni da 555 €) · posti limitati' },
     ],
   },
   {
@@ -172,15 +174,17 @@ const passi = [
           <div>
             <span class="label">Solo venerdì 27 novembre · posti limitati</span>
             <h2 class="d">Black <em>Reformer</em> Friday</h2>
-            <p class="bf-lead">Il prezzo cambia in base all’orario di acquisto: più sei veloce, più risparmi. Si parte dalla mezzanotte!</p>
+            <p class="bf-lead" data-bf-prima>Una notte sola. Un prezzo che sale con le ore. <b>Quello di partenza lo sveliamo venerdì a mezzanotte</b>: chi arriva per primo risparmia di più.</p>
+            <p class="bf-lead" data-bf-dopo hidden>Il prezzo cambia in base all’orario di acquisto: più sei veloce, più risparmi. Si parte dalla mezzanotte!</p>
+            <p class="bf-svela" data-svela>Si svela tra <b data-sv-t>--</b></p>
             <table class="bf-fasce">
               <thead><tr><th>Orario di acquisto</th><th>Soci</th><th>Esterni</th></tr></thead>
               <tbody>
-                {fasce.map((f) => <tr><td>{f.orario}</td><td><b>{f.soci}</b></td><td><b>{f.esterni}</b></td></tr>)}
+                {fasce.map((f) => <tr><td>{f.orario}</td><td><b class="bf-sv" data-v={f.soci}>000 €</b></td><td><b class="bf-sv" data-v={f.esterni}>000 €</b></td></tr>)}
               </tbody>
             </table>
             <p class="bf-note">Il prezzo migliore è riservato a chi sceglie per primo.</p>
-            <a class="btn btn-red" href="/prenota?centro=macerata&tipo=richiamata">Voglio il Reformer</a>
+            <a class="btn btn-red" href="/prenota?centro=macerata&tipo=richiamata"><span data-bf-prima>Avvisami quando si apre</span><span data-bf-dopo hidden>Voglio il Reformer</span></a>
           </div>
           <BfBento foto={fotoReformer} />
         </div>
@@ -209,10 +213,10 @@ const passi = [
                   <div class={t.top ? 'bf-tile top' : 'bf-tile'}>
                     {t.badge && <span class="bf-sconto">{t.badge}</span>}
                     <span class="bf-nome">{t.nome}</span>
-                    <b class={t.prezzo.length > 9 ? 'long' : undefined}>
+                    <b class={[t.prezzo.length > 9 ? 'long' : '', t.segreto ? 'bf-sv' : ''].join(' ').trim() || undefined} data-v={t.segreto}>
                       {t.prima && <s>{t.prima}</s>} {t.prezzo}
                     </b>
-                    {t.nota && <small>{t.nota}</small>}
+                    {t.nota && <small data-v={t.notaVera}>{t.nota}</small>}
                   </div>
                 ))}
               </div>
@@ -234,6 +238,28 @@ const passi = [
 
   <Footer />
 </Layout>
+
+<script is:inline define:vars={{ SVELA }}>
+  (function () {
+    var t0 = new Date(SVELA).getTime();
+    var q = function (sel) { return [].slice.call(document.querySelectorAll(sel)); };
+    var p = function (n) { return String(n).padStart(2, '0'); };
+    function svela() {
+      q('.bf-sv').forEach(function (e) { e.textContent = e.dataset.v; e.classList.remove('bf-sv'); });
+      q('small[data-v]').forEach(function (e) { e.textContent = e.dataset.v; });
+      q('[data-bf-prima]').forEach(function (e) { e.hidden = true; });
+      q('[data-bf-dopo]').forEach(function (e) { e.hidden = false; });
+      q('[data-svela]').forEach(function (e) { e.hidden = true; });
+    }
+    if (Date.now() >= t0) return svela();
+    var el = document.querySelector('[data-sv-t]');
+    var iv = setInterval(function () {
+      var t = t0 - Date.now();
+      if (t <= 0) { clearInterval(iv); return svela(); }
+      if (el) el.textContent = Math.floor(t / 864e5) + 'g ' + p(Math.floor(t / 36e5) % 24) + ':' + p(Math.floor(t / 6e4) % 60) + ':' + p(Math.floor(t / 1e3) % 60);
+    }, 1000);
+  })();
+</script>
 
 <script is:inline define:vars={{ FINE }}>
   (function () {
@@ -299,6 +325,11 @@ const passi = [
   .bf-fasce td { padding: 12px 0; border-top: 1px solid var(--line); }
   .bf-fasce b { font-size: 22px; color: var(--cream); }
   .bf-fasce td:nth-child(2) b { color: var(--red-txt); }
+
+  /* Prezzi Reformer sfocati fino a mezzanotte di venerdì */
+  .bf-sv { filter: blur(9px); user-select: none; pointer-events: none; transition: filter .6s; }
+  .bf-svela { margin: 0 0 18px; color: var(--mut); font-size: 14px; }
+  .bf-svela b { color: var(--red-txt); font-variant-numeric: tabular-nums; }
 
   /* Club (stesso schema per tutti) */
   .bf-club { border-top: 1px solid var(--line); scroll-margin-top: 80px; }
