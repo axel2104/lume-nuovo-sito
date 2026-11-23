@@ -29,6 +29,9 @@ export const SFONDI = {
 } as const;
 
 export const LINK_BOTTONI: LinkBottone[] = [
+  { slug: 'black-week', label: 'Black Week Red Pass', sotto: 'Dal 23 al 29 novembre: Lume Gold a 800 € invece di 900', href: '/blackfriday?utm_source=instagram&utm_medium=bio&utm_campaign=black-week-red-pass', formato: 'hero', img: '/media/gym1.jpg', evidenza: true },
+  { slug: 'bw-prenota', label: 'Prenota una visita', sotto: 'Scopri l’offerta in sede: scegli giorno e ora', href: '/prenota?centro=macerata&tipo=visita&utm_source=instagram&utm_medium=bio&utm_campaign=black-week-red-pass' },
+  { slug: 'bw-info', label: 'Richiedi informazioni sull’offerta', sotto: 'Lasci i dati e ti ricontattiamo noi', href: '/contatti?utm_source=instagram&utm_medium=bio&utm_campaign=black-week-red-pass' },
   { slug: 'prevendita', label: 'Prevendita', sotto: 'Entra prima degli altri a Lume Fitness Club', href: 'https://promo.lumefitness.it', formato: 'hero', img: '/media/gym1.jpg', evidenza: true },
   { slug: 'tour-valdichienti', label: 'Tour Val di Chienti', sotto: 'Domenica 29 novembre: prenota la tua visita, 30 minuti', href: '/prenota?centro=piediripa&tipo=tour&interna=1&utm_source=instagram&utm_medium=bio&utm_campaign=tour-inaugurazione-vdc', formato: 'hero', img: '/media/gym2.jpg', evidenza: true },
   { slug: 'info', label: 'Richiedi informazioni', sotto: 'Ti rispondiamo noi, senza impegno', href: 'https://n8n.lumeflow.it/form/iscrizioni?source=Instagram&medium=LinkInBio', formato: 'hero', img: '/media/pt.jpg', vid: true },
