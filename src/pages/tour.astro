@@ -1,10 +1,10 @@
 ---
 /**
- * Pagina del tour — sostituisce `n8n.lumeflow.it/form/iscrizioni` per chi vuole vedere il centro.
+ * Pagina "Lasciaci i tuoi dati" — sostituisce `n8n.lumeflow.it/form/iscrizioni`.
  *
- * Una pagina sola: sede, dati, interessi, poi l'orario dal calendario interno del CRM. La prenotazione
- * (/api/prenota → site_prenota) crea lead e visita; subito dopo /api/tour-dati chiede al CRM di controllare
- * PerfectGym e di scrivere gli interessi. Il browser non vede mai le chiavi di PerfectGym.
+ * Nessun appuntamento: registra sede, dati, interessi e consensi. /api/lead salva il lead nel CRM e lancia
+ * il flusso n8n di sempre (mail, recap, Spoki); poi /api/tour-dati chiede al CRM, da server a server, di
+ * controllare PerfectGym, creare il lead se manca e lasciare la nota. Le chiavi di PerfectGym non toccano il sito.
  */
 import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
@@ -23,8 +23,8 @@ const INTERESSI = [
 ---
 
 <Layout
-  title="Prenota il tuo tour — Lume Fitness Club"
-  description="Vieni a vedere Lume: lasciaci i tuoi dati, scegli l’orario e ti facciamo fare il giro del centro. Un minuto, senza impegno."
+  title="Scopri Lume — Lume Fitness Club"
+  description="Lasciaci i tuoi dati e gli interessi: ti mandiamo informazioni, proposte e novità del centro Lume che preferisci. Un minuto, senza impegno."
 >
   <Header />
 
@@ -32,9 +32,9 @@ const INTERESSI = [
     <section class="sec">
       <div class="wrap">
         <div class="sec-head">
-          <span class="label">Tour</span>
-          <h1 class="d">Vieni a <em>vederci</em></h1>
-          <p>Ti facciamo fare il giro del centro e ti spieghiamo come funziona. Non si firma niente: lasciaci i dati e scegli l’orario.</p>
+          <span class="label">Scopri Lume</span>
+          <h1 class="d">Resta in <em>contatto</em></h1>
+          <p>Dicci dove ti alleni e cosa ti interessa: ti mandiamo le informazioni sul centro, gli orari e le proposte giuste per te. Non si firma niente.</p>
         </div>
 
         <form class="tr" data-tour novalidate>
@@ -70,20 +70,22 @@ const INTERESSI = [
               <input type="checkbox" name="consenso" required />
               <span>Ho letto l’<a href="/privacy" target="_blank" rel="noopener">informativa privacy</a> e acconsento al trattamento dei miei dati per essere ricontattato.</span>
             </label>
+            <label class="tr-privacy">
+              <input type="checkbox" name="marketing" />
+              <span>Voglio ricevere novità, promozioni ed eventi di Lume. <small>(facoltativo)</small></span>
+            </label>
 
             {/* Trappola per i bot: un campo che una persona non vede e non compila. */}
             <input class="tr-esca" name="sito_web" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
             <p class="tr-errore" data-tour-errore role="alert" hidden></p>
-            <button type="submit" class="btn btn-red btn-full" data-tour-avanti>Scegli l’orario</button>
+            <button type="submit" class="btn btn-red btn-full" data-tour-avanti>Invia</button>
           </fieldset>
 
-          <div class="tr-orario" data-tour-orario hidden>
-            <div class="tr-orario-testa">
-              <h2>Scegli l’orario</h2>
-              <button type="button" class="tr-modifica" data-tour-modifica>← Modifica i dati</button>
-            </div>
-            <div class="tr-cal" data-tour-cal></div>
+          <div class="tr-grazie" data-tour-grazie hidden role="status">
+            <h2>Ci siamo, grazie!</h2>
+            <p data-tour-recap></p>
+            <p>Ti scriviamo presto con le informazioni. Se vuoi, puoi anche <a data-tour-prenota href="/prenota">fissare una visita</a>.</p>
           </div>
         </form>
 
@@ -99,9 +101,9 @@ const INTERESSI = [
   .sec-head h1 em { color: var(--red-txt); font-style: normal; }
   .tr { max-width: 760px; }
   .tr-dati { border: 0; padding: 0; margin: 0; display: grid; gap: 22px; min-width: 0; }
-  .tr-dati:disabled { opacity: .55; pointer-events: none; }
+  .tr-dati[hidden] { display: none; }
   .tr-gruppo .label { display: block; margin-bottom: 10px; }
-  .tr-gruppo small, .tr-campo small { color: var(--mut); font-weight: 400; text-transform: none; letter-spacing: 0; }
+  .tr-gruppo small, .tr-campo small, .tr-privacy small { color: var(--mut); font-weight: 400; text-transform: none; letter-spacing: 0; }
   .tr-chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .tr-chip {
     min-height: 44px; padding: 10px 16px; border: 1px solid var(--line); border-radius: var(--lf-r-s, 6px);
@@ -124,27 +126,25 @@ const INTERESSI = [
   .tr-privacy a { color: var(--red-txt); text-decoration: underline; }
   .tr-esca { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
   .tr-errore { margin: 0; font-size: 14px; color: var(--red-txt); }
-  .tr-orario { margin-top: 8px; }
-  .tr-orario-testa { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
-  .tr-orario h2 { font-family: 'Anton', sans-serif; font-weight: 400; text-transform: uppercase; font-size: 20px; letter-spacing: .03em; margin: 0; }
-  .tr-modifica { background: none; border: 0; color: var(--red-txt); text-decoration: underline; font-size: 14px; cursor: pointer; padding: 8px 0; min-height: 44px; }
-  .tr-cal { min-height: 320px; border: 1px solid var(--line); border-radius: var(--lf-r-m); background: var(--card); overflow: hidden; }
+  .tr-grazie { border: 1px solid var(--line); border-radius: var(--lf-r-m); background: var(--card); padding: 24px; }
+  .tr-grazie h2 { font-family: 'Anton', sans-serif; font-weight: 400; text-transform: uppercase; font-size: 22px; letter-spacing: .03em; margin: 0 0 10px; }
+  .tr-grazie p { font-size: 14px; color: #cfcfcf; margin: 0 0 8px; }
+  .tr-grazie a { color: var(--red-txt); text-decoration: underline; }
   .tr-nota { margin-top: 28px; font-size: 14px; color: var(--mut); }
   .tr-nota a { color: var(--red-txt); text-decoration: underline; }
   @media (min-width: 640px) { .tr-griglia { grid-template-columns: 1fr 1fr; } }
 </style>
 
 <script>
-  import { montaPrenotazioneInterna, smontaPrenotazioneInterna } from '../lib/prenotaInterna.client.js';
-
   const form = document.querySelector<HTMLFormElement>('[data-tour]');
   if (form) {
     const dati = form.querySelector<HTMLFieldSetElement>('[data-tour-dati]')!;
-    const orario = form.querySelector<HTMLElement>('[data-tour-orario]')!;
-    const cal = form.querySelector<HTMLElement>('[data-tour-cal]')!;
+    const grazie = form.querySelector<HTMLElement>('[data-tour-grazie]')!;
     const errore = form.querySelector<HTMLElement>('[data-tour-errore]')!;
+    const avanti = form.querySelector<HTMLButtonElement>('[data-tour-avanti]')!;
     const sedi = Array.from(form.querySelectorAll<HTMLButtonElement>('[data-sede]'));
     const interessi = Array.from(form.querySelectorAll<HTMLButtonElement>('[data-interesse]'));
+    const w = window as any;
 
     // ?centro=montecassiano (come /prenota) o ?sede=… scelgono la sede di partenza
     const q = new URLSearchParams(location.search);
@@ -155,47 +155,57 @@ const INTERESSI = [
     interessi.forEach((b) => b.addEventListener('click', () => b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'))));
 
     const campo = (n: string) => (form.elements.namedItem(n) as HTMLInputElement).value.trim();
+    const spunta = (n: string) => !!(form.elements.namedItem(n) as HTMLInputElement).checked;
     const mostraErrore = (t: string) => { errore.textContent = t; errore.hidden = !t; };
+    const post = (url: string, corpo: unknown) => fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corpo) });
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       mostraErrore('');
-      if (campo('sito_web')) return; // un bot: non si fa niente
+      if (campo('sito_web')) { dati.hidden = true; grazie.hidden = false; return; } // un bot: finto successo, nessun invio
       if (!form.reportValidity()) return;
-      const sede = sedi.find((b) => b.getAttribute('aria-pressed') === 'true')?.dataset.sede || 'macerata';
+      const chip = sedi.find((b) => b.getAttribute('aria-pressed') === 'true')!;
+      const sede = chip.dataset.sede === 'piediripa' ? 'VALDICHIENTI' : chip.dataset.sede!.toUpperCase();
       const scelti = interessi.filter((b) => b.getAttribute('aria-pressed') === 'true').map((b) => b.dataset.interesse!);
       const email = campo('email');
-      const note = [scelti.length ? 'Interessi: ' + scelti.join(', ') : '', campo('note')].filter(Boolean).join('. ');
+      const note = campo('note');
 
-      dati.disabled = true;
-      orario.hidden = false;
-      const ok = await montaPrenotazioneInterna(cal, {
-        agenda: 'visita',
-        sede: sede.toUpperCase(),
-        prefill: { nome: campo('nome'), cognome: campo('cognome'), email, telefono: campo('telefono'), note },
-        meta: { flusso: 'tour' },
-        onPrenotato: (r: { uid?: string }) => {
-          (window as any).lumeTrack?.('appuntamento_prenotato', { lead_flusso: 'tour', lead_sede: sede.toUpperCase(), lead_agenda: 'visita', booking_uid: r?.uid || '' });
-          if (r?.uid) {
-            // da server a server: il CRM controlla PerfectGym e scrive gli interessi. Se non riesce, la prenotazione resta.
-            void fetch('/api/tour-dati', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: r.uid, email, interessi: scelti, note: campo('note'), consenso: true }) }).catch(() => {});
-          }
-        },
-      });
-      if (!ok) {
-        smontaPrenotazioneInterna(cal);
-        orario.hidden = true;
-        dati.disabled = false;
-        mostraErrore('Per questa sede non ci sono orari liberi adesso: chiamaci allo 0733 232905 e fissiamo insieme.');
+      avanti.disabled = true;
+      avanti.textContent = 'Invio…';
+      // chi ha già un account lo sa il server: se è già iscritto va alla segreteria, come negli altri form
+      let verifica = 'nuovo';
+      try { verifica = (await (await post('/api/verifica', { email })).json()).stato || 'nuovo'; } catch { /* come per i nuovi */ }
+
+      const corpo = {
+        flusso: 'tour', tipoRichiesta: verifica === 'iscritto' ? 'ASSISTENZA' : 'TOUR', modalita: '', agenda: null,
+        email, nome: campo('nome'), cognome: campo('cognome'), cellulare: campo('telefono'), prefisso: '',
+        sede, centro: chip.dataset.sede, centroLabel: chip.textContent?.trim() || '',
+        attivita: scelti, abbonamento: '', messaggio: [scelti.length ? 'Interessi: ' + scelti.join(', ') : '', note].filter(Boolean).join('. '),
+        privacy: spunta('consenso'), marketing: spunta('marketing'),
+        nuovo: verifica === 'nuovo' ? 'NUOVO' : 'ESISTE', verifica, gruppo: '', cta: '', ctaMedium: '', pagina: location.pathname,
+        source: 'SitoWeb', medium: 'PaginaTour',
+        utm: typeof w.lumeGetUtm === 'function' ? w.lumeGetUtm() : {}, vid: typeof w.lumeGetVid === 'function' ? w.lumeGetVid() : null,
+        inviatoIl: new Date().toISOString(), sospetto: false,
+      };
+      try {
+        const r = await post('/api/lead', corpo);
+        if (!r.ok) throw new Error('lead ' + r.status);
+      } catch {
+        avanti.disabled = false;
+        avanti.textContent = 'Invia';
+        mostraErrore('Invio non riuscito. Riprova fra qualche istante o chiamaci allo 0733 232905.');
         return;
       }
-      orario.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+      // da server a server: il CRM controlla PerfectGym, crea il lead se manca e scrive la nota. Se non riesce, il lead è già salvato.
+      void post('/api/tour-dati', { email, sede, interessi: scelti, note, consenso: spunta('consenso') }).catch(() => {});
+      w.lumeTrack?.('generate_lead', { lead_flusso: 'tour', lead_tipo: corpo.tipoRichiesta, lead_sede: sede, lead_pagina: '/tour', lead_medium: 'PaginaTour', lead_attivita: scelti.join(', ') });
+      try { w.lumeSetEmail?.(email); } catch { /* il tracciamento non ferma la conferma */ }
 
-    form.querySelector('[data-tour-modifica]')?.addEventListener('click', () => {
-      smontaPrenotazioneInterna(cal);
-      orario.hidden = true;
-      dati.disabled = false;
+      form.querySelector('[data-tour-recap]')!.textContent = [chip.textContent?.trim(), scelti.join(', '), email].filter(Boolean).join(' · ');
+      form.querySelector('[data-tour-prenota]')?.setAttribute('href', '/prenota?centro=' + chip.dataset.sede);
+      dati.hidden = true;
+      grazie.hidden = false;
+      grazie.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   }
 </script>
