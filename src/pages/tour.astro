@@ -1,0 +1,201 @@
+---
+/**
+ * Pagina del tour — sostituisce `n8n.lumeflow.it/form/iscrizioni` per chi vuole vedere il centro.
+ *
+ * Una pagina sola: sede, dati, interessi, poi l'orario dal calendario interno del CRM. La prenotazione
+ * (/api/prenota → site_prenota) crea lead e visita; subito dopo /api/tour-dati chiede al CRM di controllare
+ * PerfectGym e di scrivere gli interessi. Il browser non vede mai le chiavi di PerfectGym.
+ */
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const SEDI = [
+  { id: 'macerata', nome: 'Macerata' },
+  { id: 'montecassiano', nome: 'Montecassiano' },
+  { id: 'urban', nome: 'Urban' },
+  { id: 'piediripa', nome: 'Val di Chienti' },
+];
+const INTERESSI = [
+  'Sala Pesi', 'Corsi Fitness', 'Pilates Reformer', 'Personal Training', 'CrossFit/Hyrox', 'Scuola Nuoto Adulti',
+  'Acqua Fitness', 'Nuoto Libero', 'Acqua Mamma', 'Scuola Nuoto Bambini', 'Acqua Nido',
+];
+---
+
+<Layout
+  title="Prenota il tuo tour — Lume Fitness Club"
+  description="Vieni a vedere Lume: lasciaci i tuoi dati, scegli l’orario e ti facciamo fare il giro del centro. Un minuto, senza impegno."
+>
+  <Header />
+
+  <main id="contenuto">
+    <section class="sec">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="label">Tour</span>
+          <h1 class="d">Vieni a <em>vederci</em></h1>
+          <p>Ti facciamo fare il giro del centro e ti spieghiamo come funziona. Non si firma niente: lasciaci i dati e scegli l’orario.</p>
+        </div>
+
+        <form class="tr" data-tour novalidate>
+          <fieldset class="tr-dati" data-tour-dati>
+            <div class="tr-gruppo" role="group" aria-label="Scegli la sede">
+              <span class="label">Dove</span>
+              <div class="tr-chips">
+                {SEDI.map((s, i) => (
+                  <button type="button" class="tr-chip" data-sede={s.id} aria-pressed={i === 0 ? 'true' : 'false'}>{s.nome}</button>
+                ))}
+              </div>
+            </div>
+
+            <div class="tr-griglia">
+              <label class="tr-campo"><span>Nome</span><input name="nome" autocomplete="given-name" required /></label>
+              <label class="tr-campo"><span>Cognome</span><input name="cognome" autocomplete="family-name" required /></label>
+              <label class="tr-campo"><span>Email</span><input name="email" type="email" autocomplete="email" inputmode="email" required /></label>
+              <label class="tr-campo"><span>Cellulare</span><input name="telefono" type="tel" autocomplete="tel" inputmode="tel" required /></label>
+            </div>
+
+            <div class="tr-gruppo" role="group" aria-label="A cosa sei interessato">
+              <span class="label">Cosa ti interessa <small>(anche più di una)</small></span>
+              <div class="tr-chips">
+                {INTERESSI.map((i) => (
+                  <button type="button" class="tr-chip" data-interesse={i} aria-pressed="false">{i}</button>
+                ))}
+              </div>
+            </div>
+
+            <label class="tr-campo"><span>Vuoi dirci qualcosa? <small>(facoltativo)</small></span><textarea name="note" rows="2" placeholder="Obiettivi, orari che preferisci…"></textarea></label>
+
+            <label class="tr-privacy">
+              <input type="checkbox" name="consenso" required />
+              <span>Ho letto l’<a href="/privacy" target="_blank" rel="noopener">informativa privacy</a> e acconsento al trattamento dei miei dati per essere ricontattato.</span>
+            </label>
+
+            {/* Trappola per i bot: un campo che una persona non vede e non compila. */}
+            <input class="tr-esca" name="sito_web" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+            <p class="tr-errore" data-tour-errore role="alert" hidden></p>
+            <button type="submit" class="btn btn-red btn-full" data-tour-avanti>Scegli l’orario</button>
+          </fieldset>
+
+          <div class="tr-orario" data-tour-orario hidden>
+            <div class="tr-orario-testa">
+              <h2>Scegli l’orario</h2>
+              <button type="button" class="tr-modifica" data-tour-modifica>← Modifica i dati</button>
+            </div>
+            <div class="tr-cal" data-tour-cal></div>
+          </div>
+        </form>
+
+        <p class="tr-nota">Preferisci parlarne? Chiamaci allo <a href="tel:+390733232905">0733 232905</a>.</p>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .sec-head h1 em { color: var(--red-txt); font-style: normal; }
+  .tr { max-width: 760px; }
+  .tr-dati { border: 0; padding: 0; margin: 0; display: grid; gap: 22px; min-width: 0; }
+  .tr-dati:disabled { opacity: .55; pointer-events: none; }
+  .tr-gruppo .label { display: block; margin-bottom: 10px; }
+  .tr-gruppo small, .tr-campo small { color: var(--mut); font-weight: 400; text-transform: none; letter-spacing: 0; }
+  .tr-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tr-chip {
+    min-height: 44px; padding: 10px 16px; border: 1px solid var(--line); border-radius: var(--lf-r-s, 6px);
+    background: transparent; color: #ddd; font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: border-color .2s ease, background .2s ease, color .2s ease;
+  }
+  .tr-chip:hover { border-color: #555; }
+  .tr-chip[aria-pressed='true'] { background: var(--red); border-color: var(--red); color: #fff; }
+  .tr-griglia { display: grid; gap: 14px; grid-template-columns: 1fr; }
+  .tr-campo { display: grid; gap: 6px; font-size: 13px; color: var(--mut); }
+  .tr-campo span { font-weight: 600; color: #cfcfcf; }
+  .tr-campo input, .tr-campo textarea {
+    width: 100%; min-height: 48px; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--lf-r-s, 6px);
+    background: var(--card); color: #fff; font: inherit; font-size: 16px;
+  }
+  .tr-campo textarea { resize: vertical; }
+  .tr-campo input:focus-visible, .tr-campo textarea:focus-visible { outline: 2px solid var(--red-txt); outline-offset: 1px; }
+  .tr-privacy { display: grid; grid-template-columns: 22px 1fr; gap: 10px; font-size: 13px; color: #cfcfcf; align-items: start; }
+  .tr-privacy input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--red); }
+  .tr-privacy a { color: var(--red-txt); text-decoration: underline; }
+  .tr-esca { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .tr-errore { margin: 0; font-size: 14px; color: var(--red-txt); }
+  .tr-orario { margin-top: 8px; }
+  .tr-orario-testa { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .tr-orario h2 { font-family: 'Anton', sans-serif; font-weight: 400; text-transform: uppercase; font-size: 20px; letter-spacing: .03em; margin: 0; }
+  .tr-modifica { background: none; border: 0; color: var(--red-txt); text-decoration: underline; font-size: 14px; cursor: pointer; padding: 8px 0; min-height: 44px; }
+  .tr-cal { min-height: 320px; border: 1px solid var(--line); border-radius: var(--lf-r-m); background: var(--card); overflow: hidden; }
+  .tr-nota { margin-top: 28px; font-size: 14px; color: var(--mut); }
+  .tr-nota a { color: var(--red-txt); text-decoration: underline; }
+  @media (min-width: 640px) { .tr-griglia { grid-template-columns: 1fr 1fr; } }
+</style>
+
+<script>
+  import { montaPrenotazioneInterna, smontaPrenotazioneInterna } from '../lib/prenotaInterna.client.js';
+
+  const form = document.querySelector<HTMLFormElement>('[data-tour]');
+  if (form) {
+    const dati = form.querySelector<HTMLFieldSetElement>('[data-tour-dati]')!;
+    const orario = form.querySelector<HTMLElement>('[data-tour-orario]')!;
+    const cal = form.querySelector<HTMLElement>('[data-tour-cal]')!;
+    const errore = form.querySelector<HTMLElement>('[data-tour-errore]')!;
+    const sedi = Array.from(form.querySelectorAll<HTMLButtonElement>('[data-sede]'));
+    const interessi = Array.from(form.querySelectorAll<HTMLButtonElement>('[data-interesse]'));
+
+    // ?centro=montecassiano (come /prenota) o ?sede=… scelgono la sede di partenza
+    const q = new URLSearchParams(location.search);
+    const iniziale = (q.get('centro') || q.get('sede') || '').toLowerCase();
+    const scegliSede = (id: string) => sedi.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.sede === id)));
+    if (sedi.some((b) => b.dataset.sede === iniziale)) scegliSede(iniziale);
+    sedi.forEach((b) => b.addEventListener('click', () => scegliSede(b.dataset.sede!)));
+    interessi.forEach((b) => b.addEventListener('click', () => b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'))));
+
+    const campo = (n: string) => (form.elements.namedItem(n) as HTMLInputElement).value.trim();
+    const mostraErrore = (t: string) => { errore.textContent = t; errore.hidden = !t; };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      mostraErrore('');
+      if (campo('sito_web')) return; // un bot: non si fa niente
+      if (!form.reportValidity()) return;
+      const sede = sedi.find((b) => b.getAttribute('aria-pressed') === 'true')?.dataset.sede || 'macerata';
+      const scelti = interessi.filter((b) => b.getAttribute('aria-pressed') === 'true').map((b) => b.dataset.interesse!);
+      const email = campo('email');
+      const note = [scelti.length ? 'Interessi: ' + scelti.join(', ') : '', campo('note')].filter(Boolean).join('. ');
+
+      dati.disabled = true;
+      orario.hidden = false;
+      const ok = await montaPrenotazioneInterna(cal, {
+        agenda: 'visita',
+        sede: sede.toUpperCase(),
+        prefill: { nome: campo('nome'), cognome: campo('cognome'), email, telefono: campo('telefono'), note },
+        meta: { flusso: 'tour' },
+        onPrenotato: (r: { uid?: string }) => {
+          (window as any).lumeTrack?.('appuntamento_prenotato', { lead_flusso: 'tour', lead_sede: sede.toUpperCase(), lead_agenda: 'visita', booking_uid: r?.uid || '' });
+          if (r?.uid) {
+            // da server a server: il CRM controlla PerfectGym e scrive gli interessi. Se non riesce, la prenotazione resta.
+            void fetch('/api/tour-dati', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: r.uid, email, interessi: scelti, note: campo('note'), consenso: true }) }).catch(() => {});
+          }
+        },
+      });
+      if (!ok) {
+        smontaPrenotazioneInterna(cal);
+        orario.hidden = true;
+        dati.disabled = false;
+        mostraErrore('Per questa sede non ci sono orari liberi adesso: chiamaci allo 0733 232905 e fissiamo insieme.');
+        return;
+      }
+      orario.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    form.querySelector('[data-tour-modifica]')?.addEventListener('click', () => {
+      smontaPrenotazioneInterna(cal);
+      orario.hidden = true;
+      dati.disabled = false;
+    });
+  }
+</script>
