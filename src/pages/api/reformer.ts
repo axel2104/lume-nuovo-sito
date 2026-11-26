@@ -18,6 +18,10 @@ export const POST: APIRoute = async ({ request }) => {
     stato = await rpc<string>('site_verifica_email', { p_email: email });
   } catch {}
   const soci = stato === 'iscritto';
+  // Interesse reale: ha lasciato la mail e ha ricevuto il codice. Agganciato al lead per email, come gli altri eventi del sito.
+  try {
+    await rpc('site_registra_evento', { p: { evento: 'reformer_codice', email: email.toLowerCase(), pagina: '/blackfriday', dati: { tipo: soci ? 'soci' : 'esterni' } } });
+  } catch {}
   const tipo = soci ? 'soci' : 'esterni';
   const codice = soci ? process.env.CODICE_REFORMER_SOCI || 'BLACKREFORMER' : process.env.CODICE_REFORMER_ESTERNI || 'BLACKREFORMER25';
   return Response.json({ tipo, codice, video: `/media/reformer-${tipo}.mp4`, poster: `/media/reformer-${tipo}.jpg` }, { headers: { 'Cache-Control': 'no-store' } });

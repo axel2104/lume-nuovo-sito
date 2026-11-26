@@ -207,7 +207,7 @@ const fotoReformer = [
           <h3>Il tuo codice</h3>
           <button type="button" class="bf-codice" data-reformer-copia><b data-reformer-codice></b><small data-reformer-copiato>Tocca per copiare</small></button>
           <video data-reformer-video controls playsinline preload="metadata"></video>
-          <a class="btn btn-red btn-full" href="https://lumefitness.perfectgym.com/ClientPortal2/" target="_blank" rel="noopener">Vai al portale e incolla il codice</a>
+          <a class="btn btn-red btn-full" data-reformer-portale href="https://lumefitness.perfectgym.com/ClientPortal2/" target="_blank" rel="noopener">Vai al portale e incolla il codice</a>
         </div>
       </dialog>
 
@@ -287,8 +287,16 @@ const fotoReformer = [
     var dlg = document.getElementById('reformer-dlg');
     if (!dlg) return;
     var $ = function (a) { return dlg.querySelector('[' + a + ']'); };
+    var mail = '';
+    // Conteggio dei gesti: anonimo senza consenso (vid null), agganciato al visitatore/lead quando c'è. Mai bloccante.
+    var ev = function (nome) {
+      try {
+        var corpo = JSON.stringify({ evento: nome, vid: (window.lumeGetVid && window.lumeGetVid()) || null, email: mail || null, pagina: location.pathname });
+        if (!navigator.sendBeacon || !navigator.sendBeacon('/api/evento', new Blob([corpo], { type: 'text/plain;charset=UTF-8' }))) fetch('/api/evento', { method: 'POST', body: corpo, keepalive: true }).catch(function () {});
+      } catch (e) {}
+    };
     var form = $('data-reformer-form'), esito = $('data-reformer-esito'), err = $('data-reformer-err'), cod = $('data-reformer-codice'), vid = $('data-reformer-video'), cop = $('data-reformer-copiato');
-    document.querySelector('[data-reformer-apri]').addEventListener('click', function () { dlg.showModal(); });
+    document.querySelector('[data-reformer-apri]').addEventListener('click', function () { ev('reformer_apri'); dlg.showModal(); });
     $('data-reformer-chiudi').addEventListener('click', function () { dlg.close(); });
     dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
     dlg.addEventListener('close', function () { vid.pause(); });
@@ -297,11 +305,13 @@ const fotoReformer = [
       var btn = form.querySelector('button[type=submit]'); btn.disabled = true;
       fetch('/api/reformer', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: form.email.value }) })
         .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || 'Riprova'); return j; }); })
-        .then(function (j) { cod.textContent = j.codice; vid.poster = j.poster; vid.src = j.video; form.hidden = true; esito.hidden = false; })
+        .then(function (j) { mail = form.email.value.trim().toLowerCase(); cod.textContent = j.codice; vid.poster = j.poster; vid.src = j.video; form.hidden = true; esito.hidden = false; })
         .catch(function (x) { err.textContent = x.message === 'Failed to fetch' ? 'Connessione assente, riprova' : x.message; err.hidden = false; })
         .finally(function () { btn.disabled = false; });
     });
+    $('data-reformer-portale').addEventListener('click', function () { ev('reformer_portale'); });
     $('data-reformer-copia').addEventListener('click', function () {
+      ev('reformer_copia');
       var ok = function () { cop.textContent = 'Copiato ✓'; setTimeout(function () { cop.textContent = 'Tocca per copiare'; }, 2000); };
       (navigator.clipboard ? navigator.clipboard.writeText(cod.textContent) : Promise.reject()).then(ok, function () {});
     });
