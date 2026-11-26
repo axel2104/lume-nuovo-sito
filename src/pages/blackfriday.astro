@@ -186,11 +186,30 @@ const fotoReformer = [
                 {fasce.map((f) => <tr><td>{f.orario}</td><td><b class="bf-sv" data-v={f.soci}>000 €</b></td><td><b class="bf-sv" data-v={f.esterni}>000 €</b></td></tr>)}
               </tbody>
             </table>
-            <a class="btn btn-red" href={pren('macerata', 'richiamata', 'Black Reformer Friday')}><span data-bf-prima>Avvisami quando si apre</span><span data-bf-dopo hidden>Voglio il Reformer</span></a>
+            <a class="btn btn-red" data-bf-prima href={pren('macerata', 'richiamata', 'Black Reformer Friday')}>Avvisami quando si apre</a>
+            <button type="button" class="btn btn-red" data-bf-dopo data-reformer-apri hidden>Voglio il Reformer</button>
           </div>
           <BfBento foto={fotoReformer} />
         </div>
       </section>
+
+      <!-- Popup Reformer: la mail decide codice e video (soci o esterni), il codice arriva dal server -->
+      <dialog class="bf-dlg" id="reformer-dlg" aria-labelledby="reformer-dlg-t">
+        <button type="button" class="bf-dlg-x" data-reformer-chiudi aria-label="Chiudi">×</button>
+        <form data-reformer-form>
+          <h3 id="reformer-dlg-t">La tua mail</h3>
+          <p>Quella con cui accedi al portale Lume, se sei già socio.</p>
+          <input type="email" name="email" required autocomplete="email" placeholder="nome@email.it" />
+          <p class="bf-dlg-err" data-reformer-err hidden></p>
+          <button class="btn btn-red btn-full" type="submit">Continua</button>
+        </form>
+        <div data-reformer-esito hidden>
+          <h3>Il tuo codice</h3>
+          <button type="button" class="bf-codice" data-reformer-copia><b data-reformer-codice></b><small data-reformer-copiato>Tocca per copiare</small></button>
+          <video data-reformer-video controls playsinline preload="metadata"></video>
+          <a class="btn btn-red btn-full" href="https://lumefitness.perfectgym.com/ClientPortal2/" target="_blank" rel="noopener">Vai al portale e incolla il codice</a>
+        </div>
+      </dialog>
 
       <!-- UN BLOCCO PER CLUB, tutti uguali -->
       {
@@ -262,6 +281,32 @@ const fotoReformer = [
 
   <Footer />
 </Layout>
+
+<script is:inline>
+  (function () {
+    var dlg = document.getElementById('reformer-dlg');
+    if (!dlg) return;
+    var $ = function (a) { return dlg.querySelector('[' + a + ']'); };
+    var form = $('data-reformer-form'), esito = $('data-reformer-esito'), err = $('data-reformer-err'), cod = $('data-reformer-codice'), vid = $('data-reformer-video'), cop = $('data-reformer-copiato');
+    document.querySelector('[data-reformer-apri]').addEventListener('click', function () { dlg.showModal(); });
+    $('data-reformer-chiudi').addEventListener('click', function () { dlg.close(); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener('close', function () { vid.pause(); });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault(); err.hidden = true;
+      var btn = form.querySelector('button[type=submit]'); btn.disabled = true;
+      fetch('/api/reformer', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: form.email.value }) })
+        .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || 'Riprova'); return j; }); })
+        .then(function (j) { cod.textContent = j.codice; vid.poster = j.poster; vid.src = j.video; form.hidden = true; esito.hidden = false; })
+        .catch(function (x) { err.textContent = x.message === 'Failed to fetch' ? 'Connessione assente, riprova' : x.message; err.hidden = false; })
+        .finally(function () { btn.disabled = false; });
+    });
+    $('data-reformer-copia').addEventListener('click', function () {
+      var ok = function () { cop.textContent = 'Copiato ✓'; setTimeout(function () { cop.textContent = 'Tocca per copiare'; }, 2000); };
+      (navigator.clipboard ? navigator.clipboard.writeText(cod.textContent) : Promise.reject()).then(ok, function () {});
+    });
+  })();
+</script>
 
 <script is:inline define:vars={{ SVELA }}>
   (function () {
@@ -395,6 +440,19 @@ const fotoReformer = [
   .bf-gold-nota a { color: var(--red-txt); font-weight: 600; }
   .bf-cta { display: grid; gap: 10px; }
   .bf-cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+
+  /* Popup Reformer */
+  .bf-dlg { width: min(440px, calc(100% - 32px)); padding: 24px; border: 1px solid var(--line); border-radius: 16px; background: var(--card); color: var(--cream); }
+  .bf-dlg::backdrop { background: rgba(0, 0, 0, .75); }
+  .bf-dlg h3 { margin: 0 0 8px; font-size: 24px; }
+  .bf-dlg p { margin: 0 0 14px; color: var(--mut); }
+  .bf-dlg input { width: 100%; box-sizing: border-box; padding: 14px; font-size: 18px; margin-bottom: 14px; }
+  .bf-dlg video { display: block; width: 100%; max-height: 55dvh; margin: 16px 0; background: #000; border-radius: 10px; }
+  .bf-dlg-x { position: absolute; top: 6px; right: 12px; background: none; border: 0; color: var(--cream); font-size: 30px; cursor: pointer; line-height: 1; }
+  .bf-dlg .bf-dlg-err { color: var(--red-txt); }
+  .bf-codice { width: 100%; padding: 16px; border: 0; border-radius: 10px; background: var(--red); color: #fff; cursor: pointer; display: grid; gap: 4px; }
+  .bf-codice b { font-size: 28px; letter-spacing: 1px; }
+  .bf-codice small { color: #fff; opacity: .8; }
 
   .bf-note { margin: 14px 0 18px; color: var(--mut); font-size: 13px; line-height: 1.5; }
   .bf-passi .bf-note { margin-top: 28px; }
