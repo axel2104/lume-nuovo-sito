@@ -23,6 +23,10 @@ export const POST: APIRoute = async ({ request }) => {
     await rpc('site_registra_evento', { p: { evento: 'reformer_codice', email: email.toLowerCase(), pagina: '/blackfriday', dati: { tipo: soci ? 'soci' : 'esterni' } } });
   } catch {}
   const tipo = soci ? 'soci' : 'esterni';
-  const codice = soci ? process.env.CODICE_REFORMER_SOCI || 'BLACKREFORMER60' : process.env.CODICE_REFORMER_ESTERNI || 'BLACKREFORMER26';
+  // Terza fascia (dalle 18:00 di venerdì 27/11, ora di Roma = 17:00 UTC): i codici cambiano da soli, senza nuovo deploy.
+  const terzaFascia = Date.now() >= Date.parse('2026-11-27T17:00:00Z');
+  const codice = terzaFascia
+    ? (soci ? 'BLACKREFORMER30' : 'BLACKREFORMER40')
+    : soci ? process.env.CODICE_REFORMER_SOCI || 'BLACKREFORMER60' : process.env.CODICE_REFORMER_ESTERNI || 'BLACKREFORMER26';
   return Response.json({ tipo, codice, video: `/media/reformer-${tipo}.mp4`, poster: `/media/reformer-${tipo}.jpg` }, { headers: { 'Cache-Control': 'no-store' } });
 };
