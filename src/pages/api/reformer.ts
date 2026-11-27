@@ -23,6 +23,6 @@ export const POST: APIRoute = async ({ request }) => {
     await rpc('site_registra_evento', { p: { evento: 'reformer_codice', email: email.toLowerCase(), pagina: '/blackfriday', dati: { tipo: soci ? 'soci' : 'esterni' } } });
   } catch {}
   const tipo = soci ? 'soci' : 'esterni';
-  const codice = soci ? process.env.CODICE_REFORMER_SOCI || 'BLACKREFORMER' : process.env.CODICE_REFORMER_ESTERNI || 'BLACKREFORMER25';
+  const codice = soci ? process.env.CODICE_REFORMER_SOCI || 'BLACKREFORMER60' : process.env.CODICE_REFORMER_ESTERNI || 'BLACKREFORMER26';
   return Response.json({ tipo, codice, video: `/media/reformer-${tipo}.mp4`, poster: `/media/reformer-${tipo}.jpg` }, { headers: { 'Cache-Control': 'no-store' } });
 };
